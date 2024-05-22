@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link -->
-    <th:block th:replace="~{fragments/common/link::link}"></th:block>
+    <th:block th:replace="fragments/common/link :: link"></th:block>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
     <!-- header -->
-    <th:block th:replace="~{fragments/common/header::header}"></th:block>
+    <th:block th:replace="fragments/common/header :: header"></th:block>
 
     <!-- ⭐ content -->
-    <!-- layout:fragment="레이아웃의 프레그먼트 영역 이름" -->
-    <th:block layout:fragment="content"></th:block>
+    <!-- 여기서는 다른 템플릿에서 content를 채워넣습니다 -->
+    <main>
+        <th:block layout:fragment="content"></th:block>
+    </main>
     
     <!-- footer -->
-    <th:block th:replace="~{fragments/common/footer::footer}"></th:block>
+    <th:block th:replace="fragments/common/footer :: footer"></th:block>
 
     <!-- script -->
-    <th:block th:replace="~{fragments/script::script}"></th:block>
+    <th:block th:replace="fragments/common/script :: script"></th:block>
 </body>
 </html>
