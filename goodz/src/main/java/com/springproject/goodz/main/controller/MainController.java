@@ -8,7 +8,7 @@ import groovy.util.logging.Slf4j;
 
 
 @Slf4j
-@Controller("/")
+@Controller
 public class MainController {
 
  
