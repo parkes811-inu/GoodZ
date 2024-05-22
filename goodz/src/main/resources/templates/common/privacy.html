@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>개인정보처리방침 - GoodZ</title>
     <style>
         body {
@@ -29,9 +30,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="cancel">
-            x -> 맨 오른쪽으로 가고 x 누르면 main으로 돌아가게 하나 만들어야 될듯 ?
-        </div>
+        <!-- Cancel button -->
+        <div th:replace="fragments/common/cancel :: cancel"></div>
 
         <h1>개인정보처리방침</h1>
         <p>GoodZ (이하 "회사"라 함)는 이용자의 개인정보를 중요시하며, "개인정보 보호법"을 준수하고 있습니다. 회사는 개인정보처리방침을 통하여 이용자가 제공하는 개인정보가 어떠한 용도와 방식으로 이용되고 있으며, 개인정보보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다.</p>
@@ -98,5 +98,6 @@
             <li>경찰청 사이버안전국 (cyberbureau.police.go.kr / 국번없이 182)</li>
         </ul>
     </div>
+    <script th:src="@{/js/policy.js}"></script>
 </body>
 </html>
