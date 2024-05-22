@@ -3,6 +3,105 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/pay_layout}"
       >
+      <style>
+    .product_info_area {
+        display: flex;
+        align-items: center;
+    }
+
+    .product_info {
+        display: flex;
+        align-items: center;
+    }
+
+    .product_img {
+        margin-right: 20px; /* 사진과 텍스트 사이 간격 */
+    }
+
+    .product_detail {
+        display: flex;
+        flex-direction: column;
+    }
+
+    
+
+
+    .section_content {
+    padding: 10px;
+    }
+
+    .delivery_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 아이템을 수직으로 중앙 정렬 */
+    padding: 10px 0;
+}
+
+    .info_list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* 각 info_box 간격 조절 */
+    }
+
+    .info_box {
+        display: flex;
+        align-items: center;
+    }
+
+    .info_box .title {
+        min-width: 80px; /* 제목 최소 너비 설정 */
+        font-weight: bold;
+    }
+
+    .info_box .desc {
+        margin-left: 10px; /* 설명과 제목 사이의 간격 */
+    }
+
+    .add_more_btn {
+        margin-left: 10px; /* 설명과 버튼 사이의 간격 */
+        color: blue; /* 버튼 색상 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+        font-size: 14px; /* 폰트 크기 조절 */
+    }
+
+    .add_more_btn:hover {
+        text-decoration: underline; /* 호버 시 밑줄 표시 */
+    }
+
+
+
+
+
+    .shipping_info {
+    display: flex;
+    align-items: center;
+    }
+
+    .shipping_info img {
+        width: 50px; /* 이미지 크기 조절 */
+        height: auto; /* 높이 자동 조절 */
+        margin-right: 10px; /* 이미지와 텍스트 사이 간격 조절 */
+    }
+
+    .shipping_detail {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* 텍스트를 이미지와 수평으로 정렬 */
+    }
+
+    .shipping_method, .shipping_cost {
+        font-size: 14px; /* 텍스트 크기 조절 */
+    }
+
+    .shipping_cost {
+        color: #888; /* 배송비 색상 설정 */
+        margin-left: 5px; /* 텍스트와 숫자 사이 간격 조절 */
+    }
+    
+
+
+
+</style>
 <!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
 <head>
     <title>구매하기</title>
@@ -15,18 +114,89 @@
         <!-- 상품이미지, 상품 설명 -->
         <div class="product_info_area">
             <div class="product_info">
-                <picture class="product_img"></picture>
+                <picture class="product_img">
+                    <img src="../../static/img/test.png">
+                </picture>
                 <div class="product_detail">
-                    상품명 <br> Stussy Basic Stussy T-Shirt Berry 2024<br>
+                    상품명 <br> Stussy Basic Stussy T-Shirt Berry 2024<br><br>
                     사이즈 <br> M <br>
                 </div>
             </div>
         </div>
 
+        <section>
+            <!-- 배송 주소 -->
+            <div class="section_unit">
+                <div class="section_title">
+                    <h3 class="title_txt">배송 주소</h3>
+                </div>
+                <div class="section_content">
+                    <div class="delivery_info">
+                        <div class="info_list">
+                            <div class="info_box">
+                                <div class="title">받는 분</div>
+                                <div class="desc">김조은</div>
+                            </div>
+                            <div class="info_box">
+                                <div class="title">연락처</div>
+                                <div class="desc">010-1234-5678</div>
+                            </div>
+                            <div class="info_box">
+                                <div class="title">배송 주소</div>
+                                <div class="desc">서울특별시 OO구 OO동 한강리버사이드 자이아파트 102동 3103호</div>
+                            </div>
+                        </div>
+                        <p id="no_address_msg" style="display: none;">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
+                        <button id="add_address_btn" style="display: none;">새 배송지 주소 추가</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 배송 방법 -->
+            <section>
+                <div class="section_unit">
+                    <div class="section_title">
+                        <h3 class="title_txt">배송 방법</h3>
+                        <div class="shipping_info">
+                            <picture class="box">
+                                <img src="../../static/img/box.png" alt="배송박스">
+                            </picture>
+                            <div class="shipping_detail">
+                                <div class="shipping_method">일반배송</div>
+                                <div class="shipping_cost">3,000원<br>검수 후 배송 | 9-11일 내 도착 예정</div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </section>
+        
+        
+        
 
     </div>
     
     <script>
+        // JavaScript로 주소 유무에 따라 메시지와 버튼을 표시하거나 숨깁니다.
+        window.addEventListener('DOMContentLoaded', function() {
+        var addressMessage = document.getElementById('no_address_msg');
+        var addAddressButton = document.getElementById('add_address_btn');
+        var deliveryInfo = document.querySelector('.delivery_info');
+
+        // 주소 정보가 있는지 확인합니다.
+        var addressExists = false;
+        var addressElements = deliveryInfo.querySelectorAll('.info_box .desc');
+        addressElements.forEach(function(element) {
+            if (element.textContent.trim() !== '') {
+                addressExists = true;
+            }
+        });
+
+        // 주소 정보가 없으면 메시지와 버튼을 표시합니다.
+        if (!addressExists) {
+            addressMessage.style.display = 'block';
+            addAddressButton.style.display = 'block';
+        }
+    });
 
     </script>
 </body>
