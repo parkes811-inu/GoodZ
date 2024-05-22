@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodZ | mainpage</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="content">
+        <!-- Your main content goes here -->
+    </div>
+    <footer class="footer">
+        <div class="left">
+            <a th:href="@{/}">
+                <img th:src="@{/img/footer/Goodz_logo2.png}" alt="GoodZ Logo">
+            </a>
+            <div class="social-icons">
+                <a th:href="@{https://www.facebook.com/?locale=ko_KR}" target="_blank">
+                    <img th:src="@{/img/footer/facebook_Icon.png}" alt="Facebook">
+                </a>
+                <a th:href="@{https://kr.linkedin.com/}" target="_blank">
+                    <img th:src="@{/img/footer/linkedin_icon.png}" alt="LinkedIn">
+                </a>
+                <a th:href="@{https://www.youtube.com/@alohaclass}" target="_blank">
+                    <img th:src="@{/img/footer/youtube_icon.png}" alt="YouTube">
+                </a>
+                <a th:href="@{https://www.instagram.com/eeeeee.s/}" target="_blank">
+                    <img th:src="@{/img/footer/instagram_Icon.png}" alt="Instagram">
+                </a>
+            </div>
+        </div>
+        <div class="links">
+            <h3>이용정책</h3>
+            <div class="link-wrapper">
+                <a th:href="@{/privacy}">개인정보처리방침</a>
+                <button id="modalBtn" type="button">검수 기준</button>
+                <a th:href="@{/privacy}">스토어 안내</a>
+                <a th:href="@{/}">커뮤니티 가이드 라인</a>
+            </div>
+        </div>
+        <div class="right">
+            <p>고객센터 1234-5678</p>
+            <p>운영시간 평일 09:30 - 18:20 (토 / 일 공휴일 휴무)</p>
+            <p>점심시간 평일 13:00 - 14:00</p>
+        </div>
+    </footer>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div th:include="layout/inspection :: body"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the modal
+            var modal = document.getElementById("myModal");
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("modalBtn");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks the button, open the modal
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
