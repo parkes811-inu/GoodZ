@@ -8,8 +8,8 @@ import groovy.util.logging.Slf4j;
 
 
 @Slf4j
-@Controller
-public class MaiController {
+@Controller("/")
+public class MainController {
 
  
     @GetMapping("/{page}")
