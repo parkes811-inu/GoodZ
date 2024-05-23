@@ -160,11 +160,10 @@ body {
 ------------ cancel btn css ------------
 */
 .cancel {
-    position: fixed;
-    top: 10px; /* 상단에서 10px 떨어짐 */
-    right: 10px; /* 오른쪽에서 10px 떨어짐 */
+    position: absolute;
+    top: 50px;
+    right: 550px;
 }
-
 .btn-close {
     background: none;
     border: none;
