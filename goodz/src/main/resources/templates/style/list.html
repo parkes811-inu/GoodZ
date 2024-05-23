@@ -10,110 +10,278 @@
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
-    <div class="mainContainer">
-        <h3 class="text-center my-5 fw-bold">STYLE</h3>
-        <div class="subcontainer">
-            <div class="postContainer row">
-                <div class="postBox col-3 my-3">
-                    <!-- 프로필정보 -->
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3">
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!--[DB] 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <!-- 게시글 이미지 & 저장/좋아요 -->
-                    <div class="post">
+                        <!--[DB] 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
-                        <div class="icons ">
-                            <i class="far fa-bookmark">123</i>
-                            <i class="far fa-heart">100</i>
+                        <!--[DB] 스크랩 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
                         </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
-                <div class="postBox col-3 my-3">
-                    <div class="profile d-flex">
-                        <div class="profile-img">
-                            <img src="/img/temp/profileImg.jpg" alt="프로필이미지">
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
                         </div>
-                        <p class="userId ms-2 fw-bold">zzang._.777</p>
-                    </div>
-                    <div class="post">
+                        <!-- 이미지 -->
                         <a href="#">
-                            <img src="/img/temp/postImg.jpg" alt="게시글">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
                         </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
+                        </div>
+                        <!-- 이미지 -->
+                        <a href="#">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
+                        </div>
+                        <!-- 이미지 -->
+                        <a href="#">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"></i><span class="postIcons">123</span>
+                            <i class="far fa-heart  fs-4"></i><span class="postIcons">31</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
+                        </div>
+                        <!-- 이미지 -->
+                        <a href="#">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <!-- 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile-img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">zzang._.777</p>
+                            </div>
+                        </div>
+                        <!-- 이미지 -->
+                        <a href="#">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                        <!-- 스크립 & 하트 -->
+                        <div class="d-flex justify-content-end column-gap-2 my-3 px-2">
+                            <i class="far fa-bookmark fs-4"><span class="fs-5">123</span></i>
+                            <i class="far fa-heart  fs-4"><span class="fs-5">31</span></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
+
+    
     
     <script>
 

@@ -179,8 +179,6 @@ body {
 --------- style 게시글 css -------------
 */
 
-
-
 .mainContainer {
     min-height: calc(100vh - 10rem);
     margin: 0 auto;
@@ -203,7 +201,7 @@ body {
 
 .post img {
     width: 200px;
-    height: 300px;
+    height: 280px;
     border-radius: 9px;
 }
 
@@ -213,4 +211,8 @@ body {
 
 .profile{
     margin-left: 16px;
+}
+
+.postIcons {
+    font-size: xx-small ;
 }
