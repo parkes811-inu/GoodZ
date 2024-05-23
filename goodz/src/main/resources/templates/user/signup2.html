@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/user_layout}"
+      >
+<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
+<head>
+    <title>회원가입</title>
+</head>
+<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
+<body layout:fragment="content">
+    <div class="mainContainer">
+        <style>
+          body {
+              background-color: #f8f9fa;
+          }
+          
+          .card {
+              border: none;
+              border-radius: 10px;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          .custom-card {
+              min-height: 600px;
+          }
+          
+          h2 {
+              font-weight: bold;
+              margin-bottom: 20px;
+          }
+          
+          .form-control {
+              height: calc(1.5em + 0.75rem + 2px);
+              border-radius: 5px;
+          }
+          
+          .form-group {
+              margin-bottom: 15px; /* 여백 추가 */
+          }
+          
+          .text-center {
+              margin-top: 20px; /* 위쪽 여백 추가 */
+          }
+          
+          .btn-primary {
+              display: block;
+              width: 100%; /* 원하는 버튼 너비 */
+              margin: 0 auto; /* 가운데 정렬을 위해 */
+              background-color: #343a40;
+              border-color: #343a40;
+              border-radius: 5px;
+          }
+          
+          .btn-primary:hover {
+              background-color: #23272b;
+              border-color: #23272b;
+          }
+
+          .btn-custom {
+            background-color: #393E46; /* 원하는 색상으로 변경 */
+            color: white;
+          }
+
+          .btn-custom:hover {
+            background-color:  #393E46;/* 호버 시에도 동일한 색상 유지 */
+            color: white;
+         }
+         
+         .btn-custom:active {
+            background-color: #393E46; /* 클릭 시에도 동일한 색상 유지 */
+            box-shadow: none; /* 클릭 시 그림자 제거 */
+         }
+
+          .mt-5 {
+              margin-top: 3rem !important;
+          }
+          
+          .mb-5 {
+              margin-bottom: 3rem !important;
+          }
+        
+          .mt-3 {
+              margin-top: 1rem !important;
+          }
+         </style>
+        </head>
+        <body>
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card p-4 custom-card">
+                            <h2 class="text-center">회원가입</h2>
+                            <form>
+                                <div class="form-group">
+                                    <label for="id">아이디 입력*</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="id" placeholder="예)joeun">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-custom" type="button" id="check-id">중복체크</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">비밀번호 입력*</label>
+                                    <input type="password" class="form-control" id="password" placeholder="영문 , 숫자 , 특수문자 조합 7-16자">
+                                </div>
+                                <div class="form-group">
+                                    <label for="passwordcheck">비밀번호 확인*</label>
+                                    <input type="password" class="form-control" id="passwordcheck" placeholder="비밀번호를 다시 입력해주세요.">
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">닉네임 입력*</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="username" placeholder="예)김준은">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-custom" type="button" id="check-username">중복체크</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phonenumber">핸드폰 번호 입력*</label>
+                                    <input type="text" class="form-control" id="phonenumber" placeholder="핸드폰 번호 12자리를 입력해주세요.">
+                                </div>
+                            
+                               
+                                <button type="button" class="btn btn-primary btn-block mt-3" onclick="location.href='/user/login'">가입하기</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+    </html>
