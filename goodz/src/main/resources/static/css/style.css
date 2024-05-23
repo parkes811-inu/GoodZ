@@ -7,7 +7,9 @@
     }
 }
 
-
+/* 
+------------ header css ------------
+ */
 
 
 
@@ -173,6 +175,39 @@ body {
 ------------ footer css ------------
 */
 
+/*
+------------ cancel btn css ------------
+*/
+.cancel {
+    position: absolute;
+    top: 50px;
+    right: 550px;
+}
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-close:hover {
+    background-color: #f00; /* 호버 상태일 때의 배경색 */
+    color: #fff; /* 호버 상태일 때의 글자색 */
+}
+
+
+/*
+------------ cancel btn css ------------
+*/
+
+
 
 
 /* 
@@ -216,3 +251,7 @@ body {
 .postIcons {
     font-size: xx-small ;
 }
+
+/* 
+--------- style 게시글 css -------------
+*/

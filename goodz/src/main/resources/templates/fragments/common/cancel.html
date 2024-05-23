@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div th:fragment="cancel">
+        <!-- Cancel button positioned to the top right corner -->
+        <div class="cancel">
+            <button type="button" onclick="goToMain()" class="btn-close" aria-label="Close">×</button>
+        </div>
+    </div>
+    <!-- External JavaScript -->
+    <script th:src="@{/js/policy.js}"></script>
+</body>
+</html>
