@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{/layouts/main_layout}">
+<head>
+    <style>
+        .complete {
+            text-align: center;
+            margin: 180px 410px; /* 위쪽 마진을 줄여서 글자를 위로 올림 */
+        }
+        .complete>img {
+            padding-bottom: 30px !important;
+            width: 250px;
+        }
+        .complete h1 {
+            font-weight: bold; /* 글자를 두껍게 */
+            margin-bottom: 20px; /* 아래쪽 마진을 줄여서 위로 올림 */
+        }
+        .complete p {
+            font-size: 14px; /* 글자 크기를 작게 */
+            margin-bottom: 30px; /* 버튼과의 간격 */
+        }
+        .complete button {
+            background-color: #000; /* 검정색 배경 */
+            color: #fff; /* 흰색 글자 */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .complete button:hover {
+            background-color: #444; /* 호버 시 배경색 변경 */
+        }
+    </style>
+
+    <title>구매 완료 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body layout:fragment="content">
+    <div class="container complete">
+        <img src="/img/pay/logo.png" alt="GoodZ" class="logo">
+        <h1>구매 완료</h1>
+        <p>구매가 완료되었습니다!</p>
+        <button onclick="location.href='/order-history'">구매내역으로 이동</button>
+    </div>
+</body>
+</html>

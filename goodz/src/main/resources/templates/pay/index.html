@@ -1,46 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/pay_layout}"
-      >
-      <style>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{/layouts/pay_layout}">
+<head>
+    <style>
     .product_info_area {
         display: flex;
         align-items: center;
     }
-
-    .product_info {
-        display: flex;
-        align-items: center;
-    }
-
     .product_img {
-        margin-right: 20px; /* 사진과 텍스트 사이 간격 */
+        margin-right: 20px;
     }
 
-    .product_detail {
+    .delivery_info, .shipping_info {
         display: flex;
-        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 0;
     }
-
-    
-
-
-    .section_content {
-    padding: 10px;
-    }
-
-    .delivery_info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* 아이템을 수직으로 중앙 정렬 */
-    padding: 10px 0;
-}
 
     .info_list {
         display: flex;
         flex-direction: column;
-        gap: 10px; /* 각 info_box 간격 조절 */
+        gap: 10px;
     }
 
     .info_box {
@@ -49,90 +31,263 @@
     }
 
     .info_box .title {
-        min-width: 80px; /* 제목 최소 너비 설정 */
+        min-width: 80px;
         font-weight: bold;
     }
 
     .info_box .desc {
-        margin-left: 10px; /* 설명과 제목 사이의 간격 */
+        margin-left: 10px;
     }
 
     .add_more_btn {
-        margin-left: 10px; /* 설명과 버튼 사이의 간격 */
-        color: blue; /* 버튼 색상 */
-        text-decoration: none; /* 링크 밑줄 제거 */
-        font-size: 14px; /* 폰트 크기 조절 */
+        margin-left: 10px;
+        color: blue;
+        text-decoration: none;
+        font-size: 14px;
     }
 
     .add_more_btn:hover {
-        text-decoration: underline; /* 호버 시 밑줄 표시 */
-    }
-
-
-
-
-
-    .shipping_info {
-    display: flex;
-    align-items: center;
+        text-decoration: underline;
     }
 
     .shipping_info img {
-        width: 50px; /* 이미지 크기 조절 */
-        height: auto; /* 높이 자동 조절 */
-        margin-right: 10px; /* 이미지와 텍스트 사이 간격 조절 */
+        width: 50px;
+        height: auto;
+        margin-right: 25px;
     }
 
     .shipping_detail {
         display: flex;
-        flex-direction: row;
-        align-items: center; /* 텍스트를 이미지와 수평으로 정렬 */
+        flex-direction: column;
     }
 
     .shipping_method, .shipping_cost {
-        font-size: 14px; /* 텍스트 크기 조절 */
+        font-size: 14px;
     }
 
     .shipping_cost {
-        color: #888; /* 배송비 색상 설정 */
-        margin-left: 5px; /* 텍스트와 숫자 사이 간격 조절 */
+        color: #888;
+        margin-left: 0;
     }
+
+    .btn {
+        height: 100%;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .h-100 {
+        height: 100%;
+    }
+
+    a {
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px;
+        overflow: auto;
+    }
+
+    .max-w-540 {
+        max-width: 540px;
+    }
+
+    .btn-wrapper {
+        padding: 0 24px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 11px 22px;
+        border: none;
+        border-radius: 8px;
+        background-color: #000;
+        color: #fff;
+        font-weight: 600;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    .btn.primary {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .flex-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .justify-center {
+        justify-content: center;
+    }
+
+    .justify-between {
+        justify-content: space-between;
+    }
+
+    .align-center {
+        align-items: center;
+    }
+
+    .confirm-loading {
+        margin-top: 72px;
+        height: 400px;
+        justify-content: space-between;
+    }
+
+    .confirm-success {
+        display: none;
+        margin-top: 72px;
+    }
+
+    .button-group {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .description {
+        margin-top: 8px;
+        color: #4e5968;
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    .response-section {
+        margin-top: 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        font-size: 20px;
+    }
+
+    .response-section .response-label {
+        font-weight: 600;
+        color: #333d48;
+        font-size: 17px;
+    }
+
+    .response-section .response-text {
+        font-weight: 500;
+        color: #4e5968;
+        font-size: 17px;
+        padding-left: 16px;
+        word-break: break-word;
+        text-align: right;
+    }
+
+    .color-grey {
+        color: #b0b8c1;
+    }
+
+    .order_summary {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+
+    .order_summary h5 {
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .order_summary .summary_item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .order_summary .summary_total {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-top: 10px;
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+    }
+
+    .order_summary .pay_button {
+        width: 100%;
+        padding: 15px;
+        background-color: #000;
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        font-size: 1.1em;
+        border-radius: 5px;
+        margin-top: 20px;
+        color: #fff;
+    }
+
+    .section_unit h3, .section_unit h1 {
+        text-align: center;
+    }
+
+    .section_unit h1 {
+        font-size: 1.5rem;
+        margin-top: 30px;
+    }
+
+    .footer-spacing {
+        margin-bottom: 30px;
+    }
+    </style>
     
-
-
-
-</style>
-<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
-<head>
     <title>구매하기</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
 </head>
-<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
-    <h1>구매하기</h1>
-    <div class="content">
-
-        <!-- 상품이미지, 상품 설명 -->
-        <div class="product_info_area">
-            <div class="product_info">
-                <picture class="product_img">
-                    <img src="../../static/img/test.png">
-                </picture>
-                <div class="product_detail">
-                    상품명 <br> Stussy Basic Stussy T-Shirt Berry 2024<br><br>
-                    사이즈 <br> M <br>
+    <div class="container">
+        <div class="section_unit mb-4">
+            <h1>구매하기</h1>
+        </div>
+        <div class="section_unit mb-4">
+            <div class="section_content p-3 border rounded">
+                <div class="product_info_area mb-4">
+                    <div class="product_info d-flex">
+                        <div class="product_img">
+                            <!-- 상품 테이블에 저장된 이미지 불러오기-->
+                            <img src="/img/pay/test.png" class="img-fluid">
+                        </div>
+                        <div class="product_detail">
+                            <!-- 상품 테이블에 저장된 상품명, 사이즈 불러오기-->
+                            <div><br><br>상품명 <br> Stussy Basic Stussy T-Shirt Berry 2024</div>
+                            <div class="mt-2"><br>사이즈 <br> M</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 배송 주소 -->
         <section>
-            <!-- 배송 주소 -->
-            <div class="section_unit">
-                <div class="section_title">
-                    <h3 class="title_txt">배송 주소</h3>
-                </div>
-                <div class="section_content">
+            <div class="section_unit mb-4">
+                
+                <div class="section_content p-3 border rounded">
                     <div class="delivery_info">
                         <div class="info_list">
+                            <h4 style="font-size: 20px; font-weight: 700;">배송 주소</h4>
+                            <!-- 주소 테이블에 있는 정보 불러오기-->
                             <div class="info_box">
                                 <div class="title">받는 분</div>
                                 <div class="desc">김조은</div>
@@ -146,36 +301,90 @@
                                 <div class="desc">서울특별시 OO구 OO동 한강리버사이드 자이아파트 102동 3103호</div>
                             </div>
                         </div>
+                        <div class="ml-auto">
+                            <button id="change_address_btn" class="btn btn-secondary">변경</button>
+                        </div>
+                        <!-- 기본 배송지 정보가 없으면 추가 하는 버튼 활성화-->
                         <p id="no_address_msg" style="display: none;">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
-                        <button id="add_address_btn" style="display: none;">새 배송지 주소 추가</button>
+                        <button id="add_address_btn" class="btn btn-primary" style="display: none;">새 배송지 주소 추가</button>
                     </div>
                 </div>
             </div>
 
             <!-- 배송 방법 -->
-            <section>
-                <div class="section_unit">
-                    <div class="section_title">
-                        <h3 class="title_txt">배송 방법</h3>
-                        <div class="shipping_info">
-                            <picture class="box">
-                                <img src="../../static/img/box.png" alt="배송박스">
-                            </picture>
-                            <div class="shipping_detail">
-                                <div class="shipping_method">일반배송</div>
-                                <div class="shipping_cost">3,000원<br>검수 후 배송 | 9-11일 내 도착 예정</div>
-                                
+            <div class="section_unit mb-4">
+                <div class="section_content p-3 border rounded">
+                    <h4 style="font-size: 20px; font-weight: 700;">배송 방법</h4>
+                    <div class="shipping_info d-flex">
+                        <img src="/img/pay/box.png" alt="배송박스" class="img-fluid">
+                        <div class="shipping_detail d-flex flex-column">
+                            <div class="shipping_method">일반배송</div>
+                            <div class="shipping_cost">3,000원<br>검수 후 배송 | 9-11일 내 도착 예정</div>
                         </div>
                     </div>
                 </div>
-            </section>
-        
-        
-        
+            </div>
+        </section>
 
+        <!-- 결제 방법 : toss payment api-->
+        <div class="section_unit mb-4">
+            <div class="section_content p-3 border rounded">
+                <!-- 결제 UI -->
+                <div id="payment-method"></div>
+                <!-- 이용약관 UI -->
+                <div id="agreement"></div>
+                <!-- 필수 체크박스 -->
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" value="" id="terms-checkbox">
+                    <label class="form-check-label" for="terms-checkbox">
+                         결제 서비스 이용 약관, 개인정보 처리 동의
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section_unit mb-4">
+            <div class="section_content p-3 border rounded order_summary">
+                <h4 style="font-size: 20px; font-weight: 700;">최종 주문 정보</h4>
+                <div class="summary_item">
+                    <span>상품 가격</span>
+                    <span>167,000원</span>
+                </div>
+                <div class="summary_item">
+                    <span>검수비</span>
+                    <span>무료</span>
+                </div>
+                <div class="summary_item">
+                    <span>배송비</span>
+                    <span>3,000원</span>
+                </div>
+                <div class="summary_item summary_total">
+                    <span>총 결제금액</span>
+                    <span>170,000원</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-wrapper w-100 footer-spacing">
+            <button id="payment-button" class="btn primary w-100" onclick="payment()" >결제하기</button>
+        </div>
     </div>
-    
+
+    <script type="module" src="/js/pay/pay.js"></script>
+
+
+
     <script>
+        function payment() {
+            window.location.href = '/pay/payment';
+        }
+    </script>
+    
+
+    
+
+    
+    <!-- <script>
         // JavaScript로 주소 유무에 따라 메시지와 버튼을 표시하거나 숨깁니다.
         window.addEventListener('DOMContentLoaded', function() {
         var addressMessage = document.getElementById('no_address_msg');
@@ -198,7 +407,10 @@
         }
     });
 
-    </script>
+    </script> -->
+
+
+
+    
 </body>
 </html>
-

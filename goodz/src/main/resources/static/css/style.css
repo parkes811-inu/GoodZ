@@ -1,3 +1,19 @@
+/* 
+------------ header css ------------
+ */
+ @media (min-width: 992px) {
+    .container {
+        max-width: 1100px !important;
+    }
+}
+
+/* 
+------------ header css ------------
+ */
+
+
+
+
 /*
 ------------ footer css ------------
 */
@@ -20,6 +36,9 @@ body {
     background-color: #f9f9f9;
     border-top: 1px solid #ddd;
     box-sizing: border-box;
+    position: relative;
+    bottom: 0;
+
 }
 .footer .left {
     display: flex;
@@ -188,6 +207,54 @@ body {
 ------------ cancel btn css ------------
 */
 
+
+
+
+/* 
+--------- style 게시글 css -------------
+*/
+
+.mainContainer {
+    min-height: calc(100vh - 10rem);
+    margin: 0 auto;
+    max-width: 1000px;
+
+}
+
+.profile-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* 둥근 모서리 */
+    overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
+}
+
+.profile-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+}
+
+.post img {
+    width: 200px;
+    height: 280px;
+    border-radius: 9px;
+}
+
+.post {
+    text-align: center;
+}
+
+.profile{
+    margin-left: 16px;
+}
+
+.postIcons {
+    font-size: xx-small ;
+}
+
+/* 
+--------- style 게시글 css -------------
+*/
 /* -------------------[header]------------------- */
 .nav-link {
     font-weight: bold;
