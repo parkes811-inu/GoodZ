@@ -49,4 +49,8 @@ public class MainController {
         return "product/index";
     }
 
+    @GetMapping("/product/size_table")
+    public String productSizeInfoPage() {
+        return "fragments/product/size_table";
+    }
 }
