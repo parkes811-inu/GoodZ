@@ -255,3 +255,25 @@ body {
 /* 
 --------- style 게시글 css -------------
 */
+/* -------------------[header]------------------- */
+.nav-link {
+    font-weight: bold;
+}
+.nav-link.active {
+    font-weight: bolder;
+}
+.logo img {
+    height: 60px; /* 이미지 크기 키움 */
+}
+.nav-item + .nav-item {
+    margin-left: 20px;
+}
+.secondary-nav .nav-item .nav-link {
+    font-size: 0.7rem; /* 글자 크기 줄임 */
+    color: gray !important; /* 글자 색상 회색으로 변경 */
+}
+.secondary-nav .nav-item .nav-link:hover {
+    color: black !important;
+}
+
+/* -------------------[header]------------------- */

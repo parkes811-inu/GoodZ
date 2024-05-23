@@ -43,11 +43,14 @@ public class MainController {
         }
         return template;
     }
-
-    // @GetMapping("/{domain}/{page}")
-    // public String page(@PathVariable("domain") String domain
-    //                   ,@PathVariable("page") String page  ) {
-    //     return domain + "/" + page;
-    // }
     
+    @GetMapping("/product")
+    public String productPage() {
+        return "product/index";
+    }
+
+    @GetMapping("/product/size_table")
+    public String productSizeInfoPage() {
+        return "fragments/product/size_table";
+    }
 }
