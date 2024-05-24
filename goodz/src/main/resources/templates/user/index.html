@@ -1,31 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/user_layout}"
+      layout:decorate="~{/layouts/mypage_layout}"
       >
 <!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
 <head>
     <style>
-        .sidebar {
-            padding: 15px;
-            margin-top: 20px; /* 상단 여백 추가 */
-        }
-        .sidebar h3 {
-            font-weight: bold; 
-            margin-bottom: 20px;
-        }
-        .sidebar h5 {
-            font-weight: 600; 
-            margin-bottom: 20px;
-        }
-        .sidebar a {
-            color: #7d7d7d; /* 흐린 색 */
-            text-decoration: none; /* 밑줄 제거 */
-        }
-        .sidebar a:hover, .sidebar a:focus {
-            color: #000; /* 진한 색 */
-            font-weight: bold; /* 진하게 */
-        }
         .shopping-info {
             margin-top: 50px; 
         }
@@ -113,112 +93,95 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-3 sidebar">
-                <h3>마이 페이지</h3>
-                
-                <h5>쇼핑 정보</h5>
-                <ul class="list-unstyled">
-                    <li><a href="/user/purchase">구매 내역</a></li>
-                    <li><a href="/user/sales">판매 내역</a></li>
-                    <li><a href="/user/wishlist">관심</a></li>
-                </ul>
-                <h5>내 정보</h5>
-                <ul class="list-unstyled">
-                    <li><a href="/user/manage_info">내 정보 관리</a></li>
-                    <li><a href="/user/address">주소록</a></li>
-                    <li><a href="/user/account">판매 정산 계좌</a></li>
-                </ul>
-            </div>
-            <div class="col-md-9 content">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title-section">
-                            <div class="profile-details">
-                                <div class="profile_img">
-                                    <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+        <div class="userMainContainer">
+            <div class="row">
+                <div class="content">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title-section">
+                                <div class="profile-details">
+                                    <div class="profile_img">
+                                        <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
+                                        <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                    </div>
+                                    <div class="profile-info">
+                                        <!-- 유저의 아이디와 닉네임 -->
+                                        <p class="username">wlrdprkffo11</p>
+                                        <p class="user-id">아이디 ^^</p>
+                                    </div>
                                 </div>
-                                <div class="profile-info">
-                                    <!-- 유저의 아이디와 닉네임 -->
-                                    <p class="username">wlrdprkffo11</p>
-                                    <p class="user-id">아이디 ^^</p>
+                                <div class="profile-buttons">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="manage_info()">내 정보 관리</button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="my_style()">스타일</button>
                                 </div>
-                            </div>
-                            <div class="profile-buttons">
-                                <button class="btn btn-sm btn-outline-secondary" onclick="manage_info()">내 정보 관리</button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="my_style()">스타일</button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card">
-                    <a href="/user/purchase" class="more-link">+더보기</a>
-                    <div class="card-body">
-                        <h5 class="card-title">구매 내역</h5>
-                        <div class="row text-center">
+                    <div class="card">
+                        <a href="/user/purchase" class="more-link">+더보기</a>
+                        <div class="card-body">
+                            <h5 class="card-title">구매 내역</h5>
+                            <div class="row text-center">
+                                <!-- 유저의 현황에 맞는 수를 가져옴 -->
+                                <div class="col">
+                                    <p>전체</p>
+                                    <p>0</p>
+                                </div>
+                                <div class="col">
+                                    <p>배송중</p>
+                                    <p>0</p>
+                                </div>
+                                <div class="col">
+                                    <p>배송완료</p>
+                                    <p>0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <a href="/user/sales" class="more-link">+더보기</a>
+                        <div class="card-body">
                             <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                            <div class="col">
-                                <p>전체</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>배송중</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>배송완료</p>
-                                <p>0</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <a href="/user/sales" class="more-link">+더보기</a>
-                    <div class="card-body">
-                        <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                        <h5 class="card-title">판매 내역</h5>
-                        <div class="row text-center">
-                            <div class="col">
-                                <p>요청</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>진행중</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>종료</p>
-                                <p>0</p>
+                            <h5 class="card-title">판매 내역</h5>
+                            <div class="row text-center">
+                                <div class="col">
+                                    <p>요청</p>
+                                    <p>0</p>
+                                </div>
+                                <div class="col">
+                                    <p>진행중</p>
+                                    <p>0</p>
+                                </div>
+                                <div class="col">
+                                    <p>종료</p>
+                                    <p>0</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- 유저가 눌러놓은 관심을 가져옴 -->
-                <h5 class="wishlist-title">관심</h5>
-                <div class="row wishlist">
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
-                    </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
-                    </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
-                    </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
+                    <!-- 유저가 눌러놓은 관심을 가져옴 -->
+                    <h5 class="wishlist-title">관심</h5>
+                    <div class="row wishlist">
+                        <div class="col-md-3">
+                            <img src="/img/product/product_img.png" alt="Product 1">
+                            <p>Nike Air Force 1 '07</p>
+                        </div>
+                        <div class="col-md-3">
+                            <img src="/img/product/product_img.png" alt="Product 1">
+                            <p>Nike Air Force 1 '07</p>
+                        </div>
+                        <div class="col-md-3">
+                            <img src="/img/product/product_img.png" alt="Product 1">
+                            <p>Nike Air Force 1 '07</p>
+                        </div>
+                        <div class="col-md-3">
+                            <img src="/img/product/product_img.png" alt="Product 1">
+                            <p>Nike Air Force 1 '07</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
     <script>
         function manage_info(){
             window.location.href = '/user/manage_info';
