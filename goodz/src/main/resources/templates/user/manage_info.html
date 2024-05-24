@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}"
+      >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-    유저 정보 관리 페이지
+    <body layout:fragment="content">
+        <div class="userMainContainer">
+            <p>유저 정보 관리 페이지</p>
+        </div>
+    </body>
 </body>
 </html>
