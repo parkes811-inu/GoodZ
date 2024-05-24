@@ -15,7 +15,7 @@ CREATE TABLE `User` (
 
 
 
--- Persistent_Loing 테이블
+-- Persistent_Login 테이블
 CREATE TABLE `Persistent_Login` (
 	`persistent_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,

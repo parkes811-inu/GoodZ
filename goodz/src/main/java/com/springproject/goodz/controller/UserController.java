@@ -43,11 +43,40 @@ public class UserController {
         return "/user/findPW";
     }
 
-    // 여기까지 로그인 관련 화면
-
-    // 여기서 부터는 마이페이지 관련
-    @GetMapping("/info")
-    public String info() {
-        return "/user/info";
+    @GetMapping("/purchase")
+    public String purchase() {
+        return "/user/purchase";
     }
+
+    @GetMapping("/sales")
+    public String sales() {
+        return "/user/sales";
+    }
+
+    @GetMapping("/wishlist")
+    public String wishlist() {
+        return "/user/wishlist";
+    }
+
+    @GetMapping("/manage_info")
+    public String manage_info() {
+        return "/user/manage_info";
+    }
+
+    @GetMapping("/address")
+    public String address() {
+        return "/user/address";
+    }
+
+    @GetMapping("/account")
+    public String account() {
+        return "/user/account";
+    }
+
+    @GetMapping("/style_profile")
+    public String style_profile() {
+        return "/user/style_profile";
+    }
+    
+
 }
