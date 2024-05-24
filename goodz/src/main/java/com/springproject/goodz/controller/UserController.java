@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/user")
 public class UserController {
     
-    @GetMapping("/index")
+    @GetMapping("")
     public String index() {
         return "/user/index";
     }
