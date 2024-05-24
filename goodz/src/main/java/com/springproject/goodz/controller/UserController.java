@@ -78,6 +78,5 @@ public class UserController {
         return "/user/style_profile";
     }
     
-    
-    
+
 }
