@@ -42,4 +42,12 @@ public class UserController {
     public String findPW() {
         return "/user/findPW";
     }
+
+    // 여기까지 로그인 관련 화면
+
+    // 여기서 부터는 마이페이지 관련
+    @GetMapping("/info")
+    public String info() {
+        return "/user/info";
+    }
 }
