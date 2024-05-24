@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/style")
+@RequestMapping("/styles")
 public class StyleController {
     
     /**
      * 전체 게시글 목록
      * @return
      */
-    @GetMapping("list")
+    @GetMapping("")
     public String list() {
         return "/style/list";
     }
