@@ -13,9 +13,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/style")
 public class StyleController {
     
+    /**
+     * 전체 게시글 목록
+     * @return
+     */
     @GetMapping("/list")
     public String list() {
         return "/style/list";
+    }
+
+    /**
+     * 게시글 상세
+     * @return
+     */
+    @GetMapping("/read")
+    public String read() {
+        return "/style/read";
     }
     
 }
