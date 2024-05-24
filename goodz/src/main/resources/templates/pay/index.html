@@ -23,6 +23,7 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        flex-grow: 1;
     }
 
     .info_box {
@@ -100,7 +101,6 @@
     }
 
     .btn-wrapper {
-        padding: 0 24px;
         margin-top: 20px;
         margin-bottom: 20px;
     }
@@ -250,6 +250,14 @@
     .footer-spacing {
         margin-bottom: 30px;
     }
+    .delivery_info {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+    .info_list {
+        flex-grow: 1;
+    }
     </style>
     
     <title>구매하기</title>
@@ -287,6 +295,7 @@
                     <div class="delivery_info">
                         <div class="info_list">
                             <h4 style="font-size: 20px; font-weight: 700;">배송 주소</h4>
+                            
                             <!-- 주소 테이블에 있는 정보 불러오기-->
                             <div class="info_box">
                                 <div class="title">받는 분</div>
@@ -301,7 +310,7 @@
                                 <div class="desc">서울특별시 OO구 OO동 한강리버사이드 자이아파트 102동 3103호</div>
                             </div>
                         </div>
-                        <div class="ml-auto">
+                        <div>
                             <button id="change_address_btn" class="btn btn-secondary">변경</button>
                         </div>
                         <!-- 기본 배송지 정보가 없으면 추가 하는 버튼 활성화-->
@@ -372,18 +381,12 @@
 
     <script type="module" src="/js/pay/pay.js"></script>
 
-
-
     <script>
         function payment() {
-            window.location.href = '/pay/payment';
+            window.location.href = '/pay/complete';
         }
     </script>
-    
 
-    
-
-    
     <!-- <script>
         // JavaScript로 주소 유무에 따라 메시지와 버튼을 표시하거나 숨깁니다.
         window.addEventListener('DOMContentLoaded', function() {
@@ -406,11 +409,7 @@
             addAddressButton.style.display = 'block';
         }
     });
-
     </script> -->
 
-
-
-    
 </body>
 </html>
