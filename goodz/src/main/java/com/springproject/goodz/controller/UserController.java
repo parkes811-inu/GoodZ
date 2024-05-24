@@ -18,4 +18,28 @@ public class UserController {
         return "/user/index";
     }
     
+    @GetMapping("/login")
+    public String login() {
+        return "/user/login";
+    }
+    
+    @GetMapping("/signup")
+    public String signup() {
+        return "/user/signup";
+    }
+
+    @GetMapping("/signup2")
+    public String signup2() {
+        return "/user/signup2";
+    }
+
+    @GetMapping("/findID")
+    public String findID() {
+        return "/user/findID";
+    }
+
+    @GetMapping("/findPW")
+    public String findPW() {
+        return "/user/findPW";
+    }
 }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/user_layout}"
+      >
+<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
+<head>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-card {
+            min-height: 600px;
+        }
+        
+        h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            height: calc(1.5em + 0.75rem + 2px);
+            border-radius: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px; /* 여백 추가 */
+        }
+        
+        .text-center {
+            margin-top: 20px; /* 위쪽 여백 추가 */
+        }
+        
+        .btn-primary {
+            background-color: #343a40;
+            border-color: #343a40;
+            border-radius: 5px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #23272b;
+            border-color: #23272b;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%; /* 원하는 버튼 너비 */
+            margin: 0 auto; /* 가운데 정렬을 위해 */
+        }
+        
+        .form-check-label {
+            margin-left: 1.25rem;
+        }
+        
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+        
+        .mb-5 {
+            margin-bottom: 3rem !important;
+        }
+        
+        .mx-2 {
+            margin-left: 0.5rem !important;
+            margin-right: 0.5rem !important;
+        }
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+       </style>
+    <title>회원가입</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+</head>
+<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
+<body layout:fragment="content">
+    <div class="container">
+        
+
+        <body>
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card p-4 custom-card">
+                            <h2 class="text-center">회원가입</h2>
+                            <form>
+                                <div class="form-group">
+                                    <label for="name">이름 입력*</label>
+                                    <input type="text" class="form-control" id="name" placeholder="예)김준은">
+                                </div>
+                                <div class="form-group">
+                                    <label for="id-number">주민등록번호 입력*</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" class="form-control mr-2" id="id-number-front" placeholder="주민번호 앞자리">
+                                        <span class="mx-2">-</span>
+                                        <input type="text" class="form-control" id="id-number-back" placeholder="주민번호 뒷자리">
+                                    </div>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input type="checkbox" class="form-check-input" id="mandatory-consent">
+                                    <label class="form-check-label" for="mandatory-consent">[필수] 만 14세 이상이며 모두 동의합니다.</label>
+                                </div>
+                                <div class="form-check mb-4">
+                                    <input type="checkbox" class="form-check-input" id="optional-consent">
+                                    <label class="form-check-label" for="optional-consent">[선택] 광고성 정보 수신에 모두 동의합니다.</label>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-block mt-3" onclick="location.href='/user/signup2'">다음 회원가입 단계</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
+    </body>
+    </html>
