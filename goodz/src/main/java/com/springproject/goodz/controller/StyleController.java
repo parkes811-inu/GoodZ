@@ -1,4 +1,4 @@
-package com.springproject.goodz.style.controller;
+package com.springproject.goodz.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
