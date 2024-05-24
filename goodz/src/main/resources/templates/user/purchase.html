@@ -1,11 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
+    <style>
+        .content {
+            padding: 15px;
+            margin-top: 20px; 
+            max-width: 900px; /* 최대 너비 설정 */
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+
+        .card {
+            margin-bottom: 20px;
+            padding: 5px; /* 카드 내부 여백 증가 */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            
+        }
+
+        .card-title {
+            font-size: 1.2rem; /* 제목 글씨 크기 증가 */
+            font-weight: 600; 
+            margin-bottom: 15px; /* 하단 여백 증가 */
+        }
+
+        .row.text-center {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; /* 상단 여백 증가 */
+        }
+
+        .row.text-center .col {
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid #ddd;
+            
+        }
+
+        .row.text-center .col:last-child {
+            border-right: none;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>구매 내역</title>
 </head>
-<body>
-    유저 구매내역 페이지
+<body layout:fragment="content">
+    <div class="content">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">구매 내역</h5>
+                <div class="row text-center">
+                    <!-- 유저의 현황에 맞는 수를 가져옴 -->
+                    <div class="col">
+                        <p>전체</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>배송중</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>배송완료</p>
+                        <p>0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

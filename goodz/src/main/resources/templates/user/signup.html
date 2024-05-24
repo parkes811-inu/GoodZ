@@ -39,20 +39,10 @@
         }
         
         .btn-primary {
-            background-color: #343a40;
-            border-color: #343a40;
-            border-radius: 5px;
-        }
-        
-        .btn-primary:hover {
-            background-color: #23272b;
-            border-color: #23272b;
-        }
-
-        .btn-primary {
             display: block;
             width: 100%; /* 원하는 버튼 너비 */
             margin: 0 auto; /* 가운데 정렬을 위해 */
+            border-radius: 5px;
         }
         
         .form-check-label {
@@ -82,7 +72,7 @@
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
     <div class="container">
-        
+        <div class="mainContainer">
 
         <body>
             <div class="container mt-5 mb-5">
@@ -111,13 +101,13 @@
                                     <input type="checkbox" class="form-check-input" id="optional-consent">
                                     <label class="form-check-label" for="optional-consent">[선택] 광고성 정보 수신에 모두 동의합니다.</label>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-block mt-3" onclick="location.href='/user/signup2'">다음 회원가입 단계</button>
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="location.href='/user/signup2'">다음 회원가입 단계</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        
-        
+        </div>
+    </div>
     </body>
     </html>
