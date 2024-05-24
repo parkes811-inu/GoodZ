@@ -8,8 +8,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>스타일 상세</title>
     <style>
-        .container {
-            max-width: 500px;
+        .mainContainer {
+            text-align: center;
+            width: 640px;
+            padding: 0;
         }
         .profile-img {
             width: 40px;
@@ -23,72 +25,148 @@
             height: 100%;
             object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
         }
+        
+        .product_item img {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .product_brand, .product_name {
+            white-space: nowrap;       /* 줄바꿈을 하지 않도록 설정 */
+            overflow: hidden;          /* 넘치는 부분을 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 부분을 ...으로 표시 */
+            display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
+            width: 100px;
+        }
     </style>
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
-    <div class="container" style="width: 500px;">
-        <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
-        <div class="socialBox d-flex justify-content-between mt-5">
-            <div class="userInfo">
-                <a href="/social/users/@jamintheforest" class="profile-img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                    <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile-img">
-                    <span class="userId fw-bold m-0" >zzang._.777</span>
-                </a>
-            </div>
-            <button type="button" class="btn btn-dark btn-sm"> 팔로우 </button>
-        </div>
-        <img src="/img/temp/postImg.jpg"  alt="스타일이미지" class="styleImg my-2 rounded-4" style="width: 100%;" >
-        <div class="social_productTags">
-            <div class="product_title">
-                <span class="title_txt">상품 태그 <strong class="num">1</strong>개</span>
-            </div>
-            <div class="product_list_area">
-                <ul class="product_list">
-                    <li class="product_item">
-                        <a href="#" class="product_link">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct"class="image full_width">
-                                
-                            <div class="product_desc">
-                                <p class="product_name">Asics Gel-Terrain Faded Ash Rock Black</p>
-                                <div class="price_box">
-                                    <span class="amount">155,000</span>
-                                    <span class="unit">원</span>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    <div data-v-d79422e0="" class="social_contents">
-        <div data-v-ebf0b578="" data-v-d79422e0="" class="social_btn">
-            <a data-v-ebf0b578="" href="#" aria-label="게시물 공유" class="btn share">
-                <svg data-v-cd8c6c40="" data-v-ebf0b578="" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon" width="26" height="26">
-                    <g fill="#222">
-                        <path d="M13 2.145L4.597 9.898l1.102 1.195 6.489-5.988v12.118h1.624V5.105l6.49 5.988 1.101-1.195L13 2.145z"></path>
-                        <path d="M3.25 21.667v-5.309h1.625v4.767h16.25v-4.767h1.625v5.309c0 .598-.485 1.083-1.083 1.083H4.333a1.083 1.083 0 01-1.083-1.083z"></path>
-                    </g>
-                </svg>
-            </a>
-            <a data-v-ebf0b578="" href="#" aria-label="좋아요" class="btn like"><svg data-v-cd8c6c40="" data-v-ebf0b578="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon icon fill-current-color" width="26" height="26"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.022 3.341l-.055-.021-.057-.017c-2.016-.603-3.662-.156-4.869.684a6.21 6.21 0 00-1.042.92 6.21 6.21 0 00-1.041-.92C9.75 3.147 8.106 2.7 6.09 3.303l-.057.017-.055.021a6.448 6.448 0 00-3.255 2.903c-.878 1.639-1.066 3.781.019 6.327 1.07 2.51 3.261 4.725 5.04 6.245a33.702 33.702 0 003.128 2.365c.09.06.162.106.212.138l.666.416a.4.4 0 00.424 0l.666-.416.212-.138a33.712 33.712 0 003.127-2.365c1.779-1.52 3.97-3.735 5.04-6.245 1.084-2.546.897-4.688.02-6.326a6.446 6.446 0 00-3.255-2.904zm1.855 8.642C18.02 16.34 12 20.1 12 20.1s-6.022-3.76-7.878-8.117C2.266 7.627 4.972 5.34 6.52 4.74c2.268-.679 3.731.377 4.57 1.41l.03.037a6.11 6.11 0 01.65 1.003c.086.166.371.166.458 0a6.343 6.343 0 01.65-1.003l.03-.038c.84-1.032 2.303-2.088 4.572-1.41 1.547.6 4.253 2.888 2.397 7.244z" fill="#222"></path></svg><span data-v-ebf0b578=""> 29 </span></a><a data-v-ebf0b578="" href="#" aria-label="댓글" class="btn comment"><svg data-v-cd8c6c40="" data-v-ebf0b578="" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon" width="26" height="26"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.581 18.273l.351-.592A9.158 9.158 0 0022.208 13 9.208 9.208 0 1013 22.207a9.158 9.158 0 004.664-1.266l.592-.349 3.202.878-.877-3.198zm2.997 4.786a.433.433 0 01-.533.532l-4.556-1.249A10.784 10.784 0 0113 23.833c-5.983 0-10.833-4.85-10.833-10.833C2.167 7.017 7.017 2.167 13 2.167c5.983 0 10.833 4.85 10.833 10.833 0 2.011-.548 3.894-1.502 5.508l1.247 4.55z" fill="#222"></path></svg><span data-v-ebf0b578="">댓글</span></a><a data-v-ebf0b578="" href="#" aria-label="관심" class="btn save"><svg data-v-cd8c6c40="" data-v-ebf0b578="" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon" width="26" height="26"><path fill-rule="evenodd" clip-rule="evenodd" d="M13 16.936l8.125 4.407v-16.9H4.875v16.9L13 16.936zm-9.11 6.79a.433.433 0 01-.64-.381V3.902c0-.599.485-1.084 1.083-1.084h17.334c.598 0 1.083.485 1.083 1.084v19.443a.433.433 0 01-.64.38L13 18.786l-9.11 4.94z" fill="#222"></path></svg><span data-v-ebf0b578="">관심</span></a></div><div data-v-760404de="" data-v-d79422e0="" class="social_text"><h2 data-v-760404de="" class="text_title">편한 아식스🌀</h2><span data-v-760404de="" class="text_link"><span data-v-760404de="" class="text"><a class="hashtag" href="https://kream.co.kr/social/tags/오뭐입챌린지">#오뭐입챌린지</a> <a class="hashtag" href="https://kream.co.kr/social/tags/여름데일리">#여름데일리</a> <a class="hashtag" href="https://kream.co.kr/social/tags/장마코디">#장마코디</a> <a class="hashtag" href="https://kream.co.kr/social/tags/오늘뭐신지">#오늘뭐신지</a> <a class="hashtag" href="https://kream.co.kr/social/tags/사이즈팁">#사이즈팁</a> <a class="hashtag" href="https://kream.co.kr/social/tags/요즘스타일">#요즘스타일</a> <a class="hashtag" href="https://kream.co.kr/social/tags/코디공유">#코디공유</a></span></span></div><div data-v-d79422e0="" class="v-portal" style="display: none;"></div><div data-v-d79422e0="" class="v-portal" style="display: none;"></div></div></div></ㅇ><section class="container"><div data-v-640d7a52="" class="container_title title"><div data-v-640d7a52="" class="title_wrap"><div data-v-640d7a52="" class="title"> @jamintheforest님의 다른 스타일 </div><!----></div><div data-v-640d7a52=""><a data-v-640d7a52="" href="/social/users/@jamintheforest" class="container_destination_url">더보기</a></div></div><div data-v-5918a2f5="" class="feeds"><!----><article data-v-7b60558c="" class="social_feed_users social-feeds" use-route="" style="--social-feed-users-cols: 1;"><div data-v-027ebdc6="" data-v-7b60558c="" class="social_feed_user_posts user_post" style="--socialfeeduser-cols: 4; --64f60fa6: undefined;"><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1238216" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA1MjJfMTEx/MDAxNzE2MzM3Mzg5Mjcw.VSj9fSE1XttGuMh6YMhrJ9ZXiaCyvjXVSKgQ1CAtFvwg.OtLdwd18782cYgvBLxo3g-OEP6rqrtXQOCdXxmnQ5VQg.JPEG/p_a4a01fbdbee54857bb671f62a8104851.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 21 </span></p><!----></a></div><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1235837" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA1MTlfMTM5/MDAxNzE2MTIyOTczMTI5.QW61G62qEIfnXrd9jA_tSeiGJKy_y4fd3PVys4L8QWIg.zfGPn0VoIBK_iRfRk1IwaBGg1-GCCJBc-tf3QWGa95Mg.JPEG/p_b91c5d50336a4e99aca578fc10a44157.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 30 </span></p><!----></a></div><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1232424" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA1MTZfMTM5/MDAxNzE1ODM4NTg2OTAx.tSEV10nJynOYr7R4kCPGyVSrpcvgpozwUs5AYWq2aekg.9WtZXz_lsRvBu6YJKmmuL9o_C3_UWb4uTMnyQRmT3tkg.JPEG/p_cca7e3c985a244f2a43775cc20d8777b.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 19 </span></p><!----></a></div><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1226385" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA1MTBfOTAg/MDAxNzE1MjcyNjg4OTcx.f1h2ndZjP2fCvjkNxzulSuB1JDa0S53PLTKq1G-HWvwg.wTazSQFCeaXj2NpV1-A51l_fdMbl76mK0iL_UdE490Mg.JPEG/p_8bb39206cc6a4bd8bf41fb881221ac14.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 23 </span></p><!----></a></div><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card hidden"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1207116" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA0MjFfNzkg/MDAxNzEzNzAwODY4MDk1.UjwjusGmbjuEet86DYAPAwPxgPlmR5xwBIjbCBmxQIog.-P_G1flgyEeM4PH3rCNOzubSwlLydHYnP5oKXaZWMuIg.JPEG/p_14ee77d1789747648b57195eff03c9a4.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 32 </span></p><!----></a></div><div data-v-00340a04="" data-v-027ebdc6="" class="style_card post_card hidden"><a data-v-00340a04="" href="/social/users/@jamintheforest/details#p1204088" class="card_link"><img data-v-00340a04="" src="https://kream-phinf.pstatic.net/MjAyNDA0MThfMzkg/MDAxNzEzNDQ1MTI4MjU4.q2mwxHcnRPw4vC3j1fuZeGj_-4Qd1AC0Trs2rPpUUcMg.5K3Z8xKyDJNTumRJXuvBAcLoiLCbYrWJ7tvX49jQI0Eg.JPEG/p_a80266973af64ce8ad82c1d06a04f33b.jpeg?type=m_webp" alt="스타일 카드" loading="lazy" class="img_card"><!----><p data-v-00340a04="" class="bottom_left"><span data-v-027ebdc6="" class="like_count"><svg data-v-027ebdc6="" width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="like_icon icon sprite-icons"><use data-v-027ebdc6="" href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white" xlink:href="/_nuxt/902a7eb5512d7d4f25543902cfd1ccdc.svg#i-ico-social-like-white"></use></svg> 26 </span></p><!----></a></div></div></article></div></section></article></div>
+    <div class="container">
+        <div class="mainContainer">
 
-    </div>    
-
-    <hr>
-
-
-        <h3 class="text-center fw-bold my-4">STYLE</h3>
-        <div class="card" style="width: 18rem;">
-            <div class="profile-img">
-                <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+            <h3 class="text-center fw-bold my-4">STYLE</h3>
+            <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
+            <div class="socialBox d-flex justify-content-between mt-5">
+                <div class="userInfo">
+                    <a href="/social/users/@jamintheforest" class="profile-img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
+                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile-img">
+                        <span class="userId fw-bold m-0" >zzang._.777</span>
+                    </a>
+                </div>
+                <button type="button" class="btn btn-dark btn-sm"> 팔로우 </button>
             </div>
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-          </div>
-        <div class="profileInfo ">
             
+            <!-- 게시글 이미지 -->
+            <img src="/img/temp/postImg.jpg"  alt="스타일이미지" class="styleImg my-2 rounded-1" style="width: 640px; height: 850px;" >
+            
+            <!-- 게시글 컨텐츠 -->
+            <div class="social_contents">
+                <!-- 소셜버튼들 -->
+                <div class="social_btn text-end mb-3">
+                    <a href="#" aria-label="관심" class="btn save p-0">
+                        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon" width="26" height="26">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M13 16.936l8.125 4.407v-16.9H4.875v16.9L13 16.936zm-9.11 6.79a.433.433 0 01-.64-.381V3.902c0-.599.485-1.084 1.083-1.084h17.334c.598 0 1.083.485 1.083 1.084v19.443a.433.433 0 01-.64.38L13 18.786l-9.11 4.94z" fill="#222"></path>
+                        </svg>
+                        <span>99</span>
+                    </a>
+                    <a href="#" aria-label="좋아요" class="btn like p-0">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon icon fill-current-color" width="26" height="26">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M18.022 3.341l-.055-.021-.057-.017c-2.016-.603-3.662-.156-4.869.684a6.21 6.21 0 00-1.042.92 6.21 6.21 0 00-1.041-.92C9.75 3.147 8.106 2.7 6.09 3.303l-.057.017-.055.021a6.448 6.448 0 00-3.255 2.903c-.878 1.639-1.066 3.781.019 6.327 1.07 2.51 3.261 4.725 5.04 6.245a33.702 33.702 0 003.128 2.365c.09.06.162.106.212.138l.666.416a.4.4 0 00.424 0l.666-.416.212-.138a33.712 33.712 0 003.127-2.365c1.779-1.52 3.97-3.735 5.04-6.245 1.084-2.546.897-4.688.02-6.326a6.446 6.446 0 00-3.255-2.904zm1.855 8.642C18.02 16.34 12 20.1 12 20.1s-6.022-3.76-7.878-8.117C2.266 7.627 4.972 5.34 6.52 4.74c2.268-.679 3.731.377 4.57 1.41l.03.037a6.11 6.11 0 01.65 1.003c.086.166.371.166.458 0a6.343 6.343 0 01.65-1.003l.03-.038c.84-1.032 2.303-2.088 4.572-1.41 1.547.6 4.253 2.888 2.397 7.244z" fill="#222"></path>
+                        </svg>
+                        <span>99</span>
+                    </a>
+                    <a href="#" aria-label="댓글" class="btn comment p-0">
+                        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-icon" width="26" height="26">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M20.581 18.273l.351-.592A9.158 9.158 0 0022.208 13 9.208 9.208 0 1013 22.207a9.158 9.158 0 004.664-1.266l.592-.349 3.202.878-.877-3.198zm2.997 4.786a.433.433 0 01-.533.532l-4.556-1.249A10.784 10.784 0 0113 23.833c-5.983 0-10.833-4.85-10.833-10.833C2.167 7.017 7.017 2.167 13 2.167c5.983 0 10.833 4.85 10.833 10.833 0 2.011-.548 3.894-1.502 5.508l1.247 4.55z" fill="#222"></path>
+                        </svg>
+                        <span>99</span>
+                    </a>
+                </div>
+                <!-- 게시글 내용 -->
+                <div class="social_text mb-5">
+                    <p class="text_title fs-4">테스트 글내용 123456678 크크크😎</p>
+                </div>
+            </div>
+            
+            <!-- 상품태그 영역 -->
+            <div class="productTags">
+                <div class="product_title my-2">
+                    <span>상품 태그 <strong>1</strong>개</span>
+                </div>
+                <!-- 상품목록 -->
+                <div class="product_list_area d-flex justify-content-start">
+                    <ul class="product_list p-0 row" style="list-style: none;">
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="product_item col-3">
+                            <!-- 상품 이미지 -->
+                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <!-- 상품정보 -->
+                                <div class="product_desc text-black">
+                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <p class="userId fw-bold m-0">zzang._.777</p>
+    </div>
+</body>
+
