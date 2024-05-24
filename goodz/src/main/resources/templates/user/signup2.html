@@ -38,7 +38,7 @@
             margin-top: 20px; /* 위쪽 여백 추가 */
         }
         
-        .btn-primary {
+        .btn-dark {
             display: block;
             width: 100%; /* 원하는 버튼 너비 */
             margin: 0 auto; /* 가운데 정렬을 위해 */
@@ -46,26 +46,6 @@
             border-color: #343a40;
             border-radius: 5px;
         }
-        
-        .btn-primary:hover {
-            background-color: #23272b;
-            border-color: #23272b;
-        }
-
-        .btn-custom {
-          background-color: #393E46; /* 원하는 색상으로 변경 */
-          color: white;
-        }
-
-        .btn-custom:hover {
-          background-color:  #393E46;/* 호버 시에도 동일한 색상 유지 */
-          color: white;
-       }
-       
-       .btn-custom:active {
-          background-color: #393E46; /* 클릭 시에도 동일한 색상 유지 */
-          box-shadow: none; /* 클릭 시 그림자 제거 */
-       }
 
         .mt-5 {
             margin-top: 3rem !important;
@@ -100,7 +80,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="id" placeholder="예)joeun">
                                         <div class="input-group-append">
-                                            <button class="btn btn-custom" type="button" id="check-id">중복체크</button>
+                                            <button class="btn btn-dark" type="button" id="check-id">중복체크</button>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +97,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="username" placeholder="예)김준은">
                                         <div class="input-group-append">
-                                            <button class="btn btn-custom" type="button" id="check-username">중복체크</button>
+                                            <button class="btn btn-dark" type="button" id="check-username">중복체크</button>
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +107,7 @@
                                 </div>
                             
                                
-                                <button type="button" class="btn btn-primary btn-block mt-3" onclick="location.href='/user/login'">가입하기</button>
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="location.href='/user/login'">가입하기</button>
                             </form>
                         </div>
                     </div>
