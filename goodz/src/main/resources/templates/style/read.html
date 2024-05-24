@@ -27,8 +27,8 @@
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
-
     <div class="container" style="width: 500px;">
+        <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
         <div class="socialBox d-flex justify-content-between mt-5">
             <div class="userInfo">
                 <a href="/social/users/@jamintheforest" class="profile-img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
@@ -39,36 +39,21 @@
             <button type="button" class="btn btn-dark btn-sm"> 팔로우 </button>
         </div>
         <img src="/img/temp/postImg.jpg"  alt="스타일이미지" class="styleImg my-2 rounded-4" style="width: 100%;" >
-                            <span class="flicking-pagination-bullet flicking-pagination-bullet-active"></span>
-                            <span class="flicking-pagination-bullet"></span>
-                            <span class="flicking-pagination-bullet"></span>
-                            <span class="flicking-pagination-bullet"></span>
-                        </div>
-                    </div>
-                </div>
+        <div class="social_productTags">
+            <div class="product_title">
+                <span class="title_txt">상품 태그 <strong class="num">1</strong>개</span>
             </div>
-            <div data-v-5186bda4="" class="social_product">
-                <div data-v-5186bda4="">
-                    <div data-v-5186bda4="" class="product_title">
-                        <span data-v-5186bda4="" class="title_txt">상품 태그<strong data-v-5186bda4="" class="num">1</strong>개</span>
-                    </div>
-                </div>
-                <div data-v-5186bda4="" class="product_list_area single_list"><ul data-v-5186bda4="" class="product_list" style="transform: translateX(0px);">
-                    <li data-v-5186bda4="" class="product_item">
-                        <a data-v-5186bda4="" href="/products/223600" class="product_link">
-                        <div data-v-16369cf2="" data-v-5186bda4="" class="product" style="background-color: rgb(244, 244, 244);">
-                            <div data-v-17ca498c="" data-v-16369cf2="" class="display_tag_item product_inner_tag tag--default">
-                                <span data-v-17ca498c="" class="tag_text">  </span></div><picture data-v-82b93d2c="" data-v-16369cf2="" class="picture product_img">
-                                    <source data-v-82b93d2c="" type="image/webp" srcset="https://kream-phinf.pstatic.net/MjAyMzEyMjlfMTE4/MDAxNzAzODEzNDYwNjM1.RZP4wZqSAnOeqyyFJtdbvm2ETR-GGEaDuxx3XzY4LH8g.e8ginMT0eM6hw_Y5EUaHklpY1YAYNkfbjDYvToIGe7og.PNG/a_4cd874178f7a41e4852a83cc80bca63e.png?type=s_webp">
-                                    <source data-v-82b93d2c="" srcset="https://kream-phinf.pstatic.net/MjAyMzEyMjlfMTE4/MDAxNzAzODEzNDYwNjM1.RZP4wZqSAnOeqyyFJtdbvm2ETR-GGEaDuxx3XzY4LH8g.e8ginMT0eM6hw_Y5EUaHklpY1YAYNkfbjDYvToIGe7og.PNG/a_4cd874178f7a41e4852a83cc80bca63e.png?type=s">
-                                    <img data-v-82b93d2c="" alt="Asics Gel-Terrain Faded Ash Rock Black" src="https://kream-phinf.pstatic.net/MjAyMzEyMjlfMTE4/MDAxNzAzODEzNDYwNjM1.RZP4wZqSAnOeqyyFJtdbvm2ETR-GGEaDuxx3XzY4LH8g.e8ginMT0eM6hw_Y5EUaHklpY1YAYNkfbjDYvToIGe7og.PNG/a_4cd874178f7a41e4852a83cc80bca63e.png?type=s" loading="auto" class="image full_width">
-                                </picture><!----><!----><!---->
-                            </div>
-                            <div data-v-5186bda4="" class="product_desc">
-                                <p data-v-5186bda4="" class="product_name">Asics Gel-Terrain Faded Ash Rock Black</p>
-                                <div data-v-5186bda4="" class="price_box">
-                                    <span data-v-5186bda4="" class="amount">155,000</span>
-                                    <span data-v-5186bda4="" class="unit">원</span>
+            <div class="product_list_area">
+                <ul class="product_list">
+                    <li class="product_item">
+                        <a href="#" class="product_link">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct"class="image full_width">
+                                
+                            <div class="product_desc">
+                                <p class="product_name">Asics Gel-Terrain Faded Ash Rock Black</p>
+                                <div class="price_box">
+                                    <span class="amount">155,000</span>
+                                    <span class="unit">원</span>
                                 </div>
                             </div>
                         </a>
