@@ -84,25 +84,75 @@
             height:100%;
             background:rgba(0, 0, 0, 0.5);
             z-index: 10;
-        }   
+        }
+        
+        /* 댓글 컨테이너 */
+        .comment_container {
+            margin: 50px 0 0 20px;
+        }
+
+        /* 댓글 프로필이미지 */
+        .profile_img {
+            width: 40px;
+            height: 40px;
+        }
+
+
+        /* .addBtn:active, .addBtn:focus {
+            border: none;
+            outline:none !important;
+            box-shadow:none !important;
+        } */
+        .addBtn {
+            border: none;
+            outline:none !important;
+            box-shadow:none !important;
+        }
+
+
     </style>
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
+
     <!-- 댓글 모달창 -->
     <div id="modal">
         <div class="modal_layer">
             <div class="modal_content">
-                <div class="modal_header d-flex">
-                    <svg id="modal_close_btn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6" width="20" height="20">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                    
-                    <h2>댓글</h2>
+
+                <div class="modal_header d-flex mx-2 mt-2">
+                        <svg id="modal_close_btn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6" width="45" height="45">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                        <p class="fs-4 m-0 pt-1 ms-2">댓글</p>
+                </div>
+
+                <!-- 댓글 컨테이너 -->
+                <div class="comment_container">
+                    <!-- 댓글입력칸 -->
+                    <div class="comment_input d-flex align-items-center">
+                        <!-- [DB] 본인 프로필이미지 DB에서 가져옴 -->
+                        <img src="/img/temp/profile_img_default.png" alt="프로필 이미지" class="profile_img">
+                        <form method="post" class="d-flex align-items-center">
+                            <div class="wrap_input ms-3">
+                                <input type="text" class="form-control bg-light border-secondary-subtle rounded-4" placeholder="댓글을 입력하세요." aria-label="First name" style="box-shadow: none !important;font-size: smaller;width: 280px;">
+                            </div>
+                            <button type="button" class="addBtn btn rounded-0 p-0" id="addBtn" style="font-size: small;width: 40px;height: 33px; margin-left: 10px;">등록</button>
+                            <!-- <button type="button" class="addBtn btn border-bottom border-2 rounded-0 p-0" id="addBtn" style="font-size: small;width: 40px;height: 33px; margin-left: 10px;">등록</button> -->
+                        </form>
+                    </div>
+                    <!-- 댓글목록 -->
+                    <div class="commet_list">
+                        <div class="comment">
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class="container">
         <div class="mainContainer">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
@@ -143,15 +193,16 @@
                           <span class="count">31</span>
                     </a>
                 </div>
+
                 <!-- 게시글 내용 -->
-                <div class="social_text mb-5">
+                <div class="social_text my-5">
                     <p class="text_title fs-4 text-start">테스트 글내용 123456678 크크크😎</p>
                 </div>
             </div>
             
             <!-- 상품태그 영역 -->
             <div class="productTags">
-                <div class="product_title my-2 text-start">
+                <div class="product_title text-start mt-5">
                     <span>상품 태그 <strong>1</strong>개</span>
                 </div>
                 <!-- 상품목록 -->
@@ -162,7 +213,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -173,7 +224,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -184,7 +235,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -195,7 +246,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -206,7 +257,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -217,7 +268,7 @@
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
                                 <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
                                 <!-- 상품정보 -->
-                                <div class="product_desc text-black">
+                                <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
                                     <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                                 </div>
@@ -228,6 +279,5 @@
             </div>
         </div>
     </div>
-    
 </body>
 

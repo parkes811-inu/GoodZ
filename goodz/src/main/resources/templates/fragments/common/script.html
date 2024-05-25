@@ -11,7 +11,10 @@
         <!-- 사용자 정의 자바스크립트 -->
         <script src="/js/script.js" ></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-9ndCyUaLntBcpqqwDjXK6V+KU3mO7Kkx2eKKd2sqq1NU6p+vL6/3DZcK8pqa0yZ9" crossorigin="anonymous"></script>
+        <!-- slim버전 : AJAX와 애니메이션 기능이 포함되지 않음.. -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <!-- min버전 : 기본 jQuery 라이브러리를 압축한 버전으로, 모든 기능이 포함되어 있습니다-->
+        <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -46,6 +49,10 @@
              
             $("#modal_close_btn").click(function () {
                 $("#modal").attr("style", "display:none");
+            });
+
+            $("#addBtn").click(function (){
+                alert("댓글등록");
             });
 
             // JS 방식
