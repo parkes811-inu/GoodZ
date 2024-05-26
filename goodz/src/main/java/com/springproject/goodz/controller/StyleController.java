@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/style")
+@RequestMapping("/styles")
 public class StyleController {
     
     /**

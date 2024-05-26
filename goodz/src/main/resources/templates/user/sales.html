@@ -1,14 +1,185 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}"
-      >
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
+    <style>
+        .content {
+            padding: 15px;
+            margin-top: 20px; 
+            max-width: 900px; 
+            margin: 0 auto; 
+        }
+
+        .card {
+            margin-bottom: 20px;
+            padding: 5px; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .card-title {
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            margin-bottom: 15px; 
+        }
+
+        .row.text-center {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px; 
+        }
+
+        .row.text-center .col {
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid #ddd;
+        }
+
+        .row.text-center .col:last-child {
+            border-right: none;
+        }
+
+        .product-list {
+            margin-bottom: 70px;
+        }
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .product-item img {
+            width: 100px;
+            height: auto;
+        }
+        .product-details {
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+        .product-date-price {
+            margin-top: 60px;
+            text-align: right;
+        }
+        .sort-order {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>판매 내역</title>
 </head>
-<body>
-    유저 판매내역 페이지
+<body layout:fragment="content">
+    <div class="content">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">판매 내역</h5>
+                <div class="row text-center">
+                    <!-- 유저의 현황에 맞는 수를 가져옴 -->
+                    <div class="col">
+                        <p>요청</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>진행중</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>종료</p>
+                        <p>0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sort-order" onclick="filter()">
+            <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+        </div>        
+        
+        <div class="product-list" id="product-list">
+            <div class="product-item" data-date="2024/05/21">
+                <!-- 판매한 삼품의 이미지, 상품명, 판매시 가격, 판매 날짜를 가져옴 -->
+                <img src="/img/product/product_img.png">
+                <div class="product-details">
+                    <strong>Nike</strong>
+                    <div>Air Force 1 '07</div>
+                </div>
+                <div class="product-date-price">
+                    <div>2024/05/21</div>
+                    <div>2555555원</div>
+                </div>
+            </div>
+            <div class="product-item" data-date="2024/05/20">
+                <img src="/img/product/product_img.png">
+                <div class="product-details">
+                    <strong>Nike</strong>
+                    <div>Air Force 1 '07</div>
+                </div>
+                <div class="product-date-price">
+                    <div>2024/05/20</div>
+                    <div>2555555원</div>
+                </div>
+            </div>
+            <div class="product-item" data-date="2024/05/19">
+                <img src="/img/product/product_img.png">
+                <div class="product-details">
+                    <strong>Nike</strong>
+                    <div>Air Force 1 '07</div>
+                </div>
+                <div class="product-date-price">
+                    <div>2024/05/19</div>
+                    <div>2555555원</div>
+                </div>
+            </div>
+            <div class="product-item" data-date="2024/05/18">
+                <img src="/img/product/product_img.png">
+                <div class="product-details">
+                    <strong>Nike</strong>
+                    <div>Air Force 1 '07</div>
+                </div>
+                <div class="product-date-price">
+                    <div>2024/05/18</div>
+                    <div>2555555원</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filter() {
+            var productList = document.getElementById('product-list');
+            var items = productList.getElementsByClassName('product-item');
+            var itemsArray = [];
+            
+            for (var i = 0; i < items.length; i++) {
+                itemsArray.push(items[i]);
+            }
+    
+            itemsArray.reverse();
+            
+            for (var i = 0; i < itemsArray.length; i++) {
+                productList.appendChild(itemsArray[i]);
+            }
+    
+            var sortIcon = document.getElementById('sort-icon');
+            var sortText = document.getElementById('sort-text');
+            if (sortIcon.innerHTML === '▼') {
+                sortIcon.innerHTML = '▲';
+                sortText.innerHTML = '오름차순';
+            } else {
+                sortIcon.innerHTML = '▼';
+                sortText.innerHTML = '내림차순';
+            }
+        }
+    </script>
+    
+    
 </body>
 </html>
