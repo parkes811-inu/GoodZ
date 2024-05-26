@@ -14,7 +14,7 @@ import groovy.util.logging.Slf4j;
 @RequestMapping("/product")
 public class ProductController {
     
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         return "/product/index";
     }
