@@ -1,14 +1,150 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}"
-      >
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>판매 정산 계좌</title>
+    <style>
+
+
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
+        .header {
+            display: flex;
+            justify-content: flex-start; /* 왼쪽에 붙이기 */
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-top: 20px; /* 위에서 좀 떨어뜨리기 */
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .account-info-container {
+            width: 400px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f1f2f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 50px;
+        }
+
+        .account-info-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .account-info-content {
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group select {
+            width: 400px; /* 입력 필드와 동일한 너비 */
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+            appearance: none; /* 기본 화살표 제거 (브라우저 기본 스타일) */
+        }
+
+        .form-group select:focus {
+            outline: none; /* 포커스 시 아웃라인 제거 */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold; 
+        }
+
+        .form-group input {
+            width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
 </head>
-<body>
-    유저 판매 정산 계좌 페이지
+<body layout:fragment="content">
+    <div class="content">
+        
+        <div class="header">
+            <h2>정산 계좌 등록</h2>
+        </div>
+        <!-- DB 연결시 등록된 계좌가 없으면 안 보이게 -->
+        <!-- 유저 테이블에 저장된 정보를 가져옴-->
+        <div class="account-info-container">
+            <div class="account-info-title">등록된 계좌 정보</div>
+            <div class="account-info-content">카카오뱅크 3333083434962 / 기부좀</div>
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="bank-name">은행명</label>
+                <select id="bank-name">
+                    <option value="">은행명을 선택해주세요</option>
+                    <option value="KB국민은행">국민은행</option>
+                    <option value="신한은행">신한은행</option>
+                    <option value="우리은행">우리은행</option>
+                    <option value="하나은행">하나은행</option>
+                    <option value="기업은행">기업은행</option>
+                    <option value="농협은행">농협은행</option>
+                    <option value="SC은행">SC은행</option>
+                    <option value="한국씨티은행">한국씨티은행</option>
+                    <option value="산업은행">산업은행</option>
+                    <option value="카카오뱅크">카카오뱅크</option>
+                    <option value="부산은행">부산은행</option>
+                    <option value="대구은행">대구은행</option>
+                    <option value="수협중항회">수협중항회</option>
+                    <option value="제주은행">제주은행</option>
+                    <option value="새마을금고연합회">새마을금고연합회</option>
+                    <option value="신협">신협</option>
+                    <option value="토스뱅크">토스뱅크</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="account-number">계좌번호</label>
+                <input type="text" id="account-number" placeholder="계좌번호를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="account-holder">예금주</label>
+                <input type="text" id="account-holder" placeholder="예금주 명을 입력해주세요">
+            </div>
+            <!-- DB 연결시 등록된 계좌가 있으면 텍스트를 수정으로 -->
+            <button type="submit" class="submit-btn">저장</button>
+        </form>
+    </div>
 </body>
+</html>
 </html>

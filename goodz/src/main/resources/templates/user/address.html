@@ -1,46 +1,176 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}"
-      >
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주소록</title>
     <style>
-        .address-card {
-          border: 1px solid #dee2e6;
-          border-radius: 5px;
-          padding: 20px;
-          margin-bottom: 10px;
+
+
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
         }
-        .btn-group-vertical .btn {
-          width: 100px;
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            margin-top: 20px;
         }
-        .truncate {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
         }
-      </style>
-    <title>주소록</title>  
+
+        .add-address-btn {
+            background-color: #fff;
+            border: 1px solid #000;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold; 
+        }
+
+        .form-group input {
+            width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+
+        .address-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .address-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+
+        .address-item-header h3 {
+            font-size: 15px;
+            margin: 0;
+        }
+
+        .address-item-header .default-badge {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+
+        .address-item-body {
+            margin-bottom: 8px;
+        }
+
+        .address-item-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .address-item-footer button {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .address-item-footer button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .divider {
+            border-top: none;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body layout:fragment="content">
-    <div class="container mt-5">
-        <h2>주소록</h2>
-        <div class="address-card">
-          <div class="d-flex justify-content-between">
-            <div>
-              <h5 class="mb-1 truncate">김***</h5>
-              <p class="mb-1 truncate">010-2***-**184</p>
-              <small class="text-muted truncate">(22182)인천 미추홀구 인하대27번길 3-4 (용현동, 성진휴먼타운) 302호</small>
-            </div>
-            <div class="btn-group-vertical">
-              <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
-              <button type="button" class="btn btn-outline-danger btn-sm">삭제</button>
-            </div>
-          </div>
+    <div class="content">
+        <div class="header">
+            <h2>주소록</h2>
+            <button class="add-address-btn">+ 새 배송지 추가</button>
         </div>
-        <button type="button" class="btn btn-primary">+ 새 배송지 추가</button>
-      </div>
+        <!-- 주소 항목이 있을 때 보여지는 부분 -->
+        <div class="address-item">
+            <div class="address-item-header">
+                <h3>메롱</h3>
+                <span class="default-badge">기본 배송지</span>
+            </div>
+            <div class="address-item-body">
+                <p>010-1234-1234</p>
+                <p>(22182) 개미시 허리도 가늘군 만지면 부러지리 88-88</p>
+            </div>
+            <div class="address-item-footer">
+                <button>수정</button>
+                <button>삭제</button>
+            </div>
+        </div>
+        <div class="divider"></div>
+
+        <!-- 등록된 주소가 없을 때 뜨게 함. 있으면 등록 버튼 눌렀을 때 뜨게 -->
+        <form>
+            <div class="form-group">
+                <label for="receiver-name">받는 분</label>
+                <input type="text" id="receiver-name" placeholder="이름을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="contact-number">연락처</label>
+                <input type="text" id="contact-number" placeholder="연락처를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="address">배송 주소</label>
+                <input type="text" id="address" placeholder="주소를 입력해주세요">
+            </div>
+            <button type="submit" class="submit-btn">저장</button>
+        </form>
+    </div>
 </body>
 </html>
