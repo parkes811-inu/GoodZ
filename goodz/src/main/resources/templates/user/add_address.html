@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주소록</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+    <div class="content">
+
+        <!-- 주소 등록 -->
+        <form>
+            <div class="form-group">
+                <label for="receiver-name">받는 분</label>
+                <input type="text" id="receiver-name" placeholder="이름을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="contact-number">연락처</label>
+                <input type="text" id="contact-number" placeholder="연락처를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="address">배송 주소</label>
+                <input type="text" id="address" placeholder="주소를 입력해주세요">
+            </div>
+            
+            <button type="submit" class="submit-btn" onclick="location.href='/user/address'">저장</button>
+        </form>
+    </div>
+    
+
+</body>
+</html>

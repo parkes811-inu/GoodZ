@@ -5,7 +5,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+/*
+ * 스타일 게시글
+ * [GET]    /styles                 게시글 목록
+ * [GET]    /styles/게시글번호       게시글 조회
+ * [POST]   /styles                 게시글 작성요청
+ * [DELETE] /styles/게시글번호       게시글 조회
+ *     
+ * 프로필    
+ * [GET]    /styles/user/@아이디     유저 프로필
+ * 
+ * 
+ * 
+ */
 
 @Slf4j
 @Controller
@@ -38,5 +52,11 @@ public class StyleController {
     public String cmmtTest() {
         return "/style/read_cmmtX";
     }
+
+    @GetMapping("/user/{userId}")
+    public String usersStyle(@PathVariable("userId") String userId) {
+        return "/style/user/profile";
+    }
+    
     
 }
