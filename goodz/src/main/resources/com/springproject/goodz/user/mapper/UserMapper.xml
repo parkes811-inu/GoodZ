@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.user.mapper.UserMapper">
+
+    <resultMap type="Users" id="userMap">
+        <id property="userId" column="user_id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="birth" column="birth" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="profilePictureUrl" column="profile_picture_url" />
+        <result property="account" column="account" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+        <result property="enabled" column="enabled" />
+        <collection property="authList" resultMap="authMap" />
+    </resultMap>
+
+        
+    <resultMap type="UserAuth" id="authMap">
+        <result property="authNo" column="auth_no" />
+        <result property="userId" column="user_id" />
+        <result property="auth" column="auth" />
+    </resultMap>
+
+    <!-- 로그인 - username -->
+    <select id="login" resultMap="userMap">
+        SELECT u.user_id
+              ,u.username
+              ,u.password
+              ,u.birth
+              ,u.profile_picture_url
+              ,u.account
+              ,u.created_at
+              ,u.updated_at
+              ,1 enabled
+              ,auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+
+    <!-- 회원 조회 - id -->
+    <select id="select" resultMap="userMap">
+        SELECT u.user_id
+              ,u.username
+              ,u.password
+              ,u.birth
+              ,u.profile_picture_url
+              ,u.account
+              ,u.created_at
+              ,u.updated_at
+              ,1 enabled
+              ,auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        WHERE u.user_id = #{userId}
+    </select>
+
+    <!-- 회원 가입 -->
+    <insert id="join">
+        INSERT INTO user (user_id, username, password, birth, phone_number, profile_picture_url, account )
+        VALUES (#{user_id}, #{username}, #{password}, #{birth}, #{phone_number}, #{profile_picture_url}, #{account})
+    </insert>
+
+    <!-- 회원 정보 수정 -->
+    <update id="update">
+        UPDATE user
+           SET name = #{name}
+              ,email = #{email}
+              ,profile = #{profile}
+              ,updated_at = now()
+        WHERE username = #{username}
+    </update>
+
+    <!-- 회원 권한 등록 -->
+    <insert id="insertAuth">
+        INSERT INTO user_auth( user_id, auth )
+        VALUES ( #{userId}, #{auth} )
+    </insert>
+
+</mapper>

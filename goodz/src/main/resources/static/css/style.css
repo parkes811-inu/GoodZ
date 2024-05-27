@@ -127,6 +127,7 @@ body {
 .mainContainer {
     min-height: calc(100vh - 10rem);
     margin: 0 auto;
+    width: 100%;    /* 이게 없으면 아이템이 작아지면 컨테이너도 작아짐 */
     max-width: 1000px;
 }
 
@@ -198,25 +199,6 @@ body {
     top: 50px;
     right: 550px;
 }
-.btn-close {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.btn-close:hover {
-    background-color: #f00; /* 호버 상태일 때의 배경색 */
-    color: #fff; /* 호버 상태일 때의 글자색 */
-}
-
 
 /*
 ------------ cancel btn css ------------
@@ -226,9 +208,10 @@ body {
 
 
 /* -------------------[header]------------------- */
-.nav-link {
+/* .nav-link {
     font-weight: bold;
 }
+*/
 .nav-link.active {
     font-weight: bolder;
 }

@@ -15,14 +15,27 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <!-- min버전 : 기본 jQuery 라이브러리를 압축한 버전으로, 모든 기능이 포함되어 있습니다-->
         <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/js/common/loadMore.js" defer></script>
+        <!-- 좋아요, 관심 버튼 ON & OFF -->
+        <script>
+            function toggleIcon(element) {
+                event.preventDefault(); // 기본 동작 막기 (a태그의 기본동작: 누르면 새로고침되면서 화면상단으로 이동됨)
+                // SVG의 fill 속성 값을 변경하기 위해 해당 SVG 요소를 찾습니다.
+                var svgElement = element.querySelector('svg');
+                
+                // SVG의 fill 속성 값을 확인하여 none이면 solid로, solid이면 none으로 변경합니다.
+                if (svgElement.getAttribute('fill') === 'none') {
+                    svgElement.setAttribute('fill', 'currentColor');
+                } else {
+                    svgElement.setAttribute('fill', 'none');
+                }
+            }
+        </script>
         <script src="/js/product/readMore.js"></script>
-        
     </th:block>
 </body>
 </html>
