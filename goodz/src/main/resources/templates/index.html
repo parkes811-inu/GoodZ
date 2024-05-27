@@ -1,18 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/main_layout}"
+      layout:decorate="~{/layouts/product_layout}"
       >
-<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인 화면</title>
+    <style>
+        .carousel-item img {
+            width: 100%;
+            height: 500px; /* 원하는 높이 값으로 변경 */
+            object-fit: contian; /* 이미지가 컨테이너에 맞게 조절됩니다 */
+            object-position: top; /* 이미지의 위쪽 부분을 보여줍니다 */
+        }
+        .carousel-inner {
+            height: 500px; /* 원하는 높이 값으로 변경 */
+        }
+
+        /* #productCarousel {
+            width: 1330px;
+        }
+        
+        /* 화면 너비가 1024px 이하일 때 적용되는 스타일 */
+        @media only screen and (max-width: 1024px) {
+            #productCarousel {
+                width: 100%;
+            }
+        } */
+
+
+    </style>
 </head>
-<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
+    <!-- <div class="container"> -->
     <div class="mainContainer">
-        <h1>메인화면</h1>
+        <div class="col-12">
+            <div id="productCarousel" class="carousel slide container" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/img/main/main3.jpg" class="d-block w-100" alt="Stussy Basic T-Shirt 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/img/main/mainCat.jpg" class="d-block w-100" alt="Stussy Basic T-Shirt 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/img/product/product_img.png" class="d-block w-100" alt="Stussy Basic T-Shirt 3">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <h5 class="text-md-start fw-bold mt-5" style="padding-right: 100px;">New Arrivals</h5>
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="taggedStyles">
+                <!-- 반복문으로 최대 4개 까지 -->
+                <div class="col">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <div class="card-text py-2">
+                                <div class="d-flex justify-content-start column-gap-1">
+                                    <div class="profile-img">
+                                        <img src="/img/product/profile.png" alt="프로필이미지" class="rounded-circle">
+                                    </div>
+                                    <!-- 게시글 주인의 피드 -->
+                                    <a href="styles/cmmtX" style="text-decoration-line: none; color: black;" >
+                                        <p class="userId fw-bold m-0">박은서</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- 애는 그 게시물로 이동 -->
+                            <a href="styles/cmmtX">
+                                <img src="/img/product/style_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
+            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
+                <!-- 반복문으로 최대 4개 까지 -->
+                <div class="col">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            <a href="#">
+                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                            </a>
+                            <div class="card-text py-2">
+                                <div class="d-flex justify-content-start column-gap-1">
+                                    <p class="userId fw-bold m-0">nike airmax1</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
