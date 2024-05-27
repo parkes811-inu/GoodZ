@@ -1,11 +1,13 @@
-﻿-- User 테이블
-CREATE TABLE `User` (
+﻿-- Active: 1715220502910@@127.0.0.1@3306@goodz
+
+DROP TABLE IF EXISTS user;
+-- User 테이블
+CREATE TABLE `user` (
 	`user_id`				VARCHAR(100)	NOT NULL,
 	`username`				VARCHAR(50)		NOT NULL,
 	`password`				VARCHAR(100)	NOT NULL,
-	`birth`					VARCHAR(50)		NOT NULL,
-	`phone_number`			VARCHAR(20)		NOT NULL,
-	`role`					ENUM('admin', 'user')	NOT NULL,
+	`birth`					VARCHAR(50)		NOT NULL,		-- 2024/01/01 형식으로 안넣으면 뒤진다.
+	`phone_number`			VARCHAR(20)		NOT NULL,		-- 010-1234-1234
 	`profile_picture_url`	VARCHAR(255),
 	`account`				VARCHAR(255),
 	`created_at`			timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -14,18 +16,32 @@ CREATE TABLE `User` (
 ) COMMENT='유저';
 
 
+DROP TABLE IF EXISTS user_auth;
+CREATE TABLE `user_auth` (
+      `auth_no` INT PRIMARY KEY AUTO_INCREMENT
+    , `user_id` varchar(100) NOT NULL                      -- 회원 아이디
+    , `AUTH` VARCHAR(100) NOT NULL                          -- 권한 (ROLE_USER, ROLE_ADMIN, ...)
+);
 
+
+DROP TABLE IF EXISTS persistent_logins;
 -- Persistent_Login 테이블
-CREATE TABLE `Persistent_Login` (
-	`persistent_no`		INT				NOT NULL AUTO_INCREMENT,
-	`user_id`			VARCHAR(100)	NOT NULL,
-	`token`				VARCHAR(255)	NOT NULL,
-	`expiration_date`	DATE			NOT NULL,
-	`created_at`		timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`state`	ENUM('remember', 'auto', 'all')	NOT NULL,
-    PRIMARY KEY (persistent_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-) COMMENT='자동로그인';
+create table persistent_logins (
+	username varchar(64) not null
+	, series varchar(64) primary key
+	, token varchar(64) not null
+	, last_used timestamp not null
+);
+-- CREATE TABLE `Persistent_Login` (
+-- 	`persistent_no`		INT				NOT NULL AUTO_INCREMENT,
+-- 	`user_id`			VARCHAR(100)	NOT NULL,
+-- 	`token`				VARCHAR(255)	NOT NULL,
+-- 	`expiration_date`	DATE			NOT NULL,
+-- 	`created_at`		timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- 	`state`	ENUM('remember', 'auto', 'all')	NOT NULL,
+--     PRIMARY KEY (persistent_no),
+--     FOREIGN KEY (user_id) REFERENCES User(user_id)
+-- ) COMMENT='자동로그인';
 
 
 -- Social_Login 테이블

@@ -29,5 +29,14 @@ public class StyleController {
     public String read() {
         return "/style/read";
     }
+
+    /**
+     * 게시글 상세 (무플버전 확인용)
+     * @return
+     */
+    @GetMapping("/cmmtX")
+    public String cmmtTest() {
+        return "/style/read_cmmtX";
+    }
     
 }
