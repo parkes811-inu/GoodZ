@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/pay")
 public class PayController {
     
-    @GetMapping("/index")
+    @GetMapping("")
     public String index() {
         return "/pay/index";
     }

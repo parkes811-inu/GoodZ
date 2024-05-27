@@ -7,11 +7,19 @@
     }
 }
 
+/* .mt-3 {
+    margin-top: 1rem !important;
+} */
+
+.align-items-center {
+    height: 80.8px;
+}
 /* 
 ------------ header css ------------
  */
-
-
+.border-bottom {
+    height: 97.8px;
+}
 
 
 /*
@@ -123,12 +131,11 @@ body {
 }
 
 /* 푸터 맨 하단에 고정시키는 코드 */
-
 .mainContainer {
     min-height: calc(100vh - 10rem);
     margin: 0 auto;
     max-width: 1000px;
-} 
+}
 
 .userMainContainer {
     min-height: calc(100vh - 10rem);

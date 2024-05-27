@@ -5,6 +5,7 @@
       >
 <head>
     <style>
+
         .sidebar {
             padding: 15px;
             margin-top: 20px; /* 상단 여백 추가 */
@@ -17,6 +18,7 @@
             font-weight: 600; 
             margin-bottom: 20px;
         }
+
         .shopping-info {
             margin-top: 50px; 
         }
@@ -86,19 +88,91 @@
 
     <title>마이 페이지-내 정보 관리</title>
 </head>
-<body>
-    <body layout:fragment="content">
-        <div class="userMainContainer">
-            <div class="profile_img">
-                <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
-            </div>
-            <div class="profile-info">
-                <!-- 유저의 아이디와 닉네임 -->
-                <p class="username">wlrdprkffo11</p>
-                <p class="user-id">아이디 ^^</p>
+<body layout:fragment="content">
+
+    <div class="container">
+        <div class="mainContainer">
+            <div class="row">
+                
+                <div class="col-md-9 content">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title-section">
+                                <div class="profile-details">
+                                    <div class="profile_img">
+                                        <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                    </div>
+                                    <div class="profile-info">
+                                        <p class="username">wlrdprkffo11</p>
+                                        <p class="user-id">아이디 ^^</p>
+                                    </div>
+                                </div>
+                                <div class="profile-buttons">
+    
+                                    <button class="btn btn-sm btn-outline-secondary">스타일</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="id">프로필 사진 수정*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="file" placeholder="첨부파일을 등록해주세요." style="max-width: 650px;">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="button" id="check-id">사진등록</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id">닉네임*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="name" placeholder="kingjoeun" style="max-width: 640px;">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id">아이디*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="id" placeholder="kingofjoeun" style="max-width: 640px;">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id">비밀번호*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="password" placeholder="********" style="max-width: 640px;">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id">비밀번호 확인*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="password_check" placeholder="********" style="max-width: 640px;">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id">핸드폰 번호 수정*</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control me-2 rounded-1" id="phone_number" placeholder="01023183721" style="max-width: 640px;">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-    </body>
+    </div>
+    
+    <script>
+
+    </script>
+
 </body>
 </html>
