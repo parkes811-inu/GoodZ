@@ -35,4 +35,14 @@ public class AdminController {
     public String pay_history() {
         return "/admin/pay_history";
     }
+
+    @GetMapping("/add_product")
+    public String add_product() {
+        return "/admin/add_product";
+    }
+
+    @GetMapping("/add_barnd")
+    public String add_barnd() {
+        return "/admin/add_barnd";
+    }
 }
