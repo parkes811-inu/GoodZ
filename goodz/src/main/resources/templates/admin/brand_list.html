@@ -6,16 +6,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 페이지</title>
+    <title>관리자 페이지 - 브랜드 등록</title>
     <style>
+        .pagination {
+            justify-content: center;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .custom-button {
+            color: black;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 4px;
+            text-decoration: none;
+            background-color: white;
+        }
+        .custom-button svg {
+            margin-right: 5px;
+        }
 
     </style>
 </head>
 
 <body layout:fragment="content">
-    <div class="content">
+    <div class="container" style="min-height: 650px">
+        <div class="mainContainer">
+            <h2 class="text-right mt-5">브랜드 목록</h2>
+            <div class="d-flex justify-content-end">
+                <a href="#" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </a>
+            </div>
+            <div class="divider">
 
+                <table class="table table-hover">
+                    <tr>
+                        <th>no</th>
+                        <th>브랜드명</th>
+                        <th>등록일자</th>
+                    </tr>
+                    <tr>
+                        <td>25</td>
+                        <td>Nike</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                    <tr>
+                        <td>24</td>
+                        <td>Stussy</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                    <tr>
+                        <td>23</td>
+                        <td>The Joeun</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                    <tr>
+                        <td>22</td>
+                        <td>Discovery</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                    <tr>
+                        <td>21</td>
+                        <td>Starbucks</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                </table>
+            </div>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
+</div>
 </body>
 
 </html>
