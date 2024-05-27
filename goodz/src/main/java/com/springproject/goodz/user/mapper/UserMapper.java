@@ -23,4 +23,6 @@ public interface UserMapper {
     // 회원 권한 등록
     public int insertAuth(UserAuth userAuth) throws Exception;
 
+    // 아이디 찾기
+    public String findId(String phone, String name) throws Exception;
 }

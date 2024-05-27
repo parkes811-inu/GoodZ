@@ -1,10 +1,18 @@
 package com.springproject.goodz.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.service.UserService;
 
 import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -13,6 +21,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/user")
 public class UserController {
     
+    @Autowired
+    private UserService userService;
+
     @GetMapping("")
     public String index() {
         return "/user/index";
@@ -36,6 +47,17 @@ public class UserController {
     @GetMapping("/findID")
     public String findID() {
         return "/user/findID";
+    }
+    
+    @PostMapping("/findID")
+    @ResponseBody
+    public String findId(@RequestParam("phone") String phone, @RequestParam("name") String name) {
+        try {
+            String id = userService.findId(phone, name);
+            return id != null ? id : "아이디를 찾을 수 없습니다.";
+        } catch (Exception e) {
+            return "아이디를 찾을 수 없습니다.";
+        }
     }
 
     @GetMapping("/findPW")

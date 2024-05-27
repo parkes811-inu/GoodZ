@@ -81,5 +81,11 @@ public class UserServiceImpl implements UserService {
         int result = userMapper.insertAuth(userAuth);
         return result;
     }
+
+    @Override
+    public String findId(String phone, String name) throws Exception {
+        String id = userMapper.findId(phone, name);
+        return id;
+    }   
     
 }

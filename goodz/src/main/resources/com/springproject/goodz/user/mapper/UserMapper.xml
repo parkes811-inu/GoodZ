@@ -81,4 +81,11 @@
         VALUES ( #{userId}, #{auth} )
     </insert>
 
+    <!-- 아이디 찾기 -->
+    <select id="findId">
+        SELECT user_id
+          FROM user
+         WHERE phone_number = #{phone_number}
+           AND username = #{user_name}
+    </select>
 </mapper>
