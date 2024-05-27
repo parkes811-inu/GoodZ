@@ -6,9 +6,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <style>
+        .address-card {
+          border: 1px solid #dee2e6;
+          border-radius: 5px;
+          padding: 20px;
+          margin-bottom: 10px;
+        }
+        .btn-group-vertical .btn {
+          width: 100px;
+        }
+        .truncate {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      </style>
+    <title>주소록</title>  
 </head>
-<body>
-    유저 주소록 페이지
+<body layout:fragment="content">
+    <div class="container mt-5">
+        <h2>주소록</h2>
+        <div class="address-card">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="mb-1 truncate">김***</h5>
+              <p class="mb-1 truncate">010-2***-**184</p>
+              <small class="text-muted truncate">(22182)인천 미추홀구 인하대27번길 3-4 (용현동, 성진휴먼타운) 302호</small>
+            </div>
+            <div class="btn-group-vertical">
+              <button type="button" class="btn btn-outline-secondary btn-sm">수정</button>
+              <button type="button" class="btn btn-outline-danger btn-sm">삭제</button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary">+ 새 배송지 추가</button>
+      </div>
 </body>
 </html>
