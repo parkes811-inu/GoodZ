@@ -23,46 +23,7 @@
         <script src="/js/common/loadMore.js" defer></script>
         <script src="/js/product/readMore.js"></script>
 
-        <!-- 좋아요, 관심 버튼 ON & OFF -->
-        <script>
-            function toggleIcon(element) {
-                event.preventDefault(); // 기본 동작 막기 (a태그의 기본동작: 누르면 새로고침되면서 화면상단으로 이동됨)
-                // SVG의 fill 속성 값을 변경하기 위해 해당 SVG 요소를 찾습니다.
-                var svgElement = element.querySelector('svg');
-                
-                // SVG의 fill 속성 값을 확인하여 none이면 solid로, solid이면 none으로 변경합니다.
-                if (svgElement.getAttribute('fill') === 'none') {
-                    svgElement.setAttribute('fill', 'currentColor');
-                } else {
-                    svgElement.setAttribute('fill', 'none');
-                }
-            }
-        </script>
         
-        <!-- 모달창 OPEN & CLOSE -->
-        <script>
-           
-            // jQuery 방식
-            $("#modal_open_btn").click(function () {
-                $("#modal").attr("style", "display:block");
-            });
-             
-            $("#modal_close_btn").click(function () {
-                $("#modal").attr("style", "display:none");
-            });
-
-            $("#addBtn").click(function (){
-                alert("댓글등록");
-            });
-
-            // JS 방식
-            // document.getElementById("modal_opne_btn").onclick = function() {
-            //     document.getElementById("modal").style.display="block";
-            // }
-            // document.getElementById("modal_close_btn").onclick = function() {
-            //     document.getElementById("modal").style.display="none";
-            // }  
-        </script>
     </th:block>
 </body>
 </html>

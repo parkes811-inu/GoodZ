@@ -16,7 +16,7 @@ public class StyleController {
      * 전체 게시글 목록
      * @return
      */
-    @GetMapping("/list")
+    @GetMapping("")
     public String list() {
         return "/style/list";
     }
@@ -28,6 +28,15 @@ public class StyleController {
     @GetMapping("/read")
     public String read() {
         return "/style/read";
+    }
+
+    /**
+     * 게시글 상세 (무플버전 확인용)
+     * @return
+     */
+    @GetMapping("/cmmtX")
+    public String cmmtTest() {
+        return "/style/read_cmmtX";
     }
     
 }

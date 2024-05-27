@@ -10,16 +10,15 @@
     <!-- header -->
     <th:block th:replace="~{fragments/common/header::header}"></th:block>
 
-
     <!-- ⭐ content -->
     <!-- layout:fragment="레이아웃의 프레그먼트 영역 이름" -->
     <th:block layout:fragment="content"></th:block>
-
     
     <!-- footer -->
     <th:block th:replace="~{fragments/common/footer::footer}"></th:block>
 
     <!-- script -->
     <th:block th:replace="~{fragments/common/script::script}"></th:block>
+    <th:block th:replace="~{fragments/style/script::script}"></th:block>
 </body>
 </html>
