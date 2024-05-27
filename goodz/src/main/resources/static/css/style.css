@@ -225,9 +225,10 @@ body {
 
 
 /* -------------------[header]------------------- */
-.nav-link {
+/* .nav-link {
     font-weight: bold;
 }
+*/
 .nav-link.active {
     font-weight: bolder;
 }

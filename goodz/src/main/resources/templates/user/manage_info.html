@@ -89,7 +89,15 @@
 <body>
     <body layout:fragment="content">
         <div class="userMainContainer">
-            <p>유저 정보 관리 페이지</p>
+            <div class="profile_img">
+                <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
+                <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+            </div>
+            <div class="profile-info">
+                <!-- 유저의 아이디와 닉네임 -->
+                <p class="username">wlrdprkffo11</p>
+                <p class="user-id">아이디 ^^</p>
+            </div>
         </div>
     </body>
 </body>
