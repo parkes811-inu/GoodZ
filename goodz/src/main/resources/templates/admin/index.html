@@ -1,21 +1,206 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/admin_layout}"
-      >
+      layout:decorate="~{/layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
 
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .card {
+            border-radius: 0 !important; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        .card-header a {
+            color: #666;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .card-header a:hover {
+            color: #333;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .stats .col {
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .stats .divider {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 10px;
+            color: #666;
+        }
+
+        .stats .col div {
+            margin-bottom: 10px;
+        }
+
+        .action img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .action p {
+            font-size: 14px;
+        }
+
+        .mb-4 {
+            margin-bottom: 4rem !important; 
+        }
+
+        .mb-70 {
+            margin-bottom: 70px !important; 
+        }
     </style>
 </head>
 
 <body layout:fragment="content">
-    <div class="content">
+    <div class="container mt-5">
+        <div class="header">
+            <h2>대시보드</h2>
+        </div>
 
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>매입 현황</span>
+                <a href="/admin/purchase_state">더보기 &gt;</a>
+            </div>
+            <!-- 각각의 총 수를 불러와야함-->
+            <div class="card-body">
+                <div class="stats">
+                    <div class="col">
+                        <div>0</div>
+                        <div>판매요청</div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>0</div>
+                        <div>수취완료</div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>0</div>
+                        <div>검수중</div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>0</div>
+                        <div>정산완료</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>판매 현황</span>
+                <a href="/admin/pay_history">더보기 &gt;</a>
+            </div>
+            <!-- 판매한 상품들의 현황을 최근 일자순으로 불러옴-->
+            <div class="card-body table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>판매번호</th>
+                            <th>상품번호</th>
+                            <th>유저ID</th>
+                            <th>운송장번호</th>
+                            <th>결제일자</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>224</td>
+                            <td>joeun123</td>
+                            <td>283451</td>
+                            <td>Nike Air Force 1 '07</td>
+                            <td>2024-05-23</td>
+                        </tr>
+                        <tr>
+                            <td>223</td>
+                            <td>joeun123</td>
+                            <td>283451</td>
+                            <td>Nike Air Force 1 '07</td>
+                            <td>2024-05-23</td>
+                        </tr>
+                        <tr>
+                            <td>222</td>
+                            <td>joeun123</td>
+                            <td>283451</td>
+                            <td>Nike Air Force 1 '07</td>
+                            <td>2024-05-23</td>
+                        </tr>
+                        <tr>
+                            <td>221</td>
+                            <td>joeun123</td>
+                            <td>283451</td>
+                            <td>Nike Air Force 1 '07</td>
+                            <td>2024-05-23</td>
+                        </tr>
+                        <tr>
+                            <td>220</td>
+                            <td>joeun123</td>
+                            <td>283451</td>
+                            <td>Nike Air Force 1 '07</td>
+                            <td>2024-05-23</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mb-70">
+            <div class="col-md-6 d-flex justify-content-center">
+                <div class="action text-center">
+                    <a href="/admin/add_product" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="150px" height="150px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </a>
+                    <p>상품등록</p>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-center">
+                <div class="action text-center">
+                    <a href="/admin/add_barnd" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="150px" height="150px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </a>
+                    <p>브랜드 등록</p>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
