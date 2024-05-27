@@ -75,6 +75,11 @@ public class UserController {
         return "/user/address";
     }
 
+    @GetMapping("/add_address")
+    public String add_address() {
+        return "/user/add_address";
+    }
+
     @GetMapping("/account")
     public String account() {
         return "/user/account";
