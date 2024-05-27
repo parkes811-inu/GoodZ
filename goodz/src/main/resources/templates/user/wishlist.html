@@ -1,11 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>관심</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 20px;
+            padding: 20px 0;
+        }
+
+        .header {
+            border-bottom: 3px solid #000;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: bold; 
+        }
+
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons {
+            display: flex;
+        }
+
+        .filter-button {
+            padding: 5px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 18px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-button.active {
+            background-color: #000;
+            color: #fff;
+        }
+
+        .filter-button:hover {
+            background-color: #ddd;
+        }
+
+        .sort-order {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: auto; /* 오른쪽으로 정렬되도록 설정 */
+        }
+
+        .sort-order span {
+            margin-left: 10px;
+        }
+
+        .wishlist img {
+            width: 100%;
+        }
+        .wishlist .col-md-3 {
+            padding: 0 5px;
+        }
+    </style>
 </head>
-<body>
-    유저 관심 페이지
+<body layout:fragment="content">
+    <div class="content">
+        <div class="header">
+            <h1>관심</h1>
+        </div>
+        <div class="filter-bar">
+            <div class="filter-buttons">
+                <!-- 상품 혹은 스타일을 눌렀을 때 넘어가는 로직 필요 -->
+                <button class="filter-button active">상품</button>
+                <button class="filter-button">스타일</button>
+            </div>
+            <div class="sort-order" onclick="filter()">
+                <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+            </div>        
+        </div>
+        <div class="row wishlist">
+            <!-- 상품 테이블에 저장된 사진과 제품명 가져오기 -->
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+            <div class="col-md-3">
+                <img src="/img/product/product_img.png" alt="Product 1">
+                <p>Nike Air Force 1 '07</p>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+
+    // 정렬하는 방식을 어떻게 할 것인지 기준 정하고 다시 작성하기
+    // 아마 관심이 등록이 최신인거 순으로 가져오는게 디폴트이지 않을까 (DB 연결후)
+    // function filter() {
+    //     var productList = document.getElementById('product-list');
+    //     var items = productList.getElementsByClassName('product-item');
+    //     var itemsArray = [];
+        
+    //     for (var i = 0; i < items.length; i++) {
+    //         itemsArray.push(items[i]);
+    //     }
+
+    //     itemsArray.reverse();
+        
+    //     for (var i = 0; i < itemsArray.length; i++) {
+    //         productList.appendChild(itemsArray[i]);
+    //     }
+
+    //     var sortIcon = document.getElementById('sort-icon');
+    //     var sortText = document.getElementById('sort-text');
+    //     if (sortIcon.innerHTML === '▼') {
+    //         sortIcon.innerHTML = '▲';
+    //         sortText.innerHTML = '오름차순';
+    //     } else {
+    //         sortIcon.innerHTML = '▼';
+    //         sortText.innerHTML = '내림차순';
+    //     }
+    // }
+
+    fuction 
+</script>
 </html>
