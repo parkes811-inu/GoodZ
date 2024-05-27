@@ -10,9 +10,19 @@
 /* .mt-3 {
     margin-top: 1rem !important;
 } */
-
 /* 
 ------------ header css ------------
+ */
+
+
+ /* 
+------------ container css ------------
+ */
+
+
+
+
+
 
 
 /*
@@ -137,6 +147,14 @@ body {
     margin: 0 auto;
     max-width: 900px;
 }
+/*
+------------ footer css ------------
+*/
+
+
+
+
+
 
 /* Modal styles */
 .modal {

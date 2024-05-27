@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/style_layout}"
+      >
+<head>
+    <title>게시글 등록</title>
+    <style>
+    </style>
+</head>
+
+<body layout:fragment="content">
+    <div class="container">
+        <div class="my-5 d-flex justify-content-center">
+            <form method="post" style="width: 500px;">
+
+                <!-- 이미지첨부 -->
+                <span id="passwordHelpInline" class="form-text">최대 10장</span>
+                <label for="formFileMultiple" class="form-label"></label>
+                <input id="file" class="form-control" type="file"  multiple>
+                <br>
+                <!-- 내용 -->
+                <textarea  id="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
+                <br>
+                <!-- 상품태그 -->
+                <div>
+                    
+                </div>
+                <input type="" class="form-control">
+
+
+
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
