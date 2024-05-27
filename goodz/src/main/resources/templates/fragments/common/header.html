@@ -12,6 +12,15 @@
           <li class="nav-item">
             <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
           </li>
+
+          <!-- 관리자 로그인 시 -->
+          <li class="nav-item">
+            <!-- 관리자 페이지 경로 -->
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+              <a href="/" class="nav-link link-body-emphasis px-2">관리자 페이지</a>
+            </th:block>
+          </li>
+          
           <li class="nav-item">
             <!-- 비 로그인 시 -->
             <th:block sec:authorize="isAnonymous()">
