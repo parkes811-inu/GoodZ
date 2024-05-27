@@ -53,8 +53,13 @@ public class UserController {
         return "/user/sales";
     }
 
-    @GetMapping("/wishlist")
-    public String wishlist() {
+    @GetMapping("/wishlist/product")
+    public String wishlist_product() {
+        return "/user/wishlist";
+    }
+
+    @GetMapping("/wishlist/style")
+    public String wishlist_style() {
         return "/user/wishlist";
     }
 
