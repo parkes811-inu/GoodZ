@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- link -->
-    <th:block th:replace="fragments/common/link :: link"></th:block>
+    <th:block th:replace="~{fragments/common/link :: link}"></th:block>
     <style>
         body {
             display: flex;
@@ -19,7 +19,7 @@
 </head>
 <body>
     <!-- header -->
-    <th:block th:replace="fragments/common/header :: header"></th:block>
+    <th:block th:replace="~{fragments/common/header :: header}"></th:block>
 
     <!-- ⭐ content -->
     <!-- 여기서는 다른 템플릿에서 content를 채워넣습니다 -->
@@ -28,9 +28,9 @@
     </main>
     
     <!-- footer -->
-    <th:block th:replace="fragments/common/footer :: footer"></th:block>
+    <th:block th:replace="~{fragments/common/footer :: footer}"></th:block>
 
     <!-- script -->
-    <th:block th:replace="fragments/common/script :: script"></th:block>
+    <th:block th:replace="~{fragments/common/script :: script}"></th:block>
 </body>
 </html>
