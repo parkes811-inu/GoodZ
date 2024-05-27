@@ -53,14 +53,16 @@ public class UserController {
         return "/user/sales";
     }
 
-    @GetMapping("/wishlist/product")
-    public String wishlist_product() {
-        return "/user/wishlist";
+    // 관심페이지 이동 _ 디폴트: 상품
+    @GetMapping("/wishlist/products")
+    public String wishlist_products() {
+        return "/user/wishlist_products";
     }
 
-    @GetMapping("/wishlist/style")
-    public String wishlist_style() {
-        return "/user/wishlist";
+    // 관심페이지 이동 _ 스타일
+    @GetMapping("/wishlist/styles")
+    public String wishlist_styles() {
+        return "/user/wishlist_styles";
     }
 
     @GetMapping("/manage_info")
