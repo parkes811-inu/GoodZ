@@ -1,22 +1,40 @@
-/* 
------------- header css ------------
- */
+/* -------------------[header]------------------- */
 
- .header-container {
-    height: 97.8px !important;
- }
+/* .nav-link {
+    font-weight: bold;
+}
+*/
+
+.nav-link.active {
+    font-weight: bolder;
+}
+.logo img {
+    height: 60px; /* 이미지 크기 키움 */
+}
+.nav-item + .nav-item {
+    margin-left: 20px;
+}
+.secondary-nav .nav-item .nav-link {
+    font-size: 0.7rem; /* 글자 크기 줄임 */
+    color: gray !important; /* 글자 색상 회색으로 변경 */
+}
+.secondary-nav .nav-item .nav-link:hover {
+    color: black !important;
+}
+
+.header-container {
+   height: 97.8px !important;
+}
+/* -------------------[header]------------------- */
 
 
-/* 
------------- header css ------------
- */
 
 
 
 
- /* 
------------- 반응형 css 시작------------
- */
+
+
+ /* ------------ 반응형 css 시작------------ */
 
  @media (min-width: 992px) {
     .container {
@@ -30,27 +48,32 @@
     }
 }
 
- /* 
------------- 반응형 css 끝------------
- */
+ /* ------------ 반응형 css 끝------------ */
 
 
- /* body css 시작 */
+
+
+
+
+
+
+
+
+
+ /* ------------ body css 시작------------ */
 .container {
     padding: 0;
 }
 
 
- /* body css 끝 */
+ /* ------------ body css 끝------------ */
 
 
 
 
 
 
-/*
------------- footer css ------------
-*/
+/* ------------ footer css 시작------------ */
 body {
     display: flex;
     flex-direction: column;
@@ -172,9 +195,7 @@ body {
     margin: 0 auto;
     max-width: 900px;
 }
-/*
------------- footer css ------------
-*/
+/* ------------ footer css 끝------------ */
 
 
 
@@ -252,26 +273,3 @@ body {
 
 
 
-/* -------------------[header]------------------- */
-/* .nav-link {
-    font-weight: bold;
-}
-*/
-.nav-link.active {
-    font-weight: bolder;
-}
-.logo img {
-    height: 60px; /* 이미지 크기 키움 */
-}
-.nav-item + .nav-item {
-    margin-left: 20px;
-}
-.secondary-nav .nav-item .nav-link {
-    font-size: 0.7rem; /* 글자 크기 줄임 */
-    color: gray !important; /* 글자 색상 회색으로 변경 */
-}
-.secondary-nav .nav-item .nav-link:hover {
-    color: black !important;
-}
-
-/* -------------------[header]------------------- */
