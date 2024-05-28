@@ -7,13 +7,16 @@ import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 /*
  * 스타일 게시글
  * [GET]    /styles                 게시글 목록
  * [GET]    /styles/게시글번호       게시글 조회
- * [POST]   /styles                 게시글 작성요청
+ * [POST]   /styles                 게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
  * 프로필    
@@ -55,10 +58,21 @@ public class StyleController {
         return "/style/read_cmmtX";
     }
 
+    /**
+     * 게시글 등록 페이지
+     * @return
+     */
     @GetMapping("/insert")
-    public String insert() {
+    public String moveToInsert() {
         return "/style/insert";
     }
+
+    // @PostMapping("")
+    // public String insert(Style style) {
+        
+    //     return entity;
+    // }
+    
     
 
     /*
