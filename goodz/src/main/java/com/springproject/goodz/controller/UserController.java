@@ -96,6 +96,25 @@ public class UserController {
         return "/user/findPW";
     }
 
+    @PostMapping("/findPW")
+
+    public ResponseEntity<String> findPw(@RequestBody Users user) {
+        String name = user.getUsername();
+        String birth = user.getBirth();
+        String user_id = user.getUserId();
+
+        try {
+            String pw = userService.findPw(name , birth , user_id);
+            if (pw != null) {
+                return ResponseEntity.ok(pw);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러가 발생했습니다.");
+        }
+    }
+
     @GetMapping("/purchase")
     public String purchase() {
         return "/user/purchase";
