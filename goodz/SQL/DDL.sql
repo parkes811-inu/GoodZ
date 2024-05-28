@@ -134,9 +134,8 @@ CREATE TABLE `Tag` (
 CREATE TABLE `Product` (
 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
 	`product_name`		VARCHAR(100)	NOT NULL,
-	`description`		TEXT,
 	`price`				INT				NOT NULL,
-	`brand`				VARCHAR(50)		NOT NULL,
+	`b_no`				VARCHAR(50)		NOT NULL,
 	`category`			VARCHAR(50)		NOT NULL,
 	`size`				VARCHAR(100)	NOT NULL,
 	`views`				INT				NOT NULL DEFAULT '0',
@@ -144,10 +143,17 @@ CREATE TABLE `Product` (
 	`image_url`			VARCHAR(255)	NOT NULL,
 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     PRIMARY KEY (p_no)
+     PRIMARY KEY (p_no),
+	 FOREIGN KEY (b_no) REFERENCES Brand(b_no)
 ) COMMENT='상품';
 
-
+-- Brand 테이블
+CREATE TABLE `Brand`(
+	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
+	`b_name` VARCHAR(100) NOT NULL,
+	`image_url` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (b_no)
+) COMMENT='브랜드';
 
 
 -- Pricehistory 테이블
