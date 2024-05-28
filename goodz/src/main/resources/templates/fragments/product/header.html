@@ -23,13 +23,45 @@
       <div class="d-flex flex-column align-items-end mb-0">
         <ul class="nav secondary-nav mb-2">
           <li class="nav-item">
+            <th:block sec:authorize="isAnonymous()">
+              <a href="/user/login" class="nav-link link-body-emphasis px-2">관심</a>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+              <a href="/user/wishlist" class="nav-link link-body-emphasis px-2">관심</a>
+            </th:block>
             <a href="/user/wishlist/products" class="nav-link link-body-emphasis px-2">관심</a>
           </li>
           <li class="nav-item">
-            <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            <th:block sec:authorize="isAnonymous()">
+              <a href="/user/login" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+              <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            </th:block>
+          </li>
+          <!-- 관리자 로그인 시 -->
+          <li class="nav-item">
+            <!-- 관리자 페이지 경로 -->
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+              <a href="/" class="nav-link link-body-emphasis px-2">관리자 페이지</a>
+            </th:block>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link link-body-emphasis px-2">로그아웃</a>
+            <!-- 비 로그인 시 -->
+            <th:block sec:authorize="isAnonymous()">
+              <a href="/user/login" class="nav-link link-body-emphasis px-2">로그인</a>
+            </th:block>
+            <!-- 로그인 시 -->
+            <th:block sec:authorize="isAuthenticated()">
+              <form action="/logout" method="post">
+                <!-- CSRF TOKEN -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="nav-link link-body-emphasis px-2">로그아웃</button>
+                </div>
+              </form>
+            </th:block>
+            <!-- <a href="#" class="nav-link link-body-emphasis px-2">로그아웃</a> -->
           </li>
         </ul>
         <div class="mb">
@@ -38,12 +70,10 @@
               <a href="/" class="nav-link link-body-emphasis px-2 active" aria-current="page">HOME</a>
             </li>
             <li class="nav-item">
-
-              <a href="/styles" class="nav-link link-body-emphasis px-2">STYLE</a>
-
+              <a href="/styles" class="nav-link link-body-emphasis px-2 active">STYLE</a>
             </li>
             <li class="nav-item">
-              <a href="/product" class="nav-link link-body-emphasis px-2">SHOP</a>
+              <a href="/product" class="nav-link link-body-emphasis px-2 active">SHOP</a>
             </li>
           </ul>
         </div>
