@@ -89,13 +89,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkId(String userId) throws Exception {
-        int result = userMapper.checkId(userId);
-        return result == 0;
-    }
-    
-    @Override
-    public Users findUserByUsername(String username) throws Exception {
-        return userMapper.login(username); // 'login' 메서드를 재사용하여 사용자 정보 조회
-    }
+    public String findPw(String username, String birth, String userId) throws Exception {
+        String pw = userMapper.findPw(username, birth, userId);
+        return pw;
+    } 
 }

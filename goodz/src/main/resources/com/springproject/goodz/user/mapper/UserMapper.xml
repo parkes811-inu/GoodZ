@@ -62,7 +62,7 @@
     <!-- 회원 가입 -->
     <insert id="join">
         INSERT INTO user (user_id, username, password, birth, phone_number, profile_picture_url, account )
-        VALUES (#{userId}, #{username}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl}, #{account})
+        VALUES (#{user_id}, #{username}, #{password}, #{birth}, #{phone_number}, #{profile_picture_url}, #{account})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -89,10 +89,12 @@
            AND username = #{userName}
     </select>
 
-    <!-- 쿼리 성능 향상을 위한 신규 아이디 중복 체크 쿼리 -->
-    <select id="checkId" resultType="int">
-        SELECT COUNT(*)
-        FROM user
-        WHERE user_id = #{userId}
+    <!-- 비밀번호 찾기 -->
+    <select id="findPw" resultType="string">
+       SELECT password
+         FROM user
+        WHERE username = #{userName}
+          AND birth = #{birth}
+          AND user_id = #{userId}
     </select>
 </mapper>
