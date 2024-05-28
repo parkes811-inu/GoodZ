@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주소록</title>
     <style>
-
-
         .content {
             flex: 1;
             margin-top: 25px;
@@ -39,42 +37,6 @@
             font-size: 12px;
         }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold; 
-        }
-
-        .form-group input {
-            width: 400px;
-            padding: 10px;
-            font-size: 14px;
-            border: none;
-            border-bottom: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-
-        .submit-btn {
-            background-color: #555;
-            color: #fff;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 200px;
-            margin-top: 10px;
-        }
-
-        .submit-btn:hover {
-            background-color: #333;
-        }
-
         .address-item {
             padding: 15px;
             border: 1px solid #ddd;
@@ -87,7 +49,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-
         }
 
         .address-item-header h3 {
@@ -136,9 +97,9 @@
     <div class="content">
         <div class="header">
             <h2>주소록</h2>
-            <button class="add-address-btn">+ 새 배송지 추가</button>
+            <button class="add-address-btn" onclick="location.href='/user/add_address'">+ 새 배송지 추가</button>
         </div>
-        <!-- 주소 항목이 있을 때 보여지는 부분 -->
+        <!-- 주소 테이블에서 불러와야함 -->
         <div class="address-item">
             <div class="address-item-header">
                 <h3>메롱</h3>
@@ -154,23 +115,6 @@
             </div>
         </div>
         <div class="divider"></div>
-
-        <!-- 등록된 주소가 없을 때 뜨게 함. 있으면 등록 버튼 눌렀을 때 뜨게 -->
-        <form>
-            <div class="form-group">
-                <label for="receiver-name">받는 분</label>
-                <input type="text" id="receiver-name" placeholder="이름을 입력해주세요">
-            </div>
-            <div class="form-group">
-                <label for="contact-number">연락처</label>
-                <input type="text" id="contact-number" placeholder="연락처를 입력해주세요">
-            </div>
-            <div class="form-group">
-                <label for="address">배송 주소</label>
-                <input type="text" id="address" placeholder="주소를 입력해주세요">
-            </div>
-            <button type="submit" class="submit-btn">저장</button>
-        </form>
     </div>
 </body>
 </html>

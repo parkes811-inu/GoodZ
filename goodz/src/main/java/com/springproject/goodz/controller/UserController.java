@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
 
+import com.springproject.goodz.user.service.UserService;
+
 import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,6 +97,11 @@ public class UserController {
     @GetMapping("/address")
     public String address() {
         return "/user/address";
+    }
+
+    @GetMapping("/add_address")
+    public String add_address() {
+        return "/user/add_address";
     }
 
     @GetMapping("/account")
