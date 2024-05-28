@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * 스타일 게시글
  * [GET]    /styles                 게시글 목록
  * [GET]    /styles/게시글번호       게시글 조회
+ * [GET]    /styles/update          게시글 수정페이지
  * [POST]   /styles                 게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
@@ -67,14 +68,23 @@ public class StyleController {
         return "/style/insert";
     }
 
+    /**
+     * 게시글 등록 처리
+     * @param userId
+     * @return
+     */
     // @PostMapping("")
     // public String insert(Style style) {
         
     //     return entity;
     // }
-    
-    
 
+    @GetMapping("/update")
+    public String moveToUpdate() {
+        return "/style/update";
+    }
+    
+    
     /*
      * 내 스타일 (유저 프로필)
      */
