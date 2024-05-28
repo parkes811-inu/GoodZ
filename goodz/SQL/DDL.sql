@@ -204,7 +204,7 @@ CREATE TABLE `Inspection` (
 
 
 
--- Pusrchase 테이블
+-- Purchase 테이블
 CREATE TABLE `Purchase` (
 	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
