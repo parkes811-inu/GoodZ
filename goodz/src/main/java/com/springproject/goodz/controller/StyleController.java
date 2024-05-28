@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 /*
  * 스타일 게시글

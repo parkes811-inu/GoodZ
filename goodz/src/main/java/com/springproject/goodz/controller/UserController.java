@@ -6,22 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
-
 
 import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
 
 @Slf4j
 @Controller
@@ -42,27 +38,35 @@ public class UserController {
     }
     
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(Model model) {
+        model.addAttribute("user", new Users());
         return "/user/signup";
     }
 
     @PostMapping("/signup")
     public ModelAndView postUserInfo(@ModelAttribute Users user) {
-        // 여기서 user 객체를 사용하여 필요한 작업을 수행합니다.
-        
-        // 예를 들어, 콘솔에 출력
-        System.out.println("Username: " + user.getUsername());
-        System.out.println("Birth: " + user.getBirth());
-
         // 데이터를 가지고 signup2.html로 이동
         ModelAndView modelAndView = new ModelAndView("/user/signup2");
         modelAndView.addObject("user", user);
         return modelAndView;
     }
     
-    @GetMapping("/signup2")
-    public String signup2() {
-        return "/user/signup2";
+    @PostMapping("/checkId")
+    public ResponseEntity<String> checkDuplicate(@RequestBody Map<String, String> request) throws Exception {
+        String userId = request.get("userId");
+        boolean isAvailable = userService.checkId(userId);
+        if (isAvailable) {
+            return ResponseEntity.ok("사용 가능한 아이디입니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
+        }
+    }
+    
+    @PostMapping("/signup2")
+    public ResponseEntity<String> signUp(@RequestBody Users user) throws Exception {
+        // 회원 가입 처리 로직
+        userService.join(user);
+        return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
     @GetMapping("/findID")
@@ -71,7 +75,6 @@ public class UserController {
     }
     
     @PostMapping("/findID")
-    // public ResponseEntity<String> findId(@RequestBody Map<String, String> payload) {
     public ResponseEntity<String> findId(@RequestBody Users user) {
         String phone = user.getPhoneNumber();
         String name = user.getUsername();
@@ -139,6 +142,4 @@ public class UserController {
     public String style_profile() {
         return "/user/style_profile";
     }
-    
-
 }

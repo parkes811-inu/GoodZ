@@ -22,4 +22,8 @@ public interface UserService {
 
     // 아이디 찾기
     public String findId(String phone, String name) throws Exception;
+
+    // 회원 가입 시 아이디 중복 체크
+    public boolean checkId(String userId) throws Exception;
+
 }

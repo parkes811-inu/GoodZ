@@ -86,6 +86,12 @@ public class UserServiceImpl implements UserService {
     public String findId(String phone, String name) throws Exception {
         String id = userMapper.findId(phone, name);
         return id;
-    }   
+    }
+
+    @Override
+    public boolean checkId(String userId) throws Exception {
+        int result = userMapper.checkId(userId);
+        return result == 0;
+    }
     
 }
