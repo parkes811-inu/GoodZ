@@ -42,12 +42,12 @@
         .form-group input,
         .form-group select {
             width: 100%;
+            max-width: 400px;
             padding: 10px;
             font-size: 14px;
             border: none;
             border-bottom: 1px solid #ddd;
             box-sizing: border-box;
-            border-radius: 4px;
         }
 
         .custom-file-input {
@@ -73,16 +73,38 @@
             background-color: #555;
             color: #fff;
             border: none;
-            padding: 12px 20px;
-            font-size: 14px;
+            padding: 15px 25px;
+            font-size: 16px;
             border-radius: 4px;
             cursor: pointer;
-            width: 200px;
+            display: block;
+            width: 250px;
             margin-top: 10px;
         }
 
         .submit-btn:hover {
             background-color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .input-group input {
+            flex: 1;
+            border: none;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .input-group span {
+            padding-left: 10px;
+            font-size: 14px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -92,7 +114,7 @@
         <div class="header">
             <h2>상품 등록</h2>
         </div>
-        <form>
+        <form id="add_product-form" method="post">
             <div class="form-group">
                 <label for="brand-name">브랜드</label>
                 <select id="brand-name" class="form-control">
@@ -119,24 +141,29 @@
                 <label for="product-img">상품 이미지</label>
                 <input type="file" id="product-img" class="custom-file-input">
                 <span id="passwordHelpInline" class="form-text">최대 10장</span>
-                <input id="file" class="form-control" type="file"  multiple>
+                <input id="file" class="form-control" type="file" multiple>
                 <br>
             </div>
             <div class="form-group">
                 <label for="origin-price">발매가</label>
-                <input type="text" id="origin-price" class="form-control" placeholder="발매가를 입력해주세요">
+                <div class="input-group">
+                    <input type="text" id="origin-price" class="form-control" placeholder="발매가를 입력해주세요">
+                    <span>원</span>
+                </div>
             </div>
             <div class="form-group">
                 <label for="amount">상품 재고</label>
                 <input type="text" id="amount" class="form-control" placeholder="상품 재고를 입력해주세요">
             </div>
             
-            <button type="submit" class="submit-btn" onclick="location.href='/admin'">등록 완료</button>
+            <button type="submit" class="submit-btn">등록 완료</button>
         </form>
     </div>
-
     <script>
-     
+        document.getElementById('add_product-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+            location.href = '/admin/product_list';  // 새로운 경로로 이동
+        });
     </script>
 </body>
 </html>

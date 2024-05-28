@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지 - 상품 수정</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .product-detail {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .product-detail img {
+            max-width: 300px; 
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            width: 120px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .form-group .file-input-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .form-group .file-input-wrapper label {
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .form-group .file-input-wrapper span {
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            width: 300px;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+
+        .image-change-group {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body layout:fragment="content">
+    <div class="content mt-5">
+        <div class="header">
+            <h2>상품 수정</h2>
+        </div>
+        <div class="product-detail">
+            <div class="col-md-3 mx-auto">
+                <img src="/img/product/product_img.png" alt="Product 1">
+            </div>
+        </div>
+        <form method="post">
+            <div class="form-group image-change-group">
+                <label for="change-img">이미지 변경</label>
+                <input id="file" class="form-control" type="file" multiple>
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="brand-name">브랜드 명</label>
+                <input type="text" id="brand-name" value="Stussy" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-number">상품 번호</label>
+                <input type="text" id="product-number" value="283451" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-name">상품 명</label>
+                <input type="text" id="product-name" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
+            </div>
+            <div class="form-group">
+                <label for="current-stock">현 재고 수</label>
+                <input type="text" id="current-stock" value="124" readonly>
+            </div>
+            <div class="form-group">
+                <label for="incoming-stock">입고 수량</label>
+                <input type="text" id="incoming-stock" placeholder="입고 수량을 입력해 주세요">
+            </div>
+            <button type="submit" class="submit-btn">수정 완료</button>
+        </form>
+    </div>
+</body>
+</html>
