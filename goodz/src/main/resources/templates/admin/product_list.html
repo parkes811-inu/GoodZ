@@ -6,16 +6,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 페이지</title>
+    <title>관리자 페이지 - 상품 등록</title>
     <style>
+        .header {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
+            margin-bottom: 100px; 
+        }
+
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+
+        .pagination li a {
+            color: #000;
+            text-decoration: none;
+            border: none; 
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .custom-button {
+            color: black;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 4px;
+            text-decoration: none;
+            background-color: white;
+        }
+        .custom-button svg {
+            margin-right: 5px;
+        }
 
     </style>
 </head>
 
 <body layout:fragment="content">
-    <div class="content">
-
+    <div class="container" style="min-height: 20px;">
+        <div class="mainContainer">
+            <div class="header">
+                <h2>상품 목록</h2>
+            </div>
+    
+            <div class="d-flex justify-content-end">
+                <a href="/admin/add_product" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                </a>
+            </div>
+            <div class="divider">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">상품ID</th>
+                        <th scope="col">상품명</th>
+                        <th scope="col">재고</th>
+                        <th scope="col">등록일자</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Nike</td>
+                        <td>123</td>
+                        <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Stussy</td>
+                        <td>234</td>
+                        <td>2024-05-23</td>
+                    </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>The Joeun</td>
+                        <td>236</td>
+                        <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">4</th>
+                        <td>Discovery</td>
+                        <td>828</td>
+                        <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">5</th>
+                        <td>Starbucks</td>
+                        <td>911</td>
+                        <td>2024-05-23</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
+</div>
 </body>
 
 </html>

@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .header {
             display: flex;
@@ -34,7 +33,7 @@
             font-weight: bold;
             font-size: 20px;
         }
-
+     
         .stats .col {
             text-align: center;
             margin: 0 10px;
@@ -69,14 +68,7 @@
             margin-bottom: 70px !important; 
         }
 
-        .table {
-            border-collapse: separate;
-            border-spacing: 0 15px;
-        }
-
         .table th, .table td {
-            border: none;
-            padding: 0.75rem;
             text-align: center;
         }
 
@@ -134,61 +126,62 @@
             </div>
         </div>
             <!-- 최근 유저가 판매한 상품 가져옴-->
-            <div class="card-body table-responsive">
+            <div class="divider">
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>판매번호</th>
-                            <th>상품번호</th>
-                            <th>유저ID</th>
-                            <th>운송장번호</th>
-                            <th>상태</th>
-                            <th>요청일자</th>
-                        </tr>
+                      <tr>
+                            <th scope="col">판매번호</th>
+                            <th scope="col">상품번호</th>
+                            <th scope="col">유저ID</th>
+                            <th scope="col">운송장번호</th>
+                            <th scope="col">상태</th>
+                            <th scope="col">요청일자</th>
+                      </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>25</td>
+                    <tbody class="table-group-divider">
+                      <tr>
+                            <th scope="row">25</th>
                             <td>283451</td>
                             <td>joeun123</td>
                             <td>2024-0625-2312</td>
                             <td>검수중</td>
                             <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>24</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">24</th>
                             <td>394325</td>
                             <td>joeun123</td>
                             <td>2024-3465-2369</td>
                             <td>판매요청</td>
                             <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>23</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">23</th>
                             <td>345612</td>
                             <td>joeun123</td>
                             <td>2024-0235-2324</td>
                             <td>검수중</td>
                             <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>22</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">22</th>
                             <td>323532</td>
                             <td>joeun123</td>
                             <td>2024-8555-2312</td>
                             <td>정산완료</td>
                             <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>21</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">21</th>
                             <td>780022</td>
                             <td>joeun123</td>
                             <td>2024-2356-2387</td>
                             <td>정산완료</td>
                             <td>2024-05-23</td>
-                        </tr>
+                      </tr>
                     </tbody>
-                </table>
+                  </table>
+            </div>
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li class="page-item">
@@ -212,7 +205,7 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
