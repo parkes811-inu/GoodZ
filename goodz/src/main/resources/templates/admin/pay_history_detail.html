@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 페이지 - 상품 수정</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            width: 120px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            width: 300px;
+            text-align: center;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body layout:fragment="content">
+    <div class="content mt-5">
+        <div class="header">
+            <h2>판매내역</h2>
+        </div>
+        
+
+            <!-- 판매 번호 기준으로 불러와야함-->
+            <div class="form-group">
+                <label for="sales-number">판매 번호</label>
+                <input type="text" id="sales-number" value="25" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-number">상품 번호</label>
+                <input type="text" id="product-number" value="283451" readonly>
+            </div>
+            <div class="form-group">
+                <label for="user-ID">유저 ID</label>
+                <input type="text" id="user-ID" value="asdf1234" readonly>
+            </div>
+            <div class="form-group">
+                <label for="tracking-no">운송장 번호</label>
+                <input type="text" id="tracking-no" value="2024-8555-2312" readonly>
+            </div>
+            <div class="form-group">
+                <label for="sale-date">유저 구매 일자</label>
+                <input type="text" id="sale-date" value="2024-05-23" readonly>
+            </div>
+            
+            <button type="submit" class="submit-btn" onclick="location.href='/admin/pay_history'">목록</button>
+
+    </div>
+
+</body>
+</html>

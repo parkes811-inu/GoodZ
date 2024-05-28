@@ -31,9 +31,19 @@ public class AdminController {
         return "/admin/purchase_state";
     }
 
+    @GetMapping("/purchase/detail")
+    public String purchase_detail() {
+        return "/admin/purchase_detail";
+    }
+
     @GetMapping("/pay_history")
     public String pay_history() {
         return "/admin/pay_history";
+    }
+
+    @GetMapping("/pay_history/detail")
+    public String pay_history_detail() {
+        return "/admin/pay_history_detail";
     }
 
     @GetMapping("/add_product")
@@ -41,8 +51,13 @@ public class AdminController {
         return "/admin/add_product";
     }
 
-    @GetMapping("/add_barnd")
-    public String add_barnd() {
-        return "/admin/add_barnd";
+    @GetMapping("/product/detail")
+    public String product_detail() {
+        return "/admin/product_detail";
+    }
+
+    @GetMapping("/add_brand")
+    public String add_brand() {
+        return "/admin/add_brand";
     }
 }
