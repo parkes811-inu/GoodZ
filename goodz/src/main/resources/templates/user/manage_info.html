@@ -2,11 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/mypage_layout}"
-      >
+>
 <head>
     <style>
-
-
         .shopping-info {
             margin-top: 50px; 
         }
@@ -22,7 +20,7 @@
         }
 
         .form-group {
-        margin-bottom: 15px; /* 여백 추가 */
+            margin-bottom: 15px; /* 여백 추가 */
         }
         
         .profile-details {
@@ -47,13 +45,14 @@
             flex-direction: column;
             margin-top: 5px; /* 텍스트 부분 전체를 아래로 이동 */
         }
-        .profile-info .username {
-            font-size: 1.1rem; /* 텍스트 크기 조정 */
-            font-weight: bold; /* 텍스트 굵게 */
+
+        .profile-info .user-id {
+            font-size: 1.1rem; 
+            font-weight: bold; 
             margin: 0;
         }
-        .profile-info .user-id {
-            font-size: 0.875rem; /* 텍스트 크기 조정 */
+        .profile-info .username {
+            font-size: 0.875rem; 
             margin: 0;
         }
         .profile-buttons {
@@ -78,22 +77,23 @@
     <title>마이 페이지-내 정보 관리</title>
 </head>
 <body layout:fragment="content">
-
     <div class="container">
         <div class="mainContainer">
             <div class="row">
-                
                 <div class="col-md-9 content">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title-section">
                                 <div class="profile-details">
                                     <div class="profile_img">
-                                        <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                        <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
+                                        <img th:if="${user != null}" th:src="${user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
+                                        <img th:unless="${user != null}" src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
                                     </div>
                                     <div class="profile-info">
-                                        <p class="username">wlrdprkffo11</p>
-                                        <p class="user-id">아이디 ^^</p>
+                                        <!-- 유저의 아이디와 닉네임 -->
+                                        <p class="user-id" th:text="${user != null ? user.userId : 'Error'}"></p>
+                                        <p class="username" th:text="${user != null ? user.username : 'Error'}"></p>
                                     </div>
                                 </div>
                                 <div class="profile-buttons">
@@ -106,66 +106,168 @@
                     <div class="form-group">
                         <label for="formFile" class="form-label">프로필 사진 수정*</label>
                         <div class="input-group" style="max-width: 640px;">
-                            <input type="text" class="form-control rounded-1" id="file" placeholder="첨부파일을 등록해주세요." >
+                            <input type="file" class="form-control rounded-1" id="file" placeholder="첨부파일을 등록해주세요.">
                             <input class="form-control" type="file" id="formFile" style="display: none;">
-                            <button class="btn btn-dark" type="button" onclick="document.getElementById('formFile').click();">사진등록</button>
                         </div>
                     </div>
-
                     
                     <form class="row g-3 needs-validation" novalidate>
-                        <div class=" position-relative" style="max-width: 655px;">
+                        <div class="position-relative" style="max-width: 655px;">
                             <label for="validationTooltip01" class="form-label">닉네임*</label>
-                            <input type="text" class="form-control" id="validationTooltip01" value="joeun" required style="width: 100%;">
+                            <input type="text" class="form-control" id="validationTooltip01" th:value="${user.username}" required style="width: 100%;">
                             <div class="valid-tooltip">
                                 Looks good!
                             </div>
                         </div>
-                    
 
-                    <div class="form-group">
-                        <label for="id">아이디*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="id" placeholder="kingofjoeun" style="max-width: 640px;">
-                            <div class="input-group-append">
+                        <div class="form-group">
+                            <label for="id">아이디*</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control me-2 rounded-1" id="id" th:value="${user.userId}" style="max-width: 640px;">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id">비밀번호*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="password" placeholder="********" style="max-width: 640px;">
-                            <div class="input-group-append">
+
+                        <div class="form-group">
+                            <label for="password">비밀번호*</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control me-2 rounded-1" id="password" placeholder="********" style="max-width: 640px;">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id">비밀번호 확인*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="password_check" placeholder="********" style="max-width: 640px;">
-                            <div class="input-group-append">
+
+                        <div class="form-group">
+                            <label for="password_check">비밀번호 확인*</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control me-2 rounded-1" id="password_check" placeholder="********" style="max-width: 640px;">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="id">핸드폰 번호 수정*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="phone_number" placeholder="01023183721" style="max-width: 640px;">
-                            <div class="input-group-append">
+
+                        <div class="form-group">
+                            <label for="phone_number">핸드폰 번호 수정*</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control me-2 rounded-1" id="phone_number" th:value="${user.phoneNumber}" style="max-width: 640px;">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 d-flex justify-content-end" style="padding-right: 175px;">
-                        <button class="btn btn-dark" type="submit">저장</button>
-                    </div>
-                    
-                </form>
+
+                        <div class="col-12 d-flex justify-content-end" style="padding-right: 175px;">
+                            <button class="btn btn-dark" type="submit">저장</button>
+                        </div>
+                    </form>
                 </div>
-
             </div>
         </div>
     </div>
     
+    <script>
+        var checkVar = false; // 아이디 중복 체크 상태를 저장하는 변수
 
+        function checkId() {
+            var userId = $('#userId').val();
+            var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
+
+            $.ajax({
+                url: '/user/checkId',
+                type: 'POST', // POST 메서드 사용
+                contentType: 'application/json',
+                data: JSON.stringify({ userId: userId }), // JSON 형식으로 전송
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                },
+                success: function(response) {
+                    alert('사용 가능한 아이디입니다.');
+                    checkVar = true; // 중복 체크 성공 시 true로 설정
+                },
+                error: function(xhr, status, error) {
+                    if(xhr.status === 409) {
+                        alert('이미 사용 중인 아이디입니다.');
+                    } else {
+                        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+                    }
+                    checkVar = false; // 중복 체크 실패 시 false로 설정
+                }
+            });
+        }
+
+        function formatPhoneNumber(phone) {
+            // 숫자만 추출
+            var cleaned = ('' + phone).replace(/\D/g, '');
+            var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+            if (match) {
+                return match[1] + '-' + match[2] + '-' + match[3];
+            }
+            return null;
+        }
+
+        function check() {
+            var firstPw = $('#password').val();
+            var secondPw = $('#password_check').val();
+            var phone = $('#phone').val();
+            var account = $('#account').val();
+            var formattedPhone = formatPhoneNumber(phone);
+
+            if (!formattedPhone) {
+                alert('올바른 휴대폰 번호를 입력해주세요.');
+                return;
+            }
+
+            // 비밀번호 유효성 검사 정규 표현식
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
+
+            // 비밀번호 유효성 검사
+            if (!passwordRegex.test(firstPw)) {
+                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                return;
+            }
+
+            // 비밀번호 일치 확인
+            if (firstPw !== secondPw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // 이메일 유효성 검사 정규 표현식
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // 이메일 유효성 검사
+            if (!emailRegex.test(account)) {
+                alert('올바른 이메일 주소를 입력해주세요.');
+                return;
+            }
+
+            // 모든 조건이 충족되면 회원가입을 완료하고 로그인 페이지로 이동
+            if(checkVar) {
+                var userData = {
+                    username: $('input[name="username"]').val(),
+                    birth: $('input[name="birth"]').val(),
+                    userId: $('#userId').val(),
+                    password: firstPw,
+                    phoneNumber: formattedPhone,
+                    account: account,
+                    profilePictureUrl: 'img/user/basic_social.png' // 기본 빈 사진
+                };
+
+                var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
+
+                $.ajax({
+                    url: '/user/signup2',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(userData),
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                    },
+                    success: function(response) {
+                        alert('회원가입이 완료되었습니다.');
+                        window.location.href = '/user/login';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+                    }
+                });
+            } else {
+                alert('아이디 중복 체크를 진행 해주세요.');
+                return;
+            }
+        }
+    </script>
 </body>
 </html>
