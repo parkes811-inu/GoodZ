@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매내역</title>
+
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 200px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .card {
+            border-radius: 0 !important; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+     
+        .stats .col {
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .stats .divider {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 10px;
+            color: #666;
+        }
+
+        .stats .col div {
+            margin-bottom: 10px;
+        }
+
+        .action img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .action p {
+            font-size: 14px;
+        }
+
+        .mb-4 {
+            margin-bottom: 4rem !important; 
+        }
+
+        .mb-70 {
+            margin-bottom: 70px !important; 
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding-left: 0;
+            list-style: none;
+            border-radius: 0.25rem;
+            margin-bottom: 100px; 
+        }
+
+        .pagination li {
+            display: inline;
+            margin: 0 5px;
+        }
+
+        .pagination li a {
+            color: #000;
+            text-decoration: none;
+            border: none; 
+        }
+    </style>
+<body layout:fragment="content">
+    <div class="content mt-5">
+        <div class="header">
+            <h2>판매내역</h2>
+        </div>
+        <!-- 최근 유저가 판매한 상품 가져옴 -->
+            <!-- 판매 번호 누르면 상세정보로 이동 -->
+            <div class="divider">
+                <table class="table">
+                    <thead>
+                      <tr>
+                            <th scope="col">판매번호</th>
+                            <th scope="col">상품번호</th>
+                            <th scope="col">유저ID</th>
+                            <th scope="col">운송장번호</th>
+                            <th scope="col">결제일자</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                      <tr>
+                            <th scope="row">25</th>
+                            <td>283451</td>
+                            <td>joeun123</td>
+                            <td>2024-0625-2312</td>
+                            <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">24</th>
+                            <td>394325</td>
+                            <td>joeun123</td>
+                            <td>2024-3465-2369</td>
+                            <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">23</th>
+                            <td>345612</td>
+                            <td>joeun123</td>
+                            <td>2024-0235-2324</td>
+                            <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">22</th>
+                            <td>323532</td>
+                            <td>joeun123</td>
+                            <td>2024-8555-2312</td>
+                            <td>2024-05-23</td>
+                      </tr>
+                      <tr>
+                            <th scope="row">21</th>
+                            <td>780022</td>
+                            <td>joeun123</td>
+                            <td>2024-2356-2387</td>
+                            <td>2024-05-23</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                              <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                              <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        
+    </div>
+</body>
+
+</html>

@@ -109,7 +109,7 @@
             <div class="account-info-title">등록된 계좌 정보</div>
             <div class="account-info-content">카카오뱅크 3333083434962 / 기부좀</div>
         </div>
-        <form>
+        <form id="accout-form" method="post">
             <div class="form-group">
                 <label for="bank-name">은행명</label>
                 <select id="bank-name">
@@ -145,6 +145,12 @@
             <button type="submit" class="submit-btn">저장</button>
         </form>
     </div>
+    <script>
+        document.getElementById('accout-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+            location.href = '/user/account';  
+        });
+    </script>
 </body>
 </html>
 </html>

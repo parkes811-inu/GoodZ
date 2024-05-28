@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주소록</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 50px;
+            margin-bottom: 400px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+    <div class="content">
+        <div class="header">
+            <h2>배송지 추가</h2>
+        </div>
+        <!-- 주소 등록 -->
+        <form id="add_address-form" method="post">
+            <div class="form-group">
+                <label for="receiver-name">받는 분</label>
+                <input type="text" id="receiver-name" placeholder="이름을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="contact-number">연락처</label>
+                <input type="text" id="contact-number" placeholder="연락처를 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="address">배송 주소</label>
+                <input type="text" id="address" placeholder="주소를 입력해주세요">
+            </div>
+            
+            <button type="submit" class="submit-btn">저장</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('add_address-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+            location.href = '/user/address';  // 새로운 경로로 이동
+        });
+    </script>
+
+</body>
+</html>

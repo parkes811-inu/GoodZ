@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/admin_layout}"
+      >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>브랜드 등록 페이지</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 450px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .custom-file-label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body layout:fragment="content">
+    <div class="content mt-5">
+        <div class="header">
+            <h2>브랜드 등록</h2>
+        </div>
+        <form id="add_brand-form" method="post">
+            <div class="form-group">
+                <div class="form-group">
+                    <label for="brand-name">브랜드명</label>
+                    <input type="text" id="brand-name" class="form-control" placeholder="상품명을 입력해주세요">
+                </div>
+                <div class="form-group">
+                    <label for="brand-logo">브랜드 로고</label>
+                    <input id="file" class="form-control" type="file"  multiple>
+                    <br>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">등록 완료</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('add_brand-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+            location.href = '/admin/brand_list';  // 새로운 경로로 이동
+        });
+    </script>
+</body>
+
+</html>

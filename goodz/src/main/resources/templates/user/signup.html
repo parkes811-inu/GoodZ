@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/user_layout}"
-      >
-<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
+      layout:decorate="~{/layouts/user_layout}">
 <head>
     <style>
         body {
@@ -61,37 +59,57 @@
             margin-left: 0.5rem !important;
             margin-right: 0.5rem !important;
         }
+        
         .mt-3 {
             margin-top: 1rem !important;
         }
-       </style>
+        
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ccc; /* 아이콘 색상을 회색으로 설정 */
+        }
+        
+        .password-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+    </style>
     <title>회원가입</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
 </head>
-<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
     <div class="container">
         <div class="mainContainer">
-
-        <body>
             <div class="container mt-5 mb-5">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="card p-4 custom-card">
                             <h2 class="text-center">회원가입</h2>
-                            <form>
+                            <form id="signup-form" action="/user/signup2" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
                                 <div class="form-group">
-                                    <label for="name">이름 입력*</label>
-                                    <input type="text" class="form-control" id="name" placeholder="예)김준은">
+                                    <label for="username">이름 입력*</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="예)김준은">
                                 </div>
                                 <div class="form-group">
-                                    <label for="id-number">주민등록번호 입력*</label>
-                                    <div class="d-flex align-items-center">
-                                        <input type="text" class="form-control mr-2" id="id-number-front" placeholder="주민번호 앞자리">
+                                    <label for="birth">주민등록번호 입력*</label>
+                                    <div class="password-input-container">
+                                        <input type="text" class="form-control mr-2" id="id-number-front" placeholder="앞자리">
                                         <span class="mx-2">-</span>
-                                        <input type="text" class="form-control" id="id-number-back" placeholder="주민번호 뒷자리">
+                                        <input type="password" class="form-control" id="id-number-back" placeholder="뒷자리">
+                                        <span class="toggle-password" onclick="toggleIdNumberVisibility()">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </span>
                                     </div>
+                                    <input type="hidden" id="birth" name="birth">
                                 </div>
                                 <div class="form-check mb-2">
                                     <input type="checkbox" class="form-check-input" id="mandatory-consent">
@@ -101,7 +119,7 @@
                                     <input type="checkbox" class="form-check-input" id="optional-consent">
                                     <label class="form-check-label" for="optional-consent">[선택] 광고성 정보 수신에 모두 동의합니다.</label>
                                 </div>
-                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="location.href='/user/signup2'">다음 회원가입 단계</button>
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="check()">다음 회원가입 단계</button>
                             </form>
                         </div>
                     </div>
@@ -109,5 +127,49 @@
             </div>
         </div>
     </div>
-    </body>
-    </html>
+    <script>
+        function toggleIdNumberVisibility() {
+            var idNumberBack = document.getElementById('id-number-back');
+            var togglePassword = document.querySelector('.toggle-password i');
+
+            if (idNumberBack.type === 'password') {
+                idNumberBack.type = 'text';
+                togglePassword.classList.remove('fa-eye-slash');
+                togglePassword.classList.add('fa-eye');
+            } else {
+                idNumberBack.type = 'password';
+                togglePassword.classList.remove('fa-eye');
+                togglePassword.classList.add('fa-eye-slash');
+            }
+        }
+
+        function check() {
+            let username = document.getElementById('username').value;
+            let idNumberFront = document.getElementById('id-number-front').value;
+            let idNumberBack = document.getElementById('id-number-back').value;
+            let consent = document.getElementById('mandatory-consent').checked;
+            let birthField = document.getElementById('birth');
+
+            if (username.trim() === '') {
+                alert("이름을 입력 해주세요.");
+                return;
+            }
+
+            if (idNumberFront.trim() === '' || idNumberBack.trim() === '' ||
+                idNumberFront.length + idNumberBack.length !== 13) {
+                alert("주민등록번호를 제대로 입력 해주세요.");
+                return;
+            }
+
+            if (!consent) {
+                alert("약관에 동의해야 합니다.");
+                return;
+            }
+
+            // 모든 조건이 충족되면 form 데이터를 설정하고 제출
+            birthField.value = idNumberFront + idNumberBack;
+            document.getElementById('signup-form').submit();
+        }
+    </script>
+</body>
+</html>

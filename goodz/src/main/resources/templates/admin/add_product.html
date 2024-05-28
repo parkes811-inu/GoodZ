@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 등록 페이지</title>
+    <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 200px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 23px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .custom-file-input {
+            display: none;
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .custom-file-label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .submit-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 250px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .input-group input {
+            flex: 1;
+            border: none;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .input-group span {
+            padding-left: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body layout:fragment="content">
+    <div class="content mt-5">
+        <div class="header">
+            <h2>상품 등록</h2>
+        </div>
+        <form id="add_product-form" method="post">
+            <div class="form-group">
+                <label for="brand-name">브랜드</label>
+                <select id="brand-name" class="form-control">
+                    <option value="">브랜드을 선택해주세요</option>
+                    <option value="NIKE">NIKE</option>
+                    <option value="Adidas">adidas</option>
+                    <option value="New Balance">New Balance</option>
+                    <option value="Asics">Asics</option>
+                    <option value="Puma">Puma</option>
+                    <option value="Golden Goose">Golden Goose</option>
+                    <option value="Stussy">Stussy</option>
+                    <option value="Emis">Emis</option>
+                    <option value="Reebok">Reebok</option>
+                    <option value="Supreme">Supreme</option>
+                    <option value="Wooyoungmi">Wooyoungmi</option>
+                    <option value="Fila">Fila</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="product-name">상품명</label>
+                <input type="text" id="product-name" class="form-control" placeholder="상품명을 입력해주세요">
+            </div>
+            <div class="form-group">
+                <label for="product-img">상품 이미지</label>
+                <input type="file" id="product-img" class="custom-file-input">
+                <span id="passwordHelpInline" class="form-text">최대 10장</span>
+                <input id="file" class="form-control" type="file" multiple>
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="origin-price">발매가</label>
+                <div class="input-group">
+                    <input type="text" id="origin-price" class="form-control" placeholder="발매가를 입력해주세요">
+                    <span>원</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="amount">상품 재고</label>
+                <input type="text" id="amount" class="form-control" placeholder="상품 재고를 입력해주세요">
+            </div>
+            
+            <button type="submit" class="submit-btn">등록 완료</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('add_product-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+            location.href = '/admin/product_list';  // 새로운 경로로 이동
+        });
+    </script>
+</body>
+</html>

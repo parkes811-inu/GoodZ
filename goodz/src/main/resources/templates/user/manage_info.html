@@ -6,18 +6,6 @@
 <head>
     <style>
 
-        .sidebar {
-            padding: 15px;
-            margin-top: 20px; /* 상단 여백 추가 */
-        }
-        .sidebar h3 {
-            font-weight: bold; 
-            margin-bottom: 20px;
-        }
-        .sidebar h5 {
-            font-weight: 600; 
-            margin-bottom: 20px;
-        }
 
         .shopping-info {
             margin-top: 50px; 
@@ -73,7 +61,8 @@
             gap: 5px;
         }
         .card {
-            margin-bottom: 20px;
+            max-width: 640px;
+            margin-bottom: 40px;
         }
         .wishlist img {
             width: 100%;
@@ -108,30 +97,32 @@
                                     </div>
                                 </div>
                                 <div class="profile-buttons">
-                                    <!-- [DB] th:href를 통해서 경로에 userId 넣기 -->
-                                    <a href="/styles/user/@zzang._.777" class="btn btn-sm btn-outline-secondary">스타일</a>
+                                    <button class="btn btn-sm btn-outline-secondary">스타일</button>
                                 </div>
                             </div>
                         </div>
                     </div>
     
                     <div class="form-group">
-                        <label for="id">프로필 사진 수정*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="file" placeholder="첨부파일을 등록해주세요." style="max-width: 650px;">
-                            <div class="input-group-append">
-                                <button class="btn btn-dark" type="button" id="check-id">사진등록</button>
-                            </div>
+                        <label for="formFile" class="form-label">프로필 사진 수정*</label>
+                        <div class="input-group" style="max-width: 640px;">
+                            <input type="text" class="form-control rounded-1" id="file" placeholder="첨부파일을 등록해주세요." >
+                            <input class="form-control" type="file" id="formFile" style="display: none;">
+                            <button class="btn btn-dark" type="button" onclick="document.getElementById('formFile').click();">사진등록</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="id">닉네임*</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control me-2 rounded-1" id="name" placeholder="kingjoeun" style="max-width: 640px;">
-                            <div class="input-group-append">
+
+                    
+                    <form class="row g-3 needs-validation" novalidate>
+                        <div class=" position-relative" style="max-width: 655px;">
+                            <label for="validationTooltip01" class="form-label">닉네임*</label>
+                            <input type="text" class="form-control" id="validationTooltip01" value="joeun" required style="width: 100%;">
+                            <div class="valid-tooltip">
+                                Looks good!
                             </div>
                         </div>
-                    </div>
+                    
+
                     <div class="form-group">
                         <label for="id">아이디*</label>
                         <div class="input-group">
@@ -164,15 +155,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 d-flex justify-content-end" style="padding-right: 175px;">
+                        <button class="btn btn-dark" type="submit">저장</button>
+                    </div>
+                    
+                </form>
                 </div>
 
             </div>
         </div>
     </div>
     
-    <script>
-
-    </script>
 
 </body>
 </html>

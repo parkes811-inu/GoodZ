@@ -6,12 +6,34 @@
       </a>
       <div class="d-flex flex-column align-items-end">
         <ul class="nav secondary-nav mb-2">
+
           <li class="nav-item">
-            <a href="/user/wishlist/products" class="nav-link link-body-emphasis px-2">관심</a>
+            <th:block sec:authorize="isAnonymous()">
+              <a href="/user/login" class="nav-link link-body-emphasis px-2">관심</a>
+            </th:block>
+
+            <th:block sec:authorize="isAuthenticated()">
+              <a href="/user/wishlist" class="nav-link link-body-emphasis px-2">관심123</a>
+            </th:block>
           </li>
+
           <li class="nav-item">
-            <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            <th:block sec:authorize="isAnonymous()">
+              <a href="/user/login" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+              <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
+            </th:block>
           </li>
+
+          <!-- 관리자 로그인 시 -->
+          <li class="nav-item">
+            <!-- 관리자 페이지 경로 -->
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+              <a href="/" class="nav-link link-body-emphasis px-2">관리자 페이지</a>
+            </th:block>
+          </li>
+          
           <li class="nav-item">
             <!-- 비 로그인 시 -->
             <th:block sec:authorize="isAnonymous()">
@@ -30,6 +52,7 @@
             <!-- <a href="#" class="nav-link link-body-emphasis px-2">로그아웃</a> -->
           </li>
         </ul>
+
         <ul class="nav primary-nav">
           <li class="nav-item">
             <a href="/" class="nav-link link-body-emphasis px-2 active" aria-current="page">HOME</a>
@@ -40,7 +63,7 @@
 
           </li>
           <li class="nav-item">
-            <a href="/product" class="nav-link link-body-emphasis px-2">SHOP</a>
+            <a href="/product" class="nav-link link-body-emphasis px-2 active">SHOP</a>
           </li>
         </ul>
       </div>
