@@ -1,4 +1,31 @@
-﻿-- Active: 1716800736662@@127.0.0.1@3306@goodz
+﻿-- Active: 1715220502910@@127.0.0.1@3306@goodz
+
+ALTER TABLE product CHANGE brand b_no int;
+
+
+-- DROP
+DROP TABLE user;
+DROP TABLE user_auth;
+DROP TABLE persistent_logins;
+DROP TABLE Social_Login;
+DROP TABLE Following;
+DROP TABLE Follower;
+DROP TABLE Post;
+DROP TABLE Comment;
+DROP TABLE Like;
+DROP TABLE Tag;
+DROP TABLE Product;
+DROP TABLE Pricehistory;
+DROP TABLE Wishlist;
+DROP TABLE Sales;
+DROP TABLE Inspection;
+DROP TABLE Purchase;
+DROP TABLE Shipment;
+DROP TABLE Shippingaddress;
+
+
+
+
 
 DROP TABLE IF EXISTS user;
 -- User 테이블
@@ -130,12 +157,14 @@ CREATE TABLE `Tag` (
 ) COMMENT='상품 태그';
 
 
+
+
 -- Product 테이블
 CREATE TABLE `Product` (
 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
 	`product_name`		VARCHAR(100)	NOT NULL,
 	`price`				INT				NOT NULL,
-	`b_no`				VARCHAR(50)		NOT NULL,
+	`b_no`				INT		NOT NULL,
 	`category`			VARCHAR(50)		NOT NULL,
 	`size`				VARCHAR(100)	NOT NULL,
 	`views`				INT				NOT NULL DEFAULT '0',

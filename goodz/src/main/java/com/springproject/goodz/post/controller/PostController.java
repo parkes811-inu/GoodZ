@@ -1,4 +1,4 @@
-package com.springproject.goodz.controller;
+package com.springproject.goodz.post.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /*
  * 스타일 게시글
- * [GET]    /styles                 게시글 목록
+ * [GET]    /styles                  게시글 목록
  * [GET]    /styles/게시글번호       게시글 조회
- * [GET]    /styles/update          게시글 수정페이지
- * [POST]   /styles                 게시글 작성처리
+ * [GET]    /styles/update           게시글 수정페이지
+ * [POST]   /styles                  게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
  * 프로필    
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @Controller
 @RequestMapping("/styles")
-public class StyleController {
+public class PostController {
     
     /**
      * 전체 게시글 목록
