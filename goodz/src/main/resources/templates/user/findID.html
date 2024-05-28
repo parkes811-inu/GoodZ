@@ -51,6 +51,11 @@
         .mt-3 {
             margin-top: 1rem !important;
         }
+
+        .modal {
+            z-index: 1055 !important;
+        }       
+
     </style>
     <title>아이디 찾기</title>
 </head>
@@ -85,27 +90,26 @@
     </div>
 
     <!-- 모달 -->
-    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="resultModalLabel">아이디 찾기 결과</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    
+                    <!-- 또 있어야 하나 ? 고민 중 은서 ... -->
+                    <!-- <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> --> 
                 </div>
                 <div class="modal-body" id="resultModalBody">
                     <!-- 결과 내용이 여기에 표시됩니다 -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
     <script>
         function findId() {
@@ -116,7 +120,7 @@
                 url: '/user/findID',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ phone: phoneNumber, name: userName }),
+                data: JSON.stringify({ phoneNumber: phoneNumber, username: userName }),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                 },
