@@ -8,8 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지 - 브랜드 등록</title>
     <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
+
         .header {
-            margin-top: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -64,14 +69,14 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="container" style="min-height: 20px;">
-        <div class="mainContainer">
+    <div class="content mt-5">
+        
             <div class="header">
                 <h2>브랜드 목록</h2>
             </div>
     
             <div class="d-flex justify-content-end">
-                <a href="/admin/add_barnd" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                <a href="/admin/add_brand" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -134,7 +139,7 @@
                     </li>
                 </ul>
             </nav>
-        </div>
+        
     </div>
 </div>
 </body>
