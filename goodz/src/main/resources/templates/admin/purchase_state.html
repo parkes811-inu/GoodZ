@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지</title>
     <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 200px;
+        }
         .header {
             display: flex;
             justify-content: space-between;
@@ -95,7 +100,7 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="container mt-5">
+    <div class="content mt-5">
         <div class="header">
             <h2>매입현황</h2>
         </div>
@@ -125,7 +130,8 @@
                 </div>
             </div>
         </div>
-            <!-- 최근 유저가 판매한 상품 가져옴-->
+            <!-- 최근 유저가 판매한 상품 가져옴 -->
+            <!-- 판매 번호 누르면 상세정보로 이동 -->
             <div class="divider">
                 <table class="table">
                     <thead>

@@ -8,8 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지 - 상품 등록</title>
     <style>
+        .content {
+            flex: 1;
+            margin-top: 25px;
+            margin-bottom: 300px;
+        }
         .header {
-            margin-top: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -64,12 +68,12 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="container" style="min-height: 20px;">
-        <div class="mainContainer">
+    <div class="content mt-5">
+
             <div class="header">
                 <h2>상품 목록</h2>
             </div>
-    
+            <!-- 상품 전체 리스트 가져오기 -->
             <div class="d-flex justify-content-end">
                 <a href="/admin/add_product" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
@@ -90,6 +94,7 @@
                     <tbody class="table-group-divider">
                       <tr>
                         <th scope="row">1</th>
+                        <!-- 상품명 누르면 해당 상세 페이지로 이동-->
                         <td>Nike</td>
                         <td>123</td>
                         <td>2024-05-23</td>
@@ -140,7 +145,7 @@
                     </li>
                 </ul>
             </nav>
-        </div>
+        
     </div>
 </div>
 </body>

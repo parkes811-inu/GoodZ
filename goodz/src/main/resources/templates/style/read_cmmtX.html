@@ -13,14 +13,14 @@
             width: 640px;
             padding: 0;
         }
-        .profile-img {
+        .profile_img {
             width: 40px;
             height: 40px;
             border-radius: 50%; /* 둥근 모서리 */
             overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
         }
 
-        .profile-img img {
+        .profile_img img {
             width: 100%;
             height: 100%;
             object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
@@ -164,11 +164,14 @@
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
                     <a href="/styles/user/@zzang._.777" class="profile-img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile-img">
+                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
                         <span class="userId fw-bold m-0" >zzang._.777</span>
                     </a>
                 </div>
-                <button type="button" class="btn btn-dark btn-sm" id="follow" onclick="followSwitch()"> 팔로우 </button>
+                <div>
+                    <a href="/styles/update" type="button" class="btn btn-dark btn-sm">수정</a>
+                    <button type="button" onclick="actionDelete()" class="btn btn-dark btn-sm">삭제</button>
+                </div>
             </div>
             
             <!-- 게시글 이미지 -->
@@ -211,11 +214,11 @@
                 </div>
                 <!-- 상품목록 -->
                 <div class="product_list_area mb-5">
-                    <ul class="product_list row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 p-0 m-0" style="list-style: none;">
+                    <ul class="product_list row row-cols-1 row-cols-sm-2 row-cols-md-4 p-0 m-0" style="list-style: none;">
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
@@ -226,7 +229,7 @@
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
@@ -237,7 +240,7 @@
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
@@ -248,7 +251,7 @@
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
@@ -259,7 +262,7 @@
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
@@ -270,7 +273,7 @@
                         <li class="product_item text-start p-0">
                             <!-- 상품 이미지 -->
                             <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
+                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg" class="product_img">
                                 <!-- 상품정보 -->
                                 <div class="product_desc text-black mb-2">
                                     <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>

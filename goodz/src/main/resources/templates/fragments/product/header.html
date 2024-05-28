@@ -1,7 +1,8 @@
+<!-- product헤더 -->
 <header th:fragment="header">
-  <nav class="py-2 bg-body-tertiary border-bottom">
+  <nav class="header-container py-2">
     <div class="container d-flex justify-content-between align-items-center">
-      <div class="mt">
+      <div>
         <a href="/" class="logo ">
           <img src="/img/header/Goodz_logo3.png" alt="Goodz Logo">
         </a>
@@ -63,21 +64,24 @@
             <!-- <a href="#" class="nav-link link-body-emphasis px-2">로그아웃</a> -->
           </li>
         </ul>
-        <div class="mb">
           <ul class="nav primary-nav">
             <li class="nav-item">
-              <a href="/" class="nav-link link-body-emphasis px-2 active" aria-current="page">HOME</a>
+              <a href="/" class="nav-link link-body-emphasis px-2" aria-current="page">HOME</a>
             </li>
             <li class="nav-item">
-              <a href="/styles" class="nav-link link-body-emphasis px-2 active">STYLE</a>
+              <a href="/styles" class="nav-link link-body-emphasis px-2">STYLE</a>
             </li>
             <li class="nav-item">
-              <a href="/product" class="nav-link link-body-emphasis px-2 active">SHOP</a>
+              <a href="/product/shoes" class="nav-link link-body-emphasis px-2 active">SHOP</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </nav>
+
+  <!-- 구분선 -->
+  <div class="seperation" style="background-color: #393E46; height: 15px; margin: 0 auto;"></div>
+
 </header>
 

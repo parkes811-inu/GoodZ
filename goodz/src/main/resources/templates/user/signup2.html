@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/user_layout}"
-      >
-<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
+      layout:decorate="~{/layouts/user_layout}">
 <head>
     <style>
         body {
             background-color: #f8f9fa;
         }
-        
+
         .card {
             border: none;
             border-radius: 10px;
@@ -19,25 +17,25 @@
         .custom-card {
             min-height: 600px;
         }
-        
+
         h2 {
             font-weight: bold;
             margin-bottom: 20px;
         }
-        
+
         .form-control {
             height: calc(1.5em + 0.75rem + 2px);
             border-radius: 5px;
         }
-        
+
         .form-group {
             margin-bottom: 15px; /* 여백 추가 */
         }
-        
+
         .text-center {
             margin-top: 20px; /* 위쪽 여백 추가 */
         }
-        
+
         .btn-dark {
             display: block;
             width: 100%; /* 원하는 버튼 너비 */
@@ -50,88 +48,195 @@
         .mt-5 {
             margin-top: 3rem !important;
         }
-        
+
         .mb-5 {
             margin-bottom: 3rem !important;
         }
-      
+
         .mt-3 {
             margin-top: 1rem !important;
         }
-       </style>
+    </style>
     <title>회원가입2</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-<!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
     <div class="container">
         <div class="mainContainer">
-
-
-        <body>
             <div class="container mt-5 mb-5">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="card p-4 custom-card">
                             <h2 class="text-center">회원가입</h2>
-                            <form>
+                            <form id="signup-form">
+                                <!-- CSRF 토큰 추가 -->
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+                                <!-- 이름과 주민등록번호는 히든으로 전송 -->
+                                <input type="hidden" name="username" th:value="${user.username}">
+                                <input type="hidden" name="birth" th:value="${user.birth}">
+
                                 <div class="form-group">
-                                    <label for="id">아이디 입력*</label>
+                                    <label for="userId">아이디 입력*</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control me-2 rounded-1" id="ID" placeholder="아이디를 입력해주세요." style="max-width: 650px;">
-                                        <div class="input-group-append" >
-                                            <button class="btn btn-dark rounded-1" type="button" id="check-id">중복체크</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="id">비밀번호 입력*</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control me-2 rounded-1" id="password" placeholder="영문 , 숫자 , 특수문자 조합 7-16자" style="max-width: 320px;">
+                                        <input type="text" class="form-control me-2 rounded-1" id="userId" name="userId" placeholder="아이디를 입력해주세요." style="max-width: 650px;">
                                         <div class="input-group-append">
+                                            <button class="btn btn-dark rounded-1" type="button" id="check-id" onclick="checkId()">중복체크</button>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="id">비밀번호 입력 확인*</label>
+                                    <label for="password">비밀번호 입력*</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control me-2 rounded-1" id="password_check" placeholder="예) joeun" style="max-width: 320px;">
-                                        <div class="input-group-append">
-                                        </div>
+                                        <input type="password" class="form-control me-2 rounded-1" id="password" name="password" placeholder="영문, 숫자, 특수문자 조합 7-16자" style="max-width: 320px;">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="id">닉네임 입력*</label>
+                                    <label for="password_check">비밀번호 입력 확인*</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control me-2 rounded-1" id="name" placeholder="kingjoeun" style="max-width: 320px;">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-dark rounded-1" type="button" id="check-id">중복체크</button>
-                                        </div>
+                                        <input type="password" class="form-control me-2 rounded-1" id="password_check" name="password_check" placeholder="비밀번호를 다시 입력해주세요." style="max-width: 320px;">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="id">핸드폰 번호 입력*</label>
+                                    <label for="phone">핸드폰 번호 입력*</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control me-2 rounded-1" id="id" placeholder="핸드폰 번호 12자리를 입력해주 세요." style="max-width: 320px;">
-                                        <div class="input-group-append">
-                                        </div>
+                                        <input type="text" class="form-control me-2 rounded-1" id="phone" name="phone" placeholder="핸드폰 번호를 입력해주세요." style="max-width: 320px;">
                                     </div>
                                 </div>
-                            
-                               
-                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="location.href='/user/login'">가입하기</button>
+
+                                <div class="form-group">
+                                    <label for="account">이메일 입력*</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control me-2 rounded-1" id="account" name="account" placeholder="이메일을 입력해주세요." style="max-width: 320px;">
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="check()">가입하기</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-    </html>
+    <script>
+        var checkVar = false; // 아이디 중복 체크 상태를 저장하는 변수
+
+        function checkId() {
+            var userId = $('#userId').val();
+            var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
+
+            $.ajax({
+                url: '/user/checkId',
+                type: 'POST', // POST 메서드 사용
+                contentType: 'application/json',
+                data: JSON.stringify({ userId: userId }), // JSON 형식으로 전송
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                },
+                success: function(response) {
+                    alert('사용 가능한 아이디입니다.');
+                    checkVar = true; // 중복 체크 성공 시 true로 설정
+                },
+                error: function(xhr, status, error) {
+                    if(xhr.status === 409) {
+                        alert('이미 사용 중인 아이디입니다.');
+                    } else {
+                        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+                    }
+                    checkVar = false; // 중복 체크 실패 시 false로 설정
+                }
+            });
+        }
+
+        function formatPhoneNumber(phone) {
+            // 숫자만 추출
+            var cleaned = ('' + phone).replace(/\D/g, '');
+            var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
+            if (match) {
+                return match[1] + '-' + match[2] + '-' + match[3];
+            }
+            return null;
+        }
+
+        function check() {
+            var firstPw = $('#password').val();
+            var secondPw = $('#password_check').val();
+            var phone = $('#phone').val();
+            var account = $('#account').val();
+            var formattedPhone = formatPhoneNumber(phone);
+
+            if (!formattedPhone) {
+                alert('올바른 휴대폰 번호를 입력해주세요.');
+                return;
+            }
+
+            // 비밀번호 유효성 검사 정규 표현식
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
+
+            // 비밀번호 유효성 검사
+            if (!passwordRegex.test(firstPw)) {
+                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                return;
+            }
+
+            // 비밀번호 일치 확인
+            if (firstPw !== secondPw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // 이메일 유효성 검사 정규 표현식
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // 이메일 유효성 검사
+            if (!emailRegex.test(account)) {
+                alert('올바른 이메일 주소를 입력해주세요.');
+                return;
+            }
+
+            // 모든 조건이 충족되면 회원가입을 완료하고 로그인 페이지로 이동
+            if(checkVar) {
+                var userData = {
+                    username: $('input[name="username"]').val(),
+                    birth: $('input[name="birth"]').val(),
+                    userId: $('#userId').val(),
+                    password: firstPw,
+                    phoneNumber: formattedPhone,
+                    account: account,
+                    profilePictureUrl: 'img/user/basic_social.png' // 기본 빈 사진
+                };
+
+                var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
+
+                $.ajax({
+                    url: '/user/signup2',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(userData),
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                    },
+                    success: function(response) {
+                        alert('회원가입이 완료되었습니다.');
+                        window.location.href = '/user/login';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+                    }
+                });
+            } else {
+                alert('아이디 중복 체크를 진행 해주세요.');
+                return;
+            }
+        }
+    </script>
+</body>
+</html>

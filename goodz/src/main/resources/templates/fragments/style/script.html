@@ -54,6 +54,31 @@
                 alert("삭제버튼");
             });
         </script>
+
+        <!-- 게시글 삭제/버튼 -->
+        <script>
+            function actionDelete() {
+                let doubleCheck = confirm ('정말로 삭제하시겠습니까?');
+
+                return;
+            }
+        </script>
+
+        <!-- 상품태그 삭제 -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var tagedItems = document.querySelectorAll(".tagedItem");
+        
+                tagedItems.forEach(function(item) {
+                    item.addEventListener("click", function() {
+                        // 클릭된 요소를 완전히 삭제합니다.
+                        item.remove();
+                    });
+                });
+            });
+        </script>
+        
+
     </th:block>
 </body>
 </html>

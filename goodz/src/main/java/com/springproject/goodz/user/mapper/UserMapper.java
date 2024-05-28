@@ -30,4 +30,8 @@ public interface UserMapper {
     // 비밀번호 찾기
     public String findPw(@Param("userName") String name , @Param("birth") String birth , @Param("userId") String userId) throws Exception;
 
+    // 회원 가입 시 아이디 중복 체크
+    public int checkId(@Param("userId") String userId) throws Exception;
+
+
 }
