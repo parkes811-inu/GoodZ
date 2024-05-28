@@ -25,5 +25,7 @@ public interface UserService {
 
     // 회원 가입 시 아이디 중복 체크
     public boolean checkId(String userId) throws Exception;
-
+    
+    // 비밀번호 찾기
+    public String findPw(String name, String birth, String userId ) throws Exception;
 }
