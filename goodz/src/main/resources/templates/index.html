@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/product_layout}"
+      layout:decorate="~{/layouts/main_layout}"
       >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>메인 화면</title>
+
+    <!-- 이미지 슬라이드 css -->
     <style>
         .carousel-item img {
             width: 100%;
@@ -28,15 +30,42 @@
                 width: 100%;
             }
         } */
+    </style>
 
+    <!-- container css -->
+    <style>
+        .profile_img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%; /* 둥근 모서리 */
+            overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
+        }
 
+        .profile_img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+        }
+
+        .product_item img {
+            width: 100%;
+        }
+        
+        .product_brand, .product_name {
+            white-space: nowrap;       /* 줄바꿈을 하지 않도록 설정 */
+            overflow: hidden;          /* 넘치는 부분을 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 부분을 ...으로 표시 */
+            display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
+            width: 100px;
+        }
     </style>
 </head>
 <body layout:fragment="content">
-    <!-- <div class="container"> -->
-    <div class="mainContainer">
+    <div class="container">
+
+        <!-- 이미지 슬라이드 -->
         <div class="col-12">
-            <div id="productCarousel" class="carousel slide container" data-bs-ride="carousel">
+            <div id="productCarousel" class="carousel slide container p-0" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img src="/img/main/main3.jpg" class="d-block w-100" alt="Stussy Basic T-Shirt 1">
@@ -48,6 +77,8 @@
                         <img src="/img/product/product_img.png" class="d-block w-100" alt="Stussy Basic T-Shirt 3">
                     </div>
                 </div>
+
+                <!-- 이전/다음 버튼 -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
@@ -56,55 +87,150 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
+
             </div>
         </div>
+
 
         <div class="container mt-4">
-            <h5 class="text-md-start fw-bold mt-5" style="padding-right: 100px;">New Arrivals</h5>
-            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="taggedStyles">
-                <!-- 반복문으로 최대 4개 까지 -->
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <div class="profile-img">
-                                        <img src="/img/product/profile.png" alt="프로필이미지" class="rounded-circle">
-                                    </div>
-                                    <!-- 게시글 주인의 피드 -->
-                                    <a href="styles/cmmtX" style="text-decoration-line: none; color: black;" >
-                                        <p class="userId fw-bold m-0">박은서</p>
-                                    </a>
-                                </div>
-                            </div>
-                            <!-- 애는 그 게시물로 이동 -->
-                            <a href="styles/cmmtX">
-                                <img src="/img/product/style_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
+
+            <!-- New Arrivals -->
+            <div class="NewArrivals">
+                <h5 class="text-md-start fw-bold mt-5">New Arrivals</h5>
+                <div class="product_list row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="taggedStyles">
+    
+                    <!-- [DB] 반복문으로 최대 4개 까지 -->
+    
+                    <div class="product_item col">
+                        <!-- 상품이미지 -->
+                        <a href="#">
+                            <img  class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
+                        </a>
+                        <!-- 상품정보 -->
+                        <div class="product_desc text-black mb-2">
+                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
                         </div>
                     </div>
+    
+                    <div class="product_item col">
+                        <!-- 상품이미지 -->
+                        <a href="#">
+                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
+                        </a>
+                        <!-- 상품정보 -->
+                        <div class="product_desc text-black mb-2">
+                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                        </div>
+                    </div>
+    
+                    <div class="product_item col">
+                        <!-- 상품이미지 -->
+                        <a href="#">
+                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
+                        </a>
+                        <!-- 상품정보 -->
+                        <div class="product_desc text-black mb-2">
+                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                        </div>
+                    </div>
+    
+                    <div class="product_item col">
+                        <!-- 상품이미지 -->
+                        <a href="#">
+                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
+                        </a>
+                        <!-- 상품정보 -->
+                        <div class="product_desc text-black mb-2">
+                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
+                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
-            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
-                <!-- 반복문으로 최대 4개 까지 -->
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <a href="#">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
+            <!-- Popular Styles -->
+            <div class="PopularStyles mb-5">
+                <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
+                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="stylesList">
+    
+                    <!-- [DB] 반복문으로 최대 4개 까지 -->
+                    <div class="col">
+                        <!--[DB] 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile_img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
                                 </div>
+                                <p class="userId fw-bold m-0">박은서</p>
                             </div>
                         </div>
+                        <!--[DB] 이미지 -->
+                        <a href="/styles/read">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
                     </div>
+                    
+                    <div class="col">
+                        <!--[DB] 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile_img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">박은서</p>
+                            </div>
+                        </div>
+                        <!--[DB] 이미지 -->
+                        <a href="/styles/read">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                    </div>
+                    
+                    <div class="col">
+                        <!--[DB] 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile_img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">박은서</p>
+                            </div>
+                        </div>
+                        <!--[DB] 이미지 -->
+                        <a href="/styles/read">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                    </div>
+                    
+                    <div class="col">
+                        <!--[DB] 프로필 & 아이디 -->
+                        <div class="card-text py-2">
+                            <div class="d-flex justify-content-start column-gap-1">
+                                <div class="profile_img">
+                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                </div>
+                                <p class="userId fw-bold m-0">박은서</p>
+                            </div>
+                        </div>
+                        <!--[DB] 이미지 -->
+                        <a href="/styles/read">
+                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
+                        </a>
+                    </div>
+
+
+
+                    
                 </div>
             </div>
+
+
         </div>
     </div>
+
 </body>
 </html>

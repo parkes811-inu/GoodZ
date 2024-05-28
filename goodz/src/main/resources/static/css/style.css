@@ -1,23 +1,54 @@
-/* 
------------- header css ------------
- */
+/* -------------------[header]------------------- */
+
+/* .nav-link {
+    font-weight: bold;
+}
+*/
+
+.nav-link.active {
+    font-weight: bolder;
+}
+.logo img {
+    height: 60px; /* 이미지 크기 키움 */
+}
+.nav-item + .nav-item {
+    margin-left: 20px;
+}
+.secondary-nav .nav-item .nav-link {
+    font-size: 0.7rem; /* 글자 크기 줄임 */
+    color: gray !important; /* 글자 색상 회색으로 변경 */
+}
+.secondary-nav .nav-item .nav-link:hover {
+    color: black !important;
+}
+
+.header-container {
+   height: 97.8px !important;
+}
+/* -------------------[header]------------------- */
+
+
+
+
+
+
+
+
+ /* ------------ 반응형 css 시작------------ */
+
  @media (min-width: 992px) {
     .container {
         max-width: 1100px !important;
     }
 }
 
-/* .mt-3 {
-    margin-top: 1rem !important;
-} */
-/* 
------------- header css ------------
- */
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 720px;
+    }
+}
 
-
- /* 
------------- container css ------------
- */
+ /* ------------ 반응형 css 끝------------ */
 
 
 
@@ -25,9 +56,24 @@
 
 
 
-/*
------------- footer css ------------
-*/
+
+
+
+
+ /* ------------ body css 시작------------ */
+.container {
+    padding: 0;
+}
+
+
+ /* ------------ body css 끝------------ */
+
+
+
+
+
+
+/* ------------ footer css 시작------------ */
 body {
     display: flex;
     flex-direction: column;
@@ -35,9 +81,11 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
+
 .content {
     flex: 1;
 }
+
 .footer {
     width: 100%;
     display: flex;
@@ -147,9 +195,7 @@ body {
     margin: 0 auto;
     max-width: 900px;
 }
-/*
------------- footer css ------------
-*/
+/* ------------ footer css 끝------------ */
 
 
 
@@ -193,7 +239,7 @@ body {
 .iframe-container {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%; /* 16:9 aspect ratio 
     height: 0;
     overflow: hidden;
 }
@@ -205,6 +251,8 @@ body {
     height: 100%;
     border: 0;
 } */
+
+
 /*
 ------------ footer css ------------
 */
@@ -225,26 +273,3 @@ body {
 
 
 
-/* -------------------[header]------------------- */
-/* .nav-link {
-    font-weight: bold;
-}
-*/
-.nav-link.active {
-    font-weight: bolder;
-}
-.logo img {
-    height: 60px; /* 이미지 크기 키움 */
-}
-.nav-item + .nav-item {
-    margin-left: 20px;
-}
-.secondary-nav .nav-item .nav-link {
-    font-size: 0.7rem; /* 글자 크기 줄임 */
-    color: gray !important; /* 글자 색상 회색으로 변경 */
-}
-.secondary-nav .nav-item .nav-link:hover {
-    color: black !important;
-}
-
-/* -------------------[header]------------------- */
