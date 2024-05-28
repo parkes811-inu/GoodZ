@@ -1,6 +1,7 @@
 package com.springproject.goodz.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
@@ -24,5 +25,6 @@ public interface UserMapper {
     public int insertAuth(UserAuth userAuth) throws Exception;
 
     // 아이디 찾기
-    public String findId(String phone, String name) throws Exception;
+    public String findId(@Param("phoneNumber") String phone, @Param("userName") String name) throws Exception;
+
 }

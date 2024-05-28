@@ -82,10 +82,10 @@
     </insert>
 
     <!-- 아이디 찾기 -->
-    <select id="findId">
+    <select id="findId" resultType="string">
         SELECT user_id
           FROM user
-         WHERE phone_number = #{phone_number}
-           AND username = #{user_name}
+         WHERE phone_number = #{phoneNumber}
+           AND username = #{userName}
     </select>
 </mapper>
