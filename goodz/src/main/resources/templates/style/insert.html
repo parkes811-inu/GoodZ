@@ -6,30 +6,103 @@
 <head>
     <title>게시글 등록</title>
     <style>
+        .productImg {
+            /* width: 100%; */
+            height: 100%;
+        }
     </style>
 </head>
 
 <body layout:fragment="content">
     <div class="container">
         <div class="my-5 d-flex justify-content-center">
-            <form method="post" style="width: 500px;">
+            <form method="post" style="width: 600px;">
 
                 <!-- 이미지첨부 -->
                 <span id="passwordHelpInline" class="form-text">최대 10장</span>
-                <label for="formFileMultiple" class="form-label"></label>
                 <input id="file" class="form-control" type="file"  multiple>
                 <br>
                 <!-- 내용 -->
                 <textarea  id="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
                 <br>
-                <!-- 상품태그 -->
-                <div>
-                    
+                <!-- 상품태그 영역 -->
+                <div class="d-flex justify-content-between">
+                    <label for="formFileMultiple" class="form-label" style="font-weight: bold; margin-bottom: 0;">상품태그</label>
+                    <!-- 상품추가버튼 -->
+                    <button type="button"  class="p-0 mb-1" style="color: white;display: inline-flex;align-items: center;justify-content: center;border: none;padding: 5px;border-radius: 4px;text-decoration: none;background-color: #393e46;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </button>
                 </div>
-                <input type="" class="form-control">
+                
+                <!-- 태그된 상품 -->
+                <div class="productTag-area border rounded-2">
+                    <div class="row row-cols-2 row-cols-md-4 g-2 p-3">
 
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
 
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
 
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col">
+                          <div class="card" style="border: none;">
+                              <img class="productImg rounded-2" src="/img/temp/sampleProduct.jpg" alt="상품이미지">
+                            <div class="card-body p-0 m-0">
+                              <p class="card-title m-0 fw-bold">Nike</p>
+                              <p class="card-text p-0" style="font-size: small;">Air Force 1 '07</p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn my-5" style="color: white;background-color: #393E46;/* align-items: center; */width: 600px;">작성 완료</button>
             </form>
         </div>
     </div>
