@@ -88,4 +88,13 @@
          WHERE phone_number = #{phoneNumber}
            AND username = #{userName}
     </select>
+
+    <!-- 비밀번호 찾기 -->
+    <select id="findPw" resultType="string">
+       SELECT password
+         FROM user
+        WHERE username = #{userName}
+          AND birth = #{birth}
+          AND user_id = #{userId}
+    </select>
 </mapper>

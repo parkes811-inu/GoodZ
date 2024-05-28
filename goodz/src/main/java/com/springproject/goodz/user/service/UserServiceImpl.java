@@ -86,6 +86,11 @@ public class UserServiceImpl implements UserService {
     public String findId(String phone, String name) throws Exception {
         String id = userMapper.findId(phone, name);
         return id;
-    }   
-    
+    }
+
+    @Override
+    public String findPw(String username, String birth, String userId) throws Exception {
+        String pw = userMapper.findPw(username, birth, userId);
+        return pw;
+    } 
 }

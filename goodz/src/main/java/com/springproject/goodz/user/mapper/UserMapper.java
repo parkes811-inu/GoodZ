@@ -26,5 +26,8 @@ public interface UserMapper {
 
     // 아이디 찾기
     public String findId(@Param("phoneNumber") String phone, @Param("userName") String name) throws Exception;
+    
+    // 비밀번호 찾기
+    public String findPw(@Param("userName") String name , @Param("birth") String birth , @Param("userId") String userId) throws Exception;
 
 }
