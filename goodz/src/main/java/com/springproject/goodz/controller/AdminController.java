@@ -5,6 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import groovy.util.logging.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+/*
+ * [GET]    /admin/brand_list   브랜드 리스트 화면
+ * [GET]    /admin/add_brand    브랜드 등록 화면
+ * [POST]   /admin/add_brand    브랜드 등록 처리
+ */
 
 @Slf4j
 @Controller
@@ -20,6 +28,18 @@ public class AdminController {
     public String brand_list() {
         return "/admin/brand_list";
     }
+
+    @GetMapping("/add_brand")
+    public String moveToAddBrand() {
+        return "/admin/add_brand";
+    }
+
+    // @PostMapping("/add_brand")
+    // public String addBrand(Brand brand) {
+        
+    //     return entity;
+    // }
+    
 
     @GetMapping("/product_list")
     public String product_list() {
@@ -56,8 +76,7 @@ public class AdminController {
         return "/admin/product_detail";
     }
 
-    @GetMapping("/add_brand")
-    public String add_brand() {
-        return "/admin/add_brand";
-    }
+    
+
+    
 }
