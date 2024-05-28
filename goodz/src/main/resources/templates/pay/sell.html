@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{/layouts/pay_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구매하기</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <style>
+        .product_img {
+            margin-right: 20px;
+            text-align: left;
+            margin-top: 20px; 
+        }
+        .product_detail {
+            margin-top: 20px;
+        }
+        .product_detail .product_info {
+            margin-bottom: 20px;
+        }
+        .info_list {
+            flex-grow: 1;
+        }
+        .info_box .title {
+            min-width: 80px;
+            font-weight: bold;
+        }
+        .info_box .desc {
+            margin-left: 10px;
+        }
+        .info_box {
+            margin-bottom: 10px;
+        }
+        .shipping_info img {
+            width: 50px;
+            height: auto;
+            margin-right: 25px;
+        }
+        .section_header {
+            font-weight: bold;
+            font-size: 1.2rem; 
+            margin-bottom: 15px;
+        }
+        .order_summary {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        .order_summary .summary_item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .order_summary .summary_total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .order_summary .pay_button {
+            width: 100%;
+            padding: 15px;
+            background-color: #000;
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            font-size: 1.1em;
+            border-radius: 5px;
+            margin-top: 20px;
+            color: #fff;
+        }
+        .section_unit h1 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+        }
+        .btn-wrapper {
+            margin-top: 20px;
+        }
+        .btn-primary {
+        background-color: #000;
+        border-color: #000;
+        }
+        .btn-primary:hover {
+            background-color: #333;
+            border-color: #333;
+        }
+        .btn-primary:focus, .btn-primary:active {
+            background-color: #333 !important;
+            border-color: #333 !important;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body layout:fragment="content">
+    <div class="container">
+        <form method="post">
+
+            <div class="section_unit mb-4 text-center">
+                <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>
+            </div>
+            <div class="section_unit mb-4">
+                <div class="section_content p-3 border rounded">
+                    <div class="product_info_area mb-4 d-flex align-items-center">
+                        <div class="product_img">
+                            <img src="/img/pay/test.png" class="img-fluid">
+                        </div>
+                        <!-- 상품명과 사이즈 가져와야함 -->
+                        <div class="product_detail">
+                            <div class="product_info">
+                                <strong>상품명</strong><br>Stussy Basic Stussy T-Shirt Berry 2024
+                            </div>
+                            <div class="product_info">
+                                <strong>사이즈</strong><br>M
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- 상품 보내는 주소 -->
+            <section>
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded mb-4">
+                        <div class="section_header">배송 주소</div>
+                        <div class="delivery_info d-flex align-items-center">
+                            <div class="info_list">
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">받는 분</div>
+                                    <div class="desc">GoodZ</div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">연락처</div>
+                                    <div class="desc">010-1234-5678</div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">배송 주소</div>
+                                    <div class="desc">뭐로 할까 애도람?? 희희</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- 발송 방법 -->
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded mb-4">
+                        <div class="section_header">발송 방법</div>
+                        <div class="shipping_info d-flex align-items-center">
+                            <img src="/img/pay/box.png" alt="배송박스" class="img-fluid">
+                            <div class="shipping_detail d-flex flex-column">
+                                <div class="shipping_method" style="font-weight: bold;">일반배송</div>
+                                <div class="shipping_cost text-muted">선불<br>착불 발송 시 정산금액에서 차감</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- 운송장 번호 입력 -->
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded mb-4">
+                        <div class="section_header">운송장 번호</div>
+                        <div class="form-group mb-3">
+                            <label for="courier" class="form-label">택배사</label>
+                            <select id="courier" class="form-select">
+                                <option selected>택배사를 선택해주세요</option>
+                                <option value="cj">CJ대한통운</option>
+                                <option value="lotte">롯데택배</option>
+                                <option value="hanjin">한진택배</option>
+                                <option value="logen">로젠택배</option>
+                                <option value="postoffice">우체국택배</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tracking-number" class="form-label">운송장 번호</label>
+                            <input type="text" id="tracking-number" class="form-control" placeholder="운송장 번호를 입력해주세요">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 고객 반송 주소 -->
+                <!-- 유저의 주소를 가져와야함 없으면 주소추가하는 부분 있어야함 (추가해야함) -->
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded mb-4">
+                        <div class="section_header">반송 주소</div>
+                        <div class="delivery_info d-flex align-items-center">
+                            <div class="info_list">
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">받는 분</div>
+                                    <div class="desc">김조은</div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">연락처</div>
+                                    <div class="desc">010-1234-5678</div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">배송 주소</div>
+                                    <div class="desc">서울특별시 OO구 OO동 한강리버사이드 자이아파트 102동 3103호</div>
+                                </div>
+                            </div>
+                            <button id="change_address_btn" class="btn btn-secondary ms-3">변경</button>
+                        </div>
+                        <p id="no_address_msg" class="text-danger" style="display: none;">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
+                        <button id="add_address_btn" class="btn btn-primary mt-2" style="display: none;">새 배송지 주소 추가</button>
+                    </div>
+                </div>
+            </section>
+    
+            <!-- 최종 주문 정보-->
+            <div class="section_unit mb-4">
+                <div class="section_content p-3 border rounded order_summary">
+                    <div class="section_header">최종 주문 정보</div>
+                    <div class="summary_item">
+                        <!-- 가격을 불러오고 검수비와 수수료는 기존 가격의 퍼센트를 정해서 자동으로 계산되게함-->
+                        <!-- 총 판매금액도 자동으로 계산되게 함-->
+                        <span>판매 가격</span>
+                        <span>56,000원</span>
+                    </div>
+                    <div class="summary_item">
+                        <span>검수비</span>
+                        <span>- 5,600원</span>
+                    </div>
+                    <div class="summary_item">
+                        <span>수수료</span>
+                        <span>- 10,000원</span>
+                    </div>
+                    <div class="summary_item">
+                        <span>배송비</span>
+                        <span>선불|판매자 부담</span>
+                    </div>
+                    <div class="summary_item summary_total">
+                        <span>총 판매금액</span>
+                        <span>40,400원</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="btn-wrapper w-100 mb-5">
+            <button id="payment-button" class="btn btn-primary w-100" onclick="payment()">판매하기</button>
+        </div>
+    </div>
+
+    <script type="module" src="/js/pay/pay.js"></script>
+
+    <script>
+        function payment() {
+            window.location.href = '/pay/complete';
+        }
+    </script>
+</body>
+</html>

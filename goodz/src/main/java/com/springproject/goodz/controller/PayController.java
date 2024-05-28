@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/pay")
 public class PayController {
     
-    @GetMapping("")
-    public String index() {
-        return "/pay/index";
+    @GetMapping("/buy")
+    public String buy() {
+        return "/pay/buy";
     }
 
     @GetMapping("/success")
@@ -31,5 +31,10 @@ public class PayController {
     @GetMapping("/complete")
     public String complete() {
         return "/pay/complete";
+    }
+
+    @GetMapping("/sell")
+    public String sell() {
+        return "/pay/sell";
     }
 }
