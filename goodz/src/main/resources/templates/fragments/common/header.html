@@ -8,24 +8,9 @@
         </a>
         <ul class="nav secondary-nav nav-left">
           <li class="nav-item">
-            <th:block sec:authorize="isAnonymous()">
-              <a href="/user/login" class="nav-link link-body-emphasis px-2">관심</a>
-            </th:block>
-
-            <th:block sec:authorize="isAuthenticated()">
-              <a href="/user/wishlist/products" class="nav-link link-body-emphasis px-2">관심</a>
-            </th:block>
-              <a href="/product/shirts" class="nav-link link-body-emphasis px-2">상의</a>
-
+            <a href="/product/shirts" class="nav-link link-body-emphasis px-2">상의</a>
           </li>
           <li class="nav-item">
-            <th:block sec:authorize="isAnonymous()">
-              <a href="/user/login" class="nav-link link-body-emphasis px-2">마이페이지</a>
-            </th:block>
-            <th:block sec:authorize="hasRole('ROLE_USER')">
-              <a href="/user" class="nav-link link-body-emphasis px-2">마이페이지</a>
-            </th:block>
-
               <a href="/product/pants" class="nav-link link-body-emphasis px-2">하의</a>
           </li>
           <li class="nav-item">
