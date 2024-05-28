@@ -78,7 +78,7 @@ public class UserController {
     }
 
     // 관심페이지 이동 _ 디폴트: 상품
-    @GetMapping("/wishlist")
+    @GetMapping("/wishlist/products")
     public String wishlist_products() {
         return "/user/wishlist_products";
     }
