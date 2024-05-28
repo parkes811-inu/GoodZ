@@ -6,12 +6,14 @@
       </a>
       <div class="d-flex flex-column align-items-end">
         <ul class="nav secondary-nav mb-2">
+
           <li class="nav-item">
             <th:block sec:authorize="isAnonymous()">
               <a href="/user/login" class="nav-link link-body-emphasis px-2">관심</a>
             </th:block>
+
             <th:block sec:authorize="isAuthenticated()">
-              <a href="/user/wishlist" class="nav-link link-body-emphasis px-2">관심</a>
+              <a href="/user/wishlist" class="nav-link link-body-emphasis px-2">관심123</a>
             </th:block>
           </li>
 
