@@ -1,6 +1,8 @@
 ﻿-- Active: 1716800736662@@127.0.0.1@3306@goodz
 
+-- 컬럼명 바꿔야 함 ㅎㅎ
 ALTER TABLE product CHANGE brand b_no int;
+ALTER TABLE purchase CHANGE purcahse_pirce purchase_pirce int;
 
 
 -- DROP
