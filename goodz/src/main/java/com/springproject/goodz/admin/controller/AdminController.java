@@ -6,12 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springproject.goodz.product.dto.Brand;
+import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.service.BrandService;
+import com.springproject.goodz.product.service.ProductService;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+
 
 /*
  * [GET]    /admin              관리자 메인 화면
@@ -19,7 +27,6 @@ import groovy.util.logging.Slf4j;
  * [GET]    /admin/add_brand    브랜드 등록 화면
  * [POST]   /admin/brands       브랜드 등록 처리
  */
-
 @Slf4j
 @Controller
 @RequestMapping("/admin")
@@ -27,6 +34,9 @@ public class AdminController {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private ProductService productService;
     
     /**
      * 관리자 메인 화면
@@ -61,6 +71,23 @@ public class AdminController {
         return "/admin/add_brand";
     }
 
+    @PostMapping("/brands")
+    public String addBrands(Brand brand) throws Exception {
+
+        log.info("::::::::::::::브랜드 등록 요청::::::::::::::");
+        log.info(brand.toString());
+    
+        int result = brandService.insert(brand);
+
+        if (result == 0) {
+            log.info("::::::::::::::브랜드 등록 처리 중 예외발생::::::::::::::");
+            return "/admin/add_brand";
+        }
+
+        return "redirect:/admin/brands";
+    }
+    
+
 
     // @PostMapping("/add_brand")
     // public String addBrand(Brand brand) {
@@ -69,10 +96,52 @@ public class AdminController {
     // }
     
 
-    @GetMapping("/product_list")
-    public String product_list() {
+    /**
+     * 관리자 상품 목록 화면
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/products")
+    public String product_list(Model model) throws Exception{
+        List<Product> productList = productService.list();
+
+        model.addAttribute("productList", productList);
+
         return "/admin/product_list";
     }
+
+    /**
+     * 상품 등록 화면
+     * @return
+     */
+    @GetMapping("/add_product")
+    public String moveToAddProduct(Model model) throws Exception {
+        List<Brand> brandList = brandService.list();
+        model.addAttribute("brandList", brandList);
+        return "/admin/add_product";
+    }
+
+    @PostMapping("/products")
+    public String addProducts(@ModelAttribute Product product, 
+                            @RequestParam("productFiles") List<MultipartFile> productFiles, 
+                            RedirectAttributes redirectAttributes) throws Exception {
+        log.info("::::::::::::::상품 등록 요청::::::::::::::");
+        log.info(product.toString());
+
+        // 상품 객체에 파일 목록 설정
+        product.setProductFiles(productFiles);
+        
+        int result = productService.insert(product);
+
+        if (result == 0) {
+            log.info("::::::::::::::상품 등록 처리 중 예외발생::::::::::::::");
+            return "redirect:/admin/add_product";
+        }
+
+        return "redirect:/admin/products";
+    }
+    
 
     @GetMapping("/purchase_state")
     public String purchase_state() {
@@ -94,10 +163,7 @@ public class AdminController {
         return "/admin/pay_history_detail";
     }
 
-    @GetMapping("/add_product")
-    public String add_product() {
-        return "/admin/add_product";
-    }
+    
 
     @GetMapping("/product/detail")
     public String product_detail() {

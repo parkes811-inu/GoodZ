@@ -19,4 +19,5 @@ public class Users {
     private Date updatedAt;
     private int enabled;
     private List<UserAuth> authList;
+
 }
