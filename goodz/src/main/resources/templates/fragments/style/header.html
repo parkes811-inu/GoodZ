@@ -23,7 +23,8 @@
       </div>
       <div class="d-flex flex-column align-items-end mb-0">
           <ul class="nav secondary-nav mb-2">
-            <li class="nav-item">
+            <!-- 관심 -->
+            <li class="nav-item" sec:authorize="!hasRole('ROLE_ADMIN')">
               <th:block sec:authorize="isAnonymous()">
                 <a href="/user/login" class="nav-link link-body-emphasis px-2">관심</a>
               </th:block>
@@ -31,7 +32,8 @@
                 <a href="/user/wishlist" class="nav-link link-body-emphasis px-2">관심</a>
               </th:block>
             </li>
-            <li class="nav-item">
+            <!-- 마이페이지 -->
+            <li class="nav-item" sec:authorize="!hasRole('ROLE_ADMIN')">
               <th:block sec:authorize="isAnonymous()">
                 <a href="/user/login" class="nav-link link-body-emphasis px-2">마이페이지</a>
               </th:block>
@@ -40,15 +42,15 @@
               </th:block>
             </li>
             <!-- 관리자 로그인 시 -->
+            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
             <li class="nav-item">
               <!-- 관리자 페이지 경로 -->
-              <th:block sec:authorize="hasRole('ROLE_ADMIN')">
-                <a href="/" class="nav-link link-body-emphasis px-2">관리자 페이지</a>
-              </th:block>
-            </li>
+                <a href="/admin" class="nav-link link-body-emphasis px-2">관리자 페이지</a>
+              </li>
+            </th:block>
             <li class="nav-item">
-              <!-- 비 로그인 시 -->
               <th:block sec:authorize="isAnonymous()">
+              <!-- 비 로그인 시 -->
                 <a href="/user/login" class="nav-link link-body-emphasis px-2">로그인</a>
               </th:block>
               <!-- 로그인 시 -->
@@ -69,7 +71,7 @@
               <a href="/" class="nav-link link-body-emphasis px-2" aria-current="page">HOME</a>
             </li>
             <li class="nav-item">
-              <a href="/styles" class="nav-link link-body-emphasis px-2 active">STYLE</a>
+              <a href="/styles" class="nav-link link-body-emphasis px-2  active">STYLE</a>
             </li>
             <li class="nav-item">
               <a href="/product/shoes" class="nav-link link-body-emphasis px-2">SHOP</a>
@@ -84,4 +86,3 @@
   <div class="seperation" style="background-color: #393E46; height: 15px; margin: 0 auto;"></div>
 
 </header>
-
