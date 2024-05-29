@@ -5,22 +5,16 @@
       >
 <!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>스타일 상세</title>
     <style>
-        .mainContainer {
-            text-align: center;
-            width: 640px;
-            padding: 0;
-        }
-        .profile-img {
+        .profile_img {
             width: 40px;
             height: 40px;
             border-radius: 50%; /* 둥근 모서리 */
             overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
         }
 
-        .profile-img img {
+        .profile_img img {
             width: 100%;
             height: 100%;
             object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
@@ -185,13 +179,13 @@
     </div>
 
     <div class="container">
-        <div class="mainContainer">
+        <div class="mainContainer" style="width: 640px;">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
-                    <a href="/styles/user/@zzang._.777" class="profile-img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile-img">
+                    <a href="/styles/user/@zzang._.777" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
+                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
                         <span class="userId fw-bold m-0" >zzang._.777</span>
                     </a>
                 </div>
@@ -224,7 +218,7 @@
                           <span class="count">31</span>
                     </a>
                 </div>
-
+    
                 <!-- 게시글 내용 -->
                 <div class="social_text my-5">
                     <p class="text_title fs-4 text-start">테스트 글내용 123456678 크크크😎</p>

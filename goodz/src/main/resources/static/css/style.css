@@ -8,6 +8,7 @@
 .nav-link.active {
     font-weight: bolder;
 }
+
 .logo img {
     height: 60px; /* 이미지 크기 키움 */
 }
@@ -77,7 +78,7 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     margin: 0;
     font-family: Arial, sans-serif;
     padding: 0;
@@ -184,6 +185,7 @@ body {
 
 /* 푸터 맨 하단에 고정시키는 코드 */
 .mainContainer {
+
     min-height: calc(100vh - 10rem);
     margin: 0 auto;
     width: 100%;    /* 이게 없으면 아이템이 작아지면 컨테이너도 작아짐 */
