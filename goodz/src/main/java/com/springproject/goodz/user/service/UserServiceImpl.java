@@ -1,5 +1,8 @@
 package com.springproject.goodz.user.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +15,8 @@ import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.mapper.UserMapper;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -88,16 +93,71 @@ public class UserServiceImpl implements UserService {
         return id;
     }
 
+
     @Override
-    public String findPw(String username, String birth, String userId) throws Exception {
-        String pw = userMapper.findPw(username, birth, userId);
-        return pw;
+    public Users findPw(String username, String birth, String userId) throws Exception {
+        log.info("findPw 메소드 호출: username={}, birth={}, userId={}", username, birth, userId);
+        Users findMan = userMapper.findPw(username, birth, userId);
+
+        return findMan;
     } 
+    // @Override
+    // public String findPw(String username, String birth, String userId) throws Exception {
+    //     log.info("findPw 메소드 호출: username={}, birth={}, userId={}", username, birth, userId);
+    //     String pw = userMapper.findPw(username, birth, userId);
+    //     log.info("findPw 결과: {}", pw);
+    //     return pw;
+    // } 
+    
+    @Override
+    public int changePw(String newPw, String userId) throws Exception {
+        // log.info("changePw 메소드 호출: username={}, currentPw={}, newPw={}", username, currentPw, newPw);
+        // 사용자의 현재 비밀번호를 가져옵니다.
+        
+        // 비밀번호가 일치하는지 확인합니다.
+            // 새 비밀번호를 암호화하여 업데이트합니다.
+            String password = passwordEncoder.encode(newPw);
+            log.info("새로운 비밀번호 암호화 결과: {}", password);
+
+            int result = userMapper.changePw(password, userId);
+            if(result > 0) {
+                log.info("비밀번호 변경 성공");
+                return result; // 성공
+            }
+            else {
+                log.info("비밀번호 변경 123123실패");
+                return 0;
+            }
+    }
+    
+    // @Override
+    // public String findPw(String username, String birth, String userId) throws Exception {
+    //     String pw = userMapper.findPw(username, birth, userId);
+    //     return pw;
+    // } 
+
+    //  @Override
+    //  public int changePw(String username, String currentPw, String newPw) throws Exception {
+    //     log.info("임플진입");
+    //      // 사용자의 현재 비밀번호를 가져옵니다.
+    //      Users user = userMapper.select(username);
+    //      // 비밀번호가 일치하는지 확인합니다.
+    //      if (passwordEncoder.matches(currentPw, user.getPassword())) {
+    //          // 새 비밀번호를 암호화하여 업데이트합니다.
+    //          String encodedNewPw = passwordEncoder.encode(newPw);
+    //          userMapper.changePw(username, encodedNewPw);
+    //          return 1; // 성공
+    //      } else {
+    //          return 0; // 현재 비밀번호가 일치하지 않습니다.
+    //      }
+    //  }
 
     @Override
     public boolean checkId(String userId) throws Exception {
         int result = userMapper.checkId(userId);
         return result == 0;
     }
+
+    
 
 }

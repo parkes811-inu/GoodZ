@@ -36,7 +36,7 @@ public class PostController {
      */
     @GetMapping("")
     public String list() {
-        return "/style/list";
+        return "/post/list";
     }
 
     /**

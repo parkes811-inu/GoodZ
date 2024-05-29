@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/user_layout}">
+<head>
+    <style>
+        .custom-card {
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        .underline {
+            width: 100%;
+            height: 2px;
+            background-color: #000;
+            margin: 1rem 0;
+        }
+        .text-below {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            height: calc(1.5em + 0.75rem + 2px);
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .text-center {
+            margin-top: 20px;
+        }
+        .btn-dark {
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 5px;
+        }
+        .btn-primary:hover {
+            background-color: #23272b;
+            border-color: #23272b;
+        }
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+        .mb-5 {
+            margin-bottom: 3rem !important;
+        }
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+        .modal {
+            z-index: 1055 !important;
+        }
+    </style>
+    <title>비밀번호 변경</title>
+</head>
+<body layout:fragment="content">
+    <div class="container">
+        <div class="mainContainer">
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card p-4 custom-card">
+                            <h2 class="text-center">비밀번호 변경</h2>
+                            <div class="underline"></div>
+                            <div class="text-below">
+                                항목에 데이터를 입력해주세요
+                            </div>
+                            <form id="changePW-form">
+                                <input type="hidden" name="_csrf" id="csrf" th:value="${_csrf.token}" />
+
+                                <!-- <input type="hidden" id="userId" name="userId" th:value="${user.userId}"> -->
+                        
+                                <div class="form-group">
+                                    <label for="password">변경 비밀번호 입력*</label>
+                                    <input type="password" name="password" class="form-control" id="password" placeholder="변경할 비밀번호를 입력해주세요">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password_check">변경 비밀번호 확인*</label>
+                                    <input type="password" class="form-control" id="password_check" placeholder="다시 한번 더 입력해주세요">
+                                </div>
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="check()">비밀번호 변경</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">비밀번호 변경 결과</h5>
+                </div>
+                <div class="modal-body" id="resultModalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function check() {
+            var firstPw = $('#password').val();
+            var secondPw = $('#password_check').val();
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
+
+            if (!passwordRegex.test(firstPw)) {
+                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                return;
+            }
+
+            if (firstPw !== secondPw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            var userData = {
+                username: $('input[name="username"]').val(),
+                birth: $('input[name="birth"]').val(),
+                userId: $('#userId').val(),
+                password: firstPw,
+            };
+
+            var csrfToken = $('input[name="_csrf"]').val();
+
+            $.ajax({
+                url: '/user/changePW',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                },
+                success: function(response) {
+                    alert('비밀번호가 수정되었습니다.');
+                    window.location.href = '/user/login';
+                },
+                error: function(xhr, status, error) {
+                    alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

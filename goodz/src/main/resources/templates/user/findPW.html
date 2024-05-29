@@ -84,15 +84,23 @@
                     <div class="col-md-6">
                         <div class="card p-4 custom-card">
                             <h2 class="text-center">비밀번호 찾기</h2>
+
+                            <!-- 비밀번호 찾기 실패 안내 -->
+                            <th:block th:if="${param.error}">
+                                <p class="text-center text-danger">해당 정보와 일치하는 계정이 존재하지 않습니다.</p>
+                            </th:block>
+
                             <div class="underline"></div>
                             <div class="text-below">
                              가입 시 등록한 이름 , 주민등록번호, 아이디를 통해 비밀번호를 알려드립니다.
                             </div>
-                            <form pw="findPwForm">
+
+
+                            <form id="form" action="/user/findPW" method="post">
                                 <input type="hidden" name="_csrf" id="csrf" th:value="${_csrf.token}" />
                                 <div class="form-group">
                                     <label for="name">이름 입력*</label>
-                                    <input type="text" class="form-control" id="user_name" placeholder="이름">
+                                    <input type="text" class="form-control" name="username" id="username" placeholder="이름">
                                 </div>
                                 <div class="form-group">
                                     <label for="birth">주민등록번호 입력*</label>
@@ -100,13 +108,15 @@
                                         <input type="text" class="form-control mr-2" id="birth1" placeholder="주민번호 앞자리">
                                         <span class="mx-2">-</span>
                                         <input type="text" class="form-control" id="birth2" placeholder="주민번호 뒷자리">
+                                        <br>
+                                        <input type="text" id="birth" name="birth" value="">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">아이디 입력*</label>
-                                    <input type="text" class="form-control" id="user_id" placeholder="아이디">
+                                    <input type="text" class="form-control" name="userId" id="userId" placeholder="아이디">
                                 </div>
-                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="findPw()">비밀번호 찾기</button>
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="actionSubmit()">비밀번호 찾기</button>
                             </form>
                         </div>
                     </div>
@@ -134,32 +144,45 @@
     </div>
 
     <script>
-        function findPw() {
-            var username = $('#user_name').val();
+        function actionSubmit() {
             var birth1 = $('#birth1').val();
             var birth2 = $('#birth2').val();
-            var birth = birth1 + birth2;
 
-            var userId = $('#user_id').val();
-            var csrfToken = $('#csrf').val();
-            $.ajax({
-                url: '/user/findPW',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ birth: birth, username: username , userId: userId}),
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                },
-                success: function(response) {
-                    $('#resultModalBody').text('당신의 비밀번호는 ' + response + '입니다.');
-                    $('#resultModal').modal('show');
-                },
-                error: function() {
-                    $('#resultModalBody').text('비밀번호를 찾을 수 없습니다.');
-                    $('#resultModal').modal('show');
-                }
-            });
+            var birth = birth1 + birth2;
+            alert('되나')
+            document.getElementById('birth').value = birth;
+            
+
+            let form = document.getElementById('form');
+            form.submit();
         }
+
+        // function findPw() {
+        //     var username = $('#username').val();
+        //     var birth1 = $('#birth1').val();
+        //     var birth2 = $('#birth2').val();
+        //     var birth = birth1 + birth2;
+
+        //     var userId = $('#userId').val();
+        //     var csrfToken = $('#csrf').val();
+        //     $.ajax({
+        //         url: '/user/findPW',
+        //         type: 'POST',
+        //         contentType: 'application/json',
+        //         data: JSON.stringify({ birth: birth, username: username , userId: userId}),
+        //         beforeSend: function(xhr) {
+        //             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+        //         },
+        //         success: function(response) {
+        //             // 성공 시 비밀번호 변경 페이지로 리다이렉트
+        //             window.location.href = '/user/changePW'; // 비밀번호 변경 페이지의 URL로 변경
+        //         },
+        //         error: function() {
+        //             $('#resultModalBody').text('정보가 일치 하지 않습니다.');
+        //             $('#resultModal').modal('show');
+        //         }
+        //     });
+        // }
     </script>
 </body>
 </html>
