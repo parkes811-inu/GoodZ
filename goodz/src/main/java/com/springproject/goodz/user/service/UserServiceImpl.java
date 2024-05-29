@@ -100,4 +100,9 @@ public class UserServiceImpl implements UserService {
         return result == 0;
     }
 
+    @Override
+    public Users findUserByUsername(String username) throws Exception {
+        return userMapper.login(username); // 'login' 메서드를 재사용하여 사용자 정보 조회
+    }
+
 }

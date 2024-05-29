@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}"
-      >
-<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
+      layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <style>
         .shopping-info {
@@ -42,15 +40,17 @@
             flex-direction: column;
             margin-top: 5px; 
         }
-        .profile-info .username {
+
+        .profile-info .user-id {
             font-size: 1.1rem; 
             font-weight: bold; 
             margin: 0;
         }
-        .profile-info .user-id {
+        .profile-info .username {
             font-size: 0.875rem; 
             margin: 0;
         }
+        
         .profile-buttons {
             display: flex;
             gap: 5px;
@@ -102,12 +102,13 @@
                             <div class="profile-details">
                                 <div class="profile_img">
                                     <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
+                                    <img th:if="${user != null}" th:src="${user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic-social.png'}" alt="프로필이미지" class="rounded-circle">
+                                    <img th:unless="${user != null}" src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
                                 </div>
                                 <div class="profile-info">
                                     <!-- 유저의 아이디와 닉네임 -->
-                                    <p class="username">유저닉넴</p>
-                                    <p class="user-id">유저아이디</p>
+                                    <p class="user-id" th:text="${user != null ? user.userId : 'Error'}"></p>
+                                    <p class="username" th:text="${user != null ? user.username : 'Error'}"></p>
                                 </div>
                             </div>
                             <div class="profile-buttons">

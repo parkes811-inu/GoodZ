@@ -5,6 +5,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +27,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @GetMapping("")
-    public String index() {
+    public String index(Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        Users user = userService.findUserByUsername(currentUserName);
+
+        model.addAttribute("user", user);
         return "/user/index";
     }
-    
+
     @GetMapping("/login")
     public String login() {
         return "/user/login";
     }
-    
+
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("user", new Users());
@@ -50,7 +62,7 @@ public class UserController {
         modelAndView.addObject("user", user);
         return modelAndView;
     }
-    
+
     @PostMapping("/checkId")
     public ResponseEntity<String> checkDuplicate(@RequestBody Map<String, String> request) throws Exception {
         String userId = request.get("userId");
@@ -61,7 +73,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
         }
     }
-    
+
     @PostMapping("/signup2")
     public ResponseEntity<String> signUp(@RequestBody Users user) throws Exception {
         // 회원 가입 처리 로직
@@ -73,7 +85,7 @@ public class UserController {
     public String findID() {
         return "/user/findID";
     }
-    
+
     @PostMapping("/findID")
     public ResponseEntity<String> findId(@RequestBody Users user) {
         String phone = user.getPhoneNumber();
@@ -96,25 +108,6 @@ public class UserController {
         return "/user/findPW";
     }
 
-    @PostMapping("/findPW")
-
-    public ResponseEntity<String> findPw(@RequestBody Users user) {
-        String name = user.getUsername();
-        String birth = user.getBirth();
-        String user_id = user.getUserId();
-
-        try {
-            String pw = userService.findPw(name , birth , user_id);
-            if (pw != null) {
-                return ResponseEntity.ok(pw);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러가 발생했습니다.");
-        }
-    }
-
     @GetMapping("/purchase")
     public String purchase() {
         return "/user/purchase";
@@ -127,7 +120,13 @@ public class UserController {
 
     // 관심페이지 이동 _ 디폴트: 상품
     @GetMapping("/wishlist/products")
-    public String wishlist_products() {
+    public String wishlist_products(Model model) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+            Users user = userService.findUserByUsername(userDetails.getUsername());
+            model.addAttribute("user", user);
+        }
         return "/user/wishlist_products";
     }
 
@@ -138,7 +137,12 @@ public class UserController {
     }
 
     @GetMapping("/manage_info")
-    public String manage_info() {
+    public String manage_info(Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        Users user = userService.findUserByUsername(currentUserName);
+
+        model.addAttribute("user", user);
         return "/user/manage_info";
     }
 

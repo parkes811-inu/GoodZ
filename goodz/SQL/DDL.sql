@@ -262,7 +262,7 @@ CREATE TABLE `Shipment` (
 	`shipment_no`	INT				NOT NULL AUTO_INCREMENT,
 	`purchase_no`	INT	 			NOT NULL,
 	`user_id`		VARCHAR(100)	NOT NULL,
-	`p_no`			INT				NOT NULL,
+	-- `p_no`			INT				NOT NULL, 🤦‍♀️🤦‍♀️🤦‍♀️ 일단 보류 : 2024.05.29 
 	`tracking_no`	VARCHAR(50)		NOT NULL,
 	`shipment_state`	ENUM('pending', 'shipped', 'in_transit', 'delivered', 'returned')	NOT NULL,
 	`shipped_date`		timestamp	NOT NULL DEFAULT CURRENT_TIMESTAMP,
