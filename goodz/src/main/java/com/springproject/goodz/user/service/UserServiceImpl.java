@@ -93,4 +93,11 @@ public class UserServiceImpl implements UserService {
         String pw = userMapper.findPw(username, birth, userId);
         return pw;
     } 
+
+    @Override
+    public boolean checkId(String userId) throws Exception {
+        int result = userMapper.checkId(userId);
+        return result == 0;
+    }
+
 }
