@@ -177,7 +177,7 @@ CREATE TABLE `Product` (
 	 FOREIGN KEY (b_no) REFERENCES Brand(b_no)
 ) COMMENT='상품';
 
--- Brand 테이블
+-- Brand 테이블 / 📁 product
 CREATE TABLE `Brand`(
 	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
 	`b_name` VARCHAR(100) NOT NULL,
