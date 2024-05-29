@@ -10,7 +10,7 @@
         FROM brand
     </select>
 
-    <insert id="insert" resultType="Brand">
+    <insert id="insert">
         INSERT INTO brand (b_name, image_url)
         VALUES (#{bName}, #{imageUrl})
     </insert>
