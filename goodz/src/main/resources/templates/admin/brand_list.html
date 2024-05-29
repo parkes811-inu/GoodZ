@@ -82,43 +82,37 @@
             </a>
         </div>
         <div class="divider">
-            <table class="table">
+            <table class="table" >
+              <!-- 제목행 -->
                 <thead>
                   <tr>
-                    <th scope="col">브랜드 번호</th>
-                    <th scope="col">브랜드명</th>
-                    <th scope="col">등록일자</th>
+                    <th scope="col" style="width: 120px;">브랜드 번호</th>
+                    <th scope="col" colspan="4">브랜드명</th>
                   </tr>
                 </thead>
+
+                <!-- 브랜드 목록 출력 영역 -->
                 <tbody class="table-group-divider">
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Nike</td>
-                    <td>2024-05-23</td>
+                  <!-- if) 조회되는 브랜드 없을 시, -->
+                  <th:block th:if="${brandList.isEmpty()}">
+                        <tr>
+                            <td colspan="2" align="center">
+                                조회된 브랜드가 없습니다.
+                            </td>
+                        </tr>
+                  </th:block>
+
+                  <!-- if) 브랜드 존재 시, 반복출력 -->
+                  <tr th:each="brand : ${brandList}">
+                    <th scope="row" th:text="${brand.bNo}"></th>
+                    <td th:text="${brand.bName}"></td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Stussy</td>
-                    <td>2024-05-23</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>The Joeun</td>
-                    <td>2024-05-23</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Discovery</td>
-                    <td>2024-05-23</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Starbucks</td>
-                    <td>2024-05-23</td>
-                  </tr>
+                  
+                  
                 </tbody>
               </table>
         </div>
+
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item">
