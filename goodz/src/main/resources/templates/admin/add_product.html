@@ -132,9 +132,11 @@
             <!-- 브랜드 선택 -->
             <div class="form-group">
                 <label for="brand-name">브랜드</label>
+
                 <select id="brand-name" name="bName" class="form-control">
                     <option value="">브랜드를 선택해주세요</option>
                     <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
+
                 </select>
             </div>
 

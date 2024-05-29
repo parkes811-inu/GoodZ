@@ -89,30 +89,32 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="content mt-5">
-
-        <div class="header">
-            <h2>브랜드 등록</h2>
+    <div class="container mt-5">
+        <div class="mainContainer">
+            <div class="header">
+                <h2>브랜드 등록</h2>
+            </div>
+    
+            <form action="/admin/brands" id="add_brand-form" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="brand-name">브랜드명</label>
+                        <input type="text" name="bName" id="brand-name" class="form-control rounded-0" placeholder="상품명을 입력해주세요">
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="brand-logo">브랜드 로고</label>
+                        <input id="file" name="logoFile" class="form-control rounded-0" type="file">
+                        <br>
+                    </div>
+    
+                </div>
+                <button type="submit" class="submit-btn">등록 완료</button>
+            </form>
         </div>
 
-        <form action="/admin/brands" id="add_brand-form" method="post" enctype="multipart/form-data">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-            <div class="form-group">
-                <div class="form-group">
-                    <label for="brand-name">브랜드명</label>
-                    <input type="text" name="bName" id="brand-name" class="form-control rounded-0" placeholder="상품명을 입력해주세요">
-                </div>
-
-                <div class="form-group">
-                    <label for="brand-logo">브랜드 로고</label>
-                    <input id="file" name="logoFile" class="form-control rounded-0" type="file">
-                    <br>
-                </div>
-
-            </div>
-            <button type="submit" class="submit-btn">등록 완료</button>
-        </form>
     </div>
     <script>
 
