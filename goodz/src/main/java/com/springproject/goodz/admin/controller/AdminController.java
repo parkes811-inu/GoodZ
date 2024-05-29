@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.service.BrandService;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 /*
  * [GET]    /admin              관리자 메인 화면
@@ -19,7 +23,6 @@ import groovy.util.logging.Slf4j;
  * [GET]    /admin/add_brand    브랜드 등록 화면
  * [POST]   /admin/brands       브랜드 등록 처리
  */
-
 @Slf4j
 @Controller
 @RequestMapping("/admin")
@@ -60,6 +63,23 @@ public class AdminController {
     public String moveToAddBrand() {
         return "/admin/add_brand";
     }
+
+    @PostMapping("/brands")
+    public String addBrands(Brand brand) throws Exception {
+
+        log.info("::::::::::::::브랜드 등록 요청::::::::::::::");
+        log.info(brand.toString());
+    
+        int result = brandService.insert(brand);
+
+        if (result == 0) {
+            log.info("::::::::::::::브랜드 등록 처리 중 예외발생::::::::::::::");
+            return "/admin/add_brand";
+        }
+
+        return "redirect:/admin/brands";
+    }
+    
 
 
     // @PostMapping("/add_brand")
