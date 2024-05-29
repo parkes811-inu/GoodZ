@@ -1,4 +1,3 @@
-﻿-- Active: 1716800736662@@127.0.0.1@3306@goodz
 
 -- 컬럼명 바꿔야 함 ㅎㅎ
 ALTER TABLE product CHANGE brand b_no int;
@@ -35,6 +34,7 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE `user` (
 	`user_id`				VARCHAR(100)	NOT NULL,	-- 유저 아이디
 	`username`				VARCHAR(50)		NOT NULL,	-- 유저 이름
+  `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
 	`password`				VARCHAR(100)	NOT NULL,
 	`birth`					VARCHAR(50)		NOT NULL,		-- 2024/01/01 형식으로 안넣으면 뒤진다.
 	`phone_number`			VARCHAR(20)		NOT NULL,		-- 010-1234-1234
@@ -293,4 +293,3 @@ CREATE TABLE `Shippingaddress` (
     PRIMARY KEY (address_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='배송주소';
-

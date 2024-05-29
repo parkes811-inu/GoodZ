@@ -137,6 +137,10 @@
             }
         }
 
+        function isNumeric(value) {
+            return /^\d+$/.test(value);
+        }
+
         function check() {
             let username = document.getElementById('username').value;
             let idNumberFront = document.getElementById('id-number-front').value;
@@ -152,6 +156,11 @@
             if (idNumberFront.trim() === '' || idNumberBack.trim() === '' ||
                 idNumberFront.length + idNumberBack.length !== 13) {
                 alert("주민등록번호를 제대로 입력 해주세요.");
+                return;
+            }
+
+            if (!isNumeric(idNumberFront) || !isNumeric(idNumberBack)) {
+                alert("주민등록번호는 숫자만 입력 가능합니다.");
                 return;
             }
 
