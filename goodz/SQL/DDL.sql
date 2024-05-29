@@ -1,4 +1,4 @@
-﻿-- Active: 1716800736662@@127.0.0.1@3306@goodz
+﻿-- Active: 1715220502910@@127.0.0.1@3306@goodz
 
 ALTER TABLE product CHANGE brand b_no int;
 
@@ -164,7 +164,6 @@ CREATE TABLE `Tag` (
 CREATE TABLE `Product` (
 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
 	`product_name`		VARCHAR(100)	NOT NULL,
-	`description`		TEXT,
 	`price`				INT				NOT NULL,
 	`b_no`				INT		NOT NULL,
 	`category`			VARCHAR(50)		NOT NULL,
@@ -174,11 +173,17 @@ CREATE TABLE `Product` (
 	`image_url`			VARCHAR(255)	NOT NULL,
 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (b_no) REFERENCES Brand(b_no),
-    PRIMARY KEY (p_no)
+     PRIMARY KEY (p_no),
+	 FOREIGN KEY (b_no) REFERENCES Brand(b_no)
 ) COMMENT='상품';
 
-
+-- Brand 테이블
+CREATE TABLE `Brand`(
+	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
+	`b_name` VARCHAR(100) NOT NULL,
+	`image_url` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (b_no)
+) COMMENT='브랜드';
 
 
 -- PriceHistory 테이블 / 📁 product
