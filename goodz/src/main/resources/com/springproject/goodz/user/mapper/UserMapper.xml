@@ -8,6 +8,7 @@
     <resultMap type="Users" id="userMap">
         <id property="userId" column="user_id" />
         <result property="username" column="username" />
+        <result property="nickname" column="nickname" />
         <result property="password" column="password" />
         <result property="birth" column="birth" />
         <result property="phoneNumber" column="phone_number" />
@@ -47,6 +48,7 @@
     <select id="select" resultMap="userMap">
         SELECT u.user_id
               ,u.username
+              ,u.nickname
               ,u.password
               ,u.birth
               ,u.profile_picture_url
@@ -61,8 +63,8 @@
 
     <!-- 회원 가입 -->
     <insert id="join">
-        INSERT INTO user (user_id, username, password, birth, phone_number, profile_picture_url, account )
-        VALUES (#{user_id}, #{username}, #{password}, #{birth}, #{phone_number}, #{profile_picture_url}, #{account})
+        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )
+        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl}, #{account})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -97,4 +99,25 @@
           AND birth = #{birth}
           AND user_id = #{userId}
     </select>
+
+    <!-- 쿼리 성능 향상을 위한 신규 아이디 중복 체크 쿼리 -->
+    <select id="check" resultType="int">
+        <choose>
+            <when test="userId != null">
+                SELECT COUNT(*)
+                FROM user
+                WHERE user_id = #{userId}
+            </when>
+            <when test="nickname != null">
+                SELECT COUNT(*)
+                FROM user
+                WHERE nickname = #{nickname}
+            </when>
+            <otherwise>
+                SELECT 0
+            </otherwise>
+        </choose>
+    </select>
+
+
 </mapper>
