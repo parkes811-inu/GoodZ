@@ -1,10 +1,17 @@
 package com.springproject.goodz.product.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import groovy.util.logging.Slf4j;
+import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.service.ProductService;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -13,6 +20,9 @@ import groovy.util.logging.Slf4j;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+    
+    @Autowired
+    private ProductService productService;
     
     @GetMapping("")
     public String index() {
@@ -29,9 +39,14 @@ public class ProductController {
         return "/product/detail";
     }
 
-    @GetMapping("/shirts")
-    public String productShirtsPage() {
-        return "/product/shirts";
+    @GetMapping("/top")
+    public String top(Model model) throws Exception {
+
+        List<Product> topList = productService.top();
+
+        model.addAttribute("topList", topList);
+
+        return "/product/top";
     }
 
     @GetMapping("/pants")

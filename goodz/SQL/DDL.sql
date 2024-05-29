@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE `user` (
 	`user_id`				VARCHAR(100)	NOT NULL,	-- 유저 아이디
 	`username`				VARCHAR(50)		NOT NULL,	-- 유저 이름
-  `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
+    `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
 	`password`				VARCHAR(100)	NOT NULL,
 	`birth`					VARCHAR(50)		NOT NULL,		-- 2024/01/01 형식으로 안넣으면 뒤진다.
 	`phone_number`			VARCHAR(20)		NOT NULL,		-- 010-1234-1234
