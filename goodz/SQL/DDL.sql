@@ -241,11 +241,12 @@ CREATE TABLE `Inspection` (
 
 
 -- Purchase 테이블 / 📁 pay
+-- 여러분 purchase_pirce 여기 오타있었어요 컬럼명 수정 바람
 CREATE TABLE `Purchase` (
 	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
 	`p_no`				INT				NOT NULL,
-	`purcahse_pirce`	INT				NOT NULL,
+	`purchase_pirce`	INT				NOT NULL,
 	`payment_method`	VARCHAR(50)		NOT NULL,
 	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
 	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
