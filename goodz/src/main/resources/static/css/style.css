@@ -22,7 +22,7 @@
     color: black !important;
 }
 
-.header-container {
+.header_container {
    height: 97.8px !important;
 }
 /* -------------------[header]------------------- */
@@ -80,6 +80,7 @@ body {
     min-height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
+    padding: 0;
 }
 
 .content {

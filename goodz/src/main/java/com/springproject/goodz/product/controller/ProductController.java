@@ -1,4 +1,4 @@
-package com.springproject.goodz.controller;
+package com.springproject.goodz.product.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,7 +4,7 @@
       layout:decorate="~{/layouts/user_layout}">
 <head>
     <style>
-        .login-container {
+        .login_container {
             max-width: 400px;
             margin: 100px auto;
             padding: 20px;
@@ -12,11 +12,11 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .login-container h2 {
+        .login_container h2 {
             text-align: center;
             margin-bottom: 20px;
         }
-        .login-container .btn-kakao {
+        .login_container .btn-kakao {
             background-color: #ffe812;
             color: black;
             font-weight: bold;
@@ -25,7 +25,7 @@
             display: block;
             margin-bottom: 10px;
         }
-        .login-container .btn-naver {
+        .login_container .btn-naver {
             background-color: #2db400;
             color: black;
             font-weight: bold;
@@ -33,16 +33,13 @@
             margin: 0 auto;
             display: block;
         }
-        .btn-dark {
-            display: block;
-            width: 100%;
-            margin: 0 auto;
-        }
-        .profile-img {
+
+        .profile_img {
             text-align: center;
             margin-bottom: 20px;
         }
-        .profile-img img {
+        
+        .profile_img img {
             max-width: 100px;
         }
         .form-group {
@@ -55,10 +52,10 @@
             color: gray;
             text-decoration: none;
         }
-        .password-input-container {
+        .password_input_container {
             position: relative;
         }
-        .toggle-password {
+        .toggle_password {
             position: absolute;
             right: 10px;
             top: 50%;
@@ -74,52 +71,50 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <div class="mainContainer">
-            <div class="login-container">
-                <div class="profile-img">
-                    <img src="../img/footer/Goodz_logo2.png" alt="로고">
-                </div>
-                <form action="/login" method="post">
-                    <!-- CSRF TOKEN -->
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <div class="login_container">
+            <div class="profile_img">
+                <img src="../img/footer/Goodz_logo2.png" alt="로고">
+            </div>
+            <form action="/login" method="post">
+                <!-- CSRF TOKEN -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-                    <div class="form-group">
-                        <!-- 아이디 -->
-                        <input type="id" class="form-control" name="userId" id="id" placeholder="ID">
-                    </div>
-                    <div class="form-group password-input-container">
-                        <!-- 비밀번호 -->
-                        <input type="password" class="form-control" name="password" id="password" placeholder="PW">
-                        <span class="toggle-password" onclick="togglePasswordVisibility()">
-                            <i class="fa fa-eye-slash"></i>
-                        </span>
-                    </div>
-                    <div class="form-group">
-                        <!-- 로그인 에러 -->
-                        <th:block th:if="${param.error}">
-                            <p class="text-center text-danger">아이디 또는 비밀번호를 잘못 입력했습니다.</p>
-                        </th:block>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-dark btn-block">로그인</button>
-                    </div>
-                </form>
-                <div class="text-center mt-3">
-                    <a href="/user/signup">회원가입</a> | <a href="/user/findID">아이디 찾기</a> | <a href="/user/findPW">비밀번호 찾기</a>
+                <div class="form-group">
+                    <!-- 아이디 -->
+                    <input type="id" class="form-control" name="userId" id="id" placeholder="ID">
                 </div>
-                <hr>
+                <div class="form-group password_input_container">
+                    <!-- 비밀번호 -->
+                    <input type="password" class="form-control" name="password" id="password" placeholder="PW">
+                    <span class="toggle_password" onclick="togglePasswordVisibility()">
+                        <i class="fa fa-eye-slash"></i>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <!-- 로그인 에러 -->
+                    <th:block th:if="${param.error}">
+                        <p class="text-center text-danger">아이디 또는 비밀번호를 잘못 입력했습니다.</p>
+                    </th:block>
+                </div>
                 <div class="text-center">
-                    <p>or continue with</p>
-                    <button class="btn btn-kakao btn-block">카카오 로그인</button>
-                    <button class="btn btn-naver btn-block">네이버 로그인</button>
+                    <button type="submit" class="btn btn-dark btn-block w-100 my-0 mx-auto">로그인</button>
                 </div>
+            </form>
+            <div class="text-center mt-3">
+                <a href="/user/signup">회원가입</a> | <a href="/user/findID">아이디 찾기</a> | <a href="/user/findPW">비밀번호 찾기</a>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>or continue with</p>
+                <button class="btn btn-kakao btn-block">카카오 로그인</button>
+                <button class="btn btn-naver btn-block">네이버 로그인</button>
             </div>
         </div>
     </div>
     <script>
         function togglePasswordVisibility() {
             var password = document.getElementById('password');
-            var togglePassword = document.querySelector('.toggle-password i');
+            var togglePassword = document.querySelector('.toggle_password i');
 
             if (password.type === 'password') {
                 password.type = 'text';
