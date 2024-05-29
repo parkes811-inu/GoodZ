@@ -1,7 +1,34 @@
-﻿-- Active: 1716800736662@@127.0.0.1@3306@goodz
+﻿-- Active: 1715220502910@@127.0.0.1@3306@goodz
+
+ALTER TABLE product CHANGE brand b_no int;
+
+
+-- DROP
+DROP TABLE user;
+DROP TABLE user_auth;
+DROP TABLE persistent_logins;
+DROP TABLE Social_Login;
+DROP TABLE Following;
+DROP TABLE Follower;
+DROP TABLE Post;
+DROP TABLE Comment;
+DROP TABLE Like;
+DROP TABLE Tag;
+DROP TABLE Product;
+DROP TABLE Pricehistory;
+DROP TABLE Wishlist;
+DROP TABLE Sales;
+DROP TABLE Inspection;
+DROP TABLE Purchase;
+DROP TABLE Shipment;
+DROP TABLE Shippingaddress;
+
+
+
+
 
 DROP TABLE IF EXISTS user;
--- User 테이블
+-- User 테이블  / 📁 user
 CREATE TABLE `user` (
 	`user_id`				VARCHAR(100)	NOT NULL,
 	`username`				VARCHAR(50)		NOT NULL,
@@ -17,6 +44,7 @@ CREATE TABLE `user` (
 
 
 DROP TABLE IF EXISTS user_auth;
+-- User_auth 테이블 / 📁 user
 CREATE TABLE `user_auth` (
       `auth_no` INT PRIMARY KEY AUTO_INCREMENT
     , `user_id` varchar(100) NOT NULL                      -- 회원 아이디
@@ -25,7 +53,7 @@ CREATE TABLE `user_auth` (
 
 
 DROP TABLE IF EXISTS persistent_logins;
--- Persistent_Login 테이블
+-- Persistent_Login 테이블 / 📁 user
 create table persistent_logins (
 	username varchar(64) not null
 	, series varchar(64) primary key
@@ -44,7 +72,7 @@ create table persistent_logins (
 -- ) COMMENT='자동로그인';
 
 
--- Social_Login 테이블
+-- Social_Login 테이블 / 📁 user
 CREATE TABLE `Social_Login` (
 	`social_login_id`	VARCHAR(100)	NOT NULL,
 	`user_id`			VARCHAR(100)	NOT NULL,
@@ -55,7 +83,7 @@ CREATE TABLE `Social_Login` (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='소셜로그인';
 
--- Following 테이블
+-- Following 테이블 / 📁 user
 CREATE TABLE `Following` (
 	`following_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
@@ -65,7 +93,7 @@ CREATE TABLE `Following` (
 ) COMMENT='팔로잉';
 
 
--- Follower 테이블
+-- Follower 테이블 / 📁 user
 CREATE TABLE `Follower` (
 	`follower_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
@@ -76,7 +104,7 @@ CREATE TABLE `Follower` (
 
 
 
--- Post 테이블
+-- Post 테이블 / 📁 post
 CREATE TABLE `Post` (
 	`post_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`	VARCHAR(100)	NOT NULL,
@@ -90,7 +118,7 @@ CREATE TABLE `Post` (
 
 
 
--- Comment 테이블
+-- Comment 테이블 / 📁 post
 CREATE TABLE `Comment` (
 	`c_no`			INT				NOT NULL AUTO_INCREMENT,
 	`post_no`		INT				NOT NULL,
@@ -104,7 +132,7 @@ CREATE TABLE `Comment` (
 ) COMMENT='댓글';
 
 
--- Like 테이블
+-- Like 테이블 / 📁 post
 CREATE TABLE `Like` (
 	`like_no`	INT				NOT NULL AUTO_INCREMENT,
 	`c_no`		INT				NOT NULL,
@@ -119,7 +147,7 @@ CREATE TABLE `Like` (
 );
 
 
--- Tag 테이블
+-- Tag 테이블 / 📁 post
 CREATE TABLE `Tag` (
 	`t_no`		INT	NOT NULL AUTO_INCREMENT,
 	`p_no`		INT	NOT NULL,
@@ -130,13 +158,14 @@ CREATE TABLE `Tag` (
 ) COMMENT='상품 태그';
 
 
--- Product 테이블
+
+
+-- Product 테이블 / 📁 product
 CREATE TABLE `Product` (
 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
 	`product_name`		VARCHAR(100)	NOT NULL,
-	`description`		TEXT,
 	`price`				INT				NOT NULL,
-	`brand`				VARCHAR(50)		NOT NULL,
+	`b_no`				INT		NOT NULL,
 	`category`			VARCHAR(50)		NOT NULL,
 	`size`				VARCHAR(100)	NOT NULL,
 	`views`				INT				NOT NULL DEFAULT '0',
@@ -144,13 +173,20 @@ CREATE TABLE `Product` (
 	`image_url`			VARCHAR(255)	NOT NULL,
 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     PRIMARY KEY (p_no)
+     PRIMARY KEY (p_no),
+	 FOREIGN KEY (b_no) REFERENCES Brand(b_no)
 ) COMMENT='상품';
 
+-- Brand 테이블 / 📁 product
+CREATE TABLE `Brand`(
+	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
+	`b_name` VARCHAR(100) NOT NULL,
+	`image_url` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (b_no)
+) COMMENT='브랜드';
 
 
-
--- Pricehistory 테이블
+-- PriceHistory 테이블 / 📁 product
 CREATE TABLE `Pricehistory` (
 	`price_history_no`	INT				NOT NULL AUTO_INCREMENT,
 	`p_no`				INT				NOT NULL,
@@ -164,7 +200,7 @@ CREATE TABLE `Pricehistory` (
 
 
 
--- Wishlist 테이블
+-- Wishlist 테이블 / 📁 user
 CREATE TABLE `Wishlist` (
 	`w_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`	VARCHAR(100)	NOT NULL,
@@ -177,7 +213,7 @@ CREATE TABLE `Wishlist` (
 ) COMMENT='관심';
 
 
--- Sales 테이블
+-- Sales 테이블 / 📁 pay
 CREATE TABLE `Sales` (
 	`s_no`			INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
@@ -192,7 +228,7 @@ CREATE TABLE `Sales` (
 ) COMMENT='판매';
 
 
--- Inspection 테이블
+-- Inspection 테이블 / 📁 pay
 CREATE TABLE `Inspection` (
 	`i_no`		INT	NOT NULL AUTO_INCREMENT,
 	`s_no`		INT	NOT NULL,
@@ -204,7 +240,7 @@ CREATE TABLE `Inspection` (
 
 
 
--- Purchase 테이블
+-- Purchase 테이블 / 📁 pay
 CREATE TABLE `Purchase` (
 	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
@@ -221,7 +257,7 @@ CREATE TABLE `Purchase` (
 
 
 
--- Shipment 테이블
+-- Shipment 테이블 / 📁 pay
 CREATE TABLE `Shipment` (
 	`shipment_no`	INT				NOT NULL AUTO_INCREMENT,
 	`purchase_no`	INT	 			NOT NULL,
@@ -238,7 +274,7 @@ CREATE TABLE `Shipment` (
 ) COMMENT='배송';
 
 
--- Shippingaddress
+-- Shippingaddress / 📁 user
 CREATE TABLE `Shippingaddress` (
 	`address_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
