@@ -46,7 +46,7 @@
             font-weight: bold; 
             margin: 0;
         }
-        .profile-info .username {
+        .profile-info .nickname {
             font-size: 0.875rem; 
             margin: 0;
         }
@@ -102,13 +102,12 @@
                             <div class="profile-details">
                                 <div class="profile_img">
                                     <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                                    <img th:if="${user != null}" th:src="${user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic-social.png'}" alt="프로필이미지" class="rounded-circle">
-                                    <img th:unless="${user != null}" src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
+                                    <img th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
                                 </div>
                                 <div class="profile-info">
                                     <!-- 유저의 아이디와 닉네임 -->
                                     <p class="user-id" th:text="${user != null ? user.userId : 'Error'}"></p>
-                                    <p class="username" th:text="${user != null ? user.username : 'Error'}"></p>
+                                    <p class="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
                                 </div>
                             </div>
                             <div class="profile-buttons">

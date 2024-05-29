@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springproject.goodz.user.dto.Users;
@@ -63,16 +64,57 @@ public class UserController {
         return modelAndView;
     }
 
-    @PostMapping("/checkId")
-    public ResponseEntity<String> checkDuplicate(@RequestBody Map<String, String> request) throws Exception {
+    /**
+     * 중복 확인을 위한 컨트롤러
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/check")
+    public ResponseEntity<String> checkIdDuplicate(@RequestBody Map<String, String> request) throws Exception {
         String userId = request.get("userId");
-        boolean isAvailable = userService.checkId(userId);
+        String nickname = request.get("nickname");
+
+        boolean isAvailable = userService.check(userId, nickname);
         if (isAvailable) {
-            return ResponseEntity.ok("사용 가능한 아이디입니다.");
+            return ResponseEntity.ok("사용 가능합니다.");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중입니다.");
         }
     }
+
+    @PostMapping("/checkPassword")
+    @ResponseBody
+    public ResponseEntity<String> checkPassword(@RequestBody Map<String, String> request) throws Exception {
+        String userId = request.get("userId");
+        String password = request.get("password");
+
+        boolean isPasswordCorrect = userService.checkPassword(userId, password);
+        if (isPasswordCorrect) {
+            return ResponseEntity.ok("비밀번호가 일치합니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+
+    // 이거 업데이트 해야됨
+    @PostMapping("/update")
+    public ResponseEntity<String> updateUserInfo(@RequestBody Map<String, String> request) throws Exception {
+        
+        Users user = new Users();
+        String userId = request.get("userId");
+        String nickname = request.get("nickname");
+
+        // update 쿼리
+        int result = userService.update(user);
+        if (result > 0) {
+            return ResponseEntity.ok("수정 되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("수정에 실패하였습니다.");
+        }
+    }
+
 
     @PostMapping("/signup2")
     public ResponseEntity<String> signUp(@RequestBody Users user) throws Exception {
@@ -118,7 +160,6 @@ public class UserController {
         return "/user/sales";
     }
 
-    // 관심페이지 이동 _ 디폴트: 상품
     @GetMapping("/wishlist/products")
     public String wishlist_products(Model model) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -130,7 +171,6 @@ public class UserController {
         return "/user/wishlist_products";
     }
 
-    // 관심페이지 이동 _ 스타일
     @GetMapping("/wishlist/styles")
     public String wishlist_styles() {
         return "/user/wishlist_styles";

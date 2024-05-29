@@ -51,7 +51,7 @@
             font-weight: bold; 
             margin: 0;
         }
-        .profile-info .username {
+        .profile-info .nickname {
             font-size: 0.875rem; 
             margin: 0;
         }
@@ -85,16 +85,12 @@
                         <div class="card-body">
                             <div class="card-title-section">
                                 <div class="profile-details">
-                                    <p th:text="${user.profilePictureUrl}"></p>
                                     <div class="profile_img">
-                                        <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                                        <img th:if="${user != null}" th:src="${user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic-social.png'}" alt="프로필이미지" class="rounded-circle">
-                                        <img th:unless="${user != null}" src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
+                                        <img th:src="${user != null and user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
                                     </div>
                                     <div class="profile-info">
-                                        <!-- 유저의 아이디와 닉네임 -->
-                                        <p class="user-id" th:text="${user != null ? user.userId : 'Error'}"></p>
-                                        <p class="username" th:text="${user != null ? user.username : 'Error'}"></p>
+                                        <p class="user-id" id="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
+                                        <p class="nickname" id="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
                                     </div>
                                 </div>
                                 <div class="profile-buttons">
@@ -103,31 +99,20 @@
                             </div>
                         </div>
                     </div>
-    
-                    <div class="form-group">
-                        <label for="formFile" class="form-label">프로필 사진 수정*</label>
-                        <div class="input-group" style="max-width: 640px;">
-                            <input type="file" class="form-control rounded-1" id="file" placeholder="첨부파일을 등록해주세요.">
-                            <input class="form-control" type="file" id="formFile" style="display: none;">
-                        </div>
-                    </div>
                     
-                    <form class="row g-3 needs-validation" novalidate>
-                        <div class="position-relative" style="max-width: 655px;">
-                            <label for="validationTooltip01" class="form-label">닉네임*</label>
-                            <input type="text" class="form-control" id="validationTooltip01" th:value="${user.username}" required style="width: 100%;">
-                            <div class="valid-tooltip">
-                                Looks good!
-                            </div>
-                        </div>
-
+                    <form class="row g-3 needs-validation" method="POST" action="/upload" enctype="multipart/form-data" novalidate id="profile-form">
                         <div class="form-group">
-                            <label for="id">아이디*</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control me-2 rounded-1" id="id" th:value="${user.userId}" style="max-width: 640px;">
+                            <label for="formFile" class="form-label">프로필 사진 수정*</label>
+                            <div class="input-group" style="max-width: 640px;">
+                                <input type="file" class="form-control rounded-1" name="file" id="file" placeholder="첨부파일을 등록해주세요.">
                             </div>
                         </div>
-
+                    
+                        <div class="position-relative" style="max-width: 655px;">
+                            <label for="nickName" class="form-label">닉네임*</label>
+                            <input type="text" class="form-control" id="nickName" th:value="${user.nickname}" required style="width: 100%;">
+                        </div>
+                    
                         <div class="form-group">
                             <label for="password">비밀번호*</label>
                             <div class="input-group">
@@ -138,19 +123,20 @@
                         <div class="form-group">
                             <label for="password_check">비밀번호 확인*</label>
                             <div class="input-group">
-                                <input type="password" class="form-control me-2 rounded-1" id="password_check" placeholder="********" style="max-width: 640px;">
+                                <input type="password" class="form-control me-2 rounded-1" id="passwordCheck" placeholder="********" style="max-width: 640px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="phone_number">핸드폰 번호 수정*</label>
                             <div class="input-group">
-                                <input type="text" class="form-control me-2 rounded-1" id="phone_number" th:value="${user.phoneNumber}" style="max-width: 640px;">
+                                <input type="text" class="form-control me-2 rounded-1" id="phoneNumber" 
+                                    th:value="${user.phoneNumber}" style="max-width: 640px;" placeholder="'-'을 제외하고 입력해주세요.">
                             </div>
                         </div>
 
-                        <div class="col-12 d-flex justify-content-end" style="padding-right: 175px;">
-                            <button class="btn btn-dark" type="submit">저장</button>
+                        <div class="col-12 d-flex justify-content-end"  style="max-width: 640px;">
+                            <button class="btn btn-dark" type="button" onclick="check()">저장</button>
                         </div>
                     </form>
                 </div>
@@ -159,35 +145,62 @@
     </div>
     
     <script>
-        var checkVar = false; // 아이디 중복 체크 상태를 저장하는 변수
-
-        function checkId() {
-            var userId = $('#userId').val();
+        function checkNickname(callback) {
+            var nickname = $('#nickName').val();
             var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
 
+            if(nickname === '') {
+                alert('닉네임을 입력해주세요.');
+                return false;
+            }
+
             $.ajax({
-                url: '/user/checkId',
-                type: 'POST', // POST 메서드 사용
+                url: '/user/check',
+                type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ userId: userId }), // JSON 형식으로 전송
+                data: JSON.stringify({ nickname: nickname }),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 },
                 success: function(response) {
-                    alert('사용 가능한 아이디입니다.');
-                    checkVar = true; // 중복 체크 성공 시 true로 설정
+                    alert('사용 가능한 닉네임입니다.');
+                    callback(true);
                 },
                 error: function(xhr, status, error) {
                     if(xhr.status === 409) {
-                        alert('이미 사용 중인 아이디입니다.');
+                        alert('이미 사용 중인 닉네임입니다.');
                     } else {
                         alert('오류가 발생했습니다. 다시 시도해 주세요.');
                     }
-                    checkVar = false; // 중복 체크 실패 시 false로 설정
+                    callback(false);
                 }
             });
         }
 
+        function checkPassword(callback) {
+            var password = $('#password').val();
+            var userId = $('#userId').text(); // UserId 텍스트로 가져오기
+            var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
+
+            $.ajax({
+                url: '/user/checkPassword',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ userId: userId, password: password }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                },
+                success: function(response) {
+                    alert('비밀번호가 일치합니다.');
+                    callback(true);
+                },
+                error: function(xhr, status, error) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    callback(false);
+                }
+            });
+        }
+        
         function formatPhoneNumber(phone) {
             // 숫자만 추출
             var cleaned = ('' + phone).replace(/\D/g, '');
@@ -200,9 +213,8 @@
 
         function check() {
             var firstPw = $('#password').val();
-            var secondPw = $('#password_check').val();
-            var phone = $('#phone').val();
-            var account = $('#account').val();
+            var secondPw = $('#passwordCheck').val();
+            var phone = $('#phoneNumber').val();
             var formattedPhone = formatPhoneNumber(phone);
 
             if (!formattedPhone) {
@@ -210,65 +222,52 @@
                 return;
             }
 
-            // 비밀번호 유효성 검사 정규 표현식
-            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
-
-            // 비밀번호 유효성 검사
-            if (!passwordRegex.test(firstPw)) {
-                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
-                return;
-            }
-
-            // 비밀번호 일치 확인
             if (firstPw !== secondPw) {
-                alert('비밀번호가 일치하지 않습니다.');
+                alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
                 return;
             }
 
-            // 이메일 유효성 검사 정규 표현식
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            // 이메일 유효성 검사
-            if (!emailRegex.test(account)) {
-                alert('올바른 이메일 주소를 입력해주세요.');
-                return;
-            }
-
-            // 모든 조건이 충족되면 회원가입을 완료하고 로그인 페이지로 이동
-            if(checkVar) {
-                var userData = {
-                    username: $('input[name="username"]').val(),
-                    birth: $('input[name="birth"]').val(),
-                    userId: $('#userId').val(),
-                    password: firstPw,
-                    phoneNumber: formattedPhone,
-                    account: account,
-                    profilePictureUrl: 'img/user/basic_social.png' // 기본 빈 사진
-                };
-
-                var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
-
-                $.ajax({
-                    url: '/user/signup2',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(userData),
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                    },
-                    success: function(response) {
-                        alert('회원가입이 완료되었습니다.');
-                        window.location.href = '/user/login';
-                    },
-                    error: function(xhr, status, error) {
-                        alert('회원가입에 실패했습니다. 다시 시도해 주세요.');
+            checkNickname(function(isNicknameValid) {
+                if (!isNicknameValid) {
+                    return;
+                }
+                checkPassword(function(isPasswordValid) {
+                    if (!isPasswordValid) {
+                        return;
                     }
+                    // 모든 조건이 충족되면 사용자 정보를 저장
+                    var userData = {
+                        nickname: $('#nickName').val(),
+                        password: firstPw,
+                        phoneNumber: formattedPhone,
+                    };
+
+                    var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
+
+                    $.ajax({
+                        url: '/user/update',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(userData),
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                        },
+                        success: function(response) {
+                            alert('회원 정보 수정이 완료되었습니다.');
+                            window.location.href = '/user/login';
+                        },
+                        error: function(xhr, status, error) {
+                            alert('회원 정보 수정에 실패했습니다. 다시 시도해 주세요.');
+                        }
+                    });
                 });
-            } else {
-                alert('아이디 중복 체크를 진행 해주세요.');
-                return;
-            }
+            });
         }
+
+        document.getElementById('profile-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 기본 폼 제출을 막음
+            check(); // 검증 및 AJAX 요청 수행
+        });
     </script>
 </body>
 </html>

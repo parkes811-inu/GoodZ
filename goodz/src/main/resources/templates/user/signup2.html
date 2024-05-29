@@ -56,6 +56,21 @@
         .mt-3 {
             margin-top: 1rem !important;
         }
+
+        .password-input-container {
+            position: relative;
+            max-width: 320px; /* 입력 필드 너비 설정 */
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #ccc; /* 아이콘 색상을 회색으로 설정 */
+        }
     </style>
     <title>회원가입2</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -84,22 +99,39 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control me-2 rounded-1" id="userId" name="userId" placeholder="아이디를 입력해주세요." style="max-width: 650px;">
                                         <div class="input-group-append">
-                                            <button class="btn btn-dark rounded-1" type="button" id="check-id" onclick="checkId()">중복체크</button>
+                                            <button class="btn btn-dark rounded-1" type="button" id="check-id" onclick="checkUserId()">중복체크</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 닉네임 -->
+                                <div class="form-group">
+                                    <label for="nickname">닉네임 입력*</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control me-2 rounded-1" id="nickname" name="nickname" placeholder="닉네임을 입력해주세요." style="max-width: 650px;">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark rounded-1" type="button" id="check-nickname" onclick="checkNickname()">중복체크</button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="password">비밀번호 입력*</label>
-                                    <div class="input-group">
+                                    <div class="password-input-container">
                                         <input type="password" class="form-control me-2 rounded-1" id="password" name="password" placeholder="영문, 숫자, 특수문자 조합 7-16자" style="max-width: 320px;">
+                                        <span class="toggle-password" onclick="togglePasswordVisibility('password')">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="password_check">비밀번호 입력 확인*</label>
-                                    <div class="input-group">
+                                    <div class="password-input-container">
                                         <input type="password" class="form-control me-2 rounded-1" id="password_check" name="password_check" placeholder="비밀번호를 다시 입력해주세요." style="max-width: 320px;">
+                                        <span class="toggle-password" onclick="togglePasswordVisibility('password_check')">
+                                            <i class="fa fa-eye-slash"></i>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -127,23 +159,44 @@
     </div>
 
     <script>
-        var checkVar = false; // 아이디 중복 체크 상태를 저장하는 변수
+        function togglePasswordVisibility(elementId) {
+            var input = document.getElementById(elementId);
+            var togglePassword = input.nextElementSibling.querySelector('i');
 
-        function checkId() {
+            if (input.type === 'password') {
+                input.type = 'text';
+                togglePassword.classList.remove('fa-eye-slash');
+                togglePassword.classList.add('fa-eye');
+            } else {
+                input.type = 'password';
+                togglePassword.classList.remove('fa-eye');
+                togglePassword.classList.add('fa-eye-slash');
+            }
+        }
+
+        var isUserIdAvailable = false; // 아이디 중복 체크 상태를 저장하는 변수
+        var isNicknameAvailable = false; // 닉네임 중복 체크 상태를 저장하는 변수
+
+        function checkUserId() {
             var userId = $('#userId').val();
             var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
 
+            if(userId === '') {
+                alert('아이디를 입력해주세요.');
+                return;
+            }
+
             $.ajax({
-                url: '/user/checkId',
-                type: 'POST', // POST 메서드 사용
+                url: '/user/check',
+                type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ userId: userId }), // JSON 형식으로 전송
+                data: JSON.stringify({ userId: userId }),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 },
                 success: function(response) {
                     alert('사용 가능한 아이디입니다.');
-                    checkVar = true; // 중복 체크 성공 시 true로 설정
+                    isUserIdAvailable = true; // 중복 체크 성공 시 true로 설정
                 },
                 error: function(xhr, status, error) {
                     if(xhr.status === 409) {
@@ -151,11 +204,43 @@
                     } else {
                         alert('오류가 발생했습니다. 다시 시도해 주세요.');
                     }
-                    checkVar = false; // 중복 체크 실패 시 false로 설정
+                    isUserIdAvailable = false; // 중복 체크 실패 시 false로 설정
                 }
             });
         }
- 
+
+        function checkNickname() {
+            var nickname = $('#nickname').val();
+            var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
+
+            if(nickname === '') {
+                alert('닉네임을 입력해주세요.');
+                return;
+            }
+
+            $.ajax({
+                url: '/user/check',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ nickname: nickname }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                },
+                success: function(response) {
+                    alert('사용 가능한 닉네임입니다.');
+                    isNicknameAvailable = true; // 중복 체크 성공 시 true로 설정
+                },
+                error: function(xhr, status, error) {
+                    if(xhr.status === 409) {
+                        alert('이미 사용 중인 닉네임입니다.');
+                    } else {
+                        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+                    }
+                    isNicknameAvailable = false; // 중복 체크 실패 시 false로 설정
+                }
+            });
+        }
+
         function formatPhoneNumber(phone) {
             // 숫자만 추출
             var cleaned = ('' + phone).replace(/\D/g, '');
@@ -172,6 +257,7 @@
             var phone = $('#phone').val();
             var account = $('#account').val();
             var formattedPhone = formatPhoneNumber(phone);
+            var nickname = $('#nickname').val();
 
             if (!formattedPhone) {
                 alert('올바른 휴대폰 번호를 입력해주세요.');
@@ -203,7 +289,7 @@
             }
 
             // 모든 조건이 충족되면 회원가입을 완료하고 로그인 페이지로 이동
-            if(checkVar) {
+            if(isUserIdAvailable && isNicknameAvailable) {
                 var userData = {
                     username: $('input[name="username"]').val(),
                     birth: $('input[name="birth"]').val(),
@@ -211,7 +297,8 @@
                     password: firstPw,
                     phoneNumber: formattedPhone,
                     account: account,
-                    profilePictureUrl: 'img/user/basic_social.png' // 기본 빈 사진
+                    nickname: nickname,
+                    profilePictureUrl: '/img/user/basic_social.png' // 기본 빈 사진
                 };
 
                 var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
@@ -233,7 +320,7 @@
                     }
                 });
             } else {
-                alert('아이디 중복 체크를 진행 해주세요.');
+                alert('아이디 및 닉네임 중복 체크를 완료해 주세요.');
                 return;
             }
         }
