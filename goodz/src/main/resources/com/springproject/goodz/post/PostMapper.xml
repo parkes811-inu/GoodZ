@@ -13,7 +13,9 @@
     <select id="select" resultType="post">
         SELECT *
         FROM post
-        WHERE post_no = #{post_no}
+        WHERE post_no = #{postNo}
     </select>
+
+    
 
 </mapper>
