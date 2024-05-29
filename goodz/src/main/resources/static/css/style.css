@@ -45,7 +45,7 @@
 
 @media (min-width: 768px) {
     .container, .container-md, .container-sm {
-        max-width: 720px;
+        max-width: 700px;
     }
 }
 
@@ -194,10 +194,11 @@ body {
 
 /* 푸터 맨 하단에 고정시키는 코드 - 마이페이지용 */
 .userMainContainer {
+    padding: 15px;
+    margin: 20px auto 0 auto;
     min-height: calc(100vh - 10rem);
-    margin: 0 auto;
-    max-width: 900px;
 }
+
 /* ------------ footer css 끝------------ */
 
 

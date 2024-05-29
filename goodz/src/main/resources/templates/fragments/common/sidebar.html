@@ -5,21 +5,23 @@
 </head>
 <body>
     <div th:fragment="sidebar">
-        <div class="sidebar" style="padding-top: 15px; margin-top: 20px; min-width: 238px;">
-            <h3 class="fw-bold" style="margin-bottom: 20px;">마이 페이지</h3>
-            
-            <h5 style="font-weight: 600; margin-bottom: 20px;">쇼핑 정보</h5>
-            <ul class="list-unstyled">
-                <li><a class="text-body-secondary link-underline-light" href="/user/purchase">구매 내역</a></li>
-                <li><a class="text-body-secondary link-underline-light" href="/user/sales">판매 내역</a></li>
-                <li><a class="text-body-secondary link-underline-light" href="/user/wishlist/products">관심</a></li>
-            </ul>
-            <h5 class="mt-5" style="font-weight: 600; margin-bottom: 20px;">내 정보</h5>
-            <ul class="list-unstyled">
-                <li><a class="text-body-secondary link-underline-light" href="/user/manage_info">내 정보 관리</a></li>
-                <li><a class="text-body-secondary link-underline-light" href="/user/address">주소록</a></li>
-                <li><a class="text-body-secondary link-underline-light" href="/user/account">판매 정산 계좌</a></li>
-            </ul>
+        <div class="container">
+            <div class="sidebar" style="padding-top: 15px; margin-top: 20px; min-width: 150px;">
+                <h3 class="fw-bold" style="margin-bottom: 20px;">마이 페이지</h3>
+                
+                <h5 style="font-weight: 600; margin-bottom: 20px;">쇼핑 정보</h5>
+                <ul class="list-unstyled">
+                    <li><a class="text-body-secondary link-underline-light" href="/user/purchase">구매 내역</a></li>
+                    <li><a class="text-body-secondary link-underline-light" href="/user/sales">판매 내역</a></li>
+                    <li><a class="text-body-secondary link-underline-light" href="/user/wishlist/products">관심</a></li>
+                </ul>
+                <h5 class="mt-5" style="font-weight: 600; margin-bottom: 20px;">내 정보</h5>
+                <ul class="list-unstyled">
+                    <li><a class="text-body-secondary link-underline-light" href="/user/manage_info">내 정보 관리</a></li>
+                    <li><a class="text-body-secondary link-underline-light" href="/user/address">주소록</a></li>
+                    <li><a class="text-body-secondary link-underline-light" href="/user/account">판매 정산 계좌</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
