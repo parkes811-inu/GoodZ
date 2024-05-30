@@ -102,7 +102,7 @@
     <update id="changePw">
     UPDATE user
        SET password = #{password}
-     WHERE user_id = #{userId}
+     WHERE user_id  = #{userId}
     </update> 
 
 

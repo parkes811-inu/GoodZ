@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @Controller
 @RequestMapping("/user")
+@SessionAttributes("findMan")  // 이상하면 지우자
 public class UserController {
     
    
@@ -105,131 +107,84 @@ public class UserController {
         return "/user/findPW";
     }
 
-    // @PostMapping("/findPW")
-    // public ResponseEntity<String> findPw(@RequestBody Users user) {
-    //     String name = user.getUsername();
-    //     String birth = user.getBirth();
-    //     String user_id = user.getUserId();
-
-    //     try {
-    //         String pw = userService.findPw(name , birth , user_id);
-    //         if (pw != null) {
-    //             return ResponseEntity.ok(pw);
-    //         } else {
-    //             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
-    //         }
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 에러가 발생했습니다.");
-    //     }
-    // }
     @PostMapping("/findPW")
     public String findPw(Users user, RedirectAttributes redirectAttributes, Model model) throws Exception {
-        log.info("찾으려는 유저: " + user);
-
-        log.info("컨트롤러 진입");
-        log.info(user.toString());
 
         Users findMan = userService.findPw(user.getUsername(), user.getBirth(), user.getUserId());
-
-        if (findMan == null) {
-            log.info(":::::::::::::::일치하는 회원 없음:::::::::::::::");
-            // error 파라미터만 전달하고 값은 주지 않음
-            redirectAttributes.addAttribute("error", "true");
-            
-            return "redirect:/user/findPW";
-        }
-
+        
+       // 비밀번호 찾기에 성공했을 경우
+        if (findMan != null) {
+        // 세션 플래시 속성에 찾은 사용자 정보를 추가합니다.
         redirectAttributes.addFlashAttribute("findMan", findMan);
-    
-        return "redirect:/user/changePW"; // 리다이렉트 사용
+
+        // 리다이렉트하여 비밀번호 변경 페이지로 이동합니다.
+        return "redirect:/user/changePW";
+       }
+        // 비밀번호 찾기에 실패했을 경우
+        else {
+        // 리다이렉트 시 error 파라미터를 추가하여 실패했음을 알립니다.
+        redirectAttributes.addAttribute("error", "true");
+
+        // 비밀번호 찾기 페이지로 리다이렉트합니다.
+        return "redirect:/user/findPW";
+       }
     }
 
 
     @GetMapping("/changePW")
     public String changePW(Model model) {
-
+        // 모델에서 findMan 속성을 가져옵니다.
         Users findMan = (Users) model.asMap().get("findMan");
+
+        // 만약 findMan이 null인 경우, 비밀번호 찾기 페이지로 리다이렉트합니다.
         if (findMan == null) {
             return "redirect:/user/findPW";
         }
 
+        // 모델에 findMan 속성을 추가합니다.
         model.addAttribute("findMan", findMan);
 
+        // 비밀번호 변경 페이지로 이동합
         return "/user/changePW";
     }
 
 
     @PostMapping("/changePW")
-    public ResponseEntity<String> changePw(@RequestBody Map<String, String> request) {
-        //String username = request.get("username");
-        //String birth = request.get("birth");
-        String newPw = request.get("password");
-        String userId = request.get("userId");
-        log.info(("asdfsdfsdf"));
-        log.info(userId);
+    public String changePw(@RequestParam("password") String newPassword,
+                           @RequestParam("userId") String userId,
+                           RedirectAttributes redirectAttributes, 
+                           @ModelAttribute("findMan") Users findMan) {
 
-        try {
-            int result = userService.changePw(newPw, userId);
-            if (result > 0) {
-                return ResponseEntity.ok("비밀번호가 변경되었습니다.");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현재 비밀번호가 일치하지 않습니다.");
+            // findMan이 null이거나 사용자 ID가 일치하지 않는 경우, 비밀번호 찾기 페이지로 리다이렉트합니다.
+            if (findMan == null || !findMan.getUserId().equals(userId)) {
+                return "redirect:/user/findPW";
+            }          
+
+            try {
+                // 비밀번호 변경 시도를 로그로 기록합니다
+                log.info("비밀번호 변경 시도: userId={}, newPassword={}", userId, newPassword);
+
+                // 비밀번호를 변경하고 결과를 받아옵니다.
+                int result = userService.changePw(newPassword, userId);
+
+                if (result > 0) {
+                    // 성공 메시지를 플래시 속성에 추가하고 로그인 페이지로 리다이렉트합니다.
+                    redirectAttributes.addFlashAttribute("message", "Password successfully changed.");
+                    return "redirect:/user/login";
+
+                } else {
+                    // 실패 메시지를 플래시 속성에 추가하고 비밀번호 변경 페이지로 리다이렉트합니다.
+                    redirectAttributes.addFlashAttribute("error", "Password change failed.");
+                    return "redirect:/user/changePW";
+                }
+            } catch (Exception e) {
+                
+                // 비밀번호 변경 중 오류가 발생한 경우, 오류 메시지를 플래시 속성에 추가하고 비밀번호 변경 페이지로 리다이렉트합니다.
+                log.error("비밀번호 변경 중 오류 발생", e);
+                redirectAttributes.addFlashAttribute("error", "An error occurred. Please try again.");
+                return "redirect:/user/changePW";
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경에 실패했습니다.");
-        }
     }
-    
-    // @PostMapping("/changePW")
-    // public ResponseEntity<String> changePw(@RequestBody Map<String, String> request) {
-    //     String currentPw = request.get("currentPw");
-    //     String newPw = request.get("newPw");
-    
-    //     log.info("컨트롤러 진입");
-    
-    //     // 사용자 아이디를 요청에서 직접 가져옵니다.
-    //     String username = request.get("userId");
-    
-    //     try {
-    //         // userService의 changePw 메서드를 호출하여 비밀번호 변경을 시도합니다.
-    //         int result = userService.changePw(username, currentPw, newPw);
-    //         if (result > 0) {
-    //             // 변경이 성공하면 성공 응답을 반환합니다.
-    //             return ResponseEntity.ok("비밀번호가 변경되었습니다.");
-    //         } else {
-    //             // 변경이 실패하면 실패 응답을 반환합니다.
-    //             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현재 비밀번호가 일치하지 않습니다.");
-    //         }
-    //     } catch (Exception e) {
-    //         // 예외 발생 시에도 실패 응답을 반환합니다.
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경에 실패했습니다.");
-    //     }
-    // }
-    
-
-    // @PostMapping("/changePW")
-    // public ResponseEntity<String> changePw(@RequestBody Map<String, String> request) {
-    //     String currentPw = request.get("currentPw");
-    //     String newPw = request.get("newPw");
-    
-    //     log.info("컨트롤러 진입");
-
-    //     // 사용자 정보는 SecurityContextHolder에서 가져오도록 변경
-    //     // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    //     String username = request.get("userId");
-
-    //     try {
-    //         int result = userService.changePw(username, currentPw, newPw);
-    //         if (result > 0) {
-    //             return ResponseEntity.ok("비밀번호가 변경되었습니다.");
-    //         } else {
-    //             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("현재 비밀번호가 일치하지 않습니다.");
-    //         }
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경에 실패했습니다.");
-    //     }
-    // }
-
 
     @GetMapping("/purchase")
     public String purchase() {

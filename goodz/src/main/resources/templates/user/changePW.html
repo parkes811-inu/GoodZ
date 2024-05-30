@@ -73,20 +73,24 @@
                             <div class="text-below">
                                 항목에 데이터를 입력해주세요
                             </div>
-                            <form id="changePW-form">
+                            <!-- 비밀번호 변경 폼 -->
+                            <form id="changePW-form" th:action="@{/user/changePW}" method="post">
+                                <!-- CSRF 토큰 추가 -->
                                 <input type="hidden" name="_csrf" id="csrf" th:value="${_csrf.token}" />
-
-                                <!-- <input type="hidden" id="userId" name="userId" th:value="${user.userId}"> -->
-                        
+                                <!-- 사용자 ID 숨겨진 필드 추가 -->
+                                <input type="hidden" id="userId" name="userId" th:value="${findMan.userId}">                 
+                                <!-- 비밀번호 입력 -->
                                 <div class="form-group">
                                     <label for="password">변경 비밀번호 입력*</label>
                                     <input type="password" name="password" class="form-control" id="password" placeholder="변경할 비밀번호를 입력해주세요">
                                 </div>
+                                <!-- 비밀번호 확인 입력 -->
                                 <div class="form-group">
                                     <label for="password_check">변경 비밀번호 확인*</label>
-                                    <input type="password" class="form-control" id="password_check" placeholder="다시 한번 더 입력해주세요">
+                                    <input type="password" name="password_check" class="form-control" id="password_check" placeholder="다시 한번 더 입력해주세요">
                                 </div>
-                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="check()">비밀번호 변경</button>
+                                <!-- 비밀번호 변경 버튼 -->
+                                <button type="submit" class="btn btn-dark btn-block mt-3">비밀번호 변경</button>
                             </form>
                         </div>
                     </div>
@@ -95,62 +99,34 @@
         </div>
     </div>
 
-    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="resultModalLabel">비밀번호 변경 결과</h5>
-                </div>
-                <div class="modal-body" id="resultModalBody"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- JavaScript 스크립트 -->
     <script>
-        function check() {
-            var firstPw = $('#password').val();
-            var secondPw = $('#password_check').val();
+        // 비밀번호 변경 폼 제출 시
+        document.getElementById('changePW-form').addEventListener('submit', function (event) {
+            // 첫 번째 비밀번호와 두 번째 비밀번호 값 가져오기
+            var firstPw = document.getElementById('password').value;
+            var secondPw = document.getElementById('password_check').value;
+            
+            // 비밀번호 유효성 검사를 위한 정규식
             var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
 
+            // 첫 번째 비밀번호 유효성 검사
             if (!passwordRegex.test(firstPw)) {
                 alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                event.preventDefault(); // 폼 제출 방지
                 return;
             }
 
+            // 두 번째 비밀번호와 일치하는지 확인
             if (firstPw !== secondPw) {
                 alert('비밀번호가 일치하지 않습니다.');
+                event.preventDefault(); // 폼 제출 방지
                 return;
             }
 
-            var userData = {
-                username: $('input[name="username"]').val(),
-                birth: $('input[name="birth"]').val(),
-                userId: $('#userId').val(),
-                password: firstPw,
-            };
-
-            var csrfToken = $('input[name="_csrf"]').val();
-
-            $.ajax({
-                url: '/user/changePW',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(userData),
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                },
-                success: function(response) {
-                    alert('비밀번호가 수정되었습니다.');
-                    window.location.href = '/user/login';
-                },
-                error: function(xhr, status, error) {
-                    alert('비밀번호 수정에 실패했습니다. 다시 시도해 주세요.');
-                }
-            });
-        }
+            // 비밀번호 변경 성공 알림
+            alert('비밀번호가 성공적으로 변경되었습니다 다시 로그인해주세요');
+        });
     </script>
 </body>
 </html>
