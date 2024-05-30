@@ -37,6 +37,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
+     * 메인화면에 최근 상품 4개 띄우기
+     */
+    @Override
+    public List<Product> newArrivals() throws Exception {
+        
+        List<Product> newArrivalsList = productMapper.newArrivals();
+
+        return newArrivalsList;
+    }
+
+    /**
      *  상품 등록 처리
      */
     @Override
@@ -92,5 +103,40 @@ public class ProductServiceImpl implements ProductService {
         
         return topList;
     }
+
+    /**
+     * 하의만 보기
+     */
+    @Override
+    public List<Product> pants() throws Exception {
+        
+        List<Product> pantsList = productMapper.pants();
+        
+        return pantsList;
+    }
+
+    /**
+     * 신발만 보기
+     */
+    @Override
+    public List<Product> shoes() throws Exception {
+
+        List<Product> shoesList = productMapper.shoes();
+        
+        return shoesList;
+    }
+
+    /**
+     * 악세사리만 보기
+     */
+    @Override
+    public List<Product> accessory() throws Exception {
+
+        List<Product> accessoryList = productMapper.accessory();
+        
+        return accessoryList;
+    }
+
+    
 
 }

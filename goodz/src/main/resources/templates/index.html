@@ -97,58 +97,22 @@
             <!-- New Arrivals -->
             <div class="NewArrivals">
                 <h5 class="text-md-start fw-bold mt-5">New Arrivals</h5>
-                <div class="product_list row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="taggedStyles">
-    
+                <div class="row row-cols-1 row-cols-md-4 g-4" id="taggedStyles">
                     <!-- [DB] 반복문으로 최대 4개 까지 -->
-    
-                    <div class="product_item col">
-                        <!-- 상품이미지 -->
-                        <a href="#">
-                            <img  class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
-                        </a>
-                        <!-- 상품정보 -->
-                        <div class="product_desc text-black mb-2">
-                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
+                    <div th:each="product : ${newArrivalsList}" class="col">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <a th:href="@{/product/detail/{id}(id=${product.pNo})}">
+                                    <img th:src="|/files/img?imgUrl=${product.imageUrl}|" alt="상품 이미지" class="rounded-4 w-100">
+                                </a>
+                                <div class="card-text py-2">
+                                    <div class="d-flex justify-content-start column-gap-1">
+                                        <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-    
-                    <div class="product_item col">
-                        <!-- 상품이미지 -->
-                        <a href="#">
-                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
-                        </a>
-                        <!-- 상품정보 -->
-                        <div class="product_desc text-black mb-2">
-                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                        </div>
-                    </div>
-    
-                    <div class="product_item col">
-                        <!-- 상품이미지 -->
-                        <a href="#">
-                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
-                        </a>
-                        <!-- 상품정보 -->
-                        <div class="product_desc text-black mb-2">
-                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                        </div>
-                    </div>
-    
-                    <div class="product_item col">
-                        <!-- 상품이미지 -->
-                        <a href="#">
-                            <img class="border-0 rounded-3" src="/img/temp/sampleProduct.jpg" alt="제품이미지">
-                        </a>
-                        <!-- 상품정보 -->
-                        <div class="product_desc text-black mb-2">
-                            <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                            <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 

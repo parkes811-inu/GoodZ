@@ -7,35 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주소록</title>
     <style>
-        .content {
 
-            margin-top: 25px;
-            margin-bottom: 500px;
+        .address_container {
+            max-width: 600px;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            margin-top: 20px;
+        .add_btn {
+            font-size: 12px;    
         }
 
-        .header h2 {
-            font-size: 23px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .add-address-btn {
-            background-color: #fff;
-            border: 1px solid #000;
-            padding: 6px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
 
         .address-item {
             padding: 15px;
@@ -45,13 +25,7 @@
             font-size: 14px;
         }
 
-        .address-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .address-item-header h3 {
+        .address-item-header p {
             font-size: 15px;
             margin: 0;
         }
@@ -64,24 +38,20 @@
             margin-left: 8px;
         }
 
-        .address-item-body {
-            margin-bottom: 8px;
-        }
-
         .address-item-footer {
             display: flex;
             justify-content: flex-end;
             gap: 8px;
         }
 
-        .address-item-footer button {
+        /* .address-item-footer button {
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
-        }
+        } */
 
         .address-item-footer button:hover {
             background-color: #f0f0f0;
@@ -94,26 +64,35 @@
     </style>
 </head>
 <body layout:fragment="content">
-    <div class="content">
-        <div class="header">
-            <h2>주소록</h2>
-            <button class="add-address-btn" onclick="location.href='/user/add_address'">+ 새 배송지 추가</button>
+    <div class="container">
+        <div class="userMainContainer">
+            <p class="fs-4 fw-bold m-0">주소록</p>
+            <div class="address_container" style="max-width: 600px;">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="add_btn btn btn-sm border rounded-3" onclick="location.href='/user/add_address'" >+ 새 배송지 추가</button>
+                </div>
+                <div class="address-item">
+                    <div class="address-item-header">
+                        <div class="d-flex justify-content-end">
+                            <span class="default-badge">기본 배송지</span>
+                        </div>
+                        <p>메롱</p>
+                    </div>
+                    <div class="address-item-body">
+                        <p class="m-0">010-1234-1234</p>
+                        <p class="mt-3 mb-0">(22182) 개미시 허리도 가늘군 만지면 부러지리 88-88</p>
+                    </div>
+                    <div class="address-item-footer">
+                        <button class="btn btn-sm border">수정</button>
+                        <button class="btn btn-sm border">삭제</button>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
         <!-- 주소 테이블에서 불러와야함 -->
-        <div class="address-item">
-            <div class="address-item-header">
-                <h3>메롱</h3>
-                <span class="default-badge">기본 배송지</span>
-            </div>
-            <div class="address-item-body">
-                <p>010-1234-1234</p>
-                <p>(22182) 개미시 허리도 가늘군 만지면 부러지리 88-88</p>
-            </div>
-            <div class="address-item-footer">
-                <button>수정</button>
-                <button>삭제</button>
-            </div>
-        </div>
         <div class="divider"></div>
     </div>
 </body>

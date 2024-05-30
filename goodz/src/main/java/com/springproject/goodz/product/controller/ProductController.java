@@ -41,6 +41,7 @@ public class ProductController {
         return "/product/detail";
     }
 
+    // 상의 카테고리
     @GetMapping("/top")
     public String top(Model model) throws Exception {
 
@@ -60,18 +61,60 @@ public class ProductController {
         return "/product/top";
     }
 
+    // 하의 카테고리
     @GetMapping("/pants")
-    public String productPantsPage() {
+    public String pants(Model model) throws Exception {
+
+        List<Product> pantsList = productService.pants();
+
+        for (Product product : pantsList) {
+            String firstImageUrl = product.getFirstImageUrl();
+            if (firstImageUrl != null) {
+                
+                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
+            }
+        }
+
+        model.addAttribute("pantsList", pantsList);
+
         return "/product/pants";
     }
 
+    // 신발 카테고리
     @GetMapping("/shoes")
-    public String productShoesPage() {
+    public String shoes(Model model) throws Exception{
+        List<Product> shoesList = productService.shoes();
+
+        
+        for (Product product : shoesList) {
+            String firstImageUrl = product.getFirstImageUrl();
+            if (firstImageUrl != null) {
+            
+                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
+            }
+        }
+
+        model.addAttribute("shoesList", shoesList);
+
         return "/product/shoes";
     }
 
+    // 악세사리 카테고리
     @GetMapping("/accessory")
-    public String productAccessoryPage() {
+    public String accessory(Model model) throws Exception{
+        List<Product> accessoryList = productService.accessory();
+
+
+        for (Product product : accessoryList) {
+            String firstImageUrl = product.getFirstImageUrl();
+            if (firstImageUrl != null) {
+    
+                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
+            }
+        }
+
+        model.addAttribute("accessoryList", accessoryList);
+
         return "/product/accessory";
     }
 }

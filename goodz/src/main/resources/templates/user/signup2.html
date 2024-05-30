@@ -259,7 +259,7 @@
             var formattedPhone = formatPhoneNumber(phone);
             var nickname = $('#nickname').val();
 
-            if (!formattedPhone) {
+            if (phone !== null && !formattedPhone) {
                 alert('올바른 휴대폰 번호를 입력해주세요.');
                 return;
             }

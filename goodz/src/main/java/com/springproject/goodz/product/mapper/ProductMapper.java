@@ -9,7 +9,7 @@ import com.springproject.goodz.product.dto.Product;
 @Mapper
 public interface ProductMapper {
     
-    // 상품 목록 - 메인화면에 최근입고 4개, (알아서 짜셈)
+    // 상품 목록 - 메인화면에 최근입고 4개
     public List<Product> newArrivals() throws Exception;
 
     // 상품 목록 - 마이페이지 메인에 4개, (알아서 짜셈)
@@ -31,7 +31,7 @@ public interface ProductMapper {
     public List<Product> shoes() throws Exception;
 
     // 상품 목록 - 악세서리
-    public List<Product> acc() throws Exception;
+    public List<Product> accessory() throws Exception;
 
     // 상품 조회
     public Product select(int pNo) throws Exception;

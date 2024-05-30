@@ -10,9 +10,16 @@
         FROM brand
     </select>
 
+    <select id="maxNo">
+        SELECT max(b_no) as maxNo
+        FROM brand
+    </select>
+
     <insert id="insert">
-        INSERT INTO brand (b_name, image_url)
-        VALUES (#{bName}, #{imageUrl})
+        INSERT INTO brand (b_name)
+        VALUES (#{bName})
     </insert>
+
+
 
 </mapper>
