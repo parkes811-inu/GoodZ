@@ -1,4 +1,4 @@
-package com.springproject.goodz.user.security;
+package com.springproject.goodz.security;
 
 import java.io.IOException;
 
