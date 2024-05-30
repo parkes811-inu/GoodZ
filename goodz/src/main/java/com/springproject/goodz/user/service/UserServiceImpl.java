@@ -1,5 +1,10 @@
 package com.springproject.goodz.user.service;
 
+
+import java.util.List;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,11 +12,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.mapper.UserMapper;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -88,11 +97,6 @@ public class UserServiceImpl implements UserService {
         return id;
     }
 
-    @Override
-    public String findPw(String username, String birth, String userId) throws Exception {
-        String pw = userMapper.findPw(username, birth, userId);
-        return pw;
-    } 
 
     @Override
     public boolean check(String userId, String nickname) throws Exception {
@@ -100,14 +104,38 @@ public class UserServiceImpl implements UserService {
         System.out.println("Check Result: " + result); // 로깅 추가
         return result != null && result == 0; // null 체크 추가
     }
+    public Users findPw(String username, String birth, String userId) throws Exception {
+        log.info("findPw 메소드 호출: username={}, birth={}, userId={}", username, birth, userId);
+        Users findMan = userMapper.findPw(username, birth, userId);
+        return findMan;
+    } 
     
     @Override
-    public boolean checkPassword(String userId, String rawPassword) throws Exception {
-        Users user = userMapper.select(userId);
-        if (user != null) {
-            return passwordEncoder.matches(rawPassword, user.getPassword());
+    public int changePw(String newPw, String userId) throws Exception {
+        // 새 비밀번호를 암호화하여 업데이트
+        String password = passwordEncoder.encode(newPw);
+        log.info("새로운 비밀번호 암호화 결과: {}", password);
+         
+    try {
+        int result = userMapper.changePw(password, userId);
+        log.info("userMapper.changePw 결과 : {}", result);
+        if(result > 0) {
+            log.info("비밀번호 변경 성공");
+            return result; // 성공
+        } else {
+            log.info("비밀번호 변경 실패");
+            return 0;
         }
-        return false;
+    } catch (Exception e) {
+        log.error("비밀번호 변경 중 오류 발생" , e);
+        throw e;
+    }
+}
+
+    @Override
+    public boolean check(String userId, String nickname) throws Exception {
+        int result = userMapper.check(userId, nickname);
+        return result == 0;
     }
 
     @Override
@@ -115,5 +143,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
     }
 
-  
+
+    @Override
+    public List<Shippingaddress> selectByUserId() throws Exception {
+        
+        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
+        
+        return shippingaddresses;
+    }
+
+    
 }

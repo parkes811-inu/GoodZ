@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/user_layout}">
+<head>
+    <style>
+        .custom-card {
+            border-radius: 0.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        .underline {
+            width: 100%;
+            height: 2px;
+            background-color: #000;
+            margin: 1rem 0;
+        }
+        .text-below {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            height: calc(1.5em + 0.75rem + 2px);
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .text-center {
+            margin-top: 20px;
+        }
+        .btn-dark {
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 5px;
+        }
+        .btn-primary:hover {
+            background-color: #23272b;
+            border-color: #23272b;
+        }
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+        .mb-5 {
+            margin-bottom: 3rem !important;
+        }
+        .mt-3 {
+            margin-top: 1rem !important;
+        }
+        .modal {
+            z-index: 1055 !important;
+        }
+    </style>
+    <title>비밀번호 변경</title>
+</head>
+<body layout:fragment="content">
+    <div class="container">
+        <div class="mainContainer">
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card p-4 custom-card">
+                            <h2 class="text-center">비밀번호 변경</h2>
+                            <div class="underline"></div>
+                            <div class="text-below">
+                                항목에 데이터를 입력해주세요
+                            </div>
+                            <!-- 비밀번호 변경 폼 -->
+                            <form id="changePW-form" th:action="@{/user/changePW}" method="post">
+                                <!-- CSRF 토큰 추가 -->
+                                <input type="hidden" name="_csrf" id="csrf" th:value="${_csrf.token}" />
+                                <!-- 사용자 ID 숨겨진 필드 추가 -->
+                                <input type="hidden" id="userId" name="userId" th:value="${findMan.userId}">                 
+                                <!-- 비밀번호 입력 -->
+                                <div class="form-group">
+                                    <label for="password">변경 비밀번호 입력*</label>
+                                    <input type="password" name="password" class="form-control" id="password" placeholder="변경할 비밀번호를 입력해주세요">
+                                </div>
+                                <!-- 비밀번호 확인 입력 -->
+                                <div class="form-group">
+                                    <label for="password_check">변경 비밀번호 확인*</label>
+                                    <input type="password" name="password_check" class="form-control" id="password_check" placeholder="다시 한번 더 입력해주세요">
+                                </div>
+                                <!-- 비밀번호 변경 버튼 -->
+                                <button type="submit" class="btn btn-dark btn-block mt-3">비밀번호 변경</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 스크립트 -->
+    <script>
+        // 비밀번호 변경 폼 제출 시
+        document.getElementById('changePW-form').addEventListener('submit', function (event) {
+            // 첫 번째 비밀번호와 두 번째 비밀번호 값 가져오기
+            var firstPw = document.getElementById('password').value;
+            var secondPw = document.getElementById('password_check').value;
+            
+            // 비밀번호 유효성 검사를 위한 정규식
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
+
+            // 첫 번째 비밀번호 유효성 검사
+            if (!passwordRegex.test(firstPw)) {
+                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                event.preventDefault(); // 폼 제출 방지
+                return;
+            }
+
+            // 두 번째 비밀번호와 일치하는지 확인
+            if (firstPw !== secondPw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                event.preventDefault(); // 폼 제출 방지
+                return;
+            }
+
+            // 비밀번호 변경 성공 알림
+            alert('비밀번호가 성공적으로 변경되었습니다 다시 로그인해주세요');
+        });
+    </script>
+</body>
+</html>

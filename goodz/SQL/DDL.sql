@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE `user` (
 	`user_id`				VARCHAR(100)	NOT NULL,	-- 유저 아이디
 	`username`				VARCHAR(50)		NOT NULL,	-- 유저 이름
-  `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
+    `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
 	`password`				VARCHAR(100)	NOT NULL,
 	`birth`					VARCHAR(50)		NOT NULL,		-- 2024/01/01 형식으로 안넣으면 뒤진다.
 	`phone_number`			VARCHAR(20)		NOT NULL,		-- 010-1234-1234
@@ -293,3 +293,19 @@ CREATE TABLE `Shippingaddress` (
     PRIMARY KEY (address_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='배송주소';
+
+
+-- file / 📁 utils
+CREATE TABLE `file` (
+  `no` int NOT NULL AUTO_INCREMENT,
+  `parent_table` varchar(45) NOT NULL,
+  `parent_no` int NOT NULL,
+  `file_name` text NOT NULL,
+  `origin_name` text,
+  `file_path` text NOT NULL,
+  `file_size` int NOT NULL DEFAULT '0',
+  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `upd_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `file_code` int NOT NULL DEFAULT '0',         # 파일종류 코드 => 1:썸네일, 2: 일반첨부파일...
+  PRIMARY KEY (`no`)
+) COMMENT='파일';
