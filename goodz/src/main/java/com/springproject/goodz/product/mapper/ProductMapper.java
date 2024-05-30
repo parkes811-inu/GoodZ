@@ -18,7 +18,7 @@ public interface ProductMapper {
     // 상품 목록 (페이징 추후 추가) - 관리자 전용 다 볼 수 있음
     public List<Product> list() throws Exception;
 
-    // <관심>상품 목록 (페이징 추후 추가) -  볼 수 있음(알아서 짜셈)하의
+    // <관심>상품 목록 (페이징 추후 추가) -  볼 수 있음(알아서 짜셈)
     public List<Product> userlist() throws Exception;
     
     // 상품 목록 - 상의

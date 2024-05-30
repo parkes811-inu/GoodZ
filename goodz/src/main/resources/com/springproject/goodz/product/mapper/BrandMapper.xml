@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.product.mapper.BrandMapper">
+
+    <select id="list" resultType="Brand">
+        SELECT *
+        FROM brand
+    </select>
+
+    <insert id="insert">
+        INSERT INTO brand (b_name, image_url)
+        VALUES (#{bName}, #{imageUrl})
+    </insert>
+
+</mapper>

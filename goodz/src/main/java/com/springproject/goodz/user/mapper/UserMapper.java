@@ -34,7 +34,11 @@ public interface UserMapper {
     public int changePw(@Param("password") String password, @Param("userId") String userId) throws Exception;
 
     // 회원 가입 시 아이디 중복 체크
-    public int checkId(@Param("userId") String userId) throws Exception;
+    public int check(@Param("userId") String userId, @Param("nickname") String nickname) throws Exception;
+    
+    // 회원 정보 수정 시 닉네임 중복 체크
+    public int checkName(@Param("userName") String userName) throws Exception;
 
 
+    
 }

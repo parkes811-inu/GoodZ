@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * [GET]    /styles                  게시글 목록
  * [GET]    /styles/게시글번호       게시글 조회
  * [GET]    /styles/update           게시글 수정페이지
+ * [GET]    /styles/insert           게시글 수정페이지
  * [POST]   /styles                  게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
@@ -45,7 +46,7 @@ public class PostController {
      */
     @GetMapping("/read")
     public String read() {
-        return "/style/read";
+        return "/post/read";
     }
 
     /**
@@ -54,7 +55,7 @@ public class PostController {
      */
     @GetMapping("/cmmtX")
     public String cmmtTest() {
-        return "/style/read_cmmtX";
+        return "/post/read_cmmtX";
     }
 
     /**
@@ -63,7 +64,7 @@ public class PostController {
      */
     @GetMapping("/insert")
     public String moveToInsert() {
-        return "/style/insert";
+        return "/post/insert";
     }
 
     /**
@@ -79,7 +80,7 @@ public class PostController {
 
     @GetMapping("/update")
     public String moveToUpdate() {
-        return "/style/update";
+        return "/post/update";
     }
     
     
@@ -91,7 +92,7 @@ public class PostController {
         if (userId.equals("NoOne")) {
             return "/style/user/profile_noPosts";
         }
-        return "/style/user/profile";
+        return "/post/user/profile";
     }
     
     

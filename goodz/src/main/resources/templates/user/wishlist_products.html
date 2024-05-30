@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관심/상품</title>
     <style>
-
-
         .content {
             width: 80%;
             margin: 0 auto;
@@ -85,68 +83,70 @@
     </style>
 </head>
 <body layout:fragment="content">
-    <div class="content">
-        <div class="header">
-            <h1>관심</h1>
-        </div>
-        <div class="filter-bar">
-            <div class="filter-buttons">
-                <!-- 상품 혹은 스타일을 눌렀을 때 넘어가는 로직 필요 -->
-                <button class="filter-button active" onclick="location.href='/user/wishlist/products'">상품</button>
-                <button class="filter-button" onclick="location.href='/user/wishlist/styles'">스타일</button>
+    <div class="container">
+        <div class="userMainContainer">
+            <div class="border-bottom border-3 mb-3" style="border-color: #393E46 !important;">
+                <p class="fs-4 fw-bold mb-1">관심</p>
             </div>
-            <div class="sort-order" onclick="filter()">
-                <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
-            </div>        
-        </div>
-
-        <!-- 리스트 돗자리 -->
-        <div class="row wishlist">
-            <!-- 상품 테이블에 저장된 사진과 제품명 가져오기 -->
-            <!-- 상품 클릭 시 해당 상품의 판매 페이지로-->
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
+            <div class="filter-bar">
+                <div class="filter-buttons">
+                    <!-- 상품 혹은 스타일을 눌렀을 때 넘어가는 로직 필요 -->
+                    <button class="filter-button active" onclick="location.href='/user/wishlist/products'">상품</button>
+                    <button class="filter-button" onclick="location.href='/user/wishlist/styles'">스타일</button>
+                </div>
+                <div class="sort-order" onclick="filter()">
+                    <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+                </div>        
             </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
-            </div>
-            <div class="col-md-3">
-                <img src="/img/product/product_img.png" alt="Product 1">
-                <p>Nike Air Force 1 '07</p>
+    
+            <!-- 리스트 돗자리 -->
+            <div class="row wishlist row-cols-2 row-cols-sm-2 row-cols-lg-4 g-3">
+                <!-- 상품 테이블에 저장된 사진과 제품명 가져오기 -->
+                <!-- 상품 클릭 시 해당 상품의 판매 페이지로-->
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
+                <div class="col">
+                    <img src="/img/product/product_img.png" alt="Product 1">
+                    <p>Nike Air Force 1 '07</p>
+                </div>
             </div>
         </div>
     </div>

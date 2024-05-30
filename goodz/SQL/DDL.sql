@@ -1,6 +1,8 @@
-﻿-- Active: 1715220502910@@127.0.0.1@3306@goodz
 
+-- 컬럼명 바꿔야 함 ㅎㅎ
 ALTER TABLE product CHANGE brand b_no int;
+ALTER TABLE product CHANGE b_no b_name VARCHAR;
+ALTER TABLE purchase CHANGE purcahse_pirce purchase_pirce int;
 
 
 -- DROP
@@ -30,8 +32,9 @@ DROP TABLE Shippingaddress;
 DROP TABLE IF EXISTS user;
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
-	`user_id`				VARCHAR(100)	NOT NULL,
-	`username`				VARCHAR(50)		NOT NULL,
+	`user_id`				VARCHAR(100)	NOT NULL,	-- 유저 아이디
+	`username`				VARCHAR(50)		NOT NULL,	-- 유저 이름
+    `nickname`      VARCHAR(100)	NOT NULL,	-- 유저 닉네임
 	`password`				VARCHAR(100)	NOT NULL,
 	`birth`					VARCHAR(50)		NOT NULL,		-- 2024/01/01 형식으로 안넣으면 뒤진다.
 	`phone_number`			VARCHAR(20)		NOT NULL,		-- 010-1234-1234
@@ -165,16 +168,16 @@ CREATE TABLE `Product` (
 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
 	`product_name`		VARCHAR(100)	NOT NULL,
 	`price`				INT				NOT NULL,
-	`b_no`				INT		NOT NULL,
+	`b_name`			VARCHAR(100)	NOT NULL,
 	`category`			VARCHAR(50)		NOT NULL,
 	`size`				VARCHAR(100)	NOT NULL,
 	`views`				INT				NOT NULL DEFAULT '0',
 	`stock_quantity`	INT				NOT NULL,
-	`image_url`			VARCHAR(255)	NOT NULL,
+	`image_url`			VARCHAR(1000)	NOT NULL,
 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (p_no),
-	 FOREIGN KEY (b_no) REFERENCES Brand(b_no)
+	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
 ) COMMENT='상품';
 
 -- Brand 테이블 / 📁 product
@@ -241,11 +244,12 @@ CREATE TABLE `Inspection` (
 
 
 -- Purchase 테이블 / 📁 pay
+-- 여러분 purchase_pirce 여기 오타있었어요 컬럼명 수정 바람
 CREATE TABLE `Purchase` (
 	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
 	`p_no`				INT				NOT NULL,
-	`purcahse_pirce`	INT				NOT NULL,
+	`purchase_pirce`	INT				NOT NULL,
 	`payment_method`	VARCHAR(50)		NOT NULL,
 	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
 	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -262,7 +266,7 @@ CREATE TABLE `Shipment` (
 	`shipment_no`	INT				NOT NULL AUTO_INCREMENT,
 	`purchase_no`	INT	 			NOT NULL,
 	`user_id`		VARCHAR(100)	NOT NULL,
-	`p_no`			INT				NOT NULL,
+	-- `p_no`			INT				NOT NULL,
 	`tracking_no`	VARCHAR(50)		NOT NULL,
 	`shipment_state`	ENUM('pending', 'shipped', 'in_transit', 'delivered', 'returned')	NOT NULL,
 	`shipped_date`		timestamp	NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -270,7 +274,7 @@ CREATE TABLE `Shipment` (
     PRIMARY KEY (shipment_no),
     FOREIGN KEY (purchase_no) REFERENCES Purchase(purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (p_no) REFERENCES Product(p_no)
+    -- FOREIGN KEY (p_no) REFERENCES Product(p_no)
 ) COMMENT='배송';
 
 
@@ -289,4 +293,3 @@ CREATE TABLE `Shippingaddress` (
     PRIMARY KEY (address_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='배송주소';
-

@@ -85,44 +85,32 @@
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">상품ID</th>
+                        <th scope="col" style="width: 100px;">상품 번호</th>
+                        <th scope="col">브랜드명</th>
                         <th scope="col">상품명</th>
                         <th scope="col">재고</th>
                         <th scope="col">등록일자</th>
                       </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                      <tr>
-                        <th scope="row">1</th>
-                        <!-- 상품명 누르면 해당 상세 페이지로 이동-->
-                        <td>Nike</td>
-                        <td>123</td>
-                        <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Stussy</td>
-                        <td>234</td>
-                        <td>2024-05-23</td>
+                      <!-- if) 조회되는 브랜드 없을 시, -->
+                  <th:block th:if="${productList.isEmpty()}">
+                    <tr>
+                        <td colspan="5" align="center">
+                            조회된 상품이 없습니다.
+                        </td>
                     </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>The Joeun</td>
-                        <td>236</td>
-                        <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">4</th>
-                        <td>Discovery</td>
-                        <td>828</td>
-                        <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">5</th>
-                        <td>Starbucks</td>
-                        <td>911</td>
-                        <td>2024-05-23</td>
-                      </tr>
+              </th:block>
+
+              <!-- if) 브랜드 존재 시, 반복출력 -->
+              <tr th:each="product : ${productList}">
+                <th scope="row" th:text="${product.pNo}"></th>
+                <td th:text="${product.bName}"></td>
+                <td th:text="${product.productName}"></td>
+                <td th:text="${product.stockQuantity}"></td>
+                <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
+                
+              </tr>
                     </tbody>
                   </table>
             </div>

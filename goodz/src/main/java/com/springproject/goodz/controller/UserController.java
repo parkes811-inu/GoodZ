@@ -32,22 +32,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @SessionAttributes("findMan")  // 이상하면 지우자
 public class UserController {
     
-   
     @Autowired
     private UserService userService;
 
-    
-
     @GetMapping("")
-    public String index() {
+    public String index(Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        Users user = userService.findUserByUsername(currentUserName);
+
+        model.addAttribute("user", user);
         return "/user/index";
     }
-    
+
     @GetMapping("/login")
     public String login() {
         return "/user/login";
     }
-    
+
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("user", new Users());
@@ -61,18 +63,59 @@ public class UserController {
         modelAndView.addObject("user", user);
         return modelAndView;
     }
-    
-    @PostMapping("/checkId")
-    public ResponseEntity<String> checkDuplicate(@RequestBody Map<String, String> request) throws Exception {
+
+    /**
+     * 중복 확인을 위한 컨트롤러
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/check")
+    public ResponseEntity<String> checkIdDuplicate(@RequestBody Map<String, String> request) throws Exception {
         String userId = request.get("userId");
-        boolean isAvailable = userService.checkId(userId);
+        String nickname = request.get("nickname");
+
+        boolean isAvailable = userService.check(userId, nickname);
         if (isAvailable) {
-            return ResponseEntity.ok("사용 가능한 아이디입니다.");
+            return ResponseEntity.ok("사용 가능합니다.");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중입니다.");
         }
     }
-    
+
+    @PostMapping("/checkPassword")
+    @ResponseBody
+    public ResponseEntity<String> checkPassword(@RequestBody Map<String, String> request) throws Exception {
+        String userId = request.get("userId");
+        String password = request.get("password");
+
+        boolean isPasswordCorrect = userService.checkPassword(userId, password);
+        if (isPasswordCorrect) {
+            return ResponseEntity.ok("비밀번호가 일치합니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+
+    // 이거 업데이트 해야됨
+    @PostMapping("/update")
+    public ResponseEntity<String> updateUserInfo(@RequestBody Map<String, String> request) throws Exception {
+        
+        Users user = new Users();
+        String userId = request.get("userId");
+        String nickname = request.get("nickname");
+
+        // update 쿼리
+        int result = userService.update(user);
+        if (result > 0) {
+            return ResponseEntity.ok("수정 되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("수정에 실패하였습니다.");
+        }
+    }
+
+
     @PostMapping("/signup2")
     public ResponseEntity<String> signUp(@RequestBody Users user) throws Exception {
         // 회원 가입 처리 로직
@@ -84,7 +127,7 @@ public class UserController {
     public String findID() {
         return "/user/findID";
     }
-    
+
     @PostMapping("/findID")
     public ResponseEntity<String> findId(@RequestBody Users user) {
         String phone = user.getPhoneNumber();
@@ -196,20 +239,29 @@ public class UserController {
         return "/user/sales";
     }
 
-    // 관심페이지 이동 _ 디폴트: 상품
     @GetMapping("/wishlist/products")
-    public String wishlist_products() {
+    public String wishlist_products(Model model) throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+            Users user = userService.findUserByUsername(userDetails.getUsername());
+            model.addAttribute("user", user);
+        }
         return "/user/wishlist_products";
     }
 
-    // 관심페이지 이동 _ 스타일
     @GetMapping("/wishlist/styles")
     public String wishlist_styles() {
         return "/user/wishlist_styles";
     }
 
     @GetMapping("/manage_info")
-    public String manage_info() {
+    public String manage_info(Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        Users user = userService.findUserByUsername(currentUserName);
+
+        model.addAttribute("user", user);
         return "/user/manage_info";
     }
 

@@ -124,11 +124,9 @@ public class UserServiceImpl implements UserService {
 }
 
     @Override
-    public boolean checkId(String userId) throws Exception {
-        int result = userMapper.checkId(userId);
+    public boolean check(String userId, String nickname) throws Exception {
+        int result = userMapper.check(userId, nickname);
         return result == 0;
     }
-
-    
 
 }
