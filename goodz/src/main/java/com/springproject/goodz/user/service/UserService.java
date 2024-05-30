@@ -45,4 +45,5 @@ public interface UserService {
 
     // 유저의 주소 목록
     public List<Shippingaddress> selectByUserId() throws Exception;
+
 }

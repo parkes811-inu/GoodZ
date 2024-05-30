@@ -32,19 +32,14 @@ public interface UserMapper {
     public String findId(@Param("phoneNumber") String phone, @Param("userName") String name) throws Exception;
     
     // 비밀번호 찾기
-    public String findPw(@Param("userName") String name, @Param("birth") String birth , @Param("userId") String userId) throws Exception;
+    public Users findPw(@Param("userName") String name, @Param("birth") String birth , @Param("userId") String userId) throws Exception;
 
     // 회원 가입, 정보 수정 시 아이디 및 닉네임 중복 체크
     public Integer check(@Param("userId") String userId, @Param("nickname") String nickname) throws Exception;
   
-    public Users findPw(@Param("userName") String name , @Param("birth") String birth , @Param("userId") String userId) throws Exception;
-    
     // 비밀번호 변경
     public int changePw(@Param("password") String password, @Param("userId") String userId) throws Exception;
 
-    // 회원 가입 시 아이디 중복 체크
-    public int check(@Param("userId") String userId, @Param("nickname") String nickname) throws Exception;
-    
     // 회원 정보 수정 시 닉네임 중복 체크
     public int checkName(@Param("userName") String userName) throws Exception;
 
