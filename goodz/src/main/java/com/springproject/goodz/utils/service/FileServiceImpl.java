@@ -155,7 +155,7 @@ public class FileServiceImpl implements FileService{
         String fileName = UUID.randomUUID().toString() + "_" + originName;
 
         // File 객체 생성 => new File(업로드 경로, 설정할 파일명);
-        File uploadFile = new File(uploadPath, fileName);
+        File uploadFile = new File(uploadPath+"/brand", fileName);
 
         // 파일 업로드 (유저가 서버에 요청한 파일을 복사해서 경로에 넣음)
         FileCopyUtils.copy(fileData, uploadFile);
