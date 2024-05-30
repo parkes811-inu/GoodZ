@@ -155,10 +155,11 @@ public class UserServiceImpl implements UserService {
     public boolean checkPassword(String userId, String rawPassword) throws Exception {
         Users user = userMapper.select(userId);
         if (user != null) {
-            // 성공
             return passwordEncoder.matches(rawPassword, user.getPassword());
         }
         return false;
     }
+
+    
 
 }

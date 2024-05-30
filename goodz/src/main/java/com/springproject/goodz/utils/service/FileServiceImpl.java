@@ -134,10 +134,9 @@ public class FileServiceImpl implements FileService{
      * 파일 업로드
      */
     @Override
-    public boolean upload(Files file) throws Exception {
+    public boolean upload(Files file, String dir) throws Exception {
         log.info("file: " + file);
 
-        
        MultipartFile mf = file.getFile();
         // 파일 정보 : 원본 파일명, 파일 용량, 파일 데이터
         String originName = mf.getOriginalFilename();
@@ -153,7 +152,7 @@ public class FileServiceImpl implements FileService{
         // - 파일명 중복 방지를 위해 "UID_파일명.확장자" 형식으로 지정
         // - 업로드 파일명 : UID_원본파일명.확장자
         String fileName = UUID.randomUUID().toString() + "_" + originName;
-
+        uploadPath +=  "/" + dir;
         // File 객체 생성 => new File(업로드 경로, 설정할 파일명);
         File uploadFile = new File(uploadPath+"/brand", fileName);
 

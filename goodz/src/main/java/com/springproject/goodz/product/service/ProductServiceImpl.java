@@ -63,6 +63,7 @@ public class ProductServiceImpl implements ProductService {
                 throw new Exception("최대 10개의 이미지만 업로드할 수 있습니다.");
             }
 
+            // 파일 경로들을 저장할 StringBuilder 객체를 초기화
             StringBuilder filePaths = new StringBuilder();
 
             for (MultipartFile productFile : productFiles) {
@@ -73,14 +74,16 @@ public class ProductServiceImpl implements ProductService {
                     File uploadFile = new File(uploadPath, fileName);
                     FileCopyUtils.copy(productFile.getBytes(), uploadFile);
 
-                    String filePath = uploadPath + "/" + fileName;
+                    String filePath = uploadPath + "/products/" + fileName;
                     if (filePaths.length() > 0) {
+                        // StringBuilder에 파일 경로를 추가하기 전에 구분자(;)를 추가
                         filePaths.append(";");
                     }
                     filePaths.append(filePath);
                 }
             }
 
+            // 모든 파일 경로를 ;로 구분된 문자열로 설정하여 Product 객체의 imageUrl 속성에 저장
             product.setImageUrl(filePaths.toString());
         }
 
