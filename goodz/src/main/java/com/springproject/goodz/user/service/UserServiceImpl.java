@@ -151,6 +151,15 @@ public class UserServiceImpl implements UserService {
         return shippingaddresses;
     }
 
+    @Override
+    public boolean checkPassword(String userId, String rawPassword) throws Exception {
+        Users user = userMapper.select(userId);
+        if (user != null) {
+            return passwordEncoder.matches(rawPassword, user.getPassword());
+        }
+        return false;
+    }
+
     
 
 }
