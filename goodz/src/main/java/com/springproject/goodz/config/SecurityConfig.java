@@ -9,9 +9,11 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import com.springproject.goodz.user.security.LoginSuccessHandler;
 import com.springproject.goodz.user.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,9 @@ public class SecurityConfig {
 
     @Autowired
     private UserDetailServiceImpl userDetailServiceImpl;
+
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
 
     // 스프링 시큐리티 설정 메소드
     @Bean
@@ -44,6 +49,8 @@ public class SecurityConfig {
                                      .loginProcessingUrl("/login")
                                      .usernameParameter("userId")   // 기본값:username
                                      .passwordParameter("password") // 기본값:password
+                                     .successHandler( loginSuccessHandler )
+                                    //  .successHandler( authenticationSuccessHandler() )
                                      );
 
         // ✅ 사용자 정의 인증 설정
@@ -97,4 +104,12 @@ public class SecurityConfig {
         return repositoryImpl;
     }
     
+     /**
+     * 🍃 인증 성공 처리 빈 등록
+     * @return
+     */
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new LoginSuccessHandler();
+    }
 }

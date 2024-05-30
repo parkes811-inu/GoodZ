@@ -14,5 +14,8 @@ public interface BrandMapper {
 
     // 브랜드 등록
     public int insert(Brand brand) throws Exception;
+
+    // 마지막 브랜드 번호 가져오기 (첨부파일 등록시 사용됨)
+    public int maxNo() throws Exception;
     
 }
