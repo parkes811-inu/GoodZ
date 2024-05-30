@@ -1,6 +1,10 @@
 package com.springproject.goodz.user.service;
 
 
+import java.util.List;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.mapper.UserMapper;
@@ -126,5 +132,31 @@ public class UserServiceImpl implements UserService {
         int result = userMapper.check(userId, nickname);
         return result == 0;
     }
+
+
+    @Override
+    public Users findUserByUsername(String username) throws Exception {
+        return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
+    }
+
+    @Override
+    public boolean isUserIdDuplicate(String userId) throws Exception {
+        return userMapper.check(userId, null) > 0;
+    }
+
+    @Override
+    public boolean isNicknameDuplicate(String nickname) throws Exception {
+        return userMapper.check(null, nickname) > 0;
+    }
+
+    @Override
+    public List<Shippingaddress> selectByUserId() throws Exception {
+        
+        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
+        
+        return shippingaddresses;
+    }
+
+    
 
 }
