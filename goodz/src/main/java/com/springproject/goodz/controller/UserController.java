@@ -134,10 +134,11 @@ public class UserController {
 
         if (file != null && !file.isEmpty()) {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            String filePath = uploadPath + File.separator + fileName;
+            String filePath = uploadPath + "/user/" + File.separator + fileName;
             try {
                 file.transferTo(new File(filePath));
-                user.setProfilePictureUrl(filePath);
+                // user.setProfilePictureUrl(filePath);
+                user.setProfilePictureUrl("/user/" + fileName); // URL 형식으로 저장
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
             }

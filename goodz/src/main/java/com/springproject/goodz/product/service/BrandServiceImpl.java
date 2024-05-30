@@ -80,7 +80,7 @@ public class BrandServiceImpl implements BrandService{
             logoFile.setParentNo(parentNo);         // maxNo으로 받아온 결과값
             logoFile.setFileCode(0);       // 일반파일 처리 (fileCode는 상품 대표이미지때 쓰임)
 
-            boolean isUploaded = fileService.upload(logoFile);           // 파일 업로드 요청
+            boolean isUploaded = fileService.upload(logoFile, "brand");           // 파일 업로드 요청
 
             if (isUploaded) {
                 log.info("로고 파일 처리 완료!!!!!");

@@ -59,9 +59,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         // }
 
 
-
-
-
         // 인증된 사용자 정보 - (아이디/패스워드/권한)
         // User user = (User) authentication.getPrincipal();
         CustomUser customUser = (CustomUser) authentication.getPrincipal();

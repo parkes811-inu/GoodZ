@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
                     File uploadFile = new File(uploadPath, fileName);
                     FileCopyUtils.copy(productFile.getBytes(), uploadFile);
 
-                    String filePath = uploadPath + "/" + fileName;
+                    String filePath = uploadPath + "/products/" + fileName;
                     if (filePaths.length() > 0) {
                         // StringBuilder에 파일 경로를 추가하기 전에 구분자(;)를 추가
                         filePaths.append(";");
