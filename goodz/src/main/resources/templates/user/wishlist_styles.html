@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관심/스타일</title>
     <style>
-
-
-.content {
+        .content {
             width: 80%;
             margin: 0 auto;
             margin-top: 20px;
@@ -85,50 +83,56 @@
     </style>
 </head>
 <body layout:fragment="content">
-    <div class="content">
-        <div class="header">
-            <h1>관심</h1>
-        </div>
-        <div class="filter-bar">
-            <div class="filter-buttons">
-                <button class="filter-button" onclick="location.href='/user/wishlist/products'">상품</button>
-                <button class="filter-button active" onclick="location.href='/user/wishlist/styles'">스타일</button>
+    <div class="container">
+        <div class="userMainContainer">
+
+            <div class="header">
+                <h1>관심</h1>
             </div>
-        </div>
-        <!-- 유저가 관심으로 등록한 스타일들의 대표 이미지만 가져옴(첫번째 이미지)-->
-        <!-- 이미지를 누르면 해당 스타일 상세 글로-->
-        <div class="grid-container">
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
+
+            <!-- 관심 카테고리 -->
+            <div class="filter-bar">
+                <div class="filter-buttons">
+                    <button class="filter-button" onclick="location.href='/user/wishlist/products'">상품</button>
+                    <button class="filter-button active" onclick="location.href='/user/wishlist/styles'">스타일</button>
+                </div>
             </div>
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
+            
+            <!-- 유저가 관심으로 등록한 스타일들의 대표 이미지만 가져옴(첫번째 이미지)-->
+            <!-- 이미지를 누르면 해당 스타일 상세 글로-->
+            <div class="grid-container">
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <div class="grid-item">
+                    <a href="/styles/cmmtX">
+                        <img src="/img/temp/postImg.jpg" alt="게시글">
+                    </a>
+                </div>
+                <!-- 추가 이미지들 -->
             </div>
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
-            </div>
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
-            </div>
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
-            </div>
-            <div class="grid-item">
-                <a href="/styles/cmmtX">
-                    <img src="/img/temp/postImg.jpg" alt="게시글">
-                </a>
-            </div>
-            <!-- 추가 이미지들 -->
         </div>
     </div>
 </body>
