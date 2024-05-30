@@ -1,9 +1,8 @@
-
 -- 컬럼명 바꿔야 함 ㅎㅎ
 ALTER TABLE product CHANGE brand b_no int;
 ALTER TABLE product CHANGE b_no b_name VARCHAR;
 ALTER TABLE purchase CHANGE purcahse_pirce purchase_pirce int;
-
+-- Shippingaddress 에 type 컬럼 삭제 요망.
 
 -- DROP
 DROP TABLE user;
@@ -286,8 +285,7 @@ CREATE TABLE `Shippingaddress` (
 	`address`			VARCHAR(255)	NOT NULL,
 	`zip_code`			VARCHAR(20)		NOT NULL,
 	`phone_number`		VARCHAR(20)		NOT NULL,
-	`is_default`		BOOLEAN			NOT NULL DEFAULT TRUE,	
-	`type`				ENUM('return','buy')	NOT NULL,
+	`is_default`		BOOLEAN			NOT NULL DEFAULT FALSE,	
 	`created_at`	  	timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (address_no),

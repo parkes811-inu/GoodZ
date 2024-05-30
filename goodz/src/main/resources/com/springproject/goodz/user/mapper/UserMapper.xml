@@ -154,6 +154,20 @@
         </choose>
     </select>
 
+
+    <!-- 주소록 등록하기 -->
+    <insert id="insertAddress">
+        INSERT INTO Shippingaddress (user_id, recipient_name, phone_number, address, zip_code) 
+        VALUES (#{userId}, #{recipientName}, #{phoneNumber}, #{address}, #{zipCode})
+    </insert>
+
+    <!-- 기본 배송지 설정 -->
+    <update id="DefaultAddress" parameterType="string">
+        UPDATE Shippingaddress
+        SET is_default = 0
+        WHERE user_id = #{userId} AND is_default = 1
+    </update>
+
     <!-- 유저 아이디의 맞는 배송지 불러오기 -->
     <select id="selectByUserId" resultMap="shippingAddressMap">
         SELECT *

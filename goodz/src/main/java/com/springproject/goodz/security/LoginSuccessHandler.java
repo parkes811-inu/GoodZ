@@ -1,4 +1,4 @@
-package com.springproject.goodz.user.security;
+package com.springproject.goodz.security;
 
 import java.io.IOException;
 
@@ -57,9 +57,6 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
             cookie.setPath("/");                   // 쿠키 적용 경로 지정
             response.addCookie(cookie);                // 응답에 쿠키 등록
         }
-
-
-
 
 
         // 인증된 사용자 정보 - (아이디/패스워드/권한)
