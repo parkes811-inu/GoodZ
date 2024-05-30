@@ -4,63 +4,24 @@
       layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <style>
-        .content {
-            padding: 15px;
-            margin-top: 20px; 
-            max-width: 900px; 
-
+        p {
+            margin: 0;
         }
-
-        .card {
-            margin-bottom: 20px;
-            padding: 5px; 
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-
-        .card-title {
-            font-size: 1.2rem; 
-            font-weight: 600; 
-            margin-bottom: 15px; 
-        }
-
-        .row.text-center {
+        .product_item {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px; 
-        }
-
-        .row.text-center .col {
-            flex: 1;
-            text-align: center;
-            border-right: 1px solid #ddd;
-        }
-
-        .row.text-center .col:last-child {
-            border-right: none;
-        }
-
-        .product-list {
-            margin-bottom: 70px;
-        }
-        .product-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
-        .product-item img {
+
+        .product_item img {
             width: 100px;
-            height: auto;
         }
-        .product-details {
-            flex-grow: 1;
-            margin-left: 20px;
-        }
-        .product-date-price {
-            margin-top: 60px;
+
+        .product_date_price{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             text-align: right;
         }
         .sort-order {
@@ -72,90 +33,129 @@
             cursor: pointer;
         }
     </style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>판매 내역</title>
+    <title>구매 내역</title>
 </head>
 <body layout:fragment="content">
-    <div class="content">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">판매 내역</h5>
-                <div class="row text-center">
-                    <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                    <div class="col">
-                        <p>요청</p>
+    <div class="container">
+        <div class="userMainContainer">
+
+            <!-- [DB] 구매내역 요약창 / 유저의 구매내역 Stauts에 맞게 count값을 가져옴 -->
+            <div class="box d-flex flex-column border rounded-3 p-3 w-100">
+                <p class="fs-4 fw-bold">판매 내역</p>
+                <div class="d-flex text-center">
+                    <div class="col border-end my-3">
+                        <p class="fw-bold">요청</p>
                         <p>0</p>
                     </div>
-                    <div class="col">
-                        <p>진행중</p>
+                    <div class="col border-end my-3">
+                        <p class="fw-bold">진행중</p>
                         <p>0</p>
                     </div>
-                    <div class="col">
-                        <p>종료</p>
+                    <div class="col my-3">
+                        <p class="fw-bold">정산완료</p>
                         <p>0</p>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="sort-order" onclick="filter()">
-            <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
-        </div>        
-        
-        <div class="product-list" id="product-list">
-            <div class="product-item" data-date="2024/05/21">
-                <!-- 판매한 삼품의 이미지, 상품명, 판매시 가격, 판매 날짜를 가져옴 -->
-                <img src="/img/product/product_img.png">
-                <div class="product-details">
-                    <strong>Nike</strong>
-                    <div>Air Force 1 '07</div>
-                </div>
-                <div class="product-date-price">
-                    <div>2024/05/21</div>
-                    <div>2555555원</div>
+
+            <div class="purchase_list my-3">
+                <!-- 필터 -->
+                <div class="sort-order" onclick="filter()">
+                    <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+                </div>        
+                
+                <!-- [DB] 구매 상품 리스트 반복문으로 출력-->
+                <div class="product_list mb-5 d-flex flex-column" id="product_list">
+
+                    <div class="product_item" data-date="2024/05/21">
+                        <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
+                        <div class="d-flex">
+                            <!-- 상품 이미지 -->
+                            <img src="/img/product/product_img.png">
+                            <!-- 브랜드/상품명 -->
+                            <div class="product_details d-flex flex-column my-auto ms-3">
+                                <p class=" fw-bold">Nike</p>
+                                <p>Air Force 1 '07</p>
+                            </div>
+                        </div>
+                        <div class="product_date_price">
+                            <!-- 구매 status -->
+                            <p>요청</p>
+                            <div>
+                                <!-- 구매일자/가격 -->
+                                <p>2024/05/21</p>
+                                <p>2555555원</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product_item" data-date="2024/05/20">
+                         <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
+                         <div class="d-flex">
+                             <img src="/img/product/product_img.png">
+                             <div class="product_details d-flex flex-column my-auto ms-3">
+                                 <p class=" fw-bold">Nike</p>
+                                 <p>Air Force 1 '07</p>
+                             </div>
+                         </div>
+                         <div class="product_date_price">
+                            <p>진행중</p>
+                            <div>
+                                <p>2024/05/20</p>
+                                <p>2555555원</p>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div class="product_item"  data-date="2024/05/19">
+                        <div class="d-flex">
+                            <img src="/img/product/product_img.png">
+                             <div class="product_details d-flex flex-column my-auto ms-3">
+                                 <p class=" fw-bold">Nike</p>
+                                 <p>Air Force 1 '07</p>
+                             </div>
+                        </div>
+                         <div class="product_date_price">
+                            <p>정산완료</p>
+                            <div>
+                                <p>2024/05/19</p>
+                                <p>2555555원</p>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div class="product_item" data-date="2024/05/18">
+                        <div class="d-flex">
+                            <img src="/img/product/product_img.png">
+                             <div class="product_details d-flex flex-column my-auto ms-3">
+                                 <p class=" fw-bold">Nike</p>
+                                 <p>Air Force 1 '07</p>
+                             </div>
+                        </div>
+                         <div class="product_date_price">
+                            <p>정산완료</p>
+                            <div>
+                                <p>2024/05/18</p>
+                                <p>2555555원</p>
+                            </div>
+                         </div>
+                    </div>
+                    
                 </div>
             </div>
-            <div class="product-item" data-date="2024/05/20">
-                <img src="/img/product/product_img.png">
-                <div class="product-details">
-                    <strong>Nike</strong>
-                    <div>Air Force 1 '07</div>
-                </div>
-                <div class="product-date-price">
-                    <div>2024/05/20</div>
-                    <div>2555555원</div>
-                </div>
-            </div>
-            <div class="product-item" data-date="2024/05/19">
-                <img src="/img/product/product_img.png">
-                <div class="product-details">
-                    <strong>Nike</strong>
-                    <div>Air Force 1 '07</div>
-                </div>
-                <div class="product-date-price">
-                    <div>2024/05/19</div>
-                    <div>2555555원</div>
-                </div>
-            </div>
-            <div class="product-item" data-date="2024/05/18">
-                <img src="/img/product/product_img.png">
-                <div class="product-details">
-                    <strong>Nike</strong>
-                    <div>Air Force 1 '07</div>
-                </div>
-                <div class="product-date-price">
-                    <div>2024/05/18</div>
-                    <div>2555555원</div>
-                </div>
-            </div>
+
+
+
         </div>
     </div>
 
     <script>
         function filter() {
-            var productList = document.getElementById('product-list');
-            var items = productList.getElementsByClassName('product-item');
+            var productList = document.getElementById('product_list');
+            var items = productList.getElementsByClassName('product_item');
             var itemsArray = [];
             
             for (var i = 0; i < items.length; i++) {
