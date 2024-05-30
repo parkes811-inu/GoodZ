@@ -1,27 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}">
+      layout:decorate="~{/layouts/mypage_layout}"
+      >
+<!-- ⭐ layout:decorate="~{/레이아웃 경로/레이아웃 파일명}" -->
 <head>
     <style>
-        .shopping-info {
-            margin-top: 50px; 
+        .box {
+            margin-bottom: 15px;
         }
-        .content {
-            padding: 15px;
-            margin-top: 20px; 
-        }
-        .card-title-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
-        }
-        
-        .profile-details {
-            display: flex;
-            align-items: center;
-        }
+
         .profile_img {
             width: 55px;
             height: 55px;
@@ -29,167 +17,127 @@
             overflow: hidden; 
             margin-right: 15px;
         }
-
         .profile_img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .profile-info {
-            display: flex;
-            flex-direction: column;
-            margin-top: 5px; 
-        }
 
-        .profile-info .user-id {
-            font-size: 1.1rem; 
-            font-weight: bold; 
-            margin: 0;
-        }
-        .profile-info .nickname {
-            font-size: 0.875rem; 
-            margin: 0;
-        }
-        
-        .profile-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        .card {
-            margin-bottom: 20px;
-            position: relative; 
-        }
-        .card-title {
-            font-size: 1rem; 
-            font-weight: 600; 
-            margin-bottom: 10px; 
-        }
-        .more-link {
-            position: absolute; 
-            top: 10px; 
-            right: 10px; 
-            font-size: 0.875rem; 
-            color: #7d7d7d; 
-            text-decoration: none; 
-        }
-        .more-link:hover, .more-link:focus {
-            color: #000; 
-        }
-        .wishlist h5 {
-            font-size: 1rem; 
-            font-weight: 600; 
-        }
-        .wishlist img {
+        .product_img img {
             width: 100%;
         }
-        .wishlist .col-md-3 {
-            padding: 0 5px;
-        }
-        .purchase-summary .col {
-            margin-top: 10px; 
-        }
     </style>
+
     <title>마이 페이지</title>
 </head>
 
 <body layout:fragment="content">
-    <div class="userMainContainer">
-        <div class="row">
-            <div class="content">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card-title-section">
-                            <div class="profile-details">
-                                <div class="profile_img">
-                                    <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                                    <img th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
-                                </div>
-                                <div class="profile-info">
-                                    <!-- 유저의 아이디와 닉네임 -->
-                                    <p class="user-id" th:text="${user != null ? user.userId : 'Error'}"></p>
-                                    <p class="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
-                                </div>
-                            </div>
-                            <div class="profile-buttons">
-                                <button class="btn btn-sm btn-outline-secondary" onclick="manage_info()">내 정보 관리</button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="my_style()">스타일</button>
-                            </div>
-                        </div>
+    <div class="container">
+        <div class="userMainContainer">
+
+            <!-- 유저 정보 -->
+            <div class="box profile_details d-flex justify-content-between border rounded-3 p-3">
+                <div class="d-flex">
+                    <div class="profile_img">
+                        <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
+                        <img th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
+                    </div>
+                    <div class="profile_info d-flex flex-column my-auto">
+                        <!-- 유저의 아이디와 닉네임 -->
+                        <p class="nickname  fw-bold m-0" th:text="${user != null ? user.nickname : 'Error'}">유저 닉네임</p>
+                        <p class="user_id m-0" style="font-size: small;">유저 아이디</p>
                     </div>
                 </div>
-                <div class="card">
-                    <a href="/user/purchase" class="more-link">+더보기</a>
-                    <div class="card-body">
-                        <h5 class="card-title">구매 내역</h5>
-                        <div class="row text-center">
-                            <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                            <div class="col">
-                                <p>전체</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>배송중</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>배송완료</p>
-                                <p>0</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="profile_buttons my-auto">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="manage_info()">내 정보 관리</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="my_style()">스타일</button>
                 </div>
-                <div class="card">
-                    <a href="/user/sales" class="more-link">+더보기</a>
-                    <div class="card-body">
-                        <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                        <h5 class="card-title">판매 내역</h5>
-                        <div class="row text-center">
-                            <div class="col">
-                                <p>요청</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>진행중</p>
-                                <p>0</p>
-                            </div>
-                            <div class="col">
-                                <p>종료</p>
-                                <p>0</p>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+
+            <!-- 구매 내역 -->
+            <div class="box border rounded-3 p-3">
+                <div class="d-flex justify-content-between">
+                    <p class="fw-bold">구매 내역</p>
+                    <a href="/user/purchase" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
                 </div>
-                <!-- 유저가 눌러놓은 관심을 가져옴 -->
-                <h5 class="wishlist-title">관심</h5>
-                <div class="row wishlist">
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
+                <div class="row text-center">
+                    <!-- 유저의 현황에 맞는 수를 가져옴 -->
+                    <div class="col">
+                        <p>전체</p>
+                        <p>0</p>
                     </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
+                    <div class="col">
+                        <p>배송중</p>
+                        <p>0</p>
                     </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
-                    </div>
-                    <div class="col-md-3">
-                        <img src="/img/product/product_img.png" alt="Product 1">
-                        <p>Nike Air Force 1 '07</p>
+                    <div class="col">
+                        <p>배송완료</p>
+                        <p>0</p>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- 판매 내역 -->
+            <div class="box border rounded-3 p-3">
+                <div class="d-flex justify-content-between">
+                    <p class="fw-bold">판매 내역</p>
+                    <a href="/user/purchase" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
+                </div>
+                <div class="row text-center">
+                    <!-- 유저의 현황에 맞는 수를 가져옴 -->
+                    <div class="col">
+                        <p>요청</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>진행중</p>
+                        <p>0</p>
+                    </div>
+                    <div class="col">
+                        <p>정산완료</p>
+                        <p>0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <!-- 유저가 눌러놓은 관심을 가져옴 -->
+                <p class="wishlist_title fw-bold fs-5 m-0">관심</p>
+                <div class="box row wishlist border rounded-3 p-3 m-0">
+                    <div class="product_img col-md-3">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                        <p class="fw-bold m-0">Nike</p>
+                        <p class="m-0">Air Force 1 '07</p>
+                    </div>
+                    <div class="product_img col-md-3">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                        <p class="fw-bold m-0">Nike</p>
+                        <p class="m-0">Air Force 1 '07</p>
+                    </div>
+                    <div class="product_img col-md-3">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                        <p class="fw-bold m-0">Nike</p>
+                        <p class="m-0">Air Force 1 '07</p>
+                    </div>
+                    <div class="product_img col-md-3">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                        <p class="fw-bold m-0">Nike</p>
+                        <p class="m-0">Air Force 1 '07</p>
+                    </div>
+                </div>      
+            </div>
+
+        </div>      
     </div>
+
     <script>
         function manage_info(){
-            window.location.href = '/user/manage_info';
+              window.location.href = '/user/manage_info';
         }
-
         function my_style(){
             window.location.href = '/styles/user/@joeun';
         }
     </script>
+    
 </body>
 </html>
