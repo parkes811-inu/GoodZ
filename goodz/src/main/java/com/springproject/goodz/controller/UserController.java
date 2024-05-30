@@ -1,8 +1,11 @@
 package com.springproject.goodz.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,7 +15,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springproject.goodz.user.dto.Users;
@@ -35,6 +40,9 @@ public class UserController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Value("${upload.path}")
+    private String uploadPath;
+    
     @GetMapping("")
     public String index(Model model) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,16 +105,37 @@ public class UserController {
         }
     }
 
-
-    // 이거 업데이트 해야됨
+    // 회원 정보 업데이트 - manage_info
     @PostMapping("/update")
-    public ResponseEntity<String> updateUserInfo(@RequestBody Map<String, String> request) throws Exception {
+    public ResponseEntity<String> updateUserInfo(
+            @RequestParam Map<String, String> request,
+            @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
         
         Users user = new Users();
         String userId = request.get("userId");
         String nickname = request.get("nickname");
+        String phoneNumber = request.get("phoneNumber");
 
-        // update 쿼리
+        user.setUserId(userId);
+        user.setNickname(nickname);
+        if(phoneNumber != null && !phoneNumber.isEmpty()) {
+            user.setPhoneNumber(phoneNumber);
+        }
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            String filePath = uploadPath + File.separator + fileName;
+            try {
+                file.transferTo(new File(filePath));
+                user.setProfilePictureUrl(filePath);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
+            }
+        }
+
+        // 디버그 로그 추가
+        System.out.println("User data: " + user);
+        
         int result = userService.update(user);
         if (result > 0) {
             return ResponseEntity.ok("수정 되었습니다.");

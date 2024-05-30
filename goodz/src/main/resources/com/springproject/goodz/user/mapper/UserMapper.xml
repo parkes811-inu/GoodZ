@@ -6,7 +6,7 @@
 <mapper namespace="com.springproject.goodz.user.mapper.UserMapper">
 
     <resultMap type="Users" id="userMap">
-        <id property="userId" column="user_id" />
+        <id property="userId" column="user_id" javaType="String"/>
         <result property="username" column="username" />
         <result property="nickname" column="nickname" />
         <result property="password" column="password" />
@@ -70,12 +70,21 @@
     <!-- 회원 정보 수정 -->
     <update id="update">
         UPDATE user
-           SET name = #{name}
-              ,email = #{email}
-              ,profile = #{profile}
-              ,updated_at = now()
-        WHERE username = #{username}
+        <set>
+            nickname = #{nickname},
+            updated_at = now()
+            <if test="phoneNumber != null and phoneNumber != ''">
+                ,phone_number = #{phoneNumber}
+            </if>
+            <if test="profilePictureUrl != null and profilePictureUrl != ''">
+                ,profile_picture_url = #{profilePictureUrl}
+            </if>
+        </set>
+        WHERE user_id = #{userId}
     </update>
+
+
+
 
     <!-- 회원 권한 등록 -->
     <insert id="insertAuth">
@@ -101,8 +110,14 @@
     </select>
 
     <!-- 쿼리 성능 향상을 위한 신규 아이디 중복 체크 쿼리 -->
-    <select id="check" resultType="int">
+    <select id="check" resultType="java.lang.Integer">
         <choose>
+            <when test="userId != null and nickname != null">
+                SELECT COUNT(*)
+                FROM user
+                WHERE nickname = #{nickname}
+                  AND user_id != #{userId}
+            </when>
             <when test="userId != null">
                 SELECT COUNT(*)
                 FROM user
@@ -118,6 +133,5 @@
             </otherwise>
         </choose>
     </select>
-
 
 </mapper>

@@ -96,8 +96,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean check(String userId, String nickname) throws Exception {
-        int result = userMapper.check(userId, nickname);
-        return result == 0;
+        Integer result = userMapper.check(userId, nickname);
+        System.out.println("Check Result: " + result); // 로깅 추가
+        return result != null && result == 0; // null 체크 추가
     }
     
     @Override
@@ -110,24 +111,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkName(String userName) throws Exception {
-        int result = userMapper.checkName(userName);
-        return result == 0;
-    }
-
-    @Override
     public Users findUserByUsername(String username) throws Exception {
         return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
-    }
-
-    @Override
-    public boolean isUserIdDuplicate(String userId) throws Exception {
-        return userMapper.check(userId, null) > 0;
-    }
-
-    @Override
-    public boolean isNicknameDuplicate(String nickname) throws Exception {
-        return userMapper.check(null, nickname) > 0;
     }
 
   

@@ -89,7 +89,7 @@
                                         <img th:src="${user != null and user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
                                     </div>
                                     <div class="profile-info">
-                                        <p class="user-id" id="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
+                                        <p class="user-id" id="userId" name="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
                                         <p class="nickname" id="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
                                     </div>
                                 </div>
@@ -101,13 +101,14 @@
                     </div>
                     
                     <form class="row g-3 needs-validation" method="POST" action="/upload" enctype="multipart/form-data" novalidate id="profile-form">
+
                         <div class="form-group">
                             <label for="formFile" class="form-label">프로필 사진 수정*</label>
                             <div class="input-group" style="max-width: 640px;">
                                 <input type="file" class="form-control rounded-1" name="file" id="file" placeholder="첨부파일을 등록해주세요.">
                             </div>
                         </div>
-                    
+                        
                         <div class="position-relative" style="max-width: 655px;">
                             <label for="nickName" class="form-label">닉네임*</label>
                             <input type="text" class="form-control" id="nickName" th:value="${user.nickname}" required style="width: 100%;">
@@ -131,7 +132,7 @@
                             <label for="phone_number">핸드폰 번호 수정*</label>
                             <div class="input-group">
                                 <input type="text" class="form-control me-2 rounded-1" id="phoneNumber" 
-                                    th:value="${user.phoneNumber}" style="max-width: 640px;" placeholder="'-'을 제외하고 입력해주세요.">
+                                    style="max-width: 640px;" placeholder="'-'을 제외하고 입력해주세요.">
                             </div>
                         </div>
 
@@ -146,6 +147,7 @@
     
     <script>
         function checkNickname(callback) {
+            var userId = $('#userId').text();
             var nickname = $('#nickName').val();
             var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
 
@@ -153,17 +155,20 @@
                 alert('닉네임을 입력해주세요.');
                 return false;
             }
+            var data = {
+                userId: userId,
+                nickname: nickname
+            };
 
             $.ajax({
                 url: '/user/check',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ nickname: nickname }),
+                data: JSON.stringify(data),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 },
                 success: function(response) {
-                    alert('사용 가능한 닉네임입니다.');
                     callback(true);
                 },
                 error: function(xhr, status, error) {
@@ -191,7 +196,6 @@
                     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 },
                 success: function(response) {
-                    alert('비밀번호가 일치합니다.');
                     callback(true);
                 },
                 error: function(xhr, status, error) {
@@ -216,8 +220,13 @@
             var secondPw = $('#passwordCheck').val();
             var phone = $('#phoneNumber').val();
             var formattedPhone = formatPhoneNumber(phone);
+            console.log(formattedPhone);
+            console.log(formattedPhone);
+            console.log(formattedPhone);
+            console.log(formattedPhone);
+            console.log(formattedPhone);
 
-            if (!formattedPhone) {
+            if(formattedPhone !== null && !formattedPhone) {
                 alert('올바른 휴대폰 번호를 입력해주세요.');
                 return;
             }
@@ -236,19 +245,26 @@
                         return;
                     }
                     // 모든 조건이 충족되면 사용자 정보를 저장
-                    var userData = {
-                        nickname: $('#nickName').val(),
-                        password: firstPw,
-                        phoneNumber: formattedPhone,
-                    };
+                    var userData = new FormData(); // FormData 객체 생성
+                    userData.append('userId', $('#userId').text()); // 추가
+                    userData.append('nickname', $('#nickName').val());
+                    if (formattedPhone) {
+                        userData.append('phoneNumber', formattedPhone); // phoneNumber 추가
+                    }
+                    
+                    var fileInput = $('#file')[0];
+                    if (fileInput.files.length > 0) {
+                        userData.append('file', fileInput.files[0]); // 파일 추가
+                    }
 
                     var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
 
                     $.ajax({
                         url: '/user/update',
                         type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(userData),
+                        data: userData,
+                        processData: false,
+                        contentType: false,
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
                         },
