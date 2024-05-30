@@ -82,4 +82,15 @@ public class ProductServiceImpl implements ProductService {
         return result;
     }
 
+    /**
+     * 상의만 보기
+     */
+    @Override
+    public List<Product> top() throws Exception {
+
+        List<Product> topList = productMapper.top();
+        
+        return topList;
+    }
+
 }

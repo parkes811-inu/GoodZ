@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 public class Product {
     
@@ -24,5 +26,15 @@ public class Product {
 
     private List<MultipartFile> productFiles; // 여러 이미지를 위한 필드
 
+    // 첫 번째 이미지 URL을 가져오는 메서드
+    public String getFirstImageUrl() {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            String firstImageUrl = imageUrl.split(";")[0];
+            System.out.println("First image URL: " + firstImageUrl);
+            return firstImageUrl;
+        }
+        return null;
+    }
+    
     
 }

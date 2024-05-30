@@ -11,4 +11,7 @@ public interface ProductService {
 
     // 상품 등록
     public int insert(Product product) throws Exception;
+
+    // 상품 목록 - 상의
+    public List<Product> top() throws Exception;
 }

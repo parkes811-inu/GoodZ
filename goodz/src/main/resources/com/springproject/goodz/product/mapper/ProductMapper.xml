@@ -16,4 +16,11 @@
 		INSERT INTO product (category, b_name, product_name, image_url, size, price, stock_quantity)
 		VALUES (#{category}, #{bName}, #{productName}, #{imageUrl}, #{size},#{price}, #{stockQuantity})
 	</insert>
+
+	<!-- 상의 목록 -->
+    <select id="top" resultType="Product">
+        SELECT *
+		FROM product
+		WHERE category = '상의'
+    </select>
 </mapper>
