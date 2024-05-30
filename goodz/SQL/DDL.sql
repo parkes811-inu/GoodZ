@@ -293,3 +293,19 @@ CREATE TABLE `Shippingaddress` (
     PRIMARY KEY (address_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='배송주소';
+
+
+-- file / 📁 utils
+CREATE TABLE `file` (
+  `no` int NOT NULL AUTO_INCREMENT,
+  `parent_table` varchar(45) NOT NULL,
+  `parent_no` int NOT NULL,
+  `file_name` text NOT NULL,
+  `origin_name` text,
+  `file_path` text NOT NULL,
+  `file_size` int NOT NULL DEFAULT '0',
+  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `upd_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `file_code` int NOT NULL DEFAULT '0',         # 파일종류 코드 => 1:썸네일, 2: 일반첨부파일...
+  PRIMARY KEY (`no`)
+) COMMENT='파일';

@@ -71,6 +71,12 @@ public class AdminController {
         return "/admin/add_brand";
     }
 
+    /**
+     * 브랜드 등록 처리
+     * @param brand
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/brands")
     public String addBrands(Brand brand) throws Exception {
 

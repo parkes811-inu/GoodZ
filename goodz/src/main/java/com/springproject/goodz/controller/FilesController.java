@@ -27,46 +27,6 @@ public class FilesController {
 
     @Value("${upload.path}")
     private String uploadPath;
-
-    /**
-     * 파일 다운로드
-     * @param no
-     * @param response
-     * @throws Exception
-     */
-    // @GetMapping("/{id}")
-    // public void fileDownload(@PathVariable("id") String id
-    //                           ,HttpServletResponse response) throws Exception {
-        
-    //     Files downloadFile = filesService.select(id);
-
-    //     // 파일이 없으면,
-    //     if( downloadFile == null ) {
-    //         return;
-    //     }
-
-    //     String fileName = downloadFile.getName();   // 파일 이름
-    //     String filePath  = downloadFile.getPath();  // 파일 경로
-
-    //     // 다운로드를 위한 응답 헤더 세팅
-    //     // - ContentType            : application/octect-stream
-    //     // - Content-Disposition    : attachment; filename="파일명.확장자"
-    //     response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-
-    //     fileName = URLEncoder.encode(fileName, "UTF-8");
-        
-    //     response.setHeader("Content-Disposition"
-    //                           , "attachment; filename=\"" + fileName + "\"");
-
-    //     // 파일 다운로드
-    //     File file = new File(filePath);
-    //     FileInputStream fis = new FileInputStream(file);            // 파일 입력
-    //     ServletOutputStream sos = response.getOutputStream();       // 파일 출력
-    //     FileCopyUtils.copy(fis, sos);
-
-    //     fis.close();
-    //     sos.close();
-    // }
     
     /**
      * 파일 삭제
@@ -91,7 +51,7 @@ public class FilesController {
     // }
     
     /**
-     * 이미지 썸네일
+     * 대표이미지
      * - /files/img?path=???Url
      * @param param
      * @return
