@@ -30,7 +30,7 @@ public class Product {
     public String getFirstImageUrl() {
         if (imageUrl != null && !imageUrl.isEmpty()) {
             String firstImageUrl = imageUrl.split(";")[0];
-            System.out.println("First image URL: " + firstImageUrl);
+            // System.out.println("First image URL: " + firstImageUrl);
             return firstImageUrl;
         }
         return null;

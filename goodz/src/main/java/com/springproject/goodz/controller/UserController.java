@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("/user")
-@SessionAttributes("findMan")  // 이상하면 지우자
+@SessionAttributes("findMan")  // 이상하면 지우자 - 뭔데 이게?
 public class UserController {
     
     @Autowired
