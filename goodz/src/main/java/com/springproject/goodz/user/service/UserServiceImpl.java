@@ -157,6 +157,21 @@ public class UserServiceImpl implements UserService {
         return shippingaddresses;
     }
 
+    @Override
+    public boolean checkName(String userName) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkName'");
+    }
+
+    @Override
+    public boolean checkPassword(String userId, String rawPassword) throws Exception {
+        Users user = userMapper.select(userId);
+        if (user != null) {
+            return passwordEncoder.matches(rawPassword, user.getPassword());
+        }
+        return false;
+    }
+
     
 
 }
