@@ -1,15 +1,11 @@
-package com.springproject.goodz.post.mapper;
+package com.springproject.goodz.post.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.springproject.goodz.post.dto.Post;
 
-@Mapper
-public interface PostMapper {
+public interface PostService {
 
-    
     // 게시글 목록
     public List<Post> list() throws Exception;
 
@@ -27,5 +23,4 @@ public interface PostMapper {
 
     // 게시글 삭제
     public int delete(int postNo) throws Exception;
-    
 }

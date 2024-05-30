@@ -16,6 +16,12 @@
         WHERE post_no = #{postNo}
     </select>
 
+    <select id="selectById" resultType="post">
+        SELECT *
+        FROM post
+        WHERE user_id = #{userId}
+    </select>
+
     
 
 </mapper>
