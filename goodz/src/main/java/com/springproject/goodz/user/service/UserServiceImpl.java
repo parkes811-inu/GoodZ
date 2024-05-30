@@ -2,10 +2,11 @@ package com.springproject.goodz.user.service;
 
 
 import java.util.List;
-
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
@@ -104,6 +108,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("Check Result: " + result); // 로깅 추가
         return result != null && result == 0; // null 체크 추가
     }
+
     public Users findPw(String username, String birth, String userId) throws Exception {
         log.info("findPw 메소드 호출: username={}, birth={}, userId={}", username, birth, userId);
         Users findMan = userMapper.findPw(username, birth, userId);
@@ -133,12 +138,6 @@ public class UserServiceImpl implements UserService {
 }
 
     @Override
-    public boolean check(String userId, String nickname) throws Exception {
-        int result = userMapper.check(userId, nickname);
-        return result == 0;
-    }
-
-    @Override
     public Users findUserByUsername(String username) throws Exception {
         return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
     }
@@ -150,6 +149,15 @@ public class UserServiceImpl implements UserService {
         List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
         
         return shippingaddresses;
+    }
+
+    @Override
+    public boolean checkPassword(String userId, String rawPassword) throws Exception {
+        Users user = userMapper.select(userId);
+        if (user != null) {
+            return passwordEncoder.matches(rawPassword, user.getPassword());
+        }
+        return false;
     }
 
     
