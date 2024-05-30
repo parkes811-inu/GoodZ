@@ -61,7 +61,8 @@
                     <div class="input my-">
                         <div class="py-2">
                             <!-- 아이디 -->
-                            <input type="id" class="form-control" name="userId" id="id" placeholder="ID">
+                            <!-- <input type="id" class="form-control" name="userId" id="id" placeholder="ID"> -->
+                            <input type="id" name="userId" class ="form-control" placeholder="ID" value="${userId}">
                         </div>
                         <!-- 비밀번호 -->
                         <div class="password_input_container py-2" style="position: relative;">
@@ -99,11 +100,18 @@
                             <label for="rememberMe">자동로그인</label>
                         </div>
                         <div class="p-1">
-                            <input type="checkbox" name="remember-id" id="remember-id">
+                    <!-- 아이디 저장 ✅ or 🟩  -->
+                    <!-- <input type="checkbox" name="remember-id" id="remember-id" th:checked="${rememberId}"> -->
+                    <th:block th:if="${rememberId}">
+                        <input type="checkbox" name="remember-id" id="remember-id" checked>     
+                    </th:block>
+                    <!-- 🟩 아이디 저장 ❌-->
+                    <th:block th:if="${!rememberId}">
+                        <input type="checkbox" name="remember-id" id="remember-id">     
+                    </th:block>
                             <label for="remember-id">아이디 저장</label>
                         </div>
                     </div>
-
                 </form>
 
 
