@@ -160,35 +160,4 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-
-    @Override
-    public boolean checkPassword(String userId, String rawPassword) throws Exception {
-        Users user = userMapper.select(userId);
-        if (user != null) {
-            return passwordEncoder.matches(rawPassword, user.getPassword());
-        }
-        return false;
-    }
-
-    @Override
-    public boolean checkName(String userName) throws Exception {
-        int result = userMapper.checkName(userName);
-        return result == 0;
-    }
-
-    @Override
-    public Users findUserByUsername(String username) throws Exception {
-        return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
-    }
-
-    @Override
-    public boolean isUserIdDuplicate(String userId) throws Exception {
-        return userMapper.check(userId, null) > 0;
-    }
-
-    @Override
-    public boolean isNicknameDuplicate(String nickname) throws Exception {
-        return userMapper.check(null, nickname) > 0;
-    }
-
 }

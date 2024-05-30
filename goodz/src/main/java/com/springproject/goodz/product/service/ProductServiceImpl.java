@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
                     File uploadFile = new File(uploadPath, fileName);
                     FileCopyUtils.copy(productFile.getBytes(), uploadFile);
 
-                    String filePath = uploadPath + "/" + fileName;
+                    String filePath = uploadPath + "/products/" + fileName;
                     if (filePaths.length() > 0) {
                         filePaths.append(";");
                     }
