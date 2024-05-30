@@ -1,12 +1,19 @@
 package com.springproject.goodz.post.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import groovy.util.logging.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -30,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 @RequestMapping("/styles")
 public class PostController {
+
+    @Autowired
+    private UserService userService;
     
     /**
      * 전체 게시글 목록
@@ -88,10 +98,17 @@ public class PostController {
      * 내 스타일 (유저 프로필)
      */
     @GetMapping("/user/{userId}")
-    public String usersStyle(@PathVariable("userId") String userId) {
-        if (userId.equals("NoOne")) {
-            return "/style/user/profile_noPosts";
-        }
+    public String usersStyle(@PathVariable("userId") String userId, Model model) throws Exception {
+        
+        log.info("프로필 이동중...");
+        log.info("유저 아이디: " + userId);
+
+        Users user = userService.select(userId);
+        log.info(user.toString());
+        
+
+        model.addAttribute("user", user);
+
         return "/post/user/profile";
     }
     

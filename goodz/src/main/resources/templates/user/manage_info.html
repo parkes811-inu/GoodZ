@@ -79,6 +79,7 @@
 <body layout:fragment="content">
     <div class="container">
         <div class="UserMainContainer">
+            
             <div class="row mx-auto">
                 <div class="col-md-9 content">
                     <div class="card">
@@ -89,8 +90,8 @@
                                         <img th:src="${user != null and user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
                                     </div>
                                     <div class="profile-info">
-                                        <p class="user-id" id="userId" name="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
                                         <p class="nickname" id="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
+                                        <p class="user-id" id="userId" name="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
                                     </div>
                                 </div>
                                 <div class="profile-buttons">

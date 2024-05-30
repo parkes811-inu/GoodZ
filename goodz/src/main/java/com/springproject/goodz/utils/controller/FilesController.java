@@ -1,4 +1,4 @@
-package com.springproject.goodz.controller;
+package com.springproject.goodz.utils.controller;
 
 import java.io.File;
 
@@ -59,7 +59,7 @@ public class FilesController {
      */
     @GetMapping("/img")
     public ResponseEntity<byte[]> thumbnailImg(@RequestParam("imgUrl") String imgUrl) throws Exception {
-        log.info("imgUrl : " + imgUrl);
+        // log.info("imgUrl : " + imgUrl);
 
         // 파일 번호로 파일 정보 조회
         // Files file = filesService.select(id);

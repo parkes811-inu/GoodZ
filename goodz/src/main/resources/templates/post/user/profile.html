@@ -4,7 +4,7 @@
       layout:decorate="~{/layouts/style_layout}"
       >
 <head>
-    <title>(@joeun)님의 스타일</title>
+    <title></title>
     <style>
         .profile_img {
             width: 100px;
@@ -47,7 +47,7 @@
                 <div class="d-flex flex-column justify-content-center ms-3">
                     <!-- 유저id -->
                     <div class="user_name_area mb-2 d-flex justify-content-start">
-                        <p class="userId fs-2 m-0 text-start">zzang._.777</p>
+                        <p class="userId fs-2 m-0 text-start" th:text="${user.nickname}"></p>
                         <a href="/user/manage_info" class="btn border-secondary-subtle d-flex align-items-center justify-content-center ms-3" type="button" style="color: rgb(80, 80, 80);font-size: smaller;width: 80px;padding: 0;height: 30px;margin: auto;"> 프로필 관리 </a>
                     </div>
                     <!-- 팔로우/팔로잉 정보 -->
