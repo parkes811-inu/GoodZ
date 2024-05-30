@@ -100,17 +100,17 @@
                             조회된 상품이 없습니다.
                         </td>
                     </tr>
-              </th:block>
+                    </th:block>
 
-              <!-- if) 브랜드 존재 시, 반복출력 -->
-              <tr th:each="product : ${productList}">
-                <th scope="row" th:text="${product.pNo}"></th>
-                <td th:text="${product.bName}"></td>
-                <td th:text="${product.productName}"></td>
-                <td th:text="${product.stockQuantity}"></td>
-                <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
-                
-              </tr>
+                    <!-- if) 브랜드 존재 시, 반복출력 -->
+                    <tr th:each="product : ${productList}">
+                        <th scope="row" th:text="${product.pNo}"></th>
+                        <td th:text="${product.bName}"></td>
+                        <td th:text="${product.productName}"></td>
+                        <td th:text="${product.stockQuantity}"></td>
+                        <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
+                        
+                    </tr>
                     </tbody>
                   </table>
             </div>

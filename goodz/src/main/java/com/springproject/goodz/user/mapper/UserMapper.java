@@ -1,8 +1,12 @@
 package com.springproject.goodz.user.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.ui.Model;
 
+import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
 
@@ -36,6 +40,7 @@ public interface UserMapper {
     // 회원 정보 수정 시 닉네임 중복 체크
     public int checkName(@Param("userName") String userName) throws Exception;
 
-
+    // 유저의 주소 목록
+    public List<Shippingaddress> selectByUserId() throws Exception;
     
 }
