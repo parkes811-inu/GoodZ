@@ -37,17 +37,8 @@ public interface UserService {
     // 회원 가입 시 아이디 중복 체크
     public boolean check(String userId, String nickname) throws Exception;
 
-    // 회원 정보 수정 시 닉네임 중복 체크
-    public boolean checkName(String userName) throws Exception;
-
     // 유저 정보 조회
     public Users findUserByUsername(String username) throws Exception;
-
-
-    //
-    public boolean isUserIdDuplicate(String userId) throws Exception; 
-
-    public boolean isNicknameDuplicate(String nickname) throws Exception;
 
     // 회원 정보 수정 시 비밀 번호 확인
     public boolean checkPassword(String userId, String rawPassword) throws Exception;

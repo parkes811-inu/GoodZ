@@ -99,6 +99,11 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    public boolean check(String userId, String nickname) throws Exception {
+        Integer result = userMapper.check(userId, nickname);
+        System.out.println("Check Result: " + result); // 로깅 추가
+        return result != null && result == 0; // null 체크 추가
+    }
     public Users findPw(String username, String birth, String userId) throws Exception {
         log.info("findPw 메소드 호출: username={}, birth={}, userId={}", username, birth, userId);
         Users findMan = userMapper.findPw(username, birth, userId);
@@ -133,21 +138,11 @@ public class UserServiceImpl implements UserService {
         return result == 0;
     }
 
-
     @Override
     public Users findUserByUsername(String username) throws Exception {
         return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
     }
 
-    @Override
-    public boolean isUserIdDuplicate(String userId) throws Exception {
-        return userMapper.check(userId, null) > 0;
-    }
-
-    @Override
-    public boolean isNicknameDuplicate(String nickname) throws Exception {
-        return userMapper.check(null, nickname) > 0;
-    }
 
     @Override
     public List<Shippingaddress> selectByUserId() throws Exception {
@@ -158,5 +153,4 @@ public class UserServiceImpl implements UserService {
     }
 
     
-
 }
