@@ -154,6 +154,31 @@
         </choose>
     </select>
 
+<<<<<<< HEAD
+
+    <!-- 주소록 등록하기 -->
+    <insert id="insertAddress" parameterType="ShippingAddress">
+        INSERT INTO Shippingaddress (
+            user_id,
+            recipient_name,
+            address,
+            zip_code,
+            phone_number,
+            is_default,
+            type
+        ) VALUES (
+            #{userId},
+            #{recipientName},
+            #{address},
+            #{zipCode},
+            #{phoneNumber},
+            #{isDefault},
+            #{type},
+        )
+    </insert>
+
+=======
+>>>>>>> 344971675920ef6ca6cdf5463bb921a504c7e541
     <!-- 유저 아이디의 맞는 배송지 불러오기 -->
     <select id="selectByUserId" resultMap="shippingAddressMap">
         SELECT *
