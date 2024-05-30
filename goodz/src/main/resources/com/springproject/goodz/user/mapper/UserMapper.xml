@@ -92,13 +92,20 @@
     </select>
 
     <!-- 비밀번호 찾기 -->
-    <select id="findPw" resultType="string">
-       SELECT password
+    <select id="findPw" resultType="Users">
+       SELECT *
          FROM user
         WHERE username = #{userName}
           AND birth = #{birth}
           AND user_id = #{userId}
     </select>
+
+     <!-- 비밀번호 변경 -->
+    <update id="changePw">
+    UPDATE user
+       SET password = #{password}
+     WHERE user_id  = #{userId}
+    </update> 
 
     <!-- 쿼리 성능 향상을 위한 신규 아이디 중복 체크 쿼리 -->
     <select id="check" resultType="int">
@@ -118,6 +125,5 @@
             </otherwise>
         </choose>
     </select>
-
 
 </mapper>

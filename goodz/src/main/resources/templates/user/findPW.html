@@ -84,29 +84,51 @@
                     <div class="col-md-6">
                         <div class="card p-4 custom-card">
                             <h2 class="text-center">비밀번호 찾기</h2>
+
+                            <!-- 비밀번호 찾기 실패 안내 -->
+                            <!-- 실패한 경우에만 표시됩니다. -->
+                            <th:block th:if="${param.error}">
+                                <!-- 사용자에게 해당 정보와 일치하는 계정이 존재하지 않음을 안내합니다. -->
+                                <p class="text-center text-danger">해당 정보와 일치하는 계정이 존재하지 않습니다.</p>
+                            </th:block>
+
                             <div class="underline"></div>
                             <div class="text-below">
                              가입 시 등록한 이름 , 주민등록번호, 아이디를 통해 비밀번호를 알려드립니다.
                             </div>
-                            <form pw="findPwForm">
+  
+                            <!-- 비밀번호 찾기 양식입니다. -->
+                            <form id="form" action="/user/findPW" method="post">
+                                <!-- CSRF 토큰을 양식에 추가합니다. -->
                                 <input type="hidden" name="_csrf" id="csrf" th:value="${_csrf.token}" />
+
+                                <!-- 사용자의 이름을 입력할 수 있는 입력란입니다. -->
                                 <div class="form-group">
                                     <label for="name">이름 입력*</label>
-                                    <input type="text" class="form-control" id="user_name" placeholder="이름">
+                                    <input type="text" class="form-control" name="username" id="username" placeholder="이름">
                                 </div>
+
+                                <!-- 사용자의 주민등록번호를 입력할 수 있는 입력란입니다. -->
                                 <div class="form-group">
                                     <label for="birth">주민등록번호 입력*</label>
                                     <div class="d-flex align-items-center">
-                                        <input type="text" class="form-control mr-2" id="birth1" placeholder="주민번호 앞자리">
+                                        <input type="text" class="form-control mr-2" name="birth1" id="birth1" placeholder="주민번호 앞자리">
                                         <span class="mx-2">-</span>
-                                        <input type="text" class="form-control" id="birth2" placeholder="주민번호 뒷자리">
+                                        <input type="text" class="form-control" name="birth2" id="birth2" placeholder="주민번호 뒷자리">
+                                        <br>
+                                        <!-- 주민등록번호를 숨겨진 필드에 저장합니다. -->
+                                        <input type="hidden" id="birth" name="birth" value="">
                                     </div>
                                 </div>
+
+                                <!-- 사용자의 아이디를 입력할 수 있는 입력란입니다. -->
                                 <div class="form-group">
                                     <label for="name">아이디 입력*</label>
-                                    <input type="text" class="form-control" id="user_id" placeholder="아이디">
+                                    <input type="text" class="form-control" name="userId" id="userId" placeholder="아이디">
                                 </div>
-                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="findPw()">비밀번호 찾기</button>
+
+                                <!-- 해당 버튼을 눌러 비밀번호 변경으로 넘어갑니다 -->
+                                <button type="button" class="btn btn-dark btn-block mt-3" onclick="actionSubmit()">비밀번호 찾기</button>
                             </form>
                         </div>
                     </div>
@@ -134,31 +156,23 @@
     </div>
 
     <script>
-        function findPw() {
-            var username = $('#user_name').val();
+        // 사용자가 주민등록번호를 입력하고 비밀번호 찾기 버튼을 클릭했을 때 호출되는 함수입니다.
+        function actionSubmit() {
+
+            // 주민등록번호 앞자리와 뒷자리를 각각 가져옵니다.
             var birth1 = $('#birth1').val();
             var birth2 = $('#birth2').val();
-            var birth = birth1 + birth2;
 
-            var userId = $('#user_id').val();
-            var csrfToken = $('#csrf').val();
-            $.ajax({
-                url: '/user/findPW',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ birth: birth, username: username , userId: userId}),
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                },
-                success: function(response) {
-                    $('#resultModalBody').text('당신의 비밀번호는 ' + response + '입니다.');
-                    $('#resultModal').modal('show');
-                },
-                error: function() {
-                    $('#resultModalBody').text('비밀번호를 찾을 수 없습니다.');
-                    $('#resultModal').modal('show');
-                }
-            });
+            // 주민등록번호를 합쳐서 변수 birth에 저장합니다.
+            var birth = birth1 + birth2;
+            // alert('되나')
+
+            // 주민등록번호를 숨겨진 필드에 설정합니다.
+            document.getElementById('birth').value = birth;
+            
+            // 폼을 서버에 제출합니다.
+            let form = document.getElementById('form');
+            form.submit();
         }
     </script>
 </body>
