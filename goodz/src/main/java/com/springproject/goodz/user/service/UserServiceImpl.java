@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
 
     @Override
     public boolean login(Users user) throws Exception {
@@ -144,14 +146,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Shippingaddress> selectByUserId() throws Exception {
-        
-        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
-        
-        return shippingaddresses;
-    }
-
-    @Override
     public boolean checkPassword(String userId, String rawPassword) throws Exception {
         Users user = userMapper.select(userId);
         if (user != null) {
@@ -160,6 +154,32 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    
+    /**
+     * 주소 등록
+     */
+    @Override
+    public int insertAddress(Shippingaddress shippingaddress) throws Exception {
+
+        int result = userMapper.insertAddress(shippingaddress);
+        return result;
+
+    }
+
+    /**
+     * 기본 배송지
+     */
+    @Override
+    public void DefaultAddress(String userId) throws Exception {
+        userMapper.DefaultAddress(userId);
+    }
+
+    @Override
+    public List<Shippingaddress> selectByUserId() throws Exception {
+        
+        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
+        
+        return shippingaddresses;
+    }
+
 
 }
