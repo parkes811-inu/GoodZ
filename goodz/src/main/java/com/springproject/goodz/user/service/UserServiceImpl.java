@@ -64,6 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Users selectByNickname(String nickname) throws Exception {
+        Users user = userMapper.selectByNickname(nickname);
+        return user;
+    }
+
+    @Override
     public int join(Users user) throws Exception {
         String username = user.getUserId();
         String password = user.getPassword();

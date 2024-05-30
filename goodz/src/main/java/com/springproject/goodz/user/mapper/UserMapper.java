@@ -16,8 +16,11 @@ public interface UserMapper {
     // 로그인
     public Users login(String username) throws Exception;
 
-    // 회원 조회
+    // 회원 조회 - id
     public Users select(String username) throws Exception;
+
+    // 회원 조회 - id
+    public Users selectByNickname(String nickname) throws Exception;
 
     // 회원 가입
     public int join(Users user) throws Exception;

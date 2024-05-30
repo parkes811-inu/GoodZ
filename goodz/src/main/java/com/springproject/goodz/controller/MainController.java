@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.service.ProductService;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+
+
+
 
 
 @Slf4j
 @Controller
-@RequestMapping("/")
+@RequestMapping("")
 public class MainController {
 
     @Autowired

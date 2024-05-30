@@ -111,7 +111,7 @@ CREATE TABLE `Post` (
 	`post_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`	VARCHAR(100)	NOT NULL,
 	`content`	TEXT,
-	`image_url`	VARCHAR(255)	NOT NULL,
+	-- `image_url`	VARCHAR(255)	NOT NULL,
 	`created_at` timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (post_no),
@@ -172,18 +172,26 @@ CREATE TABLE `Product` (
 	`size`				VARCHAR(100)	NOT NULL,
 	`views`				INT				NOT NULL DEFAULT '0',
 	`stock_quantity`	INT				NOT NULL,
-	`image_url`			VARCHAR(1000)	NOT NULL,
+	-- `image_url`			VARCHAR(1000)	NOT NULL,
 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
      PRIMARY KEY (p_no),
 	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
 ) COMMENT='상품';
 
+-- 상품 상세정보 테이블
+
+-- p_no
+-- product_name
+-- size
+-- 재고수
+-- 
+
+
 -- Brand 테이블 / 📁 product
 CREATE TABLE `Brand`(
 	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
 	`b_name` VARCHAR(100) NOT NULL,
-	`image_url` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (b_no)
 ) COMMENT='브랜드';
 

@@ -13,8 +13,11 @@ public interface UserService {
     // 로그인
     public boolean login(Users user) throws Exception;
 
-    // 조회
+    // 회원 조회 - id
     public Users select(String username) throws Exception;
+
+    // 회원 조회 - nickname
+    public Users selectByNickname(String nickname) throws Exception;
 
     // 회원 가입
     public int join(Users user) throws Exception;

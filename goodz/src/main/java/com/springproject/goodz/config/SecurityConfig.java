@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import com.springproject.goodz.user.security.LoginSuccessHandler;
+import com.springproject.goodz.security.LoginSuccessHandler;
 import com.springproject.goodz.user.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;

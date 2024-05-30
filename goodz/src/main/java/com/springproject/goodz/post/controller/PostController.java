@@ -74,7 +74,13 @@ public class PostController {
      * @return
      */
     @GetMapping("/insert")
-    public String moveToInsert() {
+    public String moveToInsert(Model model,HttpSession session) {
+
+        // 로그인된 user의 정보를 가져옴
+        Users loginUser= (Users)session.getAttribute("user");
+
+        model.addAttribute("loginUser", loginUser);
+
         return "/post/insert";
     }
 
@@ -98,20 +104,20 @@ public class PostController {
     /*
      * 유저 프로필
      */
-    @GetMapping("/user/@{userId}")
-    public String usersStyle(@PathVariable("userId") String userId, Model model, HttpSession session) throws Exception {
+    @GetMapping("/user/@{nickname}")
+    public String usersStyle(@PathVariable("nickname") String nickname, Model model, HttpSession session) throws Exception {
 
-        log.info(userId + "의 프로필로 이동중...");
+        log.info(nickname + "의 프로필로 이동중...");
         
-        Users reqeusted = userService.select(userId);
-        log.info(user.toString());
+        Users requested = userService.selectByNickname(nickname);
         
-        // 세션의 user객체를 가져옴
-        Users user= (Users)session.getAttribute("user");    
+        // 로그인된 user의 정보를 가져옴
+        Users loginUser= (Users)session.getAttribute("user");    
 
         List<Post> postList = new ArrayList<>();
 
-        model.addAttribute("user", user);
+        model.addAttribute("requested", requested);
+        model.addAttribute("loginUser", loginUser);
         model.addAttribute("postList", postList);
 
         return "/post/user/profile";
