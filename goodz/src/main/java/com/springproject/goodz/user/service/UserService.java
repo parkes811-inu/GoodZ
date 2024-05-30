@@ -1,5 +1,10 @@
 package com.springproject.goodz.user.service;
 
+import java.util.List;
+
+import org.springframework.ui.Model;
+
+import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.Users;
 
@@ -46,4 +51,7 @@ public interface UserService {
 
     // 회원 정보 수정 시 비밀 번호 확인
     public boolean checkPassword(String userId, String rawPassword) throws Exception;
+
+    // 유저의 주소 목록
+    public List<Shippingaddress> selectByUserId() throws Exception;
 }

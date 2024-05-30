@@ -27,6 +27,19 @@
         <result property="auth" column="auth" />
     </resultMap>
 
+    <resultMap type="ShippingAddress" id="shippingAddressMap">
+        <id property="addressNo" column="address_no" />
+        <result property="userId" column="user_id" />
+        <result property="recipientName" column="recipient_name" />
+        <result property="address" column="address" />
+        <result property="zipCode" column="zip_code" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="isDefault" column="is_default" />
+        <result property="type" column="type" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
     <!-- 로그인 - username -->
     <select id="login" resultMap="userMap">
         SELECT u.user_id
@@ -124,6 +137,15 @@
                 SELECT 0
             </otherwise>
         </choose>
+    </select>
+
+
+
+    <!-- 유저 아이디의 맞는 배송지 불러오기 -->
+    <select id="selectByUserId" resultMap="shippingAddressMap">
+        SELECT *
+        FROM Shippingaddress
+        WHERE user_id = #{userId}
     </select>
 
 </mapper>
