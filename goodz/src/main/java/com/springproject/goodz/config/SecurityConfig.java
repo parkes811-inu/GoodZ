@@ -29,8 +29,8 @@ public class SecurityConfig {
     @Autowired
     private UserDetailServiceImpl userDetailServiceImpl;
 
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
+    // @Autowired
+    // private LoginSuccessHandler loginSuccessHandler;
 
     // 스프링 시큐리티 설정 메소드
     @Bean
@@ -49,8 +49,8 @@ public class SecurityConfig {
                                      .loginProcessingUrl("/login")
                                      .usernameParameter("userId")   // 기본값:username
                                      .passwordParameter("password") // 기본값:password
-                                     .successHandler( loginSuccessHandler )
-                                    //  .successHandler( authenticationSuccessHandler() )
+                                   //.successHandler( loginSuccessHandler )
+                                     .successHandler( authenticationSuccessHandler() )
                                      );
 
         // ✅ 사용자 정의 인증 설정
@@ -64,8 +64,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 
     /**
     * 🍃 자동 로그인 저장소 빈 등록
@@ -112,4 +110,5 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new LoginSuccessHandler();
     }
+    
 }
