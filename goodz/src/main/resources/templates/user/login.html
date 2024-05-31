@@ -96,19 +96,11 @@
                     <!-- 자동로그인 / 아이디 저장 -->
                     <div class="d-flex">
                         <div class="p-1 me-3">
-                            <input type="checkbox" name="rememberMe" id="rememberMe">
-                            <label for="rememberMe">자동로그인</label>
+                            <input type="checkbox" name="remember-me" id="remember-me">
+                            <label for="remember-me">자동로그인</label>
                         </div>
                         <div class="p-1">
-                    <!-- 아이디 저장 ✅ or 🟩  -->
-                    <!-- <input type="checkbox" name="remember-id" id="remember-id" th:checked="${rememberId}"> -->
-                    <th:block th:if="${rememberId}">
-                        <input type="checkbox" name="remember-id" id="remember-id" checked>     
-                    </th:block>
-                    <!-- 🟩 아이디 저장 ❌-->
-                    <th:block th:if="${!rememberId}">
-                        <input type="checkbox" name="remember-id" id="remember-id">     
-                    </th:block>
+                            <input class="form-check-input" type="checkbox" name="remember-id" id="remember-id" th:checked="${rememberId}">
                             <label for="remember-id">아이디 저장</label>
                         </div>
                     </div>
