@@ -70,14 +70,13 @@
         }
 
         .form-group-inline label {
-            margin-right: 10px;
             font-size: 14px;
             font-weight: bold;
         }
 
         .form-group-inline input[type="checkbox"] {
             width: auto;
-            margin: 0 10px 0 0;
+            margin: 0 0 0 10px;
         }
     </style>
 </head>
@@ -108,13 +107,29 @@
                     <input type="text" id="zip-code" name="zipCode" th:value="${shippingaddress.zipCode}" placeholder="우편 번호를 입력해주세요">
                 </div>
                 <div class="form-group-inline">
-                    <input type="checkbox" id="is-default" name="isDefault" th:checked="${shippingaddress.isDefault}">
                     <label for="is-default">기본 배송지로 설정</label>
+                    <input type="checkbox" id="is-default" name="isDefault" th:checked="${shippingaddress.isDefault}" onclick="preventDefaultUncheck(this)" data-address-no="${shippingaddress.addressNo}">
                 </div>
                 
                 <button type="submit" class="submit-btn">수정</button>
             </form>
         </div>
     </div>
+
+    <script>
+        // 체크박스가 해제될 때 실행
+        function preventDefaultUncheck(checkbox) {
+            if (!checkbox.checked) {
+                fetch('/user/isDefaultAddress/' + checkbox.dataset.addressNo)
+                    .then(response => response.json())
+                    .then(isDefault => {
+                        if (isDefault) {
+                            alert('기본 배송지를 해제할 수 없습니다. 다른 기본 배송지를 수정해주세요.');
+                            checkbox.checked = true;
+                        }
+                    });
+            }
+        }
+    </script>
 </body>
 </html>
