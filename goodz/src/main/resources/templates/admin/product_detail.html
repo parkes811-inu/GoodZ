@@ -114,10 +114,11 @@
         </div>
         <div class="product-detail">
             <div class="col-md-3 mx-auto">
-                <img src="/img/product/product_img.png" alt="Product 1">
+                <img th:src="|/files/img?imgUrl=${product.imageUrl}|" alt="상품 이미지" class="rounded-4 w-100">
             </div>
         </div>
-        <form method="post">
+        <!-- <form action="/updateProduct" method="post"> -->
+            <form action="" method="post">
             <div class="form-group image-change-group">
                 <label for="change-img">이미지 변경</label>
                 <input id="file" class="form-control" type="file" multiple>
@@ -125,26 +126,36 @@
             </div>
             <div class="form-group">
                 <label for="brand-name">브랜드 명</label>
-                <input type="text" id="brand-name" value="Stussy" readonly>
+                <input type="text" id="brand-name" th:value="${product.bName}">
             </div>
             <div class="form-group">
                 <label for="product-number">상품 번호</label>
-                <input type="text" id="product-number" value="283451" readonly>
+                <input type="text" id="product-number" th:value="${product.pNo}">
             </div>
             <div class="form-group">
                 <label for="product-name">상품 명</label>
-                <input type="text" id="product-name" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
+                <input type="text" id="product-name" th:value="${product.productName}">
             </div>
             <div class="form-group">
                 <label for="current-stock">현 재고 수</label>
-                <input type="text" id="current-stock" value="124" readonly>
+                <input type="text" id="current-stock" th:value="${product.stockQuantity}">
             </div>
             <div class="form-group">
                 <label for="incoming-stock">입고 수량</label>
                 <input type="text" id="incoming-stock" placeholder="입고 수량을 입력해 주세요">
             </div>
-            <button type="submit" class="submit-btn">수정 완료</button>
+            <button type="submit" class="submit-btn" onclick="update()">수정 완료</button>
         </form>
     </div>
+
+    <script>
+        function update() {
+            let amount = parseInt($("#incoming-stock").val()) 
+                        + parseInt($("#current-stock").val());
+
+            alert(amount);
+
+        }
+    </script>
 </body>
 </html>
