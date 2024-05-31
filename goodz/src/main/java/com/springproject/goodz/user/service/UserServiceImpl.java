@@ -166,26 +166,56 @@ public class UserServiceImpl implements UserService {
     @Override
     public int insertAddress(Shippingaddress shippingaddress) throws Exception {
 
-        int result = userMapper.insertAddress(shippingaddress);
-        return result;
+        // 기본 배송지로 설정하려는 경우
+        if (shippingaddress.getIsDefault()) {
+            // 사용자의 모든 배송지를 가져옴
+            List<Shippingaddress> shippingaddresses = userMapper.selectByUserId(shippingaddress.getUserId());
+            for (Shippingaddress addr : shippingaddresses) {
+                // 기존 기본 배송지를 해제
+                if (addr.getIsDefault()) {
+                    addr.setIsDefault(false);
+                    userMapper.updateAddress(addr);
+                }
+            }
+        }
+        // 새 배송지를 추가
+        return userMapper.insertAddress(shippingaddress);
 
     }
 
     /**
-     * 기본 배송지
+     * 주소 업데이트 (기본 배송지 등록 여부 포함)
      */
     @Override
-    public void DefaultAddress(String userId) throws Exception {
-        userMapper.DefaultAddress(userId);
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception {
+        // 기본 배송지 설정을 변경하려는 경우
+        if (shippingaddress.getIsDefault()) {
+            // 사용자의 모든 배송지를 가져옴
+            List<Shippingaddress> shippingaddresses = userMapper.selectByUserId(shippingaddress.getUserId());
+            for (Shippingaddress addr : shippingaddresses) {
+                // 기존 기본 배송지를 해제
+                if (addr.getIsDefault()) {
+                    addr.setIsDefault(false);
+                    userMapper.updateAddress(addr);
+                }
+            }
+        }
+        // 새 배송지 또는 업데이트된 배송지를 저장
+        return userMapper.updateAddress(shippingaddress);
     }
 
+    /**
+     * 유저의 주소 목록 조회
+     */
     @Override
-    public List<Shippingaddress> selectByUserId() throws Exception {
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception {
         
-        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
-        
-        return shippingaddresses;
+        return userMapper.selectByUserId(userId);
     }
 
+
+    
+    
+    
 
 }

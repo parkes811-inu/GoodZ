@@ -7,15 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주소록</title>
     <style>
-
         .address_container {
             max-width: 600px;
         }
 
         .add_btn {
-            font-size: 12px;    
+            font-size: 12px;
         }
-
 
         .address-item {
             padding: 15px;
@@ -44,15 +42,6 @@
             gap: 8px;
         }
 
-        /* .address-item-footer button {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        } */
-
         .address-item-footer button:hover {
             background-color: #f0f0f0;
         }
@@ -67,33 +56,44 @@
     <div class="container">
         <div class="userMainContainer">
             <p class="fs-4 fw-bold m-0">주소록</p>
-            <div class="address_container" style="max-width: 600px;">
+            <div class="address_container">
                 <div class="d-flex justify-content-end mb-2">
-                    <button class="add_btn btn btn-sm border rounded-3" onclick="location.href='/user/add_address'" >+ 새 배송지 추가</button>
+                    <button class="add_btn btn btn-sm border rounded-3" onclick="location.href='/user/add_address'">+ 새 배송지 추가</button>
                 </div>
-                <div class="address-item">
+                <div th:if="${#lists.isEmpty(shippingaddresses)}" class="address-item">
+                    <div class="no-address">
+                        등록된 배송지가 없습니다.
+                    </div>
+                </div>
+                <div th:each="address : ${shippingaddresses}" class="address-item">
                     <div class="address-item-header">
                         <div class="d-flex justify-content-end">
-                            <span class="default-badge">기본 배송지</span>
+                            <span th:if="${address.isDefault}" class="default-badge">기본 배송지</span>
                         </div>
-                        <p>메롱</p>
+                        <p th:text="${address.recipientName}"></p>
                     </div>
                     <div class="address-item-body">
-                        <p class="m-0">010-1234-1234</p>
-                        <p class="mt-3 mb-0">(22182) 개미시 허리도 가늘군 만지면 부러지리 88-88</p>
+                        <p class="m-0" th:text="${address.phoneNumber}"></p>
+                        <p class="mt-3 mb-0" th:text="'(' + ${address.zipCode} + ') ' + ${address.address}"></p>
                     </div>
                     <div class="address-item-footer">
-                        <button class="btn btn-sm border">수정</button>
-                        <button class="btn btn-sm border">삭제</button>
+                        <button class="btn btn-sm border" th:onclick="'location.href=\'/user/upd_address/' + ${address.addressNo} + '\''">수정</button>
+                        <button class="btn btn-sm border" th:onclick="'deleteAddress(' + ${address.addressNo} + ')'">삭제</button>
                     </div>
                 </div>
             </div>
-
-
-
         </div>
-        <!-- 주소 테이블에서 불러와야함 -->
         <div class="divider"></div>
     </div>
+
+    <script>
+        function deleteAddress(addressId) {
+            if (confirm("정말로 이 주소를 삭제하시겠습니까?")) {
+                // 실제 삭제 요청을 보내는 로직 추가 필요
+                // 예: location.href = '/user/delete_address/' + addressId;
+                alert("삭제 기능이 구현되지 않았습니다."); // 임시 알림
+            }
+        }
+    </script>
 </body>
 </html>
