@@ -154,33 +154,25 @@
                                     </button>
                                 </th>
                                 <th>크기</th>
-                                <th>옵션가격</th>
+                                <th>가격</th>
                                 <th>재고</th>
-                                <!-- <th style="min-width: 90px;">재고추가</th> -->
-                                <!-- <th style="min-width: 90px;">재고번호</th> -->
                                 <th style="min-width: 140px;">상태</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            
+                        <tbody id="optionContainer">
                             <tr>
                                 <td></td>
-                                <td><input type="text" class="form-control" name="size" id="size"></td>
-                                <td><input type="text" class="form-control" name="price" id="price"></td>
-                                <!-- 상품번호 -->
-                                <!-- <td><input type="text" class="form-control" name="pNo" value=""></td> -->
-                                <td><input type="text" class="form-control" value=""></td>
-                                <!-- 재고추가입력란 -->
-                                <!-- <td><input type="text" class="form-control" value=""></td> -->
+                                <td><input type="text" class="form-control" name="sizes"></td>
+                                <td><input type="text" class="form-control" name="optionPrices"></td>
+                                <td><input type="text" class="form-control" name="stockQuantities"></td>
                                 <td>
-                                    <select class="form-select" name="status" id="status">
+                                    <select class="form-select" name="status">
                                         <option selected value="on">판매중</option>
                                         <option value="off">판매중지</option>
                                     </select>
                                 </td>
                             </tr>
-
                             <!-- 반복될 구간 -->
                         </tbody>
                     </table>
@@ -197,6 +189,8 @@
         const imageInput = document.getElementById('imageInput');
         const imagePreview = document.getElementById('imagePreview');
         const representativeImageInput = document.getElementById('representativeImage');
+        const addOptionButton = document.getElementById('add_option');
+        const optionContainer = document.getElementById('optionContainer');
     
         imageInput.addEventListener('change', function() {
             imagePreview.innerHTML = '';
@@ -214,9 +208,26 @@
                 imagePreview.appendChild(img);
             });
         });
+
+        addOptionButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td></td>
+                <td><input type="text" class="form-control" name="sizes"></td>
+                <td><input type="text" class="form-control" name="optionPrices"></td>
+                <td><input type="text" class="form-control" name="stockQuantities"></td>
+                <td>
+                    <select class="form-select" name="status">
+                        <option selected value="on">판매중</option>
+                        <option value="off">판매중지</option>
+                    </select>
+                </td>
+            `;
+            optionContainer.appendChild(newRow);
+        });
     </script>
 
-    
 </body>
 
 </html>
