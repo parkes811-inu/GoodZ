@@ -19,6 +19,9 @@ public interface PostMapper {
     // 게시글 조회 - id 기준
     public List<Post> selectById(String userId) throws Exception;
 
+    // 마지막 게시글번호 조회 - 첨부파일 등록 시 필요함
+    public int maxNo() throws Exception;
+
     // 게시글 등록
     public int insert(Post post) throws Exception;
 
