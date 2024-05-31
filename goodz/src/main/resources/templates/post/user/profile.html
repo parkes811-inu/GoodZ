@@ -4,7 +4,7 @@
       layout:decorate="~{/layouts/style_layout}"
       >
 <head>
-    <title th:text="'@'+${nickname}+'의 프로필'"></title>
+    <title th:text="'@'+${requested.nickname}+'의 프로필'"></title>
     <style>
         .profile_img {
             width: 100px;
@@ -43,12 +43,14 @@
         <div class="user d-flex justify-content-start justify-content-between align-items-end mt-4">
             <div class="user d-flex justify-content-start mt-4">
                 <!-- 프사 -->
-                <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
+                <img th:src="${requested.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
                 <div class="d-flex flex-column justify-content-center ms-3">
-                    <!-- 유저id -->
-                    <div class="user_name_area mb-2 d-flex justify-content-start">
-                        <p class="userId fs-2 m-0 text-start" th:text="${user.nickname}"></p>
-                        <a href="/user/manage_info" class="btn border-secondary-subtle d-flex align-items-center justify-content-center ms-3" type="button" style="color: rgb(80, 80, 80);font-size: smaller;width: 80px;padding: 0;height: 30px;margin: auto;"> 프로필 관리 </a>
+                    <!-- 유저닉네임 -->
+                    <div class="user_nickname_area mb-2 d-flex justify-content-start">
+                        <p class="userNickname fs-2 m-0 text-start" th:text="${requested.nickname}"></p>
+                        <div th:if="${loginUser.userId} == ${requested.userId}" class="d-flex align-items-center justify-content-center">
+                            <a href="/user/manage_info" class="btn border-secondary-subtle ms-3" type="button" style="color: rgb(80, 80, 80);font-size: smaller;width: 100px;height: 30px;"> 프로필 관리 </a>
+                        </div>
                     </div>
                     <!-- 팔로우/팔로잉 정보 -->
                     <div class="followInfo d-flex text-start">
@@ -58,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div th:if="${loginUser.userId} == ${requested.userId}">
                 <!-- 게시글 등록버튼 -->
                 <a href="/styles/insert"  class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
@@ -74,7 +76,7 @@
         <!-- 조회된 게시글이 없는 경우 -->
         <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" style="margin-bottom: 70px;">
             <th:block th:if="${postList.isEmpty()}">
-                <p class="fw-bold mx-auto text-center text-body-tertiary mt-5">사진이 없습니다!</p>
+                <p class="fw-bold mx-auto text-center text-body-tertiary mt-5">등록된 스타일이 없습니다!</p>
             </th:block>
 
             <!-- 조회된 게시글이 있는 경우 -->
