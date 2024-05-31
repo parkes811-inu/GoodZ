@@ -1,17 +1,16 @@
 package com.springproject.goodz.product.service;
 
-import java.io.File;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.mapper.ProductMapper;
+import com.springproject.goodz.product.mapper.ProductOptionMapper;
+import com.springproject.goodz.product.mapper.ProductImageMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,18 +21,18 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    @Value("${upload.path}")    // application.properties에 설정한 업로드 경로
-    private String uploadPath;
+    @Autowired
+    private ProductOptionMapper productOptionMapper;
+
+    @Autowired
+    private ProductImageMapper productImageMapper;
 
     /**
      * 상품 목록 조회
      */
     @Override
     public List<Product> list() throws Exception {
-
-        List<Product> productList = productMapper.list();
-
-        return productList;
+        return productMapper.list();
     }
 
     /**
@@ -41,56 +40,37 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> newArrivals() throws Exception {
-        
-        List<Product> newArrivalsList = productMapper.newArrivals();
-
-        return newArrivalsList;
+        return productMapper.newArrivals();
     }
 
     /**
-     *  상품 등록 처리
+     * 상품 등록 처리
      */
     @Override
     public int insert(Product product) throws Exception {
         log.info("상품 등록 처리 진행중...");
 
-        int result = 0;
-        List<MultipartFile> productFiles = product.getProductFiles();
-
-        if (productFiles != null && !productFiles.isEmpty()) {
-            // 파일 개수 제한
-            if (productFiles.size() > 10) {
-                throw new Exception("최대 10개의 이미지만 업로드할 수 있습니다.");
-            }
-
-            // 파일 경로들을 저장할 StringBuilder 객체를 초기화
-            StringBuilder filePaths = new StringBuilder();
-
-            for (MultipartFile productFile : productFiles) {
-                if (productFile != null && !productFile.isEmpty()) {
-                    log.info("상품 이미지 처리 진행중...");
-                    
-                    String fileName = UUID.randomUUID().toString() + "_" + productFile.getOriginalFilename();
-                    File uploadFile = new File(uploadPath, fileName);
-                    FileCopyUtils.copy(productFile.getBytes(), uploadFile);
-
-                    String filePath = uploadPath + "/products/" + fileName;
-                    if (filePaths.length() > 0) {
-                        // StringBuilder에 파일 경로를 추가하기 전에 구분자(;)를 추가
-                        filePaths.append(";");
-                    }
-                    filePaths.append(filePath);
-                }
-            }
-
-            // 모든 파일 경로를 ;로 구분된 문자열로 설정하여 Product 객체의 imageUrl 속성에 저장
-            product.setImageUrl(filePaths.toString());
-        }
-
-        result = productMapper.insert(product);
+        int result = productMapper.insert(product);
 
         if (result > 0) {
             log.info("상품 등록 처리 완료");
+
+            // 상품이 등록된 후 옵션 및 이미지를 추가
+            List<ProductOption> options = product.getOptions();
+            if (options != null && !options.isEmpty()) {
+                for (ProductOption option : options) {
+                    option.setPNo(product.getPNo());
+                    productOptionMapper.insertProductOption(option);
+                }
+            }
+
+            List<ProductImage> images = product.getImages();
+            if (images != null && !images.isEmpty()) {
+                for (ProductImage image : images) {
+                    image.setPNo(product.getPNo());
+                    productImageMapper.insertProductImage(image);
+                }
+            }
         }
 
         return result;
@@ -101,10 +81,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> top() throws Exception {
-
-        List<Product> topList = productMapper.top();
-        
-        return topList;
+        return productMapper.top();
     }
 
     /**
@@ -112,10 +89,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> pants() throws Exception {
-        
-        List<Product> pantsList = productMapper.pants();
-        
-        return pantsList;
+        return productMapper.pants();
     }
 
     /**
@@ -123,10 +97,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> shoes() throws Exception {
-
-        List<Product> shoesList = productMapper.shoes();
-        
-        return shoesList;
+        return productMapper.shoes();
     }
 
     /**
@@ -134,12 +105,30 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> accessory() throws Exception {
-
-        List<Product> accessoryList = productMapper.accessory();
-        
-        return accessoryList;
+        return productMapper.accessory();
     }
 
-    
+    /**
+     * 상품 상세 조회
+     */
+    @Override
+    public Product getProductBypNo(int pNo) throws Exception {
+        return productMapper.getProductBypNo(pNo);
+    }
 
+    /**
+     * 상품의 옵션 목록 조회
+     */
+    @Override
+    public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception {
+        return productOptionMapper.getProductOptionsByProductId(pNo);
+    }
+
+    /**
+     * 상품의 이미지 목록 조회
+     */
+    @Override
+    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception {
+        return productImageMapper.getProductImagesByProductId(pNo);
+    }
 }
