@@ -13,8 +13,11 @@ public interface UserService {
     // 로그인
     public boolean login(Users user) throws Exception;
 
-    // 조회
+    // 회원 조회 - id
     public Users select(String username) throws Exception;
+
+    // 회원 조회 - nickname
+    public Users selectByNickname(String nickname) throws Exception;
 
     // 회원 가입
     public int join(Users user) throws Exception;
@@ -43,7 +46,13 @@ public interface UserService {
     // 회원 정보 수정 시 비밀 번호 확인
     public boolean checkPassword(String userId, String rawPassword) throws Exception;
 
+    // 유저 주소 등록
+    public int insertAddress(Shippingaddress shippingaddress) throws Exception;
+
+    // 유저 주소 업데이트 (기본 배송지 등록 여부 포함)
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception;
+
     // 유저의 주소 목록
-    public List<Shippingaddress> selectByUserId() throws Exception;
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception;
 
 }

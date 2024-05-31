@@ -1,21 +1,26 @@
 package com.springproject.goodz.post.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.utils.dto.Files;
 
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /*
  * 스타일 게시글
@@ -23,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * [GET]    /styles/게시글번호       게시글 조회
  * [GET]    /styles/update           게시글 수정페이지
  * [GET]    /styles/insert           게시글 수정페이지
- * [POST]   /styles                  게시글 작성처리
+ * [POST]   /styles/insert           게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
  * 프로필    
@@ -40,6 +45,9 @@ public class PostController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
     
     /**
      * 전체 게시글 목록
@@ -73,7 +81,14 @@ public class PostController {
      * @return
      */
     @GetMapping("/insert")
-    public String moveToInsert() {
+    public String moveToInsert(Model model,HttpSession session) {
+
+        // 로그인된 user의 정보를 가져옴
+        Users loginUser= (Users)session.getAttribute("user");
+
+        model.addAttribute("loginUser", loginUser);
+        log.info("작성화면 이동...");
+
         return "/post/insert";
     }
 
@@ -81,12 +96,39 @@ public class PostController {
      * 게시글 등록 처리
      * @param userId
      * @return
+     * @throws Exception 
      */
-    // @PostMapping("")
-    // public String insert(Style style) {
-        
-    //     return entity;
-    // }
+    @PostMapping("")
+    public String insert(Post post, Model model, HttpSession session) throws Exception {
+
+        log.info(post.toString());
+
+        /* ⬇️ 게시글 등록 처리⬇️ */
+        int result = postService.insert(post); // 성공 -> 1
+
+        if (result == 0) {
+            log.info("게시글 등록 처리 시, 예외발생");
+
+            return "/post/insert";
+        }
+
+        /* ⬇️프로필로 리다이렉트 처리⬇️ */
+
+        // 로그인된 user의 정보를 가져옴
+        Users loginUser= (Users)session.getAttribute("user"); 
+
+        // 프로필로 리다이렉트를 위해 닉네임 필요하므로 아이디로 회원 조회
+        Users requested = userService.select(post.getUserId());
+        log.info(requested.getNickname() + "의 프로필로 이동중...");
+
+        List<Post> postList = postService.selectById(requested.getUserId());
+
+        model.addAttribute("postList", postList);
+        model.addAttribute("requested", requested);
+        model.addAttribute("loginUser", loginUser);
+
+        return "redirect:/post/user/profile";
+    }
 
     @GetMapping("/update")
     public String moveToUpdate() {
@@ -95,19 +137,23 @@ public class PostController {
     
     
     /*
-     * 내 스타일 (유저 프로필)
+     * 유저 프로필
      */
-    @GetMapping("/user/{userId}")
-    public String usersStyle(@PathVariable("userId") String userId, Model model) throws Exception {
-        
-        log.info("프로필 이동중...");
-        log.info("유저 아이디: " + userId);
+    @GetMapping("/user/@{nickname}")
+    public String usersStyle(@PathVariable("nickname") String nickname, Model model, HttpSession session) throws Exception {
 
-        Users user = userService.select(userId);
-        log.info(user.toString());
+        log.info(nickname + "의 프로필로 이동중...");
         
+        Users requested = userService.selectByNickname(nickname);
+        
+        // 로그인된 user의 정보를 가져옴
+        Users loginUser= (Users)session.getAttribute("user");    
 
-        model.addAttribute("user", user);
+        List<Post> postList = new ArrayList<>();
+
+        model.addAttribute("requested", requested);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("postList", postList);
 
         return "/post/user/profile";
     }

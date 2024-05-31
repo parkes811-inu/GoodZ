@@ -3,9 +3,12 @@ package com.springproject.goodz.controller;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.service.ProductService;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 
 @Slf4j
 @Controller
-@RequestMapping("/")
+@RequestMapping("")
 public class MainController {
 
     @Autowired
@@ -69,4 +74,5 @@ public class MainController {
         model.addAttribute("newArrivalsList", newArrivalsList);
         return "/index";
     }
+
 }

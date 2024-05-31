@@ -74,6 +74,25 @@
         WHERE u.user_id = #{userId}
     </select>
 
+    <!-- 회원 조회 - nickname -->
+    <select id="selectByNickname" resultMap="userMap">
+        SELECT u.user_id
+              ,u.username
+              ,u.nickname
+              ,u.password
+              ,u.birth
+              ,u.profile_picture_url
+              ,u.account
+              ,u.created_at
+              ,u.updated_at
+              ,1 enabled
+              ,auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        WHERE u.nickname = #{nickname}
+    </select>
+
+
+
     <!-- 회원 가입 -->
     <insert id="join">
         INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )
@@ -155,16 +174,27 @@
     </select>
 
 
-    <!-- 주소록 등록하기 -->
-    <insert id="insertAddress" parameterType="ShippingAddress">
-        INSERT INTO Shippingaddress (user_id, recipient_name, phone_number, address, zip_code) 
-        VALUES (#{userId}, #{recipientName}, #{phoneNumber}, #{address}, #{zipCode})
+    <insert id="insertAddress" parameterType="Shippingaddress">
+        INSERT INTO Shippingaddress (user_id, recipient_name, phone_number, address, zip_code, is_default, created_at, updated_at)
+        VALUES (#{userId}, #{recipientName}, #{phoneNumber}, #{address}, #{zipCode}, #{isDefault}, NOW(), NOW())
     </insert>
+
+    <!-- 주소 업데이트 (기본 배송지 등록 여부 포함)-->
+    <update id="updateAddress" parameterType="Shippingaddress">
+       UPDATE Shippingaddress
+        SET recipient_name = #{recipientName},
+            phone_number = #{phoneNumber},
+            address = #{address},
+            zip_code = #{zipCode},
+            is_default = #{isDefault},
+            updated_at = NOW()
+        WHERE address_no = #{addressNo}
+    </update>
 
     <!-- 유저 아이디의 맞는 배송지 불러오기 -->
     <select id="selectByUserId" resultMap="shippingAddressMap">
-        SELECT *
-        FROM Shippingaddress
+        SELECT * FROM Shippingaddress 
         WHERE user_id = #{userId}
+        ORDER BY is_default DESC, updated_at DESC
     </select>
 </mapper>

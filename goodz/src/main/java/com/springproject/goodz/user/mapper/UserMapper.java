@@ -16,8 +16,11 @@ public interface UserMapper {
     // 로그인
     public Users login(String username) throws Exception;
 
-    // 회원 조회
+    // 회원 조회 - id
     public Users select(String username) throws Exception;
+
+    // 회원 조회 - id
+    public Users selectByNickname(String nickname) throws Exception;
 
     // 회원 가입
     public int join(Users user) throws Exception;
@@ -43,7 +46,13 @@ public interface UserMapper {
     // 회원 정보 수정 시 닉네임 중복 체크
     public int checkName(@Param("userName") String userName) throws Exception;
 
+    // 유저 주소 등록
+    public int insertAddress(Shippingaddress shippingaddress) throws Exception;
+
+    // 유저 주소 업데이트 (기본 배송지 등록 여부 포함)
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception;
+
     // 유저의 주소 목록
-    public List<Shippingaddress> selectByUserId() throws Exception;
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception;
     
 }

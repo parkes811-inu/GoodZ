@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
 
     @Override
     public boolean login(Users user) throws Exception {
@@ -60,6 +62,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Users select(String username) throws Exception {
         Users user = userMapper.select(username);
+        return user;
+    }
+
+    @Override
+    public Users selectByNickname(String nickname) throws Exception {
+        Users user = userMapper.selectByNickname(nickname);
         return user;
     }
 
@@ -144,14 +152,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<Shippingaddress> selectByUserId() throws Exception {
-        
-        List<Shippingaddress> shippingaddresses = userMapper.selectByUserId();
-        
-        return shippingaddresses;
-    }
-
-    @Override
     public boolean checkPassword(String userId, String rawPassword) throws Exception {
         Users user = userMapper.select(userId);
         if (user != null) {
@@ -160,6 +160,62 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    /**
+     * 주소 등록
+     */
+    @Override
+    public int insertAddress(Shippingaddress shippingaddress) throws Exception {
+
+        // 기본 배송지로 설정하려는 경우
+        if (shippingaddress.getIsDefault()) {
+            // 사용자의 모든 배송지를 가져옴
+            List<Shippingaddress> shippingaddresses = userMapper.selectByUserId(shippingaddress.getUserId());
+            for (Shippingaddress addr : shippingaddresses) {
+                // 기존 기본 배송지를 해제
+                if (addr.getIsDefault()) {
+                    addr.setIsDefault(false);
+                    userMapper.updateAddress(addr);
+                }
+            }
+        }
+        // 새 배송지를 추가
+        return userMapper.insertAddress(shippingaddress);
+
+    }
+
+    /**
+     * 주소 업데이트 (기본 배송지 등록 여부 포함)
+     */
+    @Override
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception {
+        // 기본 배송지 설정을 변경하려는 경우
+        if (shippingaddress.getIsDefault()) {
+            // 사용자의 모든 배송지를 가져옴
+            List<Shippingaddress> shippingaddresses = userMapper.selectByUserId(shippingaddress.getUserId());
+            for (Shippingaddress addr : shippingaddresses) {
+                // 기존 기본 배송지를 해제
+                if (addr.getIsDefault()) {
+                    addr.setIsDefault(false);
+                    userMapper.updateAddress(addr);
+                }
+            }
+        }
+        // 새 배송지 또는 업데이트된 배송지를 저장
+        return userMapper.updateAddress(shippingaddress);
+    }
+
+    /**
+     * 유저의 주소 목록 조회
+     */
+    @Override
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception {
+        
+        return userMapper.selectByUserId(userId);
+    }
+
+
+    
+    
     
 
 }

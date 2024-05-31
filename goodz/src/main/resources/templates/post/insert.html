@@ -170,13 +170,18 @@
         <div class="my-5 d-flex flex-column align-items-center">
            <p class="fs-3 fw-bold" style="width:600px">게시글 등록</p>
 
-            <form id="form" method="post" style="width: 600px;">
+            <form id="form" action="/styles/insert" method="post" style="width: 600px;">
+                <input type="hidden" name="userId" th:value="${loginUser.userId}">
                 <!-- 이미지첨부 -->
-                <span id="passwordHelpInline" class="form-text">최대 10장</span>
-                <input id="file" class="form-control" type="file"  multiple>
+                <span class="form-text">최대 10장</span>
+                <input id="imageInput" name="file" class="form-control" type="file"  multiple>
+                <!-- 첨부파일 미리보기 -->
+                <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
+                <!-- 대표로 선택한 이미지가 넘어감 -->
+                <input type="hidden" id="representativeImage" name="mainImgIndex">
                 <br>
                 <!-- 내용 -->
-                <textarea  id="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
+                <textarea  id="content" name="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
                 <br>
                 <!-- 상품태그 영역 -->
                 <div class="d-flex justify-content-between">
@@ -255,10 +260,31 @@
                     </div>
                 </div>
 
-                <button type="button" id="btn-insert" onclick="alert('작성완료')" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">작성 완료</button>
+                <button type="submit" id="btn-insert" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">작성 완료</button>
             </form>
         </div>
     </div>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const representativeImageInput = document.getElementById('representativeImage');
     
+        imageInput.addEventListener('change', function() {
+            imagePreview.innerHTML = '';
+            Array.from(imageInput.files).forEach((file, index) => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.width = 100;
+                img.height = 100;
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => {
+                    representativeImageInput.value = index;
+                    document.querySelectorAll('#imagePreview img').forEach(img => img.style.border = 'none');
+                    img.style.border = '2px solid red';
+                });
+                imagePreview.appendChild(img);
+            });
+        });
+    </script>
 </body>
 </html>
