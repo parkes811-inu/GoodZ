@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
-import com.springproject.goodz.utils.dto.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -98,7 +96,7 @@ public class PostController {
      * @return
      * @throws Exception 
      */
-    @PostMapping("")
+    @PostMapping("/insert")
     public String insert(Post post, Model model, HttpSession session) throws Exception {
 
         log.info(post.toString());
@@ -127,7 +125,7 @@ public class PostController {
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
 
-        return "redirect:/post/user/profile";
+        return "redirect:/styles/user/@"+requested.getNickname();
     }
 
     @GetMapping("/update")

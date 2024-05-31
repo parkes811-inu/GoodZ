@@ -60,25 +60,36 @@ public class PostServiceImpl implements PostService{
     @Override
     public int insert(Post post) throws Exception {
 
-        /* ⬇️ '글' 등록 처리⬇️ */
+        log.info("여기까지 옴");
+
+        /* ?? '글' 등록 처리?? */
         int result = postMapper.insert(post);
 
-        /* ⬇️ '첨부파일' 등록 처리⬇️ */
+        if (result == 1) {
+            log.info("글등록 성공");
+        }
+        
+        /* ?? '첨부파일' 등록 처리?? */
         String parentTable = "post";
         int parentNo = postMapper.maxNo(); // 방금 등록처리된 게시글 번호를 가져옴
+        log.info("게시글 번호: " + parentNo);
 
         List<MultipartFile> attachedFiles = post.getAttachedFiles();
 
-        // 대표 이미지 업로드
+        // 이미지 업로드
         // 필요정보: 부모테이블, 부모번호, 멀티파트파일, 대표이미지 인덱스
         int mainImgIndex = post.getMainImgIndex();
+        log.info("대표이미지 인덱스: " + mainImgIndex);
         MultipartFile mainImg = attachedFiles.get(mainImgIndex); // 대표이미지
 
         // 깡통인지 체크
         if (!attachedFiles.isEmpty()) {
             for (int i = 0; i < attachedFiles.size(); i++) {
+                log.info(i+"번 인덱스 파일 처리중...");
 
                 MultipartFile attachedFile = attachedFiles.get(i);
+
+                log.info("파일아...: " + attachedFile.toString());
 
                 // 빈 파일인지 체크
                 if (attachedFile.isEmpty()) {
@@ -87,15 +98,16 @@ public class PostServiceImpl implements PostService{
 
                 // fileService에 매개변수로 넘길 file 객체 세팅
                 Files uploadFile = new Files();
-                uploadFile.setParentTable(parentTable);
-                uploadFile.setParentNo(parentNo);
+                uploadFile.setParentTable(parentTable);     // "post"
+                uploadFile.setParentNo(parentNo);           // 게시글 번호
+                uploadFile.setFile(attachedFile);           // 첨부했던 파일을 dto에 담음
 
                 // 대표이미지 파일코드: 1
                 if (i == mainImgIndex) {
                     uploadFile.setFileCode(1);
                 }
 
-                boolean uploadcheck = fileService.upload(uploadFile, parentTable);
+                boolean uploadcheck = fileService.upload(uploadFile);
 
                 if (uploadcheck) {
                     log.info((i+1) + "번째 파일 업로드 성공...");
@@ -103,9 +115,8 @@ public class PostServiceImpl implements PostService{
             }
         }
 
+        return result;
 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
 
     @Override
