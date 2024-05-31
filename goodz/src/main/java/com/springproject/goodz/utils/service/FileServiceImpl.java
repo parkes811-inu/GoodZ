@@ -134,10 +134,12 @@ public class FileServiceImpl implements FileService{
      * 파일 업로드
      */
     @Override
-    public boolean upload(Files file, String dir) throws Exception {
+    public boolean upload(Files file) throws Exception {
         log.info("file: " + file);
 
-       MultipartFile mf = file.getFile();
+        String dir = file.getParentTable();     
+
+        MultipartFile mf = file.getFile();
         // 파일 정보 : 원본 파일명, 파일 용량, 파일 데이터
         String originName = mf.getOriginalFilename();
         long fileSize = mf.getSize();
@@ -153,8 +155,12 @@ public class FileServiceImpl implements FileService{
         // - 업로드 파일명 : UID_원본파일명.확장자
         String fileName = UUID.randomUUID().toString() + "_" + originName;
         uploadPath +=  "/" + dir;
+
+        log.info("업로드 경로: " + uploadPath);
         // File 객체 생성 => new File(업로드 경로, 설정할 파일명);
-        File uploadFile = new File(uploadPath+"/brand", fileName);
+        File uploadFile = new File(uploadPath + fileName);
+
+        log.info("제발요" + uploadFile);
 
         // 파일 업로드 (유저가 서버에 요청한 파일을 복사해서 경로에 넣음)
         FileCopyUtils.copy(fileData, uploadFile);
@@ -163,7 +169,8 @@ public class FileServiceImpl implements FileService{
         file.setOriginName(originName);
         // filePath = C:/uploade/UID_원본파일명.확장자
 
-        String filePath = uploadPath + "/" + fileName;
+        String filePath = uploadPath + "\\" + fileName;
+        log.info("집갈래" + filePath);
         file.setFilePath(filePath);
         file.setFileSize(fileSize);
         
