@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 등록 페이지</title>
-    <style>
+    <!-- <style>
         .option_input {
             border: none;
         }
@@ -81,14 +81,14 @@
             font-size: 14px;
             font-weight: bold;
         }
-    </style>
+    </style> -->
 </head>
 
 <body layout:fragment="content">
-    <div class="container mt-5">
+    <div class="container">
         <div class="userMainContainer">
 
-            <p class="fs-4 fw-bold p-0">상품 등록</p>
+            <p class="fs-4 fw-bold p-0 mb-5">상품 등록</p>
 
             <form action="/admin/products" id="add_product-form" method="post" enctype="multipart/form-data" style="max-width: 600px;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -125,7 +125,7 @@
                 <div class="mb-3">
                     <label for="origin-price" class="form-label">발매가</label>
                     <div class="d-flex form-group">
-                        <input type="text" class="form-control text-end rounded-0" id="origin-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
+                        <input type="text" class="form-control text-end" id="origin-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
                         <p class="m-0" style="align-self: center;">원</p>
                     </div>
                 </div>
@@ -180,8 +180,8 @@
                                     </select>
                                 </td>
                             </tr>
+                            <!-- ⬇️ + 버튼 누르면 반복될 구간 ⬇️ -->
 
-                            <!-- 반복될 구간 -->
                         </tbody>
                     </table>
                 </div>
