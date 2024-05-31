@@ -49,10 +49,10 @@ public interface UserMapper {
     // 유저 주소 등록
     public int insertAddress(Shippingaddress shippingaddress) throws Exception;
 
-    // 유저 기본 배송지
-    public void DefaultAddress(String userId) throws Exception;
+    // 유저 주소 업데이트 (기본 배송지 등록 여부 포함)
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception;
 
     // 유저의 주소 목록
-    public List<Shippingaddress> selectByUserId() throws Exception;
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception;
     
 }
