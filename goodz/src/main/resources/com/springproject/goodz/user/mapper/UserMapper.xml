@@ -74,6 +74,25 @@
         WHERE u.user_id = #{userId}
     </select>
 
+    <!-- 회원 조회 - nickname -->
+    <select id="selectByNickname" resultMap="userMap">
+        SELECT u.user_id
+              ,u.username
+              ,u.nickname
+              ,u.password
+              ,u.birth
+              ,u.profile_picture_url
+              ,u.account
+              ,u.created_at
+              ,u.updated_at
+              ,1 enabled
+              ,auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        WHERE u.nickname = #{nickname}
+    </select>
+
+
+
     <!-- 회원 가입 -->
     <insert id="join">
         INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )

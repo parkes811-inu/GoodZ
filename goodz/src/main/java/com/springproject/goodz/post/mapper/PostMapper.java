@@ -11,19 +11,19 @@ public interface PostMapper {
 
     
     // 게시글 목록
-    public List<Post> list() throws Exception;
+    //public List<Post> list() throws Exception;
 
     // 게시글 조회
     public Post select(int no) throws Exception;
 
     // 게시글 조회 - id 기준
-    public List<Post> selectById() throws Exception;
+    public List<Post> selectById(String userId) throws Exception;
 
     // 게시글 등록
-    public int insert(Post style) throws Exception;
+    public int insert(Post post) throws Exception;
 
     // 게시글 수정
-    public int update(Post style) throws Exception;
+    public int update(Post post) throws Exception;
 
     // 게시글 삭제
     public int delete(int postNo) throws Exception;

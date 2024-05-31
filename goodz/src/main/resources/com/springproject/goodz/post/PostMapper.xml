@@ -5,10 +5,10 @@
 
 <mapper namespace="com.springproject.goodz.user.mapper.UserMapper">
 
-    <select id="list" resultType="post">
+    <!-- <select id="list" resultType="post">
         SELECT *
         FROM post
-    </select>
+    </select> -->
 
     <select id="select" resultType="post">
         SELECT *
@@ -21,6 +21,19 @@
         FROM post
         WHERE user_id = #{userId}
     </select>
+
+    <insert id="insert">
+        INSERT INTO post (user_id, content)
+        VALUES (#{userId}, #{content})
+    </insert>
+
+    <update id="update">
+
+    </update>
+
+    <delete id="delete">
+    
+    </delete>
 
     
 
