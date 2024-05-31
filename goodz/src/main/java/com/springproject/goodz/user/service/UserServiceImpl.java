@@ -161,7 +161,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 주소 등록
+     * 배송지 등록
      */
     @Override
     public int insertAddress(Shippingaddress shippingaddress) throws Exception {
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 주소 업데이트 (기본 배송지 등록 여부 포함)
+     * 배송지 업데이트 (기본 배송지 등록 여부 포함)
      */
     @Override
     public int updateAddress(Shippingaddress shippingaddress) throws Exception {
@@ -205,12 +205,37 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 유저의 주소 목록 조회
+     * 유저의 배송지 목록 조회
      */
     @Override
     public List<Shippingaddress> selectByUserId(String userId) throws Exception {
         
         return userMapper.selectByUserId(userId);
+    }
+
+    /**
+     * 유저 단일 배송지 조회
+     */
+    @Override
+    public Shippingaddress selectAddress(int addressNo) throws Exception {
+        Shippingaddress shippingaddress = userMapper.selectAddress(addressNo);
+        return shippingaddress;
+    }
+
+    /**
+     * 주소 삭제
+     */
+    @Override
+    public int deleteAddress(int addressNo) throws Exception {
+        return userMapper.deleteAddress(addressNo);
+        
+    }
+
+    // 기본 배송지 여부 확인
+    @Override
+    public boolean isDefaultAddress(int addressNo) throws Exception {
+        Shippingaddress shippingaddress = userMapper.selectAddress(addressNo);
+        return shippingaddress != null && shippingaddress.isDefault();
     }
 
 
