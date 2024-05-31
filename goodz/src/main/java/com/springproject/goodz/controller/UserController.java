@@ -138,7 +138,7 @@ public class UserController {
             try {
                 file.transferTo(new File(filePath));
                 // user.setProfilePictureUrl(filePath);
-                user.setProfilePictureUrl("/user/" + fileName); // URL 형식으로 저장
+                user.setProfilePictureUrl("/upload/user/" + fileName); // URL 형식으로 저장
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
             }

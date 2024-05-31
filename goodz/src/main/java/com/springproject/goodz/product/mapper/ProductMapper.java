@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.dto.ProductImage;
 
 @Mapper
 public interface ProductMapper {
@@ -18,7 +20,7 @@ public interface ProductMapper {
     // 상품 목록 (페이징 추후 추가) - 관리자 전용 다 볼 수 있음
     public List<Product> list() throws Exception;
 
-    // <관심>상품 목록 (페이징 추후 추가) -  볼 수 있음(알아서 짜셈)
+    // <관심>상품 목록 (페이징 추후 추가) - 볼 수 있음(알아서 짜셈)
     public List<Product> userlist() throws Exception;
     
     // 상품 목록 - 상의
@@ -45,5 +47,18 @@ public interface ProductMapper {
     // 조회수 증가
     public int views(int no) throws Exception;
 
+    // 상품 상세 조회
+    public Product getProductBypNo(int pNo) throws Exception;
 
+    // 상품의 옵션 목록 조회
+    public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
+
+    // 상품의 이미지 목록 조회
+    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception;
+
+    // 상품 옵션 추가
+    public int insertProductOption(ProductOption productOption) throws Exception;
+
+    // 상품 이미지 추가
+    public int insertProductImage(ProductImage productImage) throws Exception;
 }

@@ -162,28 +162,63 @@ CREATE TABLE `Tag` (
 
 
 
+-- 2024.05.31 박은서 product 테이블 분할
+-- Product 테이블 / 📁 product
+-- CREATE TABLE `Product` (
+-- 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
+-- 	`product_name`		VARCHAR(100)	NOT NULL,
+-- 	`price`				INT				NOT NULL,
+-- 	`b_name`			VARCHAR(100)	NOT NULL,
+-- 	`category`			VARCHAR(50)		NOT NULL,
+-- 	`size`				VARCHAR(100)	NOT NULL,
+-- 	`views`				INT				NOT NULL DEFAULT '0',
+-- 	`stock_quantity`	INT				NOT NULL,
+-- 	`image_url`			VARCHAR(1000)	NOT NULL,
+-- 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--      PRIMARY KEY (p_no),
+-- 	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
+-- ) COMMENT='상품';
+
 -- Product 테이블 / 📁 product
 CREATE TABLE `Product` (
-	`p_no`				INT				NOT NULL AUTO_INCREMENT,
-	`product_name`		VARCHAR(100)	NOT NULL,
-	`price`				INT				NOT NULL,
-	`b_name`			VARCHAR(100)	NOT NULL,
-	`category`			VARCHAR(50)		NOT NULL,
-	`size`				VARCHAR(100)	NOT NULL,
-	`views`				INT				NOT NULL DEFAULT '0',
-	`stock_quantity`	INT				NOT NULL,
-	`image_url`			VARCHAR(1000)	NOT NULL,
-	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-     PRIMARY KEY (p_no),
-	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
+    `p_no` INT NOT NULL AUTO_INCREMENT,
+    `product_name` VARCHAR(100) NOT NULL,
+    `price` INT NOT NULL,  -- 기본 가격
+    `b_name` VARCHAR(100) NOT NULL,
+    `category` VARCHAR(50) NOT NULL,
+    `views` INT NOT NULL DEFAULT '0',
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`p_no`),
+    FOREIGN KEY (`b_name`) REFERENCES `Brand`(`b_name`) ON DELETE CASCADE
 ) COMMENT='상품';
+
+-- Product 이미지 테이블 / 📁 product
+CREATE TABLE `ProductImage` (
+    `img_id` INT NOT NULL AUTO_INCREMENT,
+    `p_no` INT NOT NULL,
+    `image_url` VARCHAR(1000) NOT NULL,
+    PRIMARY KEY (`img_id`),
+    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
+) COMMENT='상품 이미지';
+
+-- Product 옵션 테이블 / 📁 product
+CREATE TABLE `ProductOption` (
+    `option_id` INT NOT NULL AUTO_INCREMENT,
+    `p_no` INT NOT NULL,
+    `size` VARCHAR(50) NOT NULL,
+    `option_price` INT NOT NULL,  -- 사이즈별 추가 금액
+    `stock_quantity` INT NOT NULL,
+    `status` ENUM('판매중', '비활성화') NOT NULL,
+    PRIMARY KEY (`option_id`),
+    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
+) COMMENT='상품 옵션';
 
 -- Brand 테이블 / 📁 product
 CREATE TABLE `Brand`(
 	`b_no` INT NOT NULL NOT NULL AUTO_INCREMENT,
 	`b_name` VARCHAR(100) NOT NULL,
-	`image_url` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (b_no)
 ) COMMENT='브랜드';
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -136,7 +137,7 @@ public class AdminController {
         log.info(product.toString());
 
         // 상품 객체에 파일 목록 설정
-        product.setProductFiles(productFiles);
+        // product.setProductFiles(productFiles);
         
         int result = productService.insert(product);
 
@@ -169,12 +170,28 @@ public class AdminController {
         return "/admin/pay_history_detail";
     }
 
-    
-
-    @GetMapping("/product/detail")
-    public String product_detail() {
-        return "/admin/product_detail";
+    // 사이즈, 색상 테이블을 따로 만들어서 저장해야된다. 은서야
+    // 그래야 제품 번호에 매핑되어서 제품 이름 클릭 시 
+    // 해당 사이즈, 색상 들 좌라라락 떠서 해당하는 사이즈들 넣고, 빼고, 할 수 있다.
+    @GetMapping("/product/detail/{pNo}")
+    public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {
+        // 상품 이름을 사용하여 상품 정보를 조회합니다.
+        Product product = productService.getProductBypNo(pNo);
+        if (product == null) {
+            throw new Exception("Product not found");
+        }
+        model.addAttribute("product", product);
+        return "/admin/product_detail"; // 상세 페이지 템플릿 이름
     }
+
+
+    // @GetMapping("/product/detail")
+    // public String product_detail(@RequestParam("productName") String productName, Model model) throws Exception {
+    //     // 상품 이름을 사용하여 상품 정보를 조회합니다.
+    //     Product product = productService.getProductBypName(productName);
+    //     model.addAttribute("product", product);
+    //     return "/admin/product/detail"; // 상세 페이지 템플릿 이름
+    // }
 
     
 

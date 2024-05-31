@@ -94,7 +94,7 @@
                     </thead>
                     <tbody class="table-group-divider">
                       <!-- if) 조회되는 브랜드 없을 시, -->
-                  <th:block th:if="${productList.isEmpty()}">
+                    <th:block th:if="${productList.isEmpty()}">
                     <tr>
                         <td colspan="5" align="center">
                             조회된 상품이 없습니다.
@@ -104,12 +104,17 @@
 
                     <!-- if) 브랜드 존재 시, 반복출력 -->
                     <tr th:each="product : ${productList}">
-                        <th scope="row" th:text="${product.pNo}"></th>
+                        <th scope="row" th:text="${product.pNo}" id="pNo"></th>
                         <td th:text="${product.bName}"></td>
-                        <td th:text="${product.productName}"></td>
+                        <td>
+                            <!-- 이거 글짜 검은색에 밑줄 없는 걸로 -->
+                            <a th:href="@{/admin/product/detail/{productName}(productName=${product.productName})}" 
+                               id="productName" 
+                               th:text="${product.productName}"
+                               class="text-dark text-decoration-none"></a>
+                        </td>
                         <td th:text="${product.stockQuantity}"></td>
                         <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
-                        
                     </tr>
                     </tbody>
                   </table>
