@@ -80,7 +80,7 @@ public class UserController {
             log.info("CookieName : " + cookie.getName());
             log.info("CookieValue : " + cookie.getValue());
             userId = cookie.getValue();
-            rememberId = false;
+            rememberId = true;
         }
  
         model.addAttribute("userId", userId);
