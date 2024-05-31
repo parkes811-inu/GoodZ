@@ -62,11 +62,12 @@
                         <div class="py-2">
                             <!-- 아이디 -->
                             <!-- <input type="id" class="form-control" name="userId" id="id" placeholder="ID"> -->
-                            <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" th:value="${userId}">
+                            <!-- <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" th:value="${userId}" > -->
+                            <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" value="user" >
                         </div>
                         <!-- 비밀번호 -->
                         <div class="password_input_container py-2" style="position: relative;">
-                            <input type="password" class="form-control" name="password" id="password" placeholder="PW">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="PW" value="123456">
                             <span class="toggle_password" onclick="togglePasswordVisibility()">
                                 <i class="fa fa-eye-slash"></i>
                             </span>

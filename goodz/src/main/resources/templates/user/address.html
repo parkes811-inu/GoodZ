@@ -50,12 +50,38 @@
             border-top: none;
             margin-top: 20px;
         }
+
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
     </style>
 </head>
 <body layout:fragment="content">
     <div class="container">
         <div class="userMainContainer">
             <p class="fs-4 fw-bold m-0">주소록</p>
+            <div th:if="${error}" class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <span th:text="${error}"></span>
+            </div>
             <div class="address_container">
                 <div class="d-flex justify-content-end mb-2">
                     <button class="add_btn btn btn-sm border rounded-3" onclick="location.href='/user/add_address'">+ 새 배송지 추가</button>
@@ -78,22 +104,46 @@
                     </div>
                     <div class="address-item-footer">
                         <button class="btn btn-sm border" th:onclick="'location.href=\'/user/upd_address/' + ${address.addressNo} + '\''">수정</button>
-                        <button class="btn btn-sm border" th:onclick="'deleteAddress(' + ${address.addressNo} + ')'">삭제</button>
+                        <button class="btn btn-sm border" type="button" th:onclick="'checkAndDeleteAddress(' + ${address.addressNo} + ')'">삭제</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="divider"></div>
     </div>
+    <!--
+         JavaScript를 통해 폼을 동적으로 작성하고 제출하기 위해서 form 태그가 여기에 있음
+          이렇게 하면 여러 개의 삭제 버튼이 있는 상황에서도 각 버튼이 같은 폼을 재사용하여 삭제 요청을 보낼 수 O
+    -->
+    <form id="deleteForm" method="post" action="/user/deleteAddress" style="display:none;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    </form>
 
     <script>
-        function deleteAddress(addressId) {
-            if (confirm("정말로 이 주소를 삭제하시겠습니까?")) {
-                // 실제 삭제 요청을 보내는 로직 추가 필요
-                // 예: location.href = '/user/delete_address/' + addressId;
-                alert("삭제 기능이 구현되지 않았습니다."); // 임시 알림
+        function checkAndDeleteAddress(addressNo) {
+            // fetch 함수 : 서버에 HTTP 요청 보냄
+            fetch('/user/isDefaultAddress/' + addressNo)
+                // 서버 응답 후 then 메서드 호출 -> JSON 형식으로 변환 -> JSON 데이터 반환
+                .then(response => response.json())
+                .then(isDefault => {
+                    if (isDefault) {
+                        alert('기본 배송지는 삭제할 수 없습니다. 다른 기본 배송지를 설정 후 삭제해주세요.');
+                    } else {
+                        deleteAddress(addressNo);
+                    }
+                });
+        }
+
+        function deleteAddress(addressNo) {
+            if (confirm('정말로 삭제하시겠습니까?')) {
+                var form = document.getElementById('deleteForm');
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'addressNo';
+                input.value = addressNo;
+                form.appendChild(input);
+                form.submit();
             }
         }
     </script>
 </body>
-</html>

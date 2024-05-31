@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -158,7 +159,7 @@ public class UserController {
             try {
                 file.transferTo(new File(filePath));
                 // user.setProfilePictureUrl(filePath);
-                user.setProfilePictureUrl("/user/" + fileName); // URL 형식으로 저장
+                user.setProfilePictureUrl("/upload/user/" + fileName); // URL 형식으로 저장
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
             }
@@ -351,7 +352,7 @@ public class UserController {
     }
 
     /**
-     * 주소 등록 화면
+     * 배송지 등록 화면
      * @return
      */
     @GetMapping("/add_address")
@@ -365,7 +366,7 @@ public class UserController {
     }
 
     /**
-     * 주소 등록 처리 화면
+     * 배송지 등록 처리
      * @param shippingaddress
      * @param session
      * @return
@@ -389,26 +390,95 @@ public class UserController {
     
     }
 
-    
-    @GetMapping("/upd_address")
-    public String updateAddress(Shippingaddress shippingaddress, HttpSession session) throws Exception {
+    /**
+     * 배송지 수정 화면
+     * @param addressNo
+     * @param model
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/upd_address/{addressNo}")
+    public String updateAddress(@PathVariable("addressNo") int addressNo, Model model, HttpSession session) throws Exception {
+
+        log.info("-------------------- 배송지 수정 - /user/upd_address -------------------");
+        log.info("---------------------------------------------------------");
+        log.info(addressNo + " ");
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
+    
+        // 주소번호를 기반으로 해당 주소의 정보를 가져옴
+        Shippingaddress shippingaddress = userService.selectAddress(addressNo);
+    
+        // 수정 페이지로 주소 정보를 전달
+        model.addAttribute("shippingaddress", shippingaddress);
+        return "/user/upd_address"; 
+    }
 
+    /**
+     * 배송지 수정 처리
+     * @param shippingaddress
+     * @param isDefault
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/upd_address")
+    public String updateAddress(Shippingaddress shippingaddress, String isDefault
+                               ,HttpSession session) throws Exception {
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         shippingaddress.setUserId(user.getUserId());
 
+        // 배송지 추가 기능 호출
         int result = userService.updateAddress(shippingaddress);
         if (result > 0) {
             return "redirect:/user/address";
         } else {
-            return "redirect:/user/update_address?error";
+            return "redirect:/user/upd_address";
         }
 
+       
     }
     
+    /**
+     * 배송지 삭제
+     * @param addressNo
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteAddress")
+    public String deleteAddress(@RequestParam("addressNo") int addressNo, RedirectAttributes redirectAttributes) throws Exception {
+        if (userService.isDefaultAddress(addressNo)) {
+            redirectAttributes.addFlashAttribute("error", "기본 배송지는 삭제할 수 없습니다. 다른 주소를 기본 배송지로 설정 후 삭제해주세요.");
+            return "redirect:/user/address";
+        }
+
+        int result = userService.deleteAddress(addressNo);
+
+        if (result > 0) {
+            return "redirect:/user/address";
+        }
+        return "redirect:/user/address?addressNo=" + addressNo + "&error";
+    }
     
+    /**
+     * 기본 배송지인지 확인
+     * @param addressNo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/isDefaultAddress/{addressNo}")
+    @ResponseBody
+    public ResponseEntity<Boolean> isDefaultAddress(@PathVariable("addressNo") int addressNo) throws Exception {
+        boolean isDefault = userService.isDefaultAddress(addressNo);
+        return ResponseEntity.ok(isDefault);
+    }
     
     @GetMapping("/account")
     public String account() {
