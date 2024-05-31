@@ -46,6 +46,12 @@ public interface UserMapper {
     // 회원 정보 수정 시 닉네임 중복 체크
     public int checkName(@Param("userName") String userName) throws Exception;
 
+    // 유저 주소 등록
+    public int insertAddress(Shippingaddress shippingaddress) throws Exception;
+
+    // 유저 기본 배송지
+    public void DefaultAddress(String userId) throws Exception;
+
     // 유저의 주소 목록
     public List<Shippingaddress> selectByUserId() throws Exception;
     

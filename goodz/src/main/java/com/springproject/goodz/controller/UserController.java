@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
 
@@ -61,10 +63,26 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(
-        @CookieValue(value = "rememberId", required = false) Cookie cookie
+        @CookieValue(value = "remember-id", required = false) Cookie cookie
         ,Model model
         ) {
-        log.info("로그인 페이지..");
+        // @CookieValue(value="쿠키명", required="필수 여부")
+        // - required=true (default)    : 쿠키를 필수로 가져옴 ➡ 쿠키가 없으면 에러
+        // - required=false             : 쿠키 필수 ❌ ➡ 쿠키가 없어도 에러 ❌
+        log.info("로그인 페이지...");
+
+        String userId = "";                 // 저장된 아이디
+        boolean rememberId = false;         // 아이디 저장 체크 여부 ( ✅, 🟩 )
+
+        if( cookie != null ) {
+            log.info("CookieName : " + cookie.getName());
+            log.info("CookieValue : " + cookie.getValue());
+            userId = cookie.getValue();
+            rememberId = false;
+        }
+ 
+        model.addAttribute("userId", userId);
+        model.addAttribute("rememberId", rememberId);
         return "/user/login";
     }
 
@@ -305,16 +323,63 @@ public class UserController {
         return "/user/manage_info";
     }
 
+    
     @GetMapping("/address")
     public String address() {
         return "/user/address";
     }
 
+    /**
+     * 주소 등록 화면
+     * @return
+     */
     @GetMapping("/add_address")
-    public String add_address() {
+    public String add_address(Model model, HttpSession session) {
+
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        model.addAttribute("userId", user.getUserId()); // userId를 모델에 추가
         return "/user/add_address";
     }
 
+    /**
+     * 주소등록 처리 화면
+     * @param shippingaddress
+     * @param model
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/add_address")
+    public String add_address(Shippingaddress shippingaddress, Model model, HttpSession session) throws Exception {
+        
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        shippingaddress.setUserId(user.getUserId()); // 유저 아이디 설정
+        model.addAttribute("user", user);
+
+        if ("true".equals(shippingaddress.getIsDefault())) { // isDefault가 boolean이 아닌 String일 경우
+            userService.DefaultAddress(user.getUserId());
+            shippingaddress.setIsDefault(true); // 새로운 기본 배송지로 설정
+        } else {
+            shippingaddress.setIsDefault(false);
+        }
+        int result = userService.insertAddress(shippingaddress);
+
+        if (result > 0) {
+            return "redirect:/user/address";
+        }
+
+        return "redirect:/user/add_address";
+    }
+    
+    
     @GetMapping("/account")
     public String account() {
         return "/user/account";
