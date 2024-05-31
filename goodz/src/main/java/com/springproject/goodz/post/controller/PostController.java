@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.utils.dto.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,9 +92,15 @@ public class PostController {
      * @return
      */
     // @PostMapping("")
-    // public String insert(Style style) {
+    // public String insert(Post post, Files file) {
+
+    //     log.info(post.toString());
+
+    //     // 프로필로 리다이렉트를 위해 닉네임 필요하므로
+    //     Users requested = userService.selectByUserId(post.getUserId());
+
         
-    //     return entity;
+    //     return "redirect:/style/user/@"+ post.getu();
     // }
 
     @GetMapping("/update")

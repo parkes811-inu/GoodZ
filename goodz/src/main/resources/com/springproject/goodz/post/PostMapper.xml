@@ -23,7 +23,8 @@
     </select>
 
     <insert id="insert">
-        
+        INSERT INTO post (user_id, content)
+        VALUES (#{userId}, #{content})
     </insert>
 
     <update id="update">

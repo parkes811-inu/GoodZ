@@ -18,9 +18,9 @@ public class Post {
 
     
     // 파일에 대한 변수를 받기위해 정보 추가
-    List<MultipartFile> file;
+    List<MultipartFile> attachedFiles;
 
-    // 대표 이미지
+    // 대표 이미지의 인덱스 번호
     private int representativeImageIndex;
 
 }
