@@ -106,7 +106,9 @@
                     <tr th:each="product : ${productList}">
                         <th scope="row" th:text="${product.pNo}"></th>
                         <td th:text="${product.bName}"></td>
-                        <td th:text="${product.productName}"></td>
+                        <td>
+                            <a th:href="|/admin/product/detail|" th:text="${product.productName}"></a>
+                        </td>
                         <td th:text="${product.stockQuantity}"></td>
                         <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
                         

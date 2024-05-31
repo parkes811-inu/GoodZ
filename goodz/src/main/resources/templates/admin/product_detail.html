@@ -6,26 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지 - 상품 수정</title>
-    <style>
-        .content {
-            flex: 1;
-            margin-top: 25px;
-            margin-bottom: 300px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-
-        .header h2 {
-            font-size: 23px;
-            margin: 0;
-            font-weight: bold;
-        }
-
+    <!-- <style>
         .product-detail {
             text-align: center;
             margin-top: 20px;
@@ -104,47 +85,133 @@
         .image-change-group {
             margin-top: 40px;
         }
+    </style> -->
+    <style>
+        th {
+            font-size: 14px;
+        }
     </style>
 </head>
 
 <body layout:fragment="content">
-    <div class="content mt-5">
-        <div class="header">
-            <h2>상품 수정</h2>
+    <div class="container">
+        <div class="userMainContainer">
+            <p class="fs-4 fw-bold p-0 mb-5">상품 수정</p>
+
+            <div class="d-flex flex-column justify-content-center">
+                <!-- 상품 이미지 -->
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="/img/product/product_img.png" alt="Product 1">
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <form method="post" class="mb-5">
+    
+                    <!-- 상품 이미지 변경 -->
+                    <div class="my-3">
+                        <label for="product-img">상품 이미지</label>
+                        <input type="file" id="imageInput" name="productFiles" class="form-control" multiple accept="image/*" max="10">
+                        <span id="passwordHelpInline" class="form-text">최대 10장</span>
+                            <!-- 첨부파일 미리보기 -->
+                        <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
+                        <!-- 대표로 선택한 이미지가 넘어감 -->
+                        <input type="hidden" id="representativeImage" name="mainImgIndex">
+                        <br>
+                    </div>
+    
+                    <!-- 수정못하게 하는 fieldset의 disabled 속성 -->
+                    <fieldset class="row mb-3" disabled>
+                        <!-- 상품의 브랜드 불러옴 -->
+                        <div class="col-md-8">
+                            <label for="brand" class="form-label">브랜드</label>
+                            <input type="text" class="form-control" value="브랜드명~">
+                        </div>
+                        <!-- 상품의 카테고리 불러옴 -->
+                        <div class="col-md-4">
+                            <label for="category" class="form-label">카테고리</label>
+                            <input type="text" class="form-control" value="카테고리~">
+                        </div>
+    
+                        <!-- 상품번호 -->
+                        <input type="hidden" id="product-number" value="283451" readonly>
+    
+                        <!-- 상품명 -->
+                        <div class="form-group my-4">
+                            <label for="product-name">상품명</label>
+                            <input type="text" class="form-control" id="product-name" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
+                        </div>
+                    </fieldset>
+    
+                    <!-- 수정가능 구역 -->
+                        <table class="table text-center mb-5">
+                            <thead class="text-center">
+                                <tr>
+                                    <th style="min-width: 80px;">상품번호</th>
+                                    <th>크기</th>
+                                    <th>옵션가격</th>
+                                    <th>재고</th>
+                                    <th style="min-width: 90px;">재고추가</th>
+                                    <th style="min-width: 140px;">상태</th>
+                                </tr>
+                            </thead>
+    
+                            <tbody>
+                                <!-- 상품정보 불러와서 사이즈 별로 th:each로 반복 -->
+                                <tr>
+                                    <!-- 상품번호 -->
+                                    <td>9</td>
+                                    <!-- 사이즈 -->
+                                    <td>M</td>
+                                    <!-- 옵션가격 -->
+                                    <td><span>50000</span></td>
+                                    <!-- 현재고 -->
+                                    <td>10</td>
+                                    <!-- 재고 추가 -->
+                                    <td><input type="text" class="form-control" value=""></td>
+                                    <td>
+                                        <select class="form-select" name="status" id="status">
+                                            <option selected value="on">판매중</option>
+                                            <option value="off">판매중지</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <!-- ⬇️ + 버튼 누르면 반복될 구간 ⬇️ -->
+    
+                            </tbody>
+                        </table>
+    
+    
+                    
+                    
+                    <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">등록 완료</button>
+                </form>
+
+            </div>
+
         </div>
-        <div class="product-detail">
-            <div class="col-md-3 mx-auto">
-                <img src="/img/product/product_img.png" alt="Product 1">
-            </div>
-        </div>
-        <form method="post">
-            <div class="form-group image-change-group">
-                <label for="change-img">이미지 변경</label>
-                <input id="file" class="form-control" type="file" multiple>
-                <br>
-            </div>
-            <div class="form-group">
-                <label for="brand-name">브랜드 명</label>
-                <input type="text" id="brand-name" value="Stussy" readonly>
-            </div>
-            <div class="form-group">
-                <label for="product-number">상품 번호</label>
-                <input type="text" id="product-number" value="283451" readonly>
-            </div>
-            <div class="form-group">
-                <label for="product-name">상품 명</label>
-                <input type="text" id="product-name" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
-            </div>
-            <div class="form-group">
-                <label for="current-stock">현 재고 수</label>
-                <input type="text" id="current-stock" value="124" readonly>
-            </div>
-            <div class="form-group">
-                <label for="incoming-stock">입고 수량</label>
-                <input type="text" id="incoming-stock" placeholder="입고 수량을 입력해 주세요">
-            </div>
-            <button type="submit" class="submit-btn">수정 완료</button>
-        </form>
     </div>
+    
 </body>
 </html>
