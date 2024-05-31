@@ -22,6 +22,11 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="maxNo">
+        SELECT max(post_no) as maxNo
+        FROM post
+    </select>
+
     <insert id="insert">
         INSERT INTO post (user_id, content)
         VALUES (#{userId}, #{content})
