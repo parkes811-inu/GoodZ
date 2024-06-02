@@ -32,6 +32,19 @@
             display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
             width: 100px;
         }
+
+        .carousel-inner {
+            width: 640px;
+            height: 850px;
+        }
+        
+        .carousel-item {
+            width: 100%;
+            height: 100%;
+        }
+
+
+
     </style>
     <!-- 모달창 css -->
     <style>
@@ -181,22 +194,41 @@
     <div class="container">
         <div class="mainContainer" style="width: 640px;">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
+
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
-                    <a href="/styles/user/@zzang._.777" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
-                        <span class="userId fw-bold m-0" >zzang._.777</span>
+                    <a th:href="|/styles/user/@${writer.nickname}|" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
+                        <img th:src="${writer.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
+                        <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
                 <button type="button" class="btn btn-dark btn-sm" id="follow" onclick="followSwitch()"> 팔로우 </button>
             </div>
             
             <!-- 게시글 이미지 -->
-            <img src="/img/temp/postImg.jpg"  alt="스타일이미지" class="styleImg my-2 rounded-1" style="width: 640px; height: 850px;" >
+            <div id="carouselExample" class="carousel slide mt-2" style="width: 640px; height: 850px; position: relative;">
+                <div class="carousel-inner w-100 h-100">
+                    <th:block th:each="file, iterStat : ${fileList}">
+                        <div th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                            <div class="d-flex justify-content-center align-items-center w-100 h-100">
+                                <img th:src="@{|/files/${file.no}|}" class="d-block rounded-2 border border-secondary-subtle" alt="게시글이미지" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="z-index: 2; position: absolute; top: 50%; transform: translateY(-50%); left: 0;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: black;"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="z-index: 2; position: absolute; top: 50%; transform: translateY(-50%); right: 0;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
             
             <!-- 게시글 컨텐츠 -->
-            <div class="social_contents">
+            <div class="social_contents mt-2">
                 <!-- 소셜버튼들 -->
                 <div class="d-flex justify-content-end column-gap-2 px-2">
                     <a href="#" onclick="toggleIcon(this)" style="text-decoration: none; color: black;">
@@ -221,7 +253,7 @@
     
                 <!-- 게시글 내용 -->
                 <div class="social_text my-5">
-                    <p class="text_title fs-4 text-start">테스트 글내용 123456678 크크크😎</p>
+                    <p class="text_title fs-4 text-start" th:text="${post.content}"></p>
                 </div>
             </div>
             
