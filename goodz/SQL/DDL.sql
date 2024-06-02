@@ -4,6 +4,10 @@ ALTER TABLE product CHANGE b_no b_name VARCHAR;
 ALTER TABLE purchase CHANGE purcahse_pirce purchase_pirce int;
 -- Shippingaddress 에 type 컬럼 삭제 요망.
 
+ALTER TABLE `Brand`
+ADD UNIQUE INDEX `index_b_name` (`b_name`);
+
+
 -- DROP
 DROP TABLE user;
 DROP TABLE user_auth;
