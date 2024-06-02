@@ -78,8 +78,8 @@
             margin-top: 30px;
         }
         .btn-primary {
-        background-color: #000;
-        border-color: #000;
+            background-color: #000;
+            border-color: #000;
         }
         .btn-primary:hover {
             background-color: #333;
@@ -98,7 +98,7 @@
 <body layout:fragment="content">
     <div class="container">
         <form method="post">
-
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
             </div>
@@ -171,13 +171,6 @@
                     <div id="payment-method"></div>
                     <!-- 이용약관 UI -->
                     <div id="agreement"></div>
-                    <!-- 필수 체크박스 -->
-                    <div class="form-check mt-3">
-                        <input class="form-check-input" type="checkbox" value="" id="terms-checkbox">
-                        <label class="form-check-label" for="terms-checkbox">
-                             결제 서비스 이용 약관, 개인정보 처리 동의
-                        </label>
-                    </div>
                 </div>
             </div>
     
@@ -207,16 +200,53 @@
         </form>
         
         <div class="btn-wrapper w-100 mb-5">
-            <button id="payment-button" class="btn btn-primary w-100" onclick="payment()">결제하기</button>
+            <button id="payment-request-button" class="btn btn-primary w-100" disabled>결제하기</button>
         </div>
     </div>
 
-    <script type="module" src="/js/pay/pay.js"></script>
-
     <script>
-        function payment() {
-            window.location.href = '/pay/complete';
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("payment-request-button");
+        const csrfToken = document.querySelector('input[name="_csrf"]').value; // CSRF 토큰 가져오기
+        const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
+        var amount = 170000; // 총 결제금액과 일치하도록 설정
+
+        // 결제위젯 초기화
+        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 실제 클라이언트 키로 변경하세요.
+        const customerKey = generateRandomString();
+        const paymentWidget = PaymentWidget(clientKey, customerKey);
+
+        // 결제 UI 렌더링
+        const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+            "#payment-method",
+            { value: amount },
+            { variantKey: "DEFAULT" }
+        );
+
+        // 이용약관 UI 렌더링
+        paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
+
+        // 결제 UI 렌더링 완료 이벤트
+        paymentMethodWidget.on("ready", function () {
+            button.disabled = false;
+        });
+
+        // 결제하기 버튼 누르면 결제창 띄우기
+        button.addEventListener("click", function () {
+            paymentWidget.requestPayment({
+                orderId: generateRandomString(),
+                orderName: "토스 티셔츠 외 2건",
+                successUrl: window.location.origin + "/pay/success",
+                failUrl: window.location.origin + "/pay/fail",
+                customerEmail: "customer123@gmail.com",
+                customerName: "김토스",
+                customerMobilePhone: "01012341234",
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken // CSRF 토큰을 헤더에 포함
+                }
+            });
+        });
+    });
     </script>
 </body>
 </html>
