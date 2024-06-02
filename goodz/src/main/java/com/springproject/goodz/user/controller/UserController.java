@@ -37,6 +37,7 @@ import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
 
+import groovyjarjarantlr4.v4.codegen.model.ExceptionClause;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -356,12 +357,19 @@ public class UserController {
      * @return
      */
     @GetMapping("/add_address")
-    public String addAddress(Model model, HttpSession session) {
+    public String addAddress(Model model, HttpSession session) throws Exception{
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
+        // 사용자의 기존 주소 목록을 가져옴
+        List<Shippingaddress> addresses = userService.selectByUserId(user.getUserId());
+        // 기존 주소가 없으면 첫 번째 주소로 간주
+        boolean isFirstAddress = addresses.isEmpty();
+        
+        model.addAttribute("isFirstAddress", isFirstAddress);
         model.addAttribute("userId", user.getUserId());
+        
         return "/user/add_address";
     }
 
@@ -380,6 +388,14 @@ public class UserController {
         }
 
         shippingaddress.setUserId(user.getUserId());
+
+        // 사용자의 기존 주소 목록을 가져옴
+        List<Shippingaddress> existingAddresses = userService.selectByUserId(user.getUserId());
+
+        // 기존 주소가 없으면 새로 추가되는 주소를 기본 배송지로 설정
+        if (existingAddresses.isEmpty()) {
+            shippingaddress.setDefault(true);
+        }
 
         int result = userService.insertAddress(shippingaddress);
         if (result > 0) {
