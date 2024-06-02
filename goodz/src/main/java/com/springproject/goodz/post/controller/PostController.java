@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
  * 프로필    
- * [GET]    /styles/user/@아이디     유저 프로필
+ * [GET]    /styles/user/@닉네임     유저 프로필
  * 
  * 
  * 
@@ -46,6 +49,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private FileService fileService;
     
     /**
      * 전체 게시글 목록
@@ -59,9 +65,30 @@ public class PostController {
     /**
      * 게시글 상세
      * @return
+     * @throws Exception 
      */
-    @GetMapping("/read")
-    public String read() {
+    @GetMapping("/{postNo}")
+    public String read(@PathVariable("postNo")int postNo, Model model, HttpSession session) throws Exception {
+
+        /* 게시글 조회 */
+        Post post = postService.select(postNo);
+        model.addAttribute("post", post);
+
+        /* 첨부파일 조회 */
+        Files file = new Files();
+        file.setParentTable("post");
+        file.setParentNo(post.getPostNo());
+        List<Files> fileList = fileService.listByParent(file);
+        model.addAttribute("fileList", fileList);
+
+        /* 게시글 작성자 정보 세팅 */
+        Users writer = userService.select(post.getUserId());    
+        model.addAttribute("writer", writer);
+
+        /* 세션정보 세팅 */
+        Users loginUser = (Users)session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);
+
         return "/post/read";
     }
 
@@ -139,7 +166,7 @@ public class PostController {
      */
     @GetMapping("/user/@{nickname}")
     public String usersStyle(@PathVariable("nickname") String nickname, Model model, HttpSession session) throws Exception {
-
+        log.info("::::::::::postController::::::::::");
         log.info(nickname + "의 프로필로 이동중...");
         
         Users requested = userService.selectByNickname(nickname);
@@ -147,7 +174,13 @@ public class PostController {
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");    
 
-        List<Post> postList = new ArrayList<>();
+        if (loginUser == null) {
+            log.info("로그인이 되지않은 사용자");
+        }
+
+        /* 게시글 조회 */
+        List<Post> postList = postService.selectById(requested.getUserId());
+        log.info("대표이미지 번호: 0");
 
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);

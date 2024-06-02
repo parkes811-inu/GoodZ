@@ -23,4 +23,7 @@ public class Post {
     // 대표 이미지의 인덱스 번호
     private int mainImgIndex;
 
+    // 대표이미지 파일번호
+    private int fileNo;
+
 }

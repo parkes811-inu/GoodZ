@@ -184,9 +184,9 @@
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
-                    <a href="/styles/user/@zzang._.777" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
-                        <span class="userId fw-bold m-0" >zzang._.777</span>
+                    <a th:href="/styles/user/@${writer.nickname}" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
+                        <img th:src="${requested.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
+                        <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
                 <button type="button" class="btn btn-dark btn-sm" id="follow" onclick="followSwitch()"> 팔로우 </button>

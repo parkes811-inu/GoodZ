@@ -41,8 +41,12 @@ public class FileServiceImpl implements FileService{
      */
     @Override
     public Files select(int no) throws Exception {
-        
+        log.info("::::::::::fileService::::::::::");
+        log.info("조회할 파일 번호: " + no);
+
         Files file = fileMapper.select(no);
+
+        log.info("조회된 파일 정보: " + file);
         
         return file;
     }
@@ -135,6 +139,8 @@ public class FileServiceImpl implements FileService{
      */
     @Override
     public boolean upload(Files file) throws Exception {
+        uploadPath = "C:/upload";
+
         log.info("file: " + file);
 
         String dir = file.getParentTable();     
@@ -158,9 +164,9 @@ public class FileServiceImpl implements FileService{
 
         log.info("업로드 경로: " + uploadPath);
         // File 객체 생성 => new File(업로드 경로, 설정할 파일명);
-        File uploadFile = new File(uploadPath + fileName);
+        File uploadFile = new File(uploadPath, fileName);
 
-        log.info("제발요" + uploadFile);
+        log.info("최종 업로드 경로:" + uploadFile);
 
         // 파일 업로드 (유저가 서버에 요청한 파일을 복사해서 경로에 넣음)
         FileCopyUtils.copy(fileData, uploadFile);
@@ -169,8 +175,8 @@ public class FileServiceImpl implements FileService{
         file.setOriginName(originName);
         // filePath = C:/uploade/UID_원본파일명.확장자
 
-        String filePath = uploadPath + "\\" + fileName;
-        log.info("집갈래" + filePath);
+        String filePath = uploadPath + "/" + fileName;
+        log.info("파일패쓰:" + filePath);
         file.setFilePath(filePath);
         file.setFileSize(fileSize);
         

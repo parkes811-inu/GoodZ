@@ -28,8 +28,11 @@ public class PostServiceImpl implements PostService{
      */
     @Override
     public Post select(int no) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'select'");
+
+        /* 게시글 조회 */
+        Post post = postMapper.select(no);
+
+        return post;
     }
 
     /**
@@ -60,16 +63,16 @@ public class PostServiceImpl implements PostService{
     @Override
     public int insert(Post post) throws Exception {
 
-        log.info("여기까지 옴");
+        log.info("::::::::::postService::::::::::");
 
-        /* ?? '글' 등록 처리?? */
+        /* ⬇️ '글' 등록 처리 ⬇️*/
         int result = postMapper.insert(post);
 
         if (result == 1) {
             log.info("글등록 성공");
         }
         
-        /* ?? '첨부파일' 등록 처리?? */
+        /* ⬇️ '첨부파일' 등록 처리 ⬇️ */
         String parentTable = "post";
         int parentNo = postMapper.maxNo(); // 방금 등록처리된 게시글 번호를 가져옴
         log.info("게시글 번호: " + parentNo);
@@ -88,8 +91,6 @@ public class PostServiceImpl implements PostService{
                 log.info(i+"번 인덱스 파일 처리중...");
 
                 MultipartFile attachedFile = attachedFiles.get(i);
-
-                log.info("파일아...: " + attachedFile.toString());
 
                 // 빈 파일인지 체크
                 if (attachedFile.isEmpty()) {

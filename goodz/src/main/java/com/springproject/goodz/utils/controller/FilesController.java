@@ -2,6 +2,7 @@ package com.springproject.goodz.utils.controller;
 
 import java.io.File;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springproject.goodz.utils.MediaUtil;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/files")
 public class FilesController {
 
-    // @Autowired
-    // private FilesService filesService;
+    @Autowired
+    private FileService fileService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -51,7 +55,7 @@ public class FilesController {
     // }
     
     /**
-     * 대표이미지
+     * 대표이미지 보이기
      * - /files/img?path=???Url
      * @param param
      * @return
@@ -59,6 +63,7 @@ public class FilesController {
      */
     @GetMapping("/img")
     public ResponseEntity<byte[]> thumbnailImg(@RequestParam("imgUrl") String imgUrl) throws Exception {
+        
         // log.info("imgUrl : " + imgUrl);
 
         // 파일 번호로 파일 정보 조회
@@ -98,5 +103,48 @@ public class FilesController {
         // new ResponseEntity<>( 데이터, 헤더, 상태코드 )
         return new ResponseEntity<>( fileData, headers, HttpStatus.OK );
     }
+
+    /**
+     * 대표 이미지 로드
+     * @param file_no
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/mainImg/{file_no}")
+    public ResponseEntity<byte[]> LoadMainImg(@PathVariable("file_no") int file_no) throws Exception {
+        log.info("fileController");
+
+        // 파일 경로로 전달받은 파일 번호로, 파일 정보 조회
+        Files requestFile = fileService.select(file_no);
+
+        // 파일이 Null인 경우 처리
+        if (requestFile == null) {
+            String filepath = uploadPath + "/no-img.jpg";
+
+            File noImgFile = new File(filepath);    // 대체 이미지를 설정할 java 파일객체 생성
+            byte[] noImgFileData = FileCopyUtils.copyToByteArray(noImgFile); // 이미지 업로드를 위해 서버 이미지 복제
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+
+            return new ResponseEntity<>(noImgFileData, headers, HttpStatus.OK);
+        }
+        
+        // 파일 정보 중, 파일 경로 가져오기
+        String filePath = requestFile.getFilePath();
+
+        // 실제 파일 객체 생성 (자바에 있는 파일 입출력 객체) -> 파일 경로를 넣어주면 해당 파일이 대입됨.
+        File mainImg = new File(filePath);
+
+        // 파일 데이터 -> 바이트 데이터를 가져와줌.
+        byte[] fileData = FileCopyUtils.copyToByteArray(mainImg);
+
+        // 이미지 컨텐츠 타입 지정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        // ResponseEntity<> (데이터, 헤더, 상태코드)
+        return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
+    }
+    
     
 }
