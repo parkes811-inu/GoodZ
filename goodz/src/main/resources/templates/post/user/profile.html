@@ -88,8 +88,9 @@
                     <div class="card border-0">
                         <div class="card-body">
                             <!--[DB] 이미지 -->
-                            <a href="/styles/${post.postNo}">
-                                <img th:src="|/files/mainImg/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
+                            <!-- <a href="/styles/cmmtX"> -->
+                            <a th:href="|/styles/${post.postNo}|">
+                                <img th:src="|/files/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
                             </a>
                             <!--[DB] 스크랩 & 하트 -->
                             <div class="d-flex justify-content-end column-gap-2 mt-2 px-2">

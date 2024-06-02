@@ -78,11 +78,14 @@ public class PostController {
         Files file = new Files();
         file.setParentTable("post");
         file.setParentNo(post.getPostNo());
+        log.info("조회할 파일의 parentTable: " + file.getParentTable());
+        log.info("조회할 파일의 parentNo: " + file.getParentNo());
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
 
         /* 게시글 작성자 정보 세팅 */
-        Users writer = userService.select(post.getUserId());    
+        Users writer = userService.select(post.getUserId());
+        log.info("작성자: " + writer.toString()); 
         model.addAttribute("writer", writer);
 
         /* 세션정보 세팅 */
@@ -180,7 +183,6 @@ public class PostController {
 
         /* 게시글 조회 */
         List<Post> postList = postService.selectById(requested.getUserId());
-        log.info("대표이미지 번호: 0");
 
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);

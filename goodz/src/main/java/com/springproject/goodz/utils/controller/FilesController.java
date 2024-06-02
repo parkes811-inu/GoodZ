@@ -21,6 +21,12 @@ import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+/*
+ * 파일 컨트롤러
+ * [GET]    /files/{file_no}    // 이미지 요청
+ * 
+ */
 @Slf4j
 @Controller
 @RequestMapping("/files")
@@ -31,6 +37,12 @@ public class FilesController {
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    @GetMapping("/")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
     
     /**
      * 파일 삭제
@@ -105,12 +117,12 @@ public class FilesController {
     }
 
     /**
-     * 대표 이미지 로드
+     * 이미지 로드
      * @param file_no
      * @return
      * @throws Exception
      */
-    @GetMapping("/mainImg/{file_no}")
+    @GetMapping("/{file_no}")
     public ResponseEntity<byte[]> LoadMainImg(@PathVariable("file_no") int file_no) throws Exception {
         log.info("fileController");
 
@@ -145,6 +157,8 @@ public class FilesController {
         // ResponseEntity<> (데이터, 헤더, 상태코드)
         return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
     }
+
+    
     
     
 }
