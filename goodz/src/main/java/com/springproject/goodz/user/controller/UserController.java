@@ -496,13 +496,64 @@ public class UserController {
         return ResponseEntity.ok(isDefault);
     }
     
+    /**
+     * 계좌 정보 페이지로 이동
+     * 세션에서 사용자 정보를 가져와 계좌 정보를 모델에 추가
+     * 계좌 정보를 분리하여 개별 필드로 모델에 추가
+     * @param session HttpSession 객체
+     * @param model Model 객체
+     * @return 계좌 정보 페이지 경로
+     */
     @GetMapping("/account")
-    public String account() {
-        return "/user/account";
+    public String getAccountInfo(HttpSession session, Model model) {
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        String account = user.getAccount();
+        model.addAttribute("account", account);
+
+        if (account != null) {
+            String[] accountParts = account.split(" / ");
+            String bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
+            String accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
+            String accountHolder = accountParts[1];
+            model.addAttribute("bankName", bankName);
+            model.addAttribute("accountNumber", accountNumber);
+            model.addAttribute("accountHolder", accountHolder);
+        }
+
+        return "/user/account"; // account.html 템플릿을 렌더링
     }
 
-    @GetMapping("/style_profile")
-    public String style_profile() {
-        return "/user/style_profile";
+    /**
+     * 계좌 정보 저장
+     * 계좌 정보를 받아서 결합하고 세션 및 DB에 저장
+     * @param bankName 은행명
+     * @param accountNumber 계좌번호
+     * @param accountHolder 예금주
+     * @param session HttpSession 객체
+     * @return 계좌 정보 페이지 경로로 리다이렉트
+     * @throws Exception 예외 처리
+     */
+    @PostMapping("/account")
+    public String insertAccount(@RequestParam("bankName") String bankName, 
+                                @RequestParam("accountNumber") String accountNumber, 
+                                @RequestParam("accountHolder") String accountHolder, 
+                                HttpSession session) throws Exception {
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        // 계좌 정보 결합
+        String account = bankName + " " + accountNumber + " / " + accountHolder;
+        
+        userService.insertAccount(user.getUserId(), account);
+        user.setAccount(account); // 세션에 업데이트된 계좌 정보 저장
+        session.setAttribute("user", user); // 세션 업데이트
+        return "redirect:/user/account";
     }
 }
+

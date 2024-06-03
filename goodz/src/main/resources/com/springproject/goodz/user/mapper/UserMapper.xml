@@ -95,8 +95,8 @@
 
     <!-- 회원 가입 -->
     <insert id="join">
-        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )
-        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl}, #{account})
+        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url)
+        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -211,5 +211,10 @@
         WHERE address_no IN ( ${addressNo} )
     </delete>
 
-
+    <!-- 유저 계좌 등록 -->
+    <update id="insertAccount">
+        UPDATE user
+          SET account = #{account}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>
