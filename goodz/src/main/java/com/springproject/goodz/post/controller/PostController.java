@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.CommentService;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
@@ -25,17 +25,15 @@ import lombok.extern.slf4j.Slf4j;
 
 /*
  * 스타일 게시글
- * [GET]    /styles                  게시글 목록
+ * [GET]    /styles                 전체 게시글 목록
  * [GET]    /styles/게시글번호       게시글 조회
- * [GET]    /styles/update           게시글 수정페이지
- * [GET]    /styles/insert           게시글 수정페이지
- * [POST]   /styles/insert           게시글 작성처리
+ * [GET]    /styles/update          게시글 수정페이지
+ * [GET]    /styles/insert          게시글 수정페이지
+ * [POST]   /styles/insert          게시글 작성처리
  * [DELETE] /styles/게시글번호       게시글 조회
  *     
  * 프로필    
  * [GET]    /styles/user/@닉네임     유저 프로필
- * 
- * 
  * 
  */
 
@@ -52,13 +50,20 @@ public class PostController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private CommentService cmmtService;
     
     /**
      * 전체 게시글 목록
      * @return
      */
     @GetMapping("")
-    public String list() {
+    public String list(Model model) throws Exception {
+
+        List<Post> postList = postService.list();
+        model.addAttribute("postList", postList);
+
         return "/post/list";
     }
 

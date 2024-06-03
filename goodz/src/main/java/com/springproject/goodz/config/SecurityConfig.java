@@ -35,23 +35,35 @@ public class SecurityConfig {
     // 스프링 시큐리티 설정 메소드
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
+       
+        
         // ✅ 인가 설정
         http.authorizeRequests(requests -> requests
-                                            // .antMatchers("/user", "/user/**").hasRole("USER")
-                                            .antMatchers("/**").permitAll()
-                                            .anyRequest().permitAll()
-                                            );
-
+        // .antMatchers("/user", "/user/**").hasRole("USER")
+        .antMatchers("/**").permitAll()
+        .anyRequest().permitAll()
+        );
+        
         // 🔐 폼 로그인 설정
         // ✅ 커스텀 로그인 페이지
         http.formLogin(login -> login.loginPage("/user/login")
-                                     .loginProcessingUrl("/login")
-                                     .usernameParameter("userId")   // 기본값:username
-                                     .passwordParameter("password") // 기본값:password
-                                   //.successHandler( loginSuccessHandler )
-                                     .successHandler( authenticationSuccessHandler() )
-                                     );
+        .loginProcessingUrl("/login")
+        .usernameParameter("userId")   // 기본값:username
+        .passwordParameter("password") // 기본값:password
+        // .successHandler( loginSuccessHandler )
+        .successHandler( authenticationSuccessHandler() )
+        );
+       
+        
+         // OAuth 로그인 설정
+         http.oauth2Login(login -> login
+         .loginPage("/login")
+          // .successHandler(authSuccessHandler)
+          // .userInfoEndpoint()
+          // .userService(customOAuth2UserService)
+         )	
+         ;
+
 
         // ✅ 사용자 정의 인증 설정
         http.userDetailsService(userDetailServiceImpl);

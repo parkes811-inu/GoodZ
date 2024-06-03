@@ -23,6 +23,15 @@ public class PostServiceImpl implements PostService{
     @Autowired
     private FileService fileService;
 
+
+    // 게시글 목록
+    @Override
+    public List<Post> list() throws Exception {
+        List<Post> postList = postMapper.list();
+
+        return postList;
+    }
+
     /**
      * 게시글 조회
      */
@@ -73,7 +82,7 @@ public class PostServiceImpl implements PostService{
         }
         
         /* ⬇️ '첨부파일' 등록 처리 ⬇️ */
-        String parentTable = "post";
+        String dir = "post";
         int parentNo = postMapper.maxNo(); // 방금 등록처리된 게시글 번호를 가져옴
         log.info("게시글 번호: " + parentNo);
 
@@ -99,7 +108,6 @@ public class PostServiceImpl implements PostService{
 
                 // fileService에 매개변수로 넘길 file 객체 세팅
                 Files uploadFile = new Files();
-                uploadFile.setParentTable(parentTable);     // "post"
                 uploadFile.setParentNo(parentNo);           // 게시글 번호
                 uploadFile.setFile(attachedFile);           // 첨부했던 파일을 dto에 담음
 
@@ -108,7 +116,7 @@ public class PostServiceImpl implements PostService{
                     uploadFile.setFileCode(1);
                 }
 
-                boolean uploadcheck = fileService.upload(uploadFile, "post");
+                boolean uploadcheck = fileService.upload(uploadFile, dir);
 
                 if (uploadcheck) {
                     log.info((i+1) + "번째 파일 업로드 성공...");
