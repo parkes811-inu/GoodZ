@@ -32,7 +32,18 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Files select(int no) throws Exception {
+<<<<<<< HEAD
         return fileMapper.select(no);
+=======
+        log.info("::::::::::fileService::::::::::");
+        log.info("조회할 파일 번호: " + no);
+
+        Files file = fileMapper.select(no);
+
+        log.info("조회된 파일 정보: " + file);
+        
+        return file;
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
     }
 
     @Override
@@ -82,14 +93,23 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean upload(Files file, String dir) throws Exception {
+    public boolean upload(Files file) throws Exception {
+        uploadPath = "C:/upload";
+
         log.info("file: " + file);
 
+<<<<<<< HEAD
         MultipartFile mf = file.getFile();
         if (mf == null || mf.isEmpty()) {
             throw new Exception("파일이 없습니다.");
         }
 
+=======
+        String dir = file.getParentTable();     
+
+        MultipartFile mf = file.getFile();
+        // 파일 정보 : 원본 파일명, 파일 용량, 파일 데이터
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
         String originName = mf.getOriginalFilename();
         long fileSize = mf.getSize();
         byte[] fileData = mf.getBytes();
@@ -101,14 +121,31 @@ public class FileServiceImpl implements FileService {
         }
 
         String fileName = UUID.randomUUID().toString() + "_" + originName;
+<<<<<<< HEAD
         String filePath = fileDirPath + File.separator + fileName;
+=======
+        uploadPath +=  "/" + dir;
+
+        log.info("업로드 경로: " + uploadPath);
+        // File 객체 생성 => new File(업로드 경로, 설정할 파일명);
+        File uploadFile = new File(uploadPath, fileName);
+
+        log.info("최종 업로드 경로:" + uploadFile);
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
 
         File uploadFile = new File(filePath);
         FileCopyUtils.copy(fileData, uploadFile);
 
         file.setFileName(fileName);
         file.setOriginName(originName);
+<<<<<<< HEAD
         file.setParentTable(dir);
+=======
+        // filePath = C:/uploade/UID_원본파일명.확장자
+
+        String filePath = uploadPath + "/" + fileName;
+        log.info("파일패쓰:" + filePath);
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
         file.setFilePath(filePath);
         file.setFileSize(fileSize);
 

@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/mypage_layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/mypage_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>주소록</title>
+    <title>주소 수정</title>
     <style>
         .content {
             flex: 1;
@@ -63,48 +61,74 @@
         .submit-btn:hover {
             background-color: #333;
         }
+
+        .form-group-inline {
+            display: flex;
+            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        .form-group-inline label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group-inline input[type="checkbox"] {
+            width: auto;
+            margin: 0 0 0 10px;
+        }
     </style>
 </head>
 <body layout:fragment="content">
     <div class="container">
         <div class="userMainContainer">
-            <p class="fs-4 fw-bold">배송지 추가</p>
+            <p class="fs-4 fw-bold">배송지 수정</p>
             
-            <!-- 주소 등록 -->
-            <form th:action="@{/user/add_address}" id="add_address-form" method="post" enctype="multipart/form-data" onsubmit="return checkDefaultAddress()">
+            <!-- 주소 수정 -->
+            <form action="/user/upd_address" id="update_address-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="hidden" id="receiver-id" th:name="userId" th:value="${userId}">
-                <input type="hidden" id="isDefault" name="isDefault" value="false" />
-
+                <input type="hidden" id="address-id" th:name="addressNo" th:value="${shippingaddress.addressNo}">
+                
                 <div class="form-group">
-                    <label for="receiver-name">받는 분</label>
-                    <input type="text" id="receiver-name" name="recipientName" placeholder="이름을 입력해주세요">
+                    <label for="recipient-name">받는 분</label>
+                    <input type="text" id="recipient-name" name="recipientName" th:value="${shippingaddress.recipientName}" placeholder="이름을 입력해주세요">
                 </div>
                 <div class="form-group">
                     <label for="contact-number">연락처</label>
-                    <input type="text" id="contact-number" name="phoneNumber" placeholder="연락처를 입력해주세요">
+                    <input type="text" id="contact-number" name="phoneNumber" th:value="${shippingaddress.phoneNumber}" placeholder="연락처를 입력해주세요">
                 </div>
                 <div class="form-group">
                     <label for="address">배송 주소</label>
-                    <input type="text" id="address" name="address" placeholder="주소를 입력해주세요">
+                    <input type="text" id="address" name="address" th:value="${shippingaddress.address}" placeholder="주소를 입력해주세요">
                 </div>
                 <div class="form-group">
-                    <label for="zipCode">우편 번호</label>
-                    <input type="text" id="zipCode" name="zipCode" placeholder="우편 번호를 입력해주세요">
+                    <label for="zip-code">우편 번호</label>
+                    <input type="text" id="zip-code" name="zipCode" th:value="${shippingaddress.zipCode}" placeholder="우편 번호를 입력해주세요">
+                </div>
+                <div class="form-group-inline">
+                    <label for="is-default">기본 배송지로 설정</label>
+                    <input type="checkbox" id="is-default" name="isDefault" th:checked="${shippingaddress.isDefault}" onclick="preventDefaultUncheck(this)" data-address-no="${shippingaddress.addressNo}">
                 </div>
                 
-                <button type="submit" class="submit-btn">저장</button>
+                <button type="submit" class="submit-btn">수정</button>
             </form>
         </div>
     </div>
+
     <script>
-        function checkDefaultAddress() {
-            if (confirm("기본 배송지로 추가하시겠습니까?")) {
-                document.getElementById('isDefault').value = 'true';
-            } else {
-                document.getElementById('isDefault').value = 'false';
+        // 체크박스가 해제될 때 실행
+        function preventDefaultUncheck(checkbox) {
+            if (!checkbox.checked) {
+                fetch('/user/isDefaultAddress/' + checkbox.dataset.addressNo)
+                    .then(response => response.json())
+                    .then(isDefault => {
+                        if (isDefault) {
+                            alert('기본 배송지를 해제할 수 없습니다. 다른 기본 배송지를 수정해주세요.');
+                            checkbox.checked = true;
+                        }
+                    });
             }
-            return true; // 폼을 제출
         }
     </script>
 </body>

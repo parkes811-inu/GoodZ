@@ -3,7 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.springproject.goodz.user.mapper.UserMapper">
+<mapper namespace="com.springproject.goodz.post.mapper.PostMapper">
+
 
     <!-- <select id="list" resultType="post">
         SELECT *
@@ -17,9 +18,15 @@
     </select>
 
     <select id="selectById" resultType="post">
-        SELECT *
-        FROM post
-        WHERE user_id = #{userId}
+        SELECT  p.post_no as post_no
+              , p.user_id as user_id
+              , p.content as contetnt
+              , f.no as file_no
+              , f.file_name as file_name
+              , f.file_path as file_path
+              , f.file_code as file_code
+        FROM post p inner join file f
+        on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
     </select>
 
     <select id="maxNo">
@@ -28,8 +35,8 @@
     </select>
 
     <insert id="insert">
-        INSERT INTO post (user_id, content)
-        VALUES (#{userId}, #{content})
+        INSERT INTO post (user_id, content, parent_table)
+        VALUES (#{userId}, #{content}, 'post')
     </insert>
 
     <update id="update">
