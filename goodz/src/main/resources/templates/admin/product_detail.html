@@ -22,6 +22,32 @@
                 <!-- 상품 이미지 -->
                 <div id="carouselExampleIndicators" class="carousel slide">
                     <div class="carousel-indicators">
+<<<<<<< HEAD
+                        <th:block th:each="image, iterStat : ${images}">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${iterStat.index}" 
+                                    th:classappend="${iterStat.index == 0} ? 'active'" th:aria-current="${iterStat.index == 0} ? 'true' : null" 
+                                    th:aria-label="'Slide ' + (${iterStat.index} + 1)"></button>
+                        </th:block>
+                    </div>
+                    <div class="carousel-inner">
+                        <th:block th:each="image, iterStat : ${images}">
+                            <div th:class="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}">
+                            </div>
+                        </th:block>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                
+                <form action="/updateProduct" method="post" class="mb-5">
+=======
                       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
                       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
@@ -48,6 +74,7 @@
                 </div>
 
                 <form method="post" class="mb-5">
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
     
                     <!-- 상품 이미지 변경 -->
                     <div class="my-3">
@@ -66,25 +93,83 @@
                         <!-- 상품의 브랜드 불러옴 -->
                         <div class="col-md-8">
                             <label for="brand" class="form-label">브랜드</label>
+<<<<<<< HEAD
+                            <input type="text" class="form-control" th:value="${product.bName}">
+=======
                             <input type="text" class="form-control" value="브랜드명~">
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
                         </div>
                         <!-- 상품의 카테고리 불러옴 -->
                         <div class="col-md-4">
                             <label for="category" class="form-label">카테고리</label>
+<<<<<<< HEAD
+                            <input type="text" class="form-control" th:value="${product.category}">
+                        </div>
+    
+                        <!-- 상품번호 -->
+                        <input type="hidden" id="product-number" name="pNo" th:value="${product.pNo}" readonly>
+=======
                             <input type="text" class="form-control" value="카테고리~">
                         </div>
     
                         <!-- 상품번호 -->
                         <input type="hidden" id="product-number" value="283451" readonly>
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
     
                         <!-- 상품명 -->
                         <div class="form-group my-4">
                             <label for="product-name">상품명</label>
+<<<<<<< HEAD
+                            <input type="text" class="form-control" id="product-name" th:value="${product.productName}" readonly>
+=======
                             <input type="text" class="form-control" id="product-name" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
                         </div>
                     </fieldset>
     
                     <!-- 수정가능 구역 -->
+<<<<<<< HEAD
+                    <table class="table text-center mb-5">
+                        <thead class="text-center">
+                            <tr>
+                                <th style="min-width: 80px;">상품번호</th>
+                                <th>크기</th>
+                                <th>옵션가격</th>
+                                <th>재고</th>
+                                <th style="min-width: 90px;">재고추가</th>
+                                <th style="min-width: 140px;">상태</th>
+                            </tr>
+                        </thead>
+                    
+                        <tbody>
+                            <!-- 상품정보 불러와서 사이즈 별로 th:each로 반복 -->
+                            <tr th:each="opt, iterStat : ${option}">
+                                <!-- 상품번호 -->
+                                <td th:text="${opt.pNo}"></td>
+                                <!-- 사이즈 -->
+                                <td th:text="${opt.size}"></td>
+                                <!-- 옵션가격 -->
+                                <td><span th:text="${opt.optionPrice}"></span></td>
+                                <!-- 현재 재고 -->
+                                <td th:text="${opt.stockQuantity}"></td>
+                                <!-- 재고 추가 -->
+                                <td><input type="text" class="form-control" name="addedStockQuantities[${iterStat.index}]"></td>
+                                <td>
+                                    <select class="form-select" name="status[${iterStat.index}]" id="status">
+                                        <option th:selected="${opt.status == 'on'}" value="on">판매중</option>
+                                        <option th:selected="${opt.status == 'off'}" value="off">판매중지</option>
+                                    </select>
+                                </td>
+                                <input type="hidden" name="optionPNo[${iterStat.index}]" th:value="${opt.pNo}">
+                                <input type="hidden" name="sizes[${iterStat.index}]" th:value="${opt.size}">
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">수정 완료</button>
+                </form>
+
+=======
                         <table class="table text-center mb-5">
                             <thead class="text-center">
                                 <tr>
@@ -124,9 +209,14 @@
     
                     <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">등록 완료</button>
                 </form>
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
             </div>
 
         </div>
     </div>
+<<<<<<< HEAD
+    
+=======
+>>>>>>> 129dfb74ba79b9fa2f07a9414cbc5dccb347338a
 </body>
 </html>

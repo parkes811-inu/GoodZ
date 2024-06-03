@@ -20,9 +20,9 @@
     </select>
 
     <!-- 상품 등록 -->
-    <insert id="insert">
-        INSERT INTO product (category, b_name, product_name, initial_price)
-        VALUES (#{category}, #{bName}, #{productName}, #{initialPrice})
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="pNo">
+    INSERT INTO product (category, b_name, product_name, initial_price)
+    VALUES (#{category}, #{bName}, #{productName}, #{initialPrice})
     </insert>
 
     <!-- 상의 목록 -->

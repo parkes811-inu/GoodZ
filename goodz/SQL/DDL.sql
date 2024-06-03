@@ -38,7 +38,7 @@ CREATE TABLE `Product` (
     FOREIGN KEY (`b_name`) REFERENCES `Brand`(`b_name`) ON DELETE CASCADE
 ) COMMENT='상품';
 
--- Product 이미지 테이블 / 📁 product
+-- Product 이미지 테이블 / 📁 product -> 이미지 테이블 없애도 될듯 ?
 CREATE TABLE `Product_image` (
     `img_id` INT NOT NULL AUTO_INCREMENT,
     `p_no` INT NOT NULL,
@@ -63,6 +63,7 @@ CREATE TABLE `Product_option` (
 CREATE TABLE `Pricehistory` (
     `price_history_no` INT NOT NULL AUTO_INCREMENT,
     `p_no` INT NOT NULL,
+    `size` VARCHAR(50) NOT NULL,
     `fluctuated_price` INT NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

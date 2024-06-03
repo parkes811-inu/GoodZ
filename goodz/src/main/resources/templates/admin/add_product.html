@@ -105,13 +105,16 @@
                     <!-- 카테고리 선택 -->
                     <div class="col-md-4">
                         <label for="category" class="form-label">카테고리</label>
-                        <select class="form-select" id="category" name="category">
-                            <option selected>카테고리 선택</option>
-                            <option value="상의">상의</option>
-                            <option value="하의">하의</option>
-                            <option value="신발">신발</option>
-                            <option value="악세사리">악세사리</option>
+                        <select class="form-select" id="category" name="category" required>
+                            <option selected disabled>카테고리 선택</option>
+                            <option value="top">상의</option>
+                            <option value="pants">하의</option>
+                            <option value="shoes">신발</option>
+                            <option value="accessory">악세사리</option>
                         </select>
+                        <div class="invalid-feedback">
+                            카테고리를 선택해주세요.
+                        </div>
                     </div>
                 </div>
                 
@@ -125,7 +128,7 @@
                 <div class="mb-3">
                     <label for="origin-price" class="form-label">발매가</label>
                     <div class="d-flex form-group">
-                        <input type="text" class="form-control text-end rounded-0" id="origin-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
+                        <input type="text" class="form-control text-end rounded-0" id="initial-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
                         <p class="m-0" style="align-self: center;">원</p>
                     </div>
                 </div>
@@ -135,7 +138,7 @@
                     <label for="product-img">상품 이미지</label>
                     <input type="file" id="imageInput" name="productFiles" class="form-control" multiple accept="image/*" max="10">
                     <span id="passwordHelpInline" class="form-text">최대 10장</span>
-                        <!-- 첨부파일 미리보기 -->
+                    <!-- 첨부파일 미리보기 -->
                     <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
                     <!-- 대표로 선택한 이미지가 넘어감 -->
                     <input type="hidden" id="representativeImage" name="mainImgIndex">
@@ -225,6 +228,17 @@
                 </td>
             `;
             optionContainer.appendChild(newRow);
+        });
+
+        document.getElementById('add_product-form').addEventListener('submit', function(event) {
+            var categorySelect = document.getElementById('category');
+            if (categorySelect.value === "") {
+                categorySelect.setCustomValidity("카테고리를 선택해주세요.");
+                categorySelect.reportValidity();
+                event.preventDefault(); // 폼 제출을 막음
+            } else {
+                categorySelect.setCustomValidity(""); // 유효성 메시지 초기화
+            }
         });
     </script>
 
