@@ -60,4 +60,26 @@
         WHERE p_no = #{pNo}
     </select>
 
+    <!-- 제품과 최신 가격 변동 정보 조회 -->
+    <select id="UsedInPay" resultType="Product">
+        SELECT 
+            p.*, ph.size, ph.fluctuated_price
+        FROM 
+            Product p
+        INNER JOIN 
+            Pricehistory ph ON p.p_no = ph.p_no
+        WHERE 
+            p.p_no = #{pNo} 
+            AND ph.updated_at = (
+                SELECT 
+                    MAX(updated_at) 
+                FROM 
+                    Pricehistory 
+                WHERE 
+                    p_no = p.p_no
+                    AND size = ph.size
+            );
+    </select>
+
+
 </mapper>
