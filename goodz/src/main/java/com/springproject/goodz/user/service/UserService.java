@@ -55,4 +55,17 @@ public interface UserService {
     // 유저의 주소 목록
     public List<Shippingaddress> selectByUserId(String userId) throws Exception;
 
+    // 배송지 단일 조회
+    public Shippingaddress selectAddress(int addressNo) throws Exception;
+
+    // 배송지 삭제
+    public int deleteAddress(int addressNo) throws Exception;
+
+    // 기본 배송지 여부 확인
+    public boolean isDefaultAddress(int addressNo) throws Exception;
+
+    // 유저 계좌 등록
+    public void insertAccount(String userId, String account) throws Exception;
+
+
 }

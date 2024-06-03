@@ -15,7 +15,7 @@ public interface ProductService {
     List<Product> newArrivals() throws Exception;
 
     // 상품 등록
-    int insert(Product product) throws Exception;
+    int insert(Product product, int mainImgIndex) throws Exception;
 
     // 상품 목록 - 상의
     List<Product> top() throws Exception;
@@ -32,9 +32,15 @@ public interface ProductService {
     // 상품 상세 조회
     Product getProductBypNo(int pNo) throws Exception;
 
+    // 상품 옵션 등록
+    int insertProductOption(ProductOption productOption) throws Exception;
+    
     // 상품의 옵션 목록 조회
     List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
 
     // 상품의 이미지 목록 조회
     List<ProductImage> getProductImagesByProductId(int pNo) throws Exception;
+    
+    // 상품 발매가 저장 -> priceHistory
+    void makeHistory(int pNo, String size, int initialPrice) throws Exception;
 }

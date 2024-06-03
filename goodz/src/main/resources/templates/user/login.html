@@ -3,6 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/main_layout}">
 <head>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js"charset="utf-8"></script>
     <style>
         /* 회원가입/아이디찾기/비밀번호찾기 */
         .userLinks a, span, label {
@@ -62,11 +63,13 @@
                         <div class="py-2">
                             <!-- 아이디 -->
                             <!-- <input type="id" class="form-control" name="userId" id="id" placeholder="ID"> -->
-                            <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" th:value="${userId}">
+                            <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" th:value="${userId}" >
+                            <!-- <input type="text" id="userId" name="userId" class ="form-control" placeholder="ID" value="user" > -->
                         </div>
                         <!-- 비밀번호 -->
                         <div class="password_input_container py-2" style="position: relative;">
                             <input type="password" class="form-control" name="password" id="password" placeholder="PW">
+                            <!-- <input type="password" class="form-control" name="password" id="password" placeholder="PW" value="123456"> -->
                             <span class="toggle_password" onclick="togglePasswordVisibility()">
                                 <i class="fa fa-eye-slash"></i>
                             </span>
@@ -118,9 +121,15 @@
                 <!-- 소셜로그인 -->
                 <div class="text-center mb-4">
                     <p>or continue with</p>
-                    <button class="btn btn-kakao btn-block">카카오 로그인</button>
+                    <a href="/oauth2/authorization/kakao" class="btn btn-kakao btn-block">카카오 로그인</a>
                     <button class="btn btn-naver btn-block">네이버 로그인</button>
                 </div>
+
+                <hr>
+                <th:block sec:authorize="isAuthenticated()">
+                    <span sec:authentication="principal"></span>
+                </th:block>
+
             </div>
         </div>
         
@@ -139,6 +148,7 @@
                 togglePassword.classList.add('fa-eye-slash');
             }
         }
+        
     </script>
 </body>
 </html>

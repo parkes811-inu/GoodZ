@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,7 @@ import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
 
+import groovyjarjarantlr4.v4.codegen.model.ExceptionClause;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -351,21 +353,28 @@ public class UserController {
     }
 
     /**
-     * 주소 등록 화면
+     * 배송지 등록 화면
      * @return
      */
     @GetMapping("/add_address")
-    public String addAddress(Model model, HttpSession session) {
+    public String addAddress(Model model, HttpSession session) throws Exception{
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
+        // 사용자의 기존 주소 목록을 가져옴
+        List<Shippingaddress> addresses = userService.selectByUserId(user.getUserId());
+        // 기존 주소가 없으면 첫 번째 주소로 간주
+        boolean isFirstAddress = addresses.isEmpty();
+        
+        model.addAttribute("isFirstAddress", isFirstAddress);
         model.addAttribute("userId", user.getUserId());
+        
         return "/user/add_address";
     }
 
     /**
-     * 주소 등록 처리 화면
+     * 배송지 등록 처리
      * @param shippingaddress
      * @param session
      * @return
@@ -380,6 +389,14 @@ public class UserController {
 
         shippingaddress.setUserId(user.getUserId());
 
+        // 사용자의 기존 주소 목록을 가져옴
+        List<Shippingaddress> existingAddresses = userService.selectByUserId(user.getUserId());
+
+        // 기존 주소가 없으면 새로 추가되는 주소를 기본 배송지로 설정
+        if (existingAddresses.isEmpty()) {
+            shippingaddress.setDefault(true);
+        }
+
         int result = userService.insertAddress(shippingaddress);
         if (result > 0) {
             return "redirect:/user/address";
@@ -389,34 +406,154 @@ public class UserController {
     
     }
 
+    /**
+     * 배송지 수정 화면
+     * @param addressNo
+     * @param model
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/upd_address/{addressNo}")
+    public String updateAddress(@PathVariable("addressNo") int addressNo, Model model, HttpSession session) throws Exception {
+
+        log.info("-------------------- 배송지 수정 - /user/upd_address -------------------");
+        log.info("---------------------------------------------------------");
+        log.info(addressNo + " ");
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
     
-    @GetMapping("/upd_address")
-    public String updateAddress(Shippingaddress shippingaddress, HttpSession session) throws Exception {
+        // 주소번호를 기반으로 해당 주소의 정보를 가져옴
+        Shippingaddress shippingaddress = userService.selectAddress(addressNo);
+    
+        // 수정 페이지로 주소 정보를 전달
+        model.addAttribute("shippingaddress", shippingaddress);
+        return "/user/upd_address"; 
+    }
+
+    /**
+     * 배송지 수정 처리
+     * @param shippingaddress
+     * @param isDefault
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/upd_address")
+    public String updateAddress(Shippingaddress shippingaddress, String isDefault
+                               ,HttpSession session) throws Exception {
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        shippingaddress.setUserId(user.getUserId());
+
+        // 배송지 추가 기능 호출
+        int result = userService.updateAddress(shippingaddress);
+        if (result > 0) {
+            return "redirect:/user/address";
+        } else {
+            return "redirect:/user/upd_address";
+        }
+
+       
+    }
+    
+    /**
+     * 배송지 삭제
+     * @param addressNo
+     * @param redirectAttributes
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteAddress")
+    public String deleteAddress(@RequestParam("addressNo") int addressNo, RedirectAttributes redirectAttributes) throws Exception {
+        if (userService.isDefaultAddress(addressNo)) {
+            redirectAttributes.addFlashAttribute("error", "기본 배송지는 삭제할 수 없습니다. 다른 주소를 기본 배송지로 설정 후 삭제해주세요.");
+            return "redirect:/user/address";
+        }
+
+        int result = userService.deleteAddress(addressNo);
+
+        if (result > 0) {
+            return "redirect:/user/address";
+        }
+        return "redirect:/user/address?addressNo=" + addressNo + "&error";
+    }
+    
+    /**
+     * 기본 배송지인지 확인
+     * @param addressNo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/isDefaultAddress/{addressNo}")
+    @ResponseBody
+    public ResponseEntity<Boolean> isDefaultAddress(@PathVariable("addressNo") int addressNo) throws Exception {
+        boolean isDefault = userService.isDefaultAddress(addressNo);
+        return ResponseEntity.ok(isDefault);
+    }
+    
+    /**
+     * 계좌 정보 페이지로 이동
+     * 세션에서 사용자 정보를 가져와 계좌 정보를 모델에 추가
+     * 계좌 정보를 분리하여 개별 필드로 모델에 추가
+     * @param session HttpSession 객체
+     * @param model Model 객체
+     * @return 계좌 정보 페이지 경로
+     */
+    @GetMapping("/account")
+    public String getAccountInfo(HttpSession session, Model model) {
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
 
-        shippingaddress.setUserId(user.getUserId());
+        String account = user.getAccount();
+        model.addAttribute("account", account);
 
-        int result = userService.updateAddress(shippingaddress);
-        if (result > 0) {
-            return "redirect:/user/address";
-        } else {
-            return "redirect:/user/update_address?error";
+        if (account != null) {
+            String[] accountParts = account.split(" / ");
+            String bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
+            String accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
+            String accountHolder = accountParts[1];
+            model.addAttribute("bankName", bankName);
+            model.addAttribute("accountNumber", accountNumber);
+            model.addAttribute("accountHolder", accountHolder);
         }
 
-    }
-    
-    
-    
-    @GetMapping("/account")
-    public String account() {
-        return "/user/account";
+        return "/user/account"; // account.html 템플릿을 렌더링
     }
 
-    @GetMapping("/style_profile")
-    public String style_profile() {
-        return "/user/style_profile";
+    /**
+     * 계좌 정보 저장
+     * 계좌 정보를 받아서 결합하고 세션 및 DB에 저장
+     * @param bankName 은행명
+     * @param accountNumber 계좌번호
+     * @param accountHolder 예금주
+     * @param session HttpSession 객체
+     * @return 계좌 정보 페이지 경로로 리다이렉트
+     * @throws Exception 예외 처리
+     */
+    @PostMapping("/account")
+    public String insertAccount(@RequestParam("bankName") String bankName, 
+                                @RequestParam("accountNumber") String accountNumber, 
+                                @RequestParam("accountHolder") String accountHolder, 
+                                HttpSession session) throws Exception {
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        // 계좌 정보 결합
+        String account = bankName + " " + accountNumber + " / " + accountHolder;
+        
+        userService.insertAccount(user.getUserId(), account);
+        user.setAccount(account); // 세션에 업데이트된 계좌 정보 저장
+        session.setAttribute("user", user); // 세션 업데이트
+        return "redirect:/user/account";
     }
 }
+

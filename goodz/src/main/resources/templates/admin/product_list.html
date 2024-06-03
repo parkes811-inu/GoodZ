@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/admin_layout}"
-      >
+      layout:decorate="~{/layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 페이지 - 상품 등록</title>
+    <title>관리자 페이지 - 상품 목록</title>
     <style>
         .content {
             flex: 1;
@@ -75,10 +74,11 @@
             </div>
             <!-- 상품 전체 리스트 가져오기 -->
             <div class="d-flex justify-content-end">
-                <a href="/admin/add_product" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                <a href="/admin/add_product" class="custom-button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
+                    추가
                 </a>
             </div>
             <div class="divider">
@@ -88,7 +88,6 @@
                         <th scope="col" style="width: 100px;">상품 번호</th>
                         <th scope="col">브랜드명</th>
                         <th scope="col">상품명</th>
-                        <th scope="col">재고</th>
                         <th scope="col">등록일자</th>
                       </tr>
                     </thead>
@@ -108,12 +107,12 @@
                         <td th:text="${product.bName}"></td>
                         <td>
                             <!-- 이거 글짜 검은색에 밑줄 없는 걸로 -->
-                            <a th:href="@{/admin/product/detail/{productName}(productName=${product.productName})}" 
+                            <a th:href="@{/admin/product/detail/{pNo}(pNo=${product.pNo})}" 
                                id="productName" 
                                th:text="${product.productName}"
                                class="text-dark text-decoration-none"></a>
                         </td>
-                        <td th:text="${product.stockQuantity}"></td>
+                        
                         <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
                     </tr>
                     </tbody>

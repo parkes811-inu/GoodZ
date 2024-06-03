@@ -57,19 +57,15 @@ public class BrandServiceImpl implements BrandService{
     @Override
     public int insert(Brand brand) throws Exception {
 
-        log.info("::::::::::brandService::::::::::");
+        log.info("브랜드 등록 처리 진행중...");
 
-        /* ⬇️ 브랜드 등록 처리 ⬇️ */ 
+        /* 브랜드 등록 처리 */ 
         int result = brandMapper.insert(brand); // 성공 -> 1
-
-        if (result == 1) {
-            log.info("브랜드 등록 성공");
-        }
 
         /* ⬇️ 첨부파일 (로고) 등록처리 ⬇️ */ 
         String dir = "brand";
         int parentNo = brandMapper.maxNo(); // 방금 등록된 브랜드 번호를 가져옴
-        log.info("브랜드 번호: " + parentNo + "종속테이블: " + dir);
+
 
         // 브랜드 로고 업로드
         MultipartFile requestFile = brand.getLogoFile();
@@ -81,16 +77,18 @@ public class BrandServiceImpl implements BrandService{
             
             // 필요정보: 부모테이블, 부모번호, 멀티파트 파일, 파일코드 0(일반)
             logoFile.setFile(requestFile);          // 첨부했던 파일을 dto에 담음
+
+            // logoFile.setParentTable(parentTable);   // "brand"
             logoFile.setParentNo(parentNo);         // maxNo으로 받아온 결과값
             logoFile.setFileCode(0);       // 일반파일 처리 (fileCode는 상품 대표이미지때 쓰임)
-            boolean isUploaded = fileService.upload(logoFile, dir);           // 파일 업로드 요청
+            boolean isUploaded = fileService.upload(logoFile, "brand");           // 파일 업로드 요청
 
             if (isUploaded) {
-                log.info("로고파일 등록 완료");
+                log.info("로고 파일 처리 완료!!!!!");
             }
         }
 
-        if (result > 0) {
+        if (result > 9) {
             log.info("브랜드 등록 처리 완료");
         }
 

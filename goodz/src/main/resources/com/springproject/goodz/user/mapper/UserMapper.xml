@@ -95,8 +95,8 @@
 
     <!-- 회원 가입 -->
     <insert id="join">
-        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )
-        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl}, #{account})
+        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url)
+        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -197,4 +197,24 @@
         WHERE user_id = #{userId}
         ORDER BY is_default DESC, updated_at DESC
     </select>
+
+
+    <!-- 배송지 단일 조회 -->
+    <select id="selectAddress" resultType="Shippingaddress" >
+        SELECT * FROM Shippingaddress 
+        WHERE address_no = #{addressNo}
+    </select>
+
+    <!-- 삭제 -->
+    <delete id="deleteAddress">
+        DELETE FROM Shippingaddress
+        WHERE address_no IN ( ${addressNo} )
+    </delete>
+
+    <!-- 유저 계좌 등록 -->
+    <update id="insertAccount">
+        UPDATE user
+          SET account = #{account}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

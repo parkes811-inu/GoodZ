@@ -92,7 +92,7 @@
             <form th:action="@{/user/add_address}" id="add_address-form" method="post" enctype="multipart/form-data">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" id="receiver-id" th:name="userId" th:value="${userId}">
-                <input type="hidden" id="isDefault" name="isDefault" value="false" />
+                <input type="hidden" id="isDefault" name="isDefault" th:value="${isFirstAddress ? 'true' : 'false'}" />
 
                 <div class="form-group">
                     <label for="receiver-name">받는 분</label>
@@ -110,9 +110,9 @@
                     <label for="zipCode">우편 번호</label>
                     <input type="text" id="zipCode" name="zipCode" placeholder="우편 번호를 입력해주세요">
                 </div>
-                <div class="form-group-inline">
+                <div class="form-group-inline" th:if="${!isFirstAddress}">
                     <label for="default-address">기본 배송지로 설정</label>
-                    <input type="checkbox" id="default-address" name="isDefault" value="true">
+                    <input type="checkbox" id="default-address" name="isDefault" value="true" th:checked="${isFirstAddress}">
                 </div>
 
                 <button type="submit" class="submit-btn">저장</button>
@@ -121,7 +121,7 @@
     </div>
     <script>
         document.getElementById('add_address-form').addEventListener('submit', function() {
-            if (document.getElementById('default-address').checked) {
+            if (document.getElementById('default-address') && document.getElementById('default-address').checked) {
                 document.getElementById('isDefault').value = 'true';
             } else {
                 document.getElementById('isDefault').value = 'false';

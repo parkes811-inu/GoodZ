@@ -15,6 +15,8 @@ import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +31,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private FileService fileService;
+
     @GetMapping("")
     public String index() {
         return "/product/index";
@@ -42,16 +47,13 @@ public class ProductController {
     @GetMapping("/detail/{pNo}")
     public String productDetailPage(@PathVariable("pNo") Integer pNo, Model model) throws Exception {
         Product product = productService.getProductBypNo(pNo);
-        List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
-        List<ProductImage> images = productService.getProductImagesByProductId(pNo);
-
-        // 이미지 URL을 인코딩
-        for (ProductImage image : images) {
-            image.setImageUrl(URLEncoder.encode(image.getImageUrl(), "UTF-8"));
-        }
-
+        List<ProductOption> option =  productService.getProductOptionsByProductId(pNo);
+        Files file = new Files();
+        file.setParentNo(pNo);
+        file.setParentTable(product.getCategory());
+        List<Files> images = fileService.listByParent(file);
         model.addAttribute("product", product);
-        model.addAttribute("options", options);
+        model.addAttribute("option", option);
         model.addAttribute("images", images);
 
         return "/product/detail";
