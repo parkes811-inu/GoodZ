@@ -43,4 +43,7 @@ public interface ProductService {
     
     // 상품 발매가 저장 -> priceHistory
     void makeHistory(int pNo, String size, int initialPrice) throws Exception;
+
+    // 제품과 최신 가격 변동 정보 조회
+    public List<Product> UsedInPay(int pNo) throws Exception;
 }

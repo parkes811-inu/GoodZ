@@ -26,6 +26,9 @@ public class Product {
     private String imageUrl;        // 첫 번째 이미지 URL을 저장할 필드
     private List<MultipartFile> productFiles; // 추가된 필드
 
+    private String size;
+    private int fluctuatedPrice;
+    
     // 첫 번째 이미지 URL을 가져오는 메서드
     public String getFirstImageUrl() {
         if (images != null && !images.isEmpty()) {
