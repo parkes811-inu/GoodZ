@@ -173,13 +173,14 @@ CREATE TABLE `Product` (
 ) COMMENT='상품';
 
 -- Product 이미지 테이블 / 📁 product -> 이미지 테이블 없애도 될듯 ?
-CREATE TABLE `Product_image` (
-    `img_id` INT NOT NULL AUTO_INCREMENT,
-    `p_no` INT NOT NULL,
-    `image_url` VARCHAR(1000) NOT NULL,
-    PRIMARY KEY (`img_id`),
-    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
-) COMMENT='상품 이미지';
+-- CREATE TABLE `Product_image` (
+--     `img_id` INT NOT NULL AUTO_INCREMENT,
+--     `p_no` INT NOT NULL,
+--     `image_url` VARCHAR(1000) NOT NULL,
+--     PRIMARY KEY (`img_id`),
+--     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
+-- ) COMMENT='상품 이미지';
+-- / 쓸모없을거같다해서 주석해놓음!!! -6/3 도희-
 
 -- Product 옵션 테이블 / 📁 product
 CREATE TABLE `Product_option` (
