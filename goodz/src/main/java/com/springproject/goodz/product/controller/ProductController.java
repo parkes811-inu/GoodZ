@@ -1,6 +1,5 @@
 package com.springproject.goodz.product.controller;
 
-import java.net.URLEncoder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
@@ -63,16 +61,12 @@ public class ProductController {
     @GetMapping("/top")
     public String top(Model model) throws Exception {
         List<Product> topList = productService.top();
-
-        // 이미지 경로를 설정하는 부분을 추가
-        for (Product product : topList) {
-            String firstImageUrl = product.getFirstImageUrl();
-            if (firstImageUrl != null) {
-                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
-            }
-        }
+        Files file = new Files();
+        file.setParentTable("top");
+        List<Files> images = fileService.listByParent(file);
 
         model.addAttribute("topList", topList);
+        model.addAttribute("images", images);
 
         return "/product/top";
     }
@@ -81,14 +75,11 @@ public class ProductController {
     @GetMapping("/pants")
     public String pants(Model model) throws Exception {
         List<Product> pantsList = productService.pants();
+        Files file = new Files();
+        file.setParentTable("pants");
+        List<Files> images = fileService.listByParent(file);
 
-        for (Product product : pantsList) {
-            String firstImageUrl = product.getFirstImageUrl();
-            if (firstImageUrl != null) {
-                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
-            }
-        }
-
+        model.addAttribute("images", images);
         model.addAttribute("pantsList", pantsList);
 
         return "/product/pants";
@@ -98,14 +89,11 @@ public class ProductController {
     @GetMapping("/shoes")
     public String shoes(Model model) throws Exception {
         List<Product> shoesList = productService.shoes();
+        Files file = new Files();
+        file.setParentTable("shoes");
+        List<Files> images = fileService.listByParent(file);
 
-        for (Product product : shoesList) {
-            String firstImageUrl = product.getFirstImageUrl();
-            if (firstImageUrl != null) {
-                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
-            }
-        }
-
+        model.addAttribute("images", images);
         model.addAttribute("shoesList", shoesList);
 
         return "/product/shoes";
@@ -115,14 +103,11 @@ public class ProductController {
     @GetMapping("/accessory")
     public String accessory(Model model) throws Exception {
         List<Product> accessoryList = productService.accessory();
-
-        for (Product product : accessoryList) {
-            String firstImageUrl = product.getFirstImageUrl();
-            if (firstImageUrl != null) {
-                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
-            }
-        }
-
+        Files file = new Files();
+        file.setParentTable("pants");
+        List<Files> images = fileService.listByParent(file);
+        
+        model.addAttribute("images", images);
         model.addAttribute("accessoryList", accessoryList);
 
         return "/product/accessory";
