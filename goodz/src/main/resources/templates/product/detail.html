@@ -168,10 +168,13 @@
                 <!-- 상품 상세 정보 -->
                 <div class="col-md-6">
                     <div class="product-details">
-                        <h3 th:text="${product.productName}"></h3>
+                        <h3 id="productName" th:text="${product.productName}"></h3>
                         <div class="product-price">
-                            <p th:text="${minPrice} + ' 원'"></p>
+                            <p id="productPrice" class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
                         </div>
+                        
+                        <input type="hidden" id="productNo" th:value="${product.pNo}">
+
                         <div class="product-options">
                             <button id="sizeButton" name="size" class="form-select w-100" data-bs-toggle="modal" data-bs-target="#sizeModal">
                                 모든 사이즈
@@ -208,7 +211,9 @@
                                     <div class="modal-body">
                                         <!-- 사이즈 옵션이 여기에 동적으로 삽입됩니다 -->
                                         <th:block th:each="option : ${options}">
-                                            <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:text="${option.size}"></button>
+                                            <!-- <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:text="${option.size}"></button> -->
+                                            <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:data-price="${option.optionPrice}" th:text="${option.size}"></button>
+
                                         </th:block>
                                     </div>
                                     <div class="modal-footer">
@@ -384,35 +389,8 @@
                         </div>
                     </div>
 
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <a href="#">
-                                    <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                                </a>
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="userId fw-bold m-0">nike airmax1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <a href="#">
-                                    <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                                </a>
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="userId fw-bold m-0">nike airmax1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
 
                 <button id="loadMoreBrand" class="btn btn-primary mt-3 hidden">더보기</button>
@@ -440,7 +418,10 @@
         const sizeModal = document.getElementById('sizeModal');
         const sizeOptions = sizeModal.querySelectorAll('.size-option');
         const confirmSizeButton = document.getElementById('confirmSizeButton');
-        
+        const purchaseButton = document.querySelector('.btn-purchase'); // 구매 버튼 요소
+        const purchasePriceElement = purchaseButton.querySelector('.m-0.ms-2'); // 구매 버튼 가격 텍스트 요소
+        const productPriceElement = document.getElementById('productPrice'); // 상품 가격 텍스트 요소
+
         // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
         sizeOptions.forEach(button => {
             button.addEventListener('click', function() {
@@ -450,13 +431,16 @@
                 this.classList.add('active');
                 // 선택된 사이즈 저장
                 selectedSize = this.dataset.size;
+                selectedPrice = this.dataset.price; // 선택된 사이즈의 가격 저장
             });
         });
 
         // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
         confirmSizeButton.addEventListener('click', function() {
-            if (selectedSize) {
+            if (selectedSize && selectedPrice) {
                 sizeButton.textContent = selectedSize;
+                purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
+                productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
                 var modal = bootstrap.Modal.getInstance(sizeModal);
                 modal.hide();
             } else {
@@ -517,30 +501,34 @@
             });
         });
 
-        // 거래하기 버튼 클릭 이벤트 리스너 추가
+         // 거래하기 버튼 클릭 이벤트 리스너 추가
         document.getElementById('confirmTransactionButton').addEventListener('click', function() {
             if (selectedSize && selectedPrice) {
                 // 선택된 사이즈와 가격으로 거래 요청을 보냄 (예: AJAX 요청)
                 console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
-                // 여기에서 AJAX 요청을 통해 서버로 거래 정보를 전송할 수 있습니다.
-                // 예:
-                // fetch('/transaction', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify({ type: transactionType, size: selectedSize, price: selectedPrice }),
-                // })
-                // .then(response => response.json())
-                // .then(data => {
-                //     console.log('Success:', data);
-                //     // 모달 닫기
-                //     var modalInstance = bootstrap.Modal.getInstance(modal);
-                //     modalInstance.hide();
-                // })
-                // .catch((error) => {
-                //     console.error('Error:', error);
-                // });
+                fetch('/pay/buy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        type: transactionType, 
+                        size: selectedSize, 
+                        price: selectedPrice, 
+                        productName: productName, 
+                        pNo: productNo 
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // 모달 닫기
+                    var modalInstance = bootstrap.Modal.getInstance(modal);
+                    modalInstance.hide();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
             } else {
                 alert('사이즈를 선택해주세요.');
             }

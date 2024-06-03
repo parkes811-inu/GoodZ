@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
@@ -70,14 +71,10 @@ public class ProductController {
 
     @GetMapping("/detail/{pNo}")
     public String productDetailPage(@PathVariable("pNo") Integer pNo, Model model) throws Exception {
-        // 상품 정보 가져오기
         Product product = productService.getProductBypNo(pNo);
-
-        // 상품 옵션 설정
         List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
+        product.setOptions(options);
 
-
-        // 상품 이미지 설정
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
@@ -95,13 +92,14 @@ public class ProductController {
         model.addAttribute("minPrice", minPrice);
 
         // 사이즈별 가격 정보를 JSON 형태로 변환
-        String pricesJson = options.stream()
-                                .collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
-                                .toString();
+        String pricesJson = new ObjectMapper().writeValueAsString(
+            options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
+        );
         model.addAttribute("pricesJson", pricesJson);
 
         return "/product/detail";
     }
+
 
 
     // 상의 카테고리
