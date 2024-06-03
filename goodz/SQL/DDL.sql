@@ -24,6 +24,140 @@ CREATE TABLE `user` (
     PRIMARY KEY (`user_id`)
 ) COMMENT='유저';
 
+DROP TABLE IF EXISTS user_auth;
+-- User_auth 테이블 / 📁 user
+CREATE TABLE `user_auth` (
+      `auth_no` INT PRIMARY KEY AUTO_INCREMENT
+    , `user_id` varchar(100) NOT NULL                      -- 회원 아이디
+    , `AUTH` VARCHAR(100) NOT NULL                          -- 권한 (ROLE_USER, ROLE_ADMIN, ...)
+);
+
+
+DROP TABLE IF EXISTS persistent_logins;
+-- Persistent_Login 테이블 / 📁 user
+create table persistent_logins (
+	username varchar(64) not null
+	, series varchar(64) primary key
+	, token varchar(64) not null
+	, last_used timestamp not null
+);
+-- CREATE TABLE `Persistent_Login` (
+-- 	`persistent_no`		INT				NOT NULL AUTO_INCREMENT,
+-- 	`user_id`			VARCHAR(100)	NOT NULL,
+-- 	`token`				VARCHAR(255)	NOT NULL,
+-- 	`expiration_date`	DATE			NOT NULL,
+-- 	`created_at`		timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- 	`state`	ENUM('remember', 'auto', 'all')	NOT NULL,
+--     PRIMARY KEY (persistent_no),
+--     FOREIGN KEY (user_id) REFERENCES User(user_id)
+-- ) COMMENT='자동로그인';
+
+
+-- Social_Login 테이블 / 📁 user
+CREATE TABLE `Social_Login` (
+	`social_login_id`	VARCHAR(100)	NOT NULL,
+	`user_id`			VARCHAR(100)	NOT NULL,
+	`provider`			VARCHAR(50)		NOT NULL,
+	`provider_user_id`	VARCHAR(100)	NOT NULL,
+	`created_at` 		timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (social_login_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+) COMMENT='소셜로그인';
+
+-- Following 테이블 / 📁 user
+CREATE TABLE `Following` (
+	`following_no`	INT				NOT NULL AUTO_INCREMENT,
+	`user_id`		VARCHAR(100)	NOT NULL,
+	`following_id`	VARCHAR(100),
+    PRIMARY KEY (following_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+) COMMENT='팔로잉';
+
+
+-- Follower 테이블 / 📁 user
+CREATE TABLE `Follower` (
+	`follower_no`	INT				NOT NULL AUTO_INCREMENT,
+	`user_id`		VARCHAR(100)	NOT NULL,
+	`follower_id`	VARCHAR(100),
+    PRIMARY KEY (follower_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+) COMMENT='팔로워';
+
+
+
+-- Post 테이블 / 📁 post
+CREATE TABLE `Post` (
+	`post_no`	INT				NOT NULL AUTO_INCREMENT,
+	`user_id`	VARCHAR(100)	NOT NULL,
+	`content`	TEXT,
+	-- `image_url`	VARCHAR(255)	NOT NULL,
+	`created_at` timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (post_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+) COMMENT='게시글';
+
+
+
+-- Comment 테이블 / 📁 post
+CREATE TABLE `Comment` (
+	`c_no`			INT				NOT NULL AUTO_INCREMENT,
+	`post_no`		INT				NOT NULL,
+	`user_id`		VARCHAR(100)	NOT NULL,
+	`comment`		TEXT,
+	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (c_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+) COMMENT='댓글';
+
+
+-- Like 테이블 / 📁 post
+CREATE TABLE `Like` (
+	`like_no`	INT				NOT NULL AUTO_INCREMENT,
+	`user_id`	VARCHAR(100)	NOT NULL,
+	`post_no`	INT				NOT NULL,
+	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (like_no),
+    FOREIGN KEY (c_no) REFERENCES Comment(c_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+);
+
+
+-- Tag 테이블 / 📁 post
+CREATE TABLE `Tag` (
+	`t_no`		INT	NOT NULL AUTO_INCREMENT,
+	`p_no`		INT	NOT NULL,
+	`post_no`	INT	NOT NULL,
+    PRIMARY KEY (t_no),
+    FOREIGN KEY (p_no) REFERENCES Product(p_no),
+    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+) COMMENT='상품 태그';
+
+
+
+
+-- 2024.05.31 박은서 product 테이블 분할
+-- Product 테이블 / 📁 product
+-- CREATE TABLE `Product` (
+-- 	`p_no`				INT				NOT NULL AUTO_INCREMENT,
+-- 	`product_name`		VARCHAR(100)	NOT NULL,
+-- 	`price`				INT				NOT NULL,
+-- 	`b_name`			VARCHAR(100)	NOT NULL,
+-- 	`category`			VARCHAR(50)		NOT NULL,
+-- 	`size`				VARCHAR(100)	NOT NULL,
+-- 	`views`				INT				NOT NULL DEFAULT '0',
+-- 	`stock_quantity`	INT				NOT NULL,
+-- 	`image_url`			VARCHAR(1000)	NOT NULL,
+-- 	`created_at`	    timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     `updated_at`	 	timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--      PRIMARY KEY (p_no),
+-- 	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
+-- ) COMMENT='상품';
+
 -- Product 테이블 / 📁 product
 CREATE TABLE `Product` (
     `p_no` INT NOT NULL AUTO_INCREMENT,
@@ -186,17 +320,18 @@ CREATE TABLE `Inspection` (
 
 -- Purchase 테이블 / 📁 pay
 CREATE TABLE `Purchase` (
-    `purchase_no` INT NOT NULL AUTO_INCREMENT,
-    `user_id` VARCHAR(100) NOT NULL,
-    `p_no` INT NOT NULL,
-    `purchase_price` INT NOT NULL,
-    `payment_method` VARCHAR(50) NOT NULL,
-    `purchase_state` ENUM('pending', 'shipped', 'delivered', 'cancelled') NOT NULL,
-    `purchase_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`purchase_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`)
-) COMMENT='구매';
+	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
+	`user_id`			VARCHAR(100)	NOT NULL,
+	`p_no`				INT				NOT NULL,
+	`purchase_price`	INT				NOT NULL,
+	`payment_method`	VARCHAR(50)		NOT NULL,
+	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
+	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (purchase_no),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (p_no) REFERENCES Product(p_no)
+)COMMENT='구매';
+
 
 -- Shipment 테이블 / 📁 pay
 CREATE TABLE `Shipment` (

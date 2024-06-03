@@ -95,6 +95,8 @@ public class FileServiceImpl implements FileService {
 
         log.info("file: " + file);
 
+        file.setParentTable(dir);     
+
         MultipartFile mf = file.getFile();
         if (mf == null || mf.isEmpty()) {
             throw new Exception("파일이 없습니다.");
