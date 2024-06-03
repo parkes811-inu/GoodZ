@@ -1,0 +1,23 @@
+<hr class="mb-2">
+<!-- 무플처리 -->
+<th:block th:if="${cmmtList.isEmpty()}">
+    <p class="text-body-tertiary text-center">첫 댓글 달기</p>
+</th:block>
+
+<!-- 댓글 반복문 시작 -->
+<th:block th:each="cmmt : ${cmmtList}">
+    <div class="comment px-1">
+        <!-- 작성자 -->
+        <p style="font-weight: bold;font-size: small;" class="mb-2" th:text="${cmmt.nickname}"></p>
+        <!-- 댓글내용 -->
+        <p class="mb-2" th:text="${cmmt.comment}"></p>
+        <!-- 수정&작성 - 본인이 아니면 보이지 않음 -->
+        <div th:if="${loginUser != null and loginUser.userId == cmmt.userId}">
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn-cmmt-update btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">수정</button>
+                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">삭제</button>
+            </div>
+        </div>
+        <hr class="mb-2 mt-1">
+    </div>
+</th:block>

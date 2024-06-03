@@ -138,12 +138,12 @@ public class FileServiceImpl implements FileService{
      * 파일 업로드
      */
     @Override
-    public boolean upload(Files file) throws Exception {
+    public boolean upload(Files file, String dir) throws Exception {
         uploadPath = "C:/upload"; // 이거 지우면 반복업로드할때 163행이 반복되어서 경로 이상해짐
 
         log.info("file: " + file);
 
-        String dir = file.getParentTable();     
+        file.setParentTable(dir);     
 
         MultipartFile mf = file.getFile();
         // 파일 정보 : 원본 파일명, 파일 용량, 파일 데이터

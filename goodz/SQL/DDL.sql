@@ -283,7 +283,7 @@ CREATE TABLE `Purchase` (
 	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
 	`user_id`			VARCHAR(100)	NOT NULL,
 	`p_no`				INT				NOT NULL,
-	`purchase_pirce`	INT				NOT NULL,
+	`purchase_price`	INT				NOT NULL,
 	`payment_method`	VARCHAR(50)		NOT NULL,
 	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
 	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
