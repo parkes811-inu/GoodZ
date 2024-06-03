@@ -94,7 +94,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean upload(Files file) throws Exception {
-        uploadPath = "C:/upload";
+        uploadPath = "C:/upload"; // 이거 지우면 반복업로드할때 163행이 반복되어서 경로 이상해짐
 
         log.info("file: " + file);
 

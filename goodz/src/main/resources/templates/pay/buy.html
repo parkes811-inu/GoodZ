@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>구매하기</title>
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .product_img {
             margin-right: 20px;
@@ -130,18 +131,18 @@
                             <div class="info_list">
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">받는 분</div>
-                                    <div class="desc" id="recipientName" th:text="${defaultAddress.recipientName}">[[${defaultAddress.recipientName}]]</div>
+                                    <div class="desc" id="recipientName" th:text="${defaultAddress.recipientName}"></div>
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">연락처</div>
-                                    <div class="desc" id="phoneNumber" th:text="${defaultAddress.phoneNumber}">[[${defaultAddress.phoneNumber}]]</div>
+                                    <div class="desc" id="phoneNumber" th:text="${defaultAddress.phoneNumber}"></div>
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">배송 주소</div>
-                                    <div class="desc" id="address" th:text="${defaultAddress.address}">[[${defaultAddress.address}]]</div>
+                                    <div class="desc" id="address" th:text="${defaultAddress.address}"></div>
                                 </div>
                             </div>
-                            <button id="change_address_btn" class="btn btn-outline-secondary ms-3" type="button" onclick="openAddressModal()">변경</button>
+                            <button class="btn btn-outline-secondary ms-3" type="button" data-bs-toggle="modal" data-bs-target="#addressModal">변경</button>
                         </div>
                         <div th:if="${!hasAddress}" class="text-center">
                             <!-- 기본 배송지 정보가 없는 경우 -->
@@ -153,26 +154,28 @@
 
                 <!-- 배송 주소 변경 모달 -->
                 <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addressModalLabel">배송지 변경</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <ul class="list-group">
-                                <li th:each="address : ${addresses}" class="list-group-item list-group-item-action" onclick="selectAddress('[[${address.recipientName}]]', '[[${address.phoneNumber}]]', '[[${address.address}]]')">
-                                    <div><strong th:text="${address.recipientName}">[[${address.recipientName}]]</strong></div>
-                                    <div th:text="${address.phoneNumber}">[[${address.phoneNumber}]]</div>
-                                    <div th:text="${address.address}">[[${address.address}]]</div>
-                                </li>
-                            </ul>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addressModalLabel">배송 주소 변경</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li th:each="address : ${addresses}" 
+                                        class="list-group-item list-group-item-action" 
+                                        th:onclick="selectAddress('[[${address.recipientName}]]', '[[${address.phoneNumber}]]', '[[${address.address}]]')"
+                                        data-bs-dismiss="modal">
+                                        <div><strong th:text="${address.recipientName}"></strong></div>
+                                        <div th:text="${address.phoneNumber}"></div>
+                                        <div th:text="${address.address}"></div>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            
                 <!-- 배송 방법 -->
                 <div class="section_unit mb-4">
                     <div class="section_content p-3 border rounded mb-4">
@@ -228,8 +231,6 @@
         </div>
     </div>
 
-   
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const button = document.getElementById("payment-request-button");
@@ -237,6 +238,7 @@
             const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
             var amount = 170000; // 총 결제금액과 일치하도록 설정
 
+            console.log("결제 위젯 초기화 시작");
             // 결제위젯 초기화
             const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 실제 클라이언트 키로 변경하세요.
             const customerKey = generateRandomString();
@@ -254,11 +256,13 @@
 
             // 결제 UI 렌더링 완료 이벤트
             paymentMethodWidget.on("ready", function () {
+                console.log("결제 위젯 렌더링 완료");
                 button.disabled = false;
             });
 
             // 결제하기 버튼 누르면 결제창 띄우기
             button.addEventListener("click", function () {
+                console.log("결제 요청 시작");
                 paymentWidget.requestPayment({
                     orderId: generateRandomString(),
                     orderName: "토스 티셔츠 외 2건",
@@ -274,18 +278,22 @@
             });
         });
 
-        function openAddressModal() {
-            var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
-            addressModal.show();
-        }
-
         function selectAddress(recipientName, phoneNumber, address) {
+
+            // 모달에서 선택하면 "" 생겨서 치환
+            var recipientName = recipientName.replace(/"/g, "");
+            var phoneNumber = phoneNumber.replace(/"/g, "");
+            var address = address.replace(/"/g, "");
+
             document.getElementById('recipientName').textContent = recipientName;
             document.getElementById('phoneNumber').textContent = phoneNumber;
             document.getElementById('address').textContent = address;
-            var addressModal = bootstrap.Modal.getInstance(document.getElementById('addressModal'));
-            addressModal.hide();
         }
+        
     </script>
+
+    <!-- Bootstrap 5 JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

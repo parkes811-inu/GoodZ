@@ -64,5 +64,6 @@ public interface UserMapper {
     // 기본 배송지 여부 확인
     public boolean isDefaultAddress(int addressNo) throws Exception;
 
-    
+    // 유저 계좌 등록
+    public void insertAccount(@Param("userId") String userId, @Param("account") String account) throws Exception;
 }

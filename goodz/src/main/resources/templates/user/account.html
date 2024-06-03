@@ -81,69 +81,88 @@
         }
     </style>
 </head>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/mypage_layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>판매 정산 계좌</title>
+</head>
 <body layout:fragment="content">
     <div class="container">
         <div class="userMainContainer">
-            <p class="fs-4 fw-bold mb-3">정산 계좌 등록</p>
+            <!-- 타이틀: 등록된 계좌가 있으면 '정산 계좌 변경', 없으면 '정산 계좌 등록' -->
+            <p class="fs-4 fw-bold mb-3" th:text="${account == null} ? '정산 계좌 등록' : '정산 계좌 변경'"></p>
 
-            <div class="account_info_container">
-                <div class="account-info-title">등록된 계좌 정보</div>
-                <!-- [DB] 유저의 계좌정보를 불러옴 -->
-                <div class="account-info-content">카카오뱅크 3333083434962 / 기부좀</div>
+            <!-- 등록된 계좌 정보 표시 영역 -->
+            <div class="account_info_container" th:if="${account != null}">
+                <div class="account-info-title">
+                    <span>등록된 계좌 정보</span>
+                </div>
+                <div class="account-info-content">
+                    <span th:text="${account.split(' ')[0]}"></span><br>
+                    <span th:text="${account.split(' ')[1]}"></span>
+                    <span th:text="${account.split(' ')[2]}"></span>
+                    <span th:text="${account.split(' ')[3]}"></span>
+                    
+                </div>
             </div>
 
+            <!-- 계좌 정보가 없을 때 표시 -->
+            <div class="account_info_container" th:if="${account == null}">
+                <div class="account-info-content">
+                    계좌를 등록해주세요
+                </div>
+            </div>
+
+            <!-- 계좌 등록/수정 폼 -->
             <div class="account_input">
-                <form id="accout_form" method="post" class="w-100">
-                    <div class="form-group">
-                        <label for="bank-name">은행명</label>
-                        <select id="bank-name">
+                <form id="account_form" method="post" th:action="@{/user/account}" class="w-100">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    
+                    <div class="form-group mb-3">
+                        <label for="bank-name" class="form-label">은행명</label>
+                        <select id="bank-name" name="bankName" class="form-select">
                             <option value="">은행명을 선택해주세요</option>
-                            <option value="KB국민은행">국민은행</option>
-                            <option value="신한은행">신한은행</option>
-                            <option value="우리은행">우리은행</option>
-                            <option value="하나은행">하나은행</option>
-                            <option value="기업은행">기업은행</option>
-                            <option value="농협은행">농협은행</option>
-                            <option value="SC은행">SC은행</option>
-                            <option value="한국씨티은행">한국씨티은행</option>
-                            <option value="산업은행">산업은행</option>
-                            <option value="카카오뱅크">카카오뱅크</option>
-                            <option value="부산은행">부산은행</option>
-                            <option value="대구은행">대구은행</option>
-                            <option value="수협중항회">수협중항회</option>
-                            <option value="제주은행">제주은행</option>
-                            <option value="새마을금고연합회">새마을금고연합회</option>
-                            <option value="신협">신협</option>
-                            <option value="토스뱅크">토스뱅크</option>
+                            <option value="KB국민은행" th:selected="${bankName == 'KB국민은행'}">국민은행</option>
+                            <option value="신한은행" th:selected="${bankName == '신한은행'}">신한은행</option>
+                            <option value="우리은행" th:selected="${bankName == '우리은행'}">우리은행</option>
+                            <option value="하나은행" th:selected="${bankName == '하나은행'}">하나은행</option>
+                            <option value="기업은행" th:selected="${bankName == '기업은행'}">기업은행</option>
+                            <option value="농협은행" th:selected="${bankName == '농협은행'}">농협은행</option>
+                            <option value="SC은행" th:selected="${bankName == 'SC은행'}">SC은행</option>
+                            <option value="한국씨티은행" th:selected="${bankName == '한국씨티은행'}">한국씨티은행</option>
+                            <option value="산업은행" th:selected="${bankName == '산업은행'}">산업은행</option>
+                            <option value="카카오뱅크" th:selected="${bankName == '카카오뱅크'}">카카오뱅크</option>
+                            <option value="부산은행" th:selected="${bankName == '부산은행'}">부산은행</option>
+                            <option value="대구은행" th:selected="${bankName == '대구은행'}">대구은행</option>
+                            <option value="수협중앙회" th:selected="${bankName == '수협중앙회'}">수협중앙회</option>
+                            <option value="제주은행" th:selected="${bankName == '제주은행'}">제주은행</option>
+                            <option value="새마을금고연합회" th:selected="${bankName == '새마을금고연합회'}">새마을금고연합회</option>
+                            <option value="신협" th:selected="${bankName == '신협'}">신협</option>
+                            <option value="토스뱅크" th:selected="${bankName == '토스뱅크'}">토스뱅크</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="account-number">계좌번호</label>
-                        <input type="text" id="account-number" placeholder="계좌번호를 입력해주세요">
+                    <div class="form-group mb-3">
+                        <label for="account-number" class="form-label">계좌번호</label>
+                        <input type="text" id="account-number" name="accountNumber" class="form-control" placeholder="계좌번호를 입력해주세요" 
+                               th:value="${accountNumber}">
                     </div>
 
-                    <div class="form-group">
-                        <label for="account-holder">예금주</label>
-                        <input type="text" id="account-holder" placeholder="예금주 명을 입력해주세요">
+                    <div class="form-group mb-3">
+                        <label for="account-holder" class="form-label">예금주</label>
+                        <input type="text" id="account-holder" name="accountHolder" class="form-control" placeholder="예금주 명을 입력해주세요" 
+                               th:value="${accountHolder}">
                     </div>
-                    
-                    <!-- DB 연결시 등록된 계좌가 있으면 텍스트를 수정으로 -->
-                    <button type="submit" class="submit_btn btn btn-dark btn-block my-4 w-100" onclick="findId()" style="background-color: #393E46;">저장</button>
 
+                    <button type="submit" class="submit_btn btn btn-dark btn-block w-100" th:text="${account == null} ? '저장' : '수정'">저장</button>
                 </form>
             </div>
         </div>
-        
-        <!-- DB 연결시 등록된 계좌가 없으면 안 보이게 -->
-        <!-- 유저 테이블에 저장된 정보를 가져옴-->
     </div>
-    <script>
-        document.getElementById('accout_form').addEventListener('submit', function(event) {
-            event.preventDefault();  // 기본 폼 제출 방지
-            location.href = '/user/account';  
-        });
-    </script>
 </body>
 </html>
 </html>

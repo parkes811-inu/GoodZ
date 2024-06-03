@@ -238,6 +238,12 @@ public class UserServiceImpl implements UserService {
         return shippingaddress != null && shippingaddress.isDefault();
     }
 
+    // 유저 계좌 등록 
+    @Override
+    public void insertAccount(String userId, String account) throws Exception {
+        userMapper.insertAccount(userId, account);
+    }
+
 
     
     
