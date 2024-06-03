@@ -26,7 +26,17 @@ import com.springproject.goodz.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 
-
+/*
+ * 댓글
+ * [GET]        /cmmt/게시글번호        종속된 전체 댓글 목록
+ * [POST]       /cmmt                  댓글 등록 요청    
+ * [DELETE]     /cmmt/댓글번호          댓글 삭제 요청
+ * [GET]        /cmmt/count/게시글번호  종속된 댓글 갯수 조회    
+ * 
+ * 프로필    
+ * [GET]    /styles/user/@닉네임     유저 프로필
+ * 
+ */
 @Slf4j
 @Controller
 @RequestMapping("/cmmt")
@@ -89,6 +99,12 @@ public class CommentController {
         return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED); // CREATED = 201
     }
 
+    /**
+     * 댓글 삭제 요청
+     * @param cNo
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping("/{no}")
     public ResponseEntity<String> delete(@PathVariable("no") int cNo) throws Exception{
         log.info("삭제할 댓글 번호: " + cNo);
