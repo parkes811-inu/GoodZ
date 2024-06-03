@@ -1,9 +1,6 @@
 package com.springproject.goodz.product.service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -159,5 +156,11 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getProductImagesByProductId'");
+    }
+
+    // 제품과 최신 가격 변동 정보 조회
+    @Override
+    public List<Product> UsedInPay(int pNo) throws Exception {
+        return productMapper.UsedInPay(pNo);
     }
 }

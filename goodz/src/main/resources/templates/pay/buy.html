@@ -111,10 +111,10 @@
                         </div>
                         <div class="product_detail">
                             <div class="product_info">
-                                <strong>상품명</strong><br>Stussy Basic Stussy T-Shirt Berry 2024
+                                <strong>상품명</strong><br><span th:text="${product?.productName}"></span>
                             </div>
                             <div class="product_info">
-                                <strong>사이즈</strong><br>M
+                                <strong>사이즈</strong><br><span th:text="${product.size}"></span>
                             </div>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
                     <div class="section_header">최종 주문 정보</div>
                     <div class="summary_item">
                         <span>상품 가격</span>
-                        <span>167,000원</span>
+                        <span th:text="${product.price} + '원'"></span>
                     </div>
                     <div class="summary_item">
                         <span>검수비</span>
@@ -220,7 +220,7 @@
                     <div class="summary_item summary_total">
                         <!-- 상품 가격 + 3000 로직 필요 -->
                         <span>총 결제금액</span>
-                        <span>170,000원</span>
+                        <span th:text="${product.price + 3000} + '원'"></span>
                     </div>
                 </div>
             </div>
@@ -236,7 +236,7 @@
             const button = document.getElementById("payment-request-button");
             const csrfToken = document.querySelector('input[name="_csrf"]').value; // CSRF 토큰 가져오기
             const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
-            var amount = 170000; // 총 결제금액과 일치하도록 설정
+            var amount = /*[[${product.price + 3000}]]*/ 0; // 총 결제금액과 일치하도록 설정
 
             console.log("결제 위젯 초기화 시작");
             // 결제위젯 초기화
@@ -291,9 +291,8 @@
         }
         
     </script>
+        
 
-    <!-- Bootstrap 5 JavaScript -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -47,6 +47,7 @@
                     <!-- 유저닉네임 -->
                     <div class="user_nickname_area mb-2 d-flex justify-content-start">
                         <p class="userNickname fs-2 m-0 text-start" th:text="${requested.nickname}"></p>
+                         <!-- 프로필 관리 버튼 -->
                         <th:block th:if="${loginUser != null and loginUser.userId == requested.userId}">
                             <div class="d-flex align-items-center justify-content-center">
                                 <a href="/user/manage_info" class="btn border-secondary-subtle ms-3" type="button" style="color: rgb(80, 80, 80); font-size: smaller; width: 100px; height: 30px;">
@@ -54,6 +55,7 @@
                                 </a>
                             </div>
                         </th:block>
+
                     </div>
                     <!-- 팔로우/팔로잉 정보 -->
                     <div class="followInfo d-flex text-start">
