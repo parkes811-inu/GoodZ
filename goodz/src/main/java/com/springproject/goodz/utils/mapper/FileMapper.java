@@ -25,5 +25,5 @@ public interface FileMapper {
     public List<Files> listByParent(Files file) throws Exception;
     // 파일 삭제 - 부모 기준
     public int deleteByParent(Files file) throws Exception;
-    
+
 }

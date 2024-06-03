@@ -1,6 +1,7 @@
 package com.springproject.goodz.product.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,8 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
@@ -33,7 +36,30 @@ public class ProductController {
     private FileService fileService;
 
     @GetMapping("")
-    public String index() {
+    public String index(Model model) throws Exception {
+
+        List<Product> productList = productService.list();
+
+        for (Product product : productList) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
+
+        model.addAttribute("productList", productList);
         return "/product/index";
     }
 
@@ -44,30 +70,65 @@ public class ProductController {
 
     @GetMapping("/detail/{pNo}")
     public String productDetailPage(@PathVariable("pNo") Integer pNo, Model model) throws Exception {
+        // 상품 정보 가져오기
         Product product = productService.getProductBypNo(pNo);
-        List<ProductOption> option =  productService.getProductOptionsByProductId(pNo);
+
+        // 상품 옵션 설정
+        List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
+
+
+        // 상품 이미지 설정
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
+
+        // 최저 가격 계산
+        int minPrice = options.stream()
+                            .mapToInt(ProductOption::getOptionPrice)
+                            .min()
+                            .orElse(0);
+
         model.addAttribute("product", product);
-        model.addAttribute("option", option);
+        model.addAttribute("options", options);
         model.addAttribute("images", images);
+        model.addAttribute("minPrice", minPrice);
+
+        // 사이즈별 가격 정보를 JSON 형태로 변환
+        String pricesJson = options.stream()
+                                .collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
+                                .toString();
+        model.addAttribute("pricesJson", pricesJson);
 
         return "/product/detail";
     }
+
 
     // 상의 카테고리
     @GetMapping("/top")
     public String top(Model model) throws Exception {
         List<Product> topList = productService.top();
-        Files file = new Files();
-        file.setParentTable("top");
-        List<Files> images = fileService.listByParent(file);
+
+        for (Product product : topList) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
 
         model.addAttribute("topList", topList);
-        model.addAttribute("images", images);
-
         return "/product/top";
     }
 
@@ -75,11 +136,25 @@ public class ProductController {
     @GetMapping("/pants")
     public String pants(Model model) throws Exception {
         List<Product> pantsList = productService.pants();
-        Files file = new Files();
-        file.setParentTable("pants");
-        List<Files> images = fileService.listByParent(file);
 
-        model.addAttribute("images", images);
+        for (Product product : pantsList) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
         model.addAttribute("pantsList", pantsList);
 
         return "/product/pants";
@@ -89,11 +164,24 @@ public class ProductController {
     @GetMapping("/shoes")
     public String shoes(Model model) throws Exception {
         List<Product> shoesList = productService.shoes();
-        Files file = new Files();
-        file.setParentTable("shoes");
-        List<Files> images = fileService.listByParent(file);
+        for (Product product : shoesList) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
 
-        model.addAttribute("images", images);
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
         model.addAttribute("shoesList", shoesList);
 
         return "/product/shoes";
@@ -103,11 +191,25 @@ public class ProductController {
     @GetMapping("/accessory")
     public String accessory(Model model) throws Exception {
         List<Product> accessoryList = productService.accessory();
-        Files file = new Files();
-        file.setParentTable("pants");
-        List<Files> images = fileService.listByParent(file);
-        
-        model.addAttribute("images", images);
+
+        for (Product product : accessoryList) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
         model.addAttribute("accessoryList", accessoryList);
 
         return "/product/accessory";

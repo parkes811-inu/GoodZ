@@ -8,7 +8,8 @@
     <!-- 관리자 목록 조회 -->
     <select id="list" resultType="Product">
         SELECT *
-        FROM product
+          FROM product
+         ORDER BY category DESC
     </select>
 
     <!-- 메인화면에 4개 띄우기 -->
@@ -29,28 +30,28 @@
     <select id="top" resultType="Product">
         SELECT *
         FROM product
-        WHERE category = '상의'
+        WHERE category = 'top'
     </select>
 
     <!-- 하의 목록 -->
     <select id="pants" resultType="Product">
         SELECT *
         FROM product
-        WHERE category = '하의'
+        WHERE category = 'pants'
     </select>
 
     <!-- 신발 목록 -->
     <select id="shoes" resultType="Product">
         SELECT *
         FROM product
-        WHERE category = '신발'
+        WHERE category = 'shoes'
     </select>
 
     <!-- 악세사리 목록 -->
     <select id="accessory" resultType="Product">
         SELECT *
         FROM product
-        WHERE category = '악세사리'
+        WHERE category = 'accessory'
     </select>
 
     <!-- 제품 조회 -->
