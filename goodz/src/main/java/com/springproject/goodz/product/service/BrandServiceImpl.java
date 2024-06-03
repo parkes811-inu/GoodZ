@@ -57,14 +57,19 @@ public class BrandServiceImpl implements BrandService{
     @Override
     public int insert(Brand brand) throws Exception {
 
-        log.info("브랜드 등록 처리 진행중...");
+        log.info("::::::::::brandService::::::::::");
 
-        /* 브랜드 등록 처리 */ 
+        /* ⬇️ 브랜드 등록 처리 ⬇️ */ 
         int result = brandMapper.insert(brand); // 성공 -> 1
 
-        /* 첨부파일 (로고) 등록처리 */ 
+        if (result == 1) {
+            log.info("브랜드 등록 성공");
+        }
+
+        /* ⬇️ 첨부파일 (로고) 등록처리 ⬇️ */ 
         String parentTable = "brand";
         int parentNo = brandMapper.maxNo(); // 방금 등록된 브랜드 번호를 가져옴
+        log.info("브랜드 번호: " + parentNo + "종속테이블: " + parentTable);
 
         // 브랜드 로고 업로드
         MultipartFile requestFile = brand.getLogoFile();
@@ -82,11 +87,11 @@ public class BrandServiceImpl implements BrandService{
             boolean isUploaded = fileService.upload(logoFile);           // 파일 업로드 요청
 
             if (isUploaded) {
-                log.info("로고 파일 처리 완료!!!!!");
+                log.info("로고파일 등록 완료");
             }
         }
 
-        if (result > 9) {
+        if (result > 0) {
             log.info("브랜드 등록 처리 완료");
         }
 
