@@ -35,7 +35,7 @@
     <!-- 댓글 삭제 -->
     <delete id="delete">
         DELETE FROM comment
-        WHERE c_no = #{no}
+        WHERE c_no = #{cNo}
     </delete>
 
     <!-- 댓글 종속 삭제 -->
@@ -49,6 +49,13 @@
     <select id="max" resultType="int">
         SELECT MAX(c_no)
         FROM comment
+    </select>
+
+    <!-- 댓글 갯수 -->
+    <select id="cmmtQty" resultType="int">
+        SELECT COUNT(c_no)
+        FROM comment
+        WHERE post_no = #{postNo}
     </select>
 
 

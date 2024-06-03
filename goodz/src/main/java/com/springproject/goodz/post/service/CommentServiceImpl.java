@@ -48,9 +48,11 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public int delete(int no) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public int delete(int cNo) throws Exception {
+
+        int result = cmmtMapper.delete(cNo);
+
+        return result;
     }
 
     @Override
@@ -63,6 +65,13 @@ public class CommentServiceImpl implements CommentService{
     public int max() throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'max'");
+    }
+
+    @Override
+    public int cmmtQty(int postNo) throws Exception {
+        int cmmtQty = cmmtMapper.cmmtQty(postNo);
+
+        return cmmtQty;
     }
     
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.springproject.goodz.post.dto.Comment;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.CommentService;
 import com.springproject.goodz.post.service.PostService;
@@ -86,13 +85,6 @@ public class PostController {
         log.info("조회할 파일의 parentNo: " + file.getParentNo());
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
-
-        /* 댓글 세팅 */
-        // List<Comment> cmmtList = cmmtService.list(postNo);
-        // model.addAttribute("cmmtList", cmmtList);
-        // log.info("조회된 댓글: " + cmmtList.toString());
-        // 리스트 foreach를 통해서 userService의 selectById로 닉네임 가져와서 다시 세팅해야함...
-        // 왜냐하면,, 계정의 닉네임이 변경될 수 잇어서 닉네임을 db에 넣을 순 없는데, 댓글이 표시될때는 닉네임이 표시되므로!!
 
         /* 게시글 작성자 정보 세팅 */
         Users writer = userService.select(post.getUserId());

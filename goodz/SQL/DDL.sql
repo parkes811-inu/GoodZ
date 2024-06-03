@@ -137,7 +137,6 @@ CREATE TABLE `Comment` (
 -- Like 테이블 / 📁 post
 CREATE TABLE `Like` (
 	`like_no`	INT				NOT NULL AUTO_INCREMENT,
-	`c_no`		INT				NOT NULL,
 	`user_id`	VARCHAR(100)	NOT NULL,
 	`post_no`	INT				NOT NULL,
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,

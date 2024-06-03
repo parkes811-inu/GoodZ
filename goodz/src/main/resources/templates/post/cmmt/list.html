@@ -9,13 +9,15 @@
     <div class="comment px-1">
         <!-- 작성자 -->
         <p style="font-weight: bold;font-size: small;" class="mb-2" th:text="${cmmt.nickname}"></p>
+        <input type="hidden" name="userId" th:value="${cmmt.userId}">
         <!-- 댓글내용 -->
         <p class="mb-2" th:text="${cmmt.comment}"></p>
         <!-- 수정&작성 - 본인이 아니면 보이지 않음 -->
         <div th:if="${loginUser != null and loginUser.userId == cmmt.userId}">
             <div class="d-flex justify-content-end">
+                <input type="hidden" id="myToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <button type="button" class="btn-cmmt-update btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">수정</button>
-                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">삭제</button>
+                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" th:onclick="|deleteCmmt(${cmmt.cNo})|" style="font-size: small; width: 40px;">삭제</button>
             </div>
         </div>
         <hr class="mb-2 mt-1">

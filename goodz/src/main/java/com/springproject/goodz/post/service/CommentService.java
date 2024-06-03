@@ -19,11 +19,14 @@ public interface CommentService {
     public int update(Comment comment) throws Exception;
     
     // 댓글 삭제
-    public int delete(int no) throws Exception;
+    public int delete(int cNo) throws Exception;
 
     // 댓글 종속 삭제 - 게시글 삭제와 연결(PostServiceImpl.java)
     public int deleteByBoardNo(int boardNo) throws Exception;
 
     // 댓글번호 최댓값 가져오기
     public int max() throws Exception;
+
+    // 댓글 갯수 가져오기
+    public int cmmtQty(int postNo) throws Exception;
 }
