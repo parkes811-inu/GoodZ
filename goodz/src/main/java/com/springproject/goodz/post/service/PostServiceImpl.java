@@ -23,6 +23,15 @@ public class PostServiceImpl implements PostService{
     @Autowired
     private FileService fileService;
 
+
+    // 게시글 목록
+    @Override
+    public List<Post> list() throws Exception {
+        List<Post> postList = postMapper.list();
+
+        return postList;
+    }
+
     /**
      * 게시글 조회
      */

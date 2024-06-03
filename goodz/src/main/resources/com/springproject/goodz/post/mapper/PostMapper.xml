@@ -6,10 +6,18 @@
 <mapper namespace="com.springproject.goodz.post.mapper.PostMapper">
 
 
-    <!-- <select id="list" resultType="post">
-        SELECT *
-        FROM post
-    </select> -->
+    <select id="list" resultType="post">
+        SELECT	p.post_no as post_no
+               ,p.user_id as user_id
+               ,u.nickname as nickname
+               ,u.profile_picture_url as profileImg
+               ,f.no as file_no
+        FROM post p 
+        INNER JOIN user u on p.user_id = u.user_id
+        INNER JOIN file f on post_no = parent_no and f.parent_table='post' and file_code = 1;
+
+        
+    </select>
 
     <select id="select" resultType="post">
         SELECT *

@@ -7,7 +7,7 @@ import com.springproject.goodz.post.dto.Post;
 public interface PostService {
 
     // 게시글 목록
-    // public List<Post> list() throws Exception;
+    public List<Post> list() throws Exception;
 
     // 게시글 조회
     public Post select(int no) throws Exception;

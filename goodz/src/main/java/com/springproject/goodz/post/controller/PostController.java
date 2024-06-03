@@ -59,7 +59,11 @@ public class PostController {
      * @return
      */
     @GetMapping("")
-    public String list() {
+    public String list(Model model) throws Exception {
+
+        List<Post> postList = postService.list();
+        model.addAttribute("postList", postList);
+
         return "/post/list";
     }
 
