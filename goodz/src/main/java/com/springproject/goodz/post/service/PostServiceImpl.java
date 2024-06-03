@@ -108,7 +108,7 @@ public class PostServiceImpl implements PostService{
                     uploadFile.setFileCode(1);
                 }
 
-                boolean uploadcheck = fileService.upload(uploadFile);
+                boolean uploadcheck = fileService.upload(uploadFile, "post");
 
                 if (uploadcheck) {
                     log.info((i+1) + "번째 파일 업로드 성공...");
