@@ -21,7 +21,7 @@ public class Product {
     private Date createdAt;         // 상품 등록 날짜
     private Date updatedAt;         // 상품 수정 날짜
     
-    private List<ProductImage> images; // 연관된 이미지 목록
+    private List<ProductImage> images; // 연관된 이미지 목록 -> 이걸 과연 써야 할까?
     private List<ProductOption> options; // 연관된 옵션 목록
     private String imageUrl;        // 첫 번째 이미지 URL을 저장할 필드
     private List<MultipartFile> productFiles; // 추가된 필드

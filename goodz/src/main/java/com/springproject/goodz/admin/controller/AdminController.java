@@ -2,6 +2,8 @@ package com.springproject.goodz.admin.controller;
 
 import java.util.List;
 
+import javax.swing.text.MutableAttributeSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.BrandService;
 import com.springproject.goodz.product.service.ProductService;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +37,9 @@ public class AdminController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private FileService fileService;
+    
     @GetMapping("")
     public String index() {
         return "/admin/index";
@@ -84,28 +91,44 @@ public class AdminController {
         @RequestParam("sizes") List<String> sizes, 
         @RequestParam("optionPrices") List<Integer> optionPrices, 
         @RequestParam("stockQuantities") List<Integer> stockQuantities, 
-        @RequestParam("status") List<String> status, 
+        @RequestParam("status") List<String> status,
+        @RequestParam("category") String category,
+        @RequestParam("price") int price, 
+        @RequestParam(value = "mainImgIndex", required = false, defaultValue = "-1") int mainImgIndex,
         RedirectAttributes redirectAttributes) throws Exception {
 
         log.info("::::::::::::::상품 등록 요청::::::::::::::");
         log.info(product.toString());
+        
+        product.setCategory(category);
+        product.setInitialPrice(price);
+        product.setProductFiles(productFiles); // 파일 리스트를 설정합니다.
 
-        // 상품 등록
-        int pNo = productService.insert(product);
+        int result = productService.insert(product, mainImgIndex);
+        
+        if(result > 0) {
+            int pNo = product.getPNo();
+            // 옵션 등록
+            for (int i = 0; i < sizes.size(); i++) {
+                ProductOption option = new ProductOption();
+                option.setPNo(pNo); // set the generated product number
+                option.setSize(sizes.get(i));
+                option.setOptionPrice(optionPrices.get(i));
+                option.setStockQuantity(stockQuantities.get(i));
+                option.setStatus(status.get(i));
+                productService.insertProductOption(option);
 
-        // 옵션 등록
-        for (int i = 0; i < sizes.size(); i++) {
-            ProductOption option = new ProductOption();
-            option.setPNo(pNo); // set the generated product number
-            option.setSize(sizes.get(i));
-            option.setOptionPrice(optionPrices.get(i));
-            option.setStockQuantity(stockQuantities.get(i));
-            option.setStatus(status.get(i));
-            productService.insertProductOption(option);
+                // priceHistory에 사이즈 별 가격 최초 등록
+                productService.makeHistory(pNo, sizes.get(i), optionPrices.get(i));
+            }
+
+        } else {
+            // error 페이지 만드러야 댐.....
+            return "/common/error";
         }
-
         return "redirect:/admin/products";
     }
+
 
     @GetMapping("/purchase_state")
     public String purchase_state() {
@@ -130,10 +153,15 @@ public class AdminController {
     @GetMapping("/product/detail/{pNo}")
     public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {
         Product product = productService.getProductBypNo(pNo);
-        if (product == null) {
-            throw new Exception("Product not found");
-        }
+        List<ProductOption> option =  productService.getProductOptionsByProductId(pNo);
+        Files file = new Files();
+        file.setParentNo(pNo);
+        file.setParentTable(product.getCategory());
+        List<Files> images = fileService.listByParent(file);
         model.addAttribute("product", product);
+        model.addAttribute("option", option);
+        model.addAttribute("images", images);
+
         return "/admin/product_detail";
     }
 }

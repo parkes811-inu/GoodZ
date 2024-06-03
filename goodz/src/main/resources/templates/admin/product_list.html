@@ -88,7 +88,6 @@
                         <th scope="col" style="width: 100px;">상품 번호</th>
                         <th scope="col">브랜드명</th>
                         <th scope="col">상품명</th>
-                        <th scope="col">옵션별 재고</th>
                         <th scope="col">등록일자</th>
                       </tr>
                     </thead>
@@ -113,14 +112,7 @@
                                th:text="${product.productName}"
                                class="text-dark text-decoration-none"></a>
                         </td>
-                        <td>
-                            <ul>
-                                <li th:each="option : ${product.options}">
-                                    <span th:text="${option.size}">Size</span>: 
-                                    <!-- <span th:text="${option.stockQuantity}">Stock Quantity</span> -->
-                                </li>
-                            </ul>
-                        </td>
+                        
                         <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
                     </tr>
                     </tbody>
