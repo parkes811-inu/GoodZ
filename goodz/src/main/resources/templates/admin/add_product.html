@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 등록 페이지</title>
-    <!-- <style>
+    <style>
         .option_input {
             border: none;
         }
@@ -81,14 +81,14 @@
             font-size: 14px;
             font-weight: bold;
         }
-    </style> -->
+    </style>
 </head>
 
 <body layout:fragment="content">
-    <div class="container">
+    <div class="container mt-5">
         <div class="userMainContainer">
 
-            <p class="fs-4 fw-bold p-0 mb-5">상품 등록</p>
+            <p class="fs-4 fw-bold p-0">상품 등록</p>
 
             <form action="/admin/products" id="add_product-form" method="post" enctype="multipart/form-data" style="max-width: 600px;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -125,7 +125,7 @@
                 <div class="mb-3">
                     <label for="origin-price" class="form-label">발매가</label>
                     <div class="d-flex form-group">
-                        <input type="text" class="form-control text-end" id="origin-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
+                        <input type="text" class="form-control text-end rounded-0" id="origin-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
                         <p class="m-0" style="align-self: center;">원</p>
                     </div>
                 </div>
@@ -154,34 +154,26 @@
                                     </button>
                                 </th>
                                 <th>크기</th>
-                                <th>옵션가격</th>
+                                <th>가격</th>
                                 <th>재고</th>
-                                <!-- <th style="min-width: 90px;">재고추가</th> -->
-                                <!-- <th style="min-width: 90px;">재고번호</th> -->
                                 <th style="min-width: 140px;">상태</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            
+                        <tbody id="optionContainer">
                             <tr>
                                 <td></td>
-                                <td><input type="text" class="form-control" name="size" id="size"></td>
-                                <td><input type="text" class="form-control" name="price" id="price"></td>
-                                <!-- 상품번호 -->
-                                <!-- <td><input type="text" class="form-control" name="pNo" value=""></td> -->
-                                <td><input type="text" class="form-control" value=""></td>
-                                <!-- 재고추가입력란 -->
-                                <!-- <td><input type="text" class="form-control" value=""></td> -->
+                                <td><input type="text" class="form-control" name="sizes"></td>
+                                <td><input type="text" class="form-control" name="optionPrices"></td>
+                                <td><input type="text" class="form-control" name="stockQuantities"></td>
                                 <td>
-                                    <select class="form-select" name="status" id="status">
+                                    <select class="form-select" name="status">
                                         <option selected value="on">판매중</option>
                                         <option value="off">판매중지</option>
                                     </select>
                                 </td>
                             </tr>
-                            <!-- ⬇️ + 버튼 누르면 반복될 구간 ⬇️ -->
-
+                            <!-- 반복될 구간 -->
                         </tbody>
                     </table>
                 </div>
@@ -197,6 +189,8 @@
         const imageInput = document.getElementById('imageInput');
         const imagePreview = document.getElementById('imagePreview');
         const representativeImageInput = document.getElementById('representativeImage');
+        const addOptionButton = document.getElementById('add_option');
+        const optionContainer = document.getElementById('optionContainer');
     
         imageInput.addEventListener('change', function() {
             imagePreview.innerHTML = '';
@@ -214,9 +208,26 @@
                 imagePreview.appendChild(img);
             });
         });
+
+        addOptionButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td></td>
+                <td><input type="text" class="form-control" name="sizes"></td>
+                <td><input type="text" class="form-control" name="optionPrices"></td>
+                <td><input type="text" class="form-control" name="stockQuantities"></td>
+                <td>
+                    <select class="form-select" name="status">
+                        <option selected value="on">판매중</option>
+                        <option value="off">판매중지</option>
+                    </select>
+                </td>
+            `;
+            optionContainer.appendChild(newRow);
+        });
     </script>
 
-    
 </body>
 
 </html>

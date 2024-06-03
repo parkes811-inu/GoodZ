@@ -32,6 +32,9 @@ public interface ProductService {
     // 상품 상세 조회
     Product getProductBypNo(int pNo) throws Exception;
 
+    // 상품 옵션 등록
+    int insertProductOption(ProductOption productOption) throws Exception;
+    
     // 상품의 옵션 목록 조회
     List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
 
