@@ -1,6 +1,7 @@
 package com.springproject.goodz.controller;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +32,10 @@ public class MainController {
 
     @Autowired
     private ProductService productService;
- 
+    
+    @Autowired
+    private FileService fileService;
+
     @GetMapping("/{page}")
     public String page(@PathVariable("page") String page) {
         return page;
@@ -62,17 +69,30 @@ public class MainController {
     public String newArrivals(Model model) throws Exception {
         List<Product> newArrivalsList = productService.newArrivals();
 
-        
         for (Product product : newArrivalsList) {
-            String firstImageUrl = product.getFirstImageUrl();
-            if (firstImageUrl != null) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
             
-                product.setImageUrl(URLEncoder.encode(firstImageUrl, "UTF-8")); // URL 인코딩 적용
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
             }
         }
 
         model.addAttribute("newArrivalsList", newArrivalsList);
         return "/index";
     }
+
+
+
 
 }

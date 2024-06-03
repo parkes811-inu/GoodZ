@@ -168,8 +168,10 @@
                 <!-- 상품 상세 정보 -->
                 <div class="col-md-6">
                     <div class="product-details">
-                        <h3>Stussy Basic Stussy T-Shirt Berry 2024</h3>
-                        <div class="product-price">167,000원</div>
+                        <h3 th:text="${product.productName}"></h3>
+                        <div class="product-price">
+                            <p th:text="${minPrice} + ' 원'"></p>
+                        </div>
                         <div class="product-options">
                             <button id="sizeButton" name="size" class="form-select w-100" data-bs-toggle="modal" data-bs-target="#sizeModal">
                                 모든 사이즈
@@ -178,13 +180,10 @@
                         
                         <div class="p-1">
                             <div class="buy-buttons mt-3 d-flex justify-content-end">
-                                <a type="button" class="btn btn-danger btn-purchase mb-2 me-2 d-flex justify-content-between align-items-center" href="/pay/buy?p_no=3&size=m">
-                                    구매
-                                </a>
-                                <!-- <button class="btn btn-danger btn-purchase mb-2 me-2 d-flex justify-content-between align-items-center" data-bs-toggle="modal" 
-                                data-bs-target="#transactionModal" data-type="purchase" data-prices='{"S":202000,"M":167000,"L":172000,"XL":172000,"XXL":122000}'>
-                                    <p class="m-0 ms-2">167,000 원</p>
-                                구매</button> -->
+                                <button class="btn btn-danger btn-purchase mb-2 me-2 d-flex justify-content-between align-items-center" 
+                                        data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="purchase" th:data-prices="${pricesJson}">
+                                    구매 <p class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
+                                </button>
                                 <button class="btn btn-success btn-sell mb-2 d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="sell" data-prices='["S"]'>
                                     판매 <p class="m-0 ms-2">56,000 원</p>
                                 </button>
@@ -208,11 +207,9 @@
                                     </div>
                                     <div class="modal-body">
                                         <!-- 사이즈 옵션이 여기에 동적으로 삽입됩니다 -->
-                                        <button class="btn btn-outline-secondary size-option" data-size="S">S</button>
-                                        <button class="btn btn-outline-secondary size-option" data-size="M">M</button>
-                                        <button class="btn btn-outline-secondary size-option" data-size="L">L</button>
-                                        <button class="btn btn-outline-secondary size-option" data-size="XL">XL</button>
-                                        <button class="btn btn-outline-secondary size-option" data-size="XXL">XXL</button>
+                                        <th:block th:each="option : ${options}">
+                                            <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:text="${option.size}"></button>
+                                        </th:block>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-dark" id="confirmSizeButton">선택 완료</button>
