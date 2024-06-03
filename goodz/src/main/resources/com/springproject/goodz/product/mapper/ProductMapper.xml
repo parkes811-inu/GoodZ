@@ -4,52 +4,60 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.springproject.goodz.product.mapper.ProductMapper">
-	
-	<!-- 관리자 목록 조회 -->
+    
+    <!-- 관리자 목록 조회 -->
     <select id="list" resultType="Product">
         SELECT *
-		FROM product
+        FROM product
     </select>
 
-	<!-- 메인화면에 4개 띄우기 -->
-	<select id="newArrivals" resultType="Product">
-		SELECT *
-		FROM product
-		ORDER BY created_at DESC
-		LIMIT 4
-	</select>
+    <!-- 메인화면에 4개 띄우기 -->
+    <select id="newArrivals" resultType="Product">
+        SELECT *
+        FROM product
+        ORDER BY created_at DESC
+        LIMIT 4
+    </select>
 
-	<!-- 상품 등록 -->
-	<insert id="insert">
-		INSERT INTO product (category, b_name, product_name, image_url, size, price, stock_quantity)
-		VALUES (#{category}, #{bName}, #{productName}, #{imageUrl}, #{size},#{price}, #{stockQuantity})
-	</insert>
+    <!-- 상품 등록 -->
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="pNo">
+    INSERT INTO product (category, b_name, product_name, initial_price)
+    VALUES (#{category}, #{bName}, #{productName}, #{initialPrice})
+    </insert>
 
-	<!-- 상의 목록 -->
+    <!-- 상의 목록 -->
     <select id="top" resultType="Product">
         SELECT *
-		FROM product
-		WHERE category = '상의'
+        FROM product
+        WHERE category = '상의'
     </select>
 
-	<!-- 하의 목록 -->
+    <!-- 하의 목록 -->
     <select id="pants" resultType="Product">
         SELECT *
-		FROM product
-		WHERE category = '하의'
+        FROM product
+        WHERE category = '하의'
     </select>
 
-	<!-- 신발 목록 -->
+    <!-- 신발 목록 -->
     <select id="shoes" resultType="Product">
         SELECT *
-		FROM product
-		WHERE category = '신발'
+        FROM product
+        WHERE category = '신발'
     </select>
 
-	<!-- 악세사리 목록 -->
+    <!-- 악세사리 목록 -->
     <select id="accessory" resultType="Product">
         SELECT *
-		FROM product
-		WHERE category = '악세사리'
+        FROM product
+        WHERE category = '악세사리'
     </select>
+
+    <!-- 제품 조회 -->
+    <select id="getProductBypNo" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE p_no = #{pNo}
+    </select>
+
 </mapper>

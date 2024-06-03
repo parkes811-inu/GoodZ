@@ -32,6 +32,19 @@
             display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
             width: 100px;
         }
+
+        .carousel-inner {
+            width: 640px;
+            height: 850px;
+        }
+        
+        .carousel-item {
+            width: 100%;
+            height: 100%;
+        }
+
+
+
     </style>
     <!-- 모달창 css -->
     <style>
@@ -104,102 +117,65 @@
         }
 
 
+
+
     </style>
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
 
     <!-- 댓글 모달창 -->
-    <div id="modal">
-        <div class="modal_layer"> <!-- : 불투명 배경-->
-            <div class="modal_content">
-                <div class="modal_header d-flex mx-2 mt-2">
-                        <svg id="modal_close_btn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6" width="45" height="45">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                        <p class="fs-4 m-0 pt-1 ms-2">댓글</p>
-                </div>
-
-                <!-- 댓글 컨테이너 -->
-                <div class="comment_container">
-                    <!-- 댓글입력칸 -->
-                    <div class="comment_input d-flex align-items-center">
-                        <!-- [DB] 본인 프로필이미지 DB에서 가져옴 -->
-                        <img src="/img/temp/profile_img_default.png" alt="프로필 이미지" class="profile_img">
-                        <form method="post" class="d-flex align-items-center">
-                            <div class="wrap_input ms-3">
-                                <input type="text" class="form-control bg-light border-secondary-subtle rounded-4" placeholder="댓글을 입력하세요." aria-label="First name" style="box-shadow: none !important;font-size: smaller;width: 280px;">
-                            </div>
-                            <button type="button" class="addBtn btn rounded-0 p-0" id="addBtn" style="font-size: small;width: 40px;height: 33px; margin-left: 10px;">등록</button>
-                            <!-- <button type="button" class="addBtn btn border-bottom border-2 rounded-0 p-0" id="addBtn" style="font-size: small;width: 40px;height: 33px; margin-left: 10px;">등록</button> -->
-                        </form>
-                    </div>
-
-                    <!-- [DB]댓글목록 -->
-                    <div class="commet_list">
-                        <hr class="mb-2">
-
-                        <!-- 댓글 반복문 시작 -->
-                        <div class="comment px-1">
-                            <p style="font-weight: bold;font-size: small;" class="mb-2">joeun123</p>
-                            <p class="mb-2">테스트 댓글 123</p>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn-cmmt-update btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">수정</button>
-                                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">삭제</button>
-                            </div>
-                            <hr class="mb-2 mt-1">
-                        </div>
-                        
-                        <div class="comment">
-                            <p style="font-weight: bold;font-size: small;" class="mb-2">joeun123</p>
-                            <p class="mb-2">테스트 댓글 123</p>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn-cmmt-update btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">수정</button>
-                                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">삭제</button>
-                            </div>
-                            <hr class="mb-2 mt-1">
-                        </div>
-
-                        <div class="comment">
-                            <p style="font-weight: bold;font-size: small;" class="mb-2">joeun123</p>
-                            <p class="mb-2">테스트 댓글 123</p>
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn-cmmt-update btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">수정</button>
-                                <button type="button" class="btn-cmmt-delete btn p-0 text-body-tertiary" style="font-size: small; width: 40px;">삭제</button>
-                            </div>
-                            <hr class="mb-2 mt-1">
-                        </div>
-
-                    </div>
-                    <!-- 댓글 반복문 끝 -->
-
-                </div>
-            </div>
-        </div>
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="width: 500px;">
+      <div class="offcanvas-header">
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdrop with scrolling</h5>
+      </div>
+      <div class="offcanvas-body">
+        <p>Try scrolling the rest of the page to see this option in action.</p>
+      </div>
     </div>
 
     <div class="container">
         <div class="mainContainer" style="width: 640px;">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
+
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
-                    <a href="/styles/user/@zzang._.777" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img src="/img/temp/profileImg.jpg" alt="프로필 이미지" class="profile_img">
-                        <span class="userId fw-bold m-0" >zzang._.777</span>
+                    <a th:href="|/styles/user/@${writer.nickname}|" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
+                        <img th:src="${writer.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
+                        <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
                 <button type="button" class="btn btn-dark btn-sm" id="follow" onclick="followSwitch()"> 팔로우 </button>
             </div>
             
             <!-- 게시글 이미지 -->
-            <img src="/img/temp/postImg.jpg"  alt="스타일이미지" class="styleImg my-2 rounded-1" style="width: 640px; height: 850px;" >
+            <div id="carouselExample" class="carousel slide mt-2" style="width: 640px; height: 850px; position: relative;">
+                <div class="carousel-inner w-100 h-100">
+                    <th:block th:each="file, iterStat : ${fileList}">
+                        <div th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                            <div class="d-flex justify-content-center align-items-center w-100 h-100">
+                                <img th:src="@{|/files/${file.no}|}" class="d-block rounded-2 border border-secondary-subtle" alt="게시글이미지" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="z-index: 2; position: absolute; top: 50%; transform: translateY(-50%); left: 0;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: black;"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="z-index: 2; position: absolute; top: 50%; transform: translateY(-50%); right: 0;">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: black;"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
             
             <!-- 게시글 컨텐츠 -->
-            <div class="social_contents">
+            <div class="social_contents mt-2">
                 <!-- 소셜버튼들 -->
                 <div class="d-flex justify-content-end column-gap-2 px-2">
-                    <a href="#" onclick="toggleIcon(this)" style="text-decoration: none; color: black;">
+                    <a href="#" onclick="toggleIcon(this)" style="text-decoration: none; color: black;" >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="26" height="26">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                         </svg>
@@ -211,17 +187,19 @@
                         </svg>
                         <span class="count">31</span>
                     </a>
-                    <a id="modal_open_btn">
+                    <a id="modal_open_btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="26" height="26">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
                           </svg>
                           <span class="count">31</span>
                     </a>
+
+
                 </div>
     
                 <!-- 게시글 내용 -->
                 <div class="social_text my-5">
-                    <p class="text_title fs-4 text-start">테스트 글내용 123456678 크크크😎</p>
+                    <p class="text_title fs-4 text-start" th:text="${post.content}"></p>
                 </div>
             </div>
             

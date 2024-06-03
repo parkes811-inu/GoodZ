@@ -7,44 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 등록 페이지</title>
     <style>
-        .content {
-            flex: 1;
-            margin-top: 25px;
-            margin-bottom: 200px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-        }
-
-        .header h2 {
-            font-size: 23px;
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .form-group {
-            margin-top: 25px;
-            margin-bottom: 15px;
+        .option_input {
+            border: none;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-size: 14px;
             font-weight: bold;
         }
 
         .form-group input,
         .form-group select {
-            width: 100%;
-            max-width: 400px;
             padding: 10px;
-            font-size: 14px;
             border: none;
             border-bottom: 1px solid #ddd;
             box-sizing: border-box;
@@ -110,73 +85,162 @@
 </head>
 
 <body layout:fragment="content">
-    <div class="content mt-5">
-        <div class="header">
-            <h2>상품 등록</h2>
-        </div>
-        <form action="/admin/products" id="add_product-form" method="post" enctype="multipart/form-data">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            
-            <!-- 카테고리 선택 -->
-            <div class="form-group">
-                <label for="category">카테고리</label>
-                <select id="category" name="category" class="form-control">
-                    <option value="">카테고리를 선택해주세요</option>
-                    <option value="상의">상의</option>
-                    <option value="하의">하의</option>
-                    <option value="신발">신발</option>
-                    <option value="악세사리">악세사리</option>
-                </select>
-            </div>
+    <div class="container mt-5">
+        <div class="userMainContainer">
 
-            <!-- 브랜드 선택 -->
-            <div class="form-group">
-                <label for="brand-name">브랜드</label>
+            <p class="fs-4 fw-bold p-0">상품 등록</p>
 
-                <select id="brand-name" name="bName" class="form-control">
-                    <option value="">브랜드를 선택해주세요</option>
-                    <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
-
-                </select>
-            </div>
-
-            <!-- 상품명 입력 -->
-            <div class="form-group">
-                <label for="product-name">상품명</label>
-                <input type="text" id="product-name" name="productName" class="form-control" placeholder="상품명을 입력해주세요.">
-            </div>
-
-            <!-- 상품 이미지 업로드 -->
-            <div class="form-group">
-                <label for="product-img">상품 이미지</label>
-                <input type="file" id="product-img" name="productFiles" class="form-control" multiple accept="image/*" max="10">
-                <span id="passwordHelpInline" class="form-text">최대 10장</span>
-            </div>
-
-            <!-- 사이즈 입력 -->
-            <div class="form-group">
-                <label for="size">사이즈</label>
-                <input type="text" id="size" name="size" class="form-control" placeholder="사이즈를 세미콜론(;)으로 구분하여 입력해주세요. ex : S;M;L ">
-            </div>
-
-            <!-- 발매가 입력 -->
-            <div class="form-group">
-                <label for="origin-price">발매가</label>
-                <div class="input-group">
-                    <input type="text" id="origin-price" name="price" class="form-control" placeholder="발매가를 입력해주세요. ex : 10000">
-                    <span>원</span>
+            <form action="/admin/products" id="add_product-form" method="post" enctype="multipart/form-data" style="max-width: 600px;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="row mb-3">
+                    <!-- 브랜드 선택 -->
+                    <div class="col-md-8">
+                        <label for="brand" class="form-label">브랜드</label>
+                        <select class="form-select" name="bName" id="brand">
+                            <option selected>브랜드 선택</option>
+                            <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
+                            <!-- Add options here -->
+                        </select>
+                    </div>
+                    <!-- 카테고리 선택 -->
+                    <div class="col-md-4">
+                        <label for="category" class="form-label">카테고리</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option selected disabled>카테고리 선택</option>
+                            <option value="top">상의</option>
+                            <option value="pants">하의</option>
+                            <option value="shoes">신발</option>
+                            <option value="accessory">악세사리</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            카테고리를 선택해주세요.
+                        </div>
+                    </div>
                 </div>
-            </div>
+                
+                <!-- 상품명 입력 -->
+                <div class="mb-3">
+                    <label for="productName" class="form-label">상품명</label>
+                    <input type="text" class="form-control" name="productName" id="productName" placeholder="상품명을 입력해주세요.">
+                </div>
 
-            <!-- 상품 재고 입력 -->
-            <div class="form-group">
-                <label for="amount">상품 재고</label>
-                <input type="text" id="amount" name="stockQuantity" class="form-control" placeholder="상품 재고를 입력해주세요.">
-            </div>
+                <!-- 발매가 입력 -->
+                <div class="mb-3">
+                    <label for="origin-price" class="form-label">발매가</label>
+                    <div class="d-flex form-group">
+                        <input type="text" class="form-control text-end rounded-0" id="initial-price" name="price" placeholder="발매가를 입력해주세요. ex : 10000">
+                        <p class="m-0" style="align-self: center;">원</p>
+                    </div>
+                </div>
 
-            <button type="submit" class="submit-btn">등록 완료</button>
-        </form>
+                <!-- 상품 이미지 업로드 -->
+                <div class="mb-3">
+                    <label for="product-img">상품 이미지</label>
+                    <input type="file" id="imageInput" name="productFiles" class="form-control" multiple accept="image/*" max="10">
+                    <span id="passwordHelpInline" class="form-text">최대 10장</span>
+                    <!-- 첨부파일 미리보기 -->
+                    <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
+                    <!-- 대표로 선택한 이미지가 넘어감 -->
+                    <input type="hidden" id="representativeImage" name="mainImgIndex">
+                    <br>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <thead class="text-center">
+                            <tr>
+                                <th style="max-width: 30px;">
+                                    <button type="button" id="add_option" class="add_option btn py-auto px-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                        </svg>
+                                    </button>
+                                </th>
+                                <th>크기</th>
+                                <th>가격</th>
+                                <th>재고</th>
+                                <th style="min-width: 140px;">상태</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="optionContainer">
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="form-control" name="sizes"></td>
+                                <td><input type="text" class="form-control" name="optionPrices"></td>
+                                <td><input type="text" class="form-control" name="stockQuantities"></td>
+                                <td>
+                                    <select class="form-select" name="status">
+                                        <option selected value="on">판매중</option>
+                                        <option value="off">판매중지</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!-- 반복될 구간 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">등록 완료</button>
+                
+            </form>
+    
+        </div>
+
     </div>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const representativeImageInput = document.getElementById('representativeImage');
+        const addOptionButton = document.getElementById('add_option');
+        const optionContainer = document.getElementById('optionContainer');
+    
+        imageInput.addEventListener('change', function() {
+            imagePreview.innerHTML = '';
+            Array.from(imageInput.files).forEach((file, index) => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.width = 100;
+                img.height = 100;
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => {
+                    representativeImageInput.value = index;
+                    document.querySelectorAll('#imagePreview img').forEach(img => img.style.border = 'none');
+                    img.style.border = '2px solid red';
+                });
+                imagePreview.appendChild(img);
+            });
+        });
+
+        addOptionButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td></td>
+                <td><input type="text" class="form-control" name="sizes"></td>
+                <td><input type="text" class="form-control" name="optionPrices"></td>
+                <td><input type="text" class="form-control" name="stockQuantities"></td>
+                <td>
+                    <select class="form-select" name="status">
+                        <option selected value="on">판매중</option>
+                        <option value="off">판매중지</option>
+                    </select>
+                </td>
+            `;
+            optionContainer.appendChild(newRow);
+        });
+
+        document.getElementById('add_product-form').addEventListener('submit', function(event) {
+            var categorySelect = document.getElementById('category');
+            if (categorySelect.value === "") {
+                categorySelect.setCustomValidity("카테고리를 선택해주세요.");
+                categorySelect.reportValidity();
+                event.preventDefault(); // 폼 제출을 막음
+            } else {
+                categorySelect.setCustomValidity(""); // 유효성 메시지 초기화
+            }
+        });
+    </script>
 
 </body>
 

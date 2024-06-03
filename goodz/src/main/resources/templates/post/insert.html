@@ -164,24 +164,24 @@
     <!-- 상품추가 모달창 끝-->
 
 
-
-
     <div class="container">
         <div class="my-5 d-flex flex-column align-items-center">
            <p class="fs-3 fw-bold" style="width:600px">게시글 등록</p>
 
-            <form id="form" method="post" style="width: 600px;">
+            <form id="form" action="/styles/insert" method="post" style="width: 600px;" enctype="multipart/form-data">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                 <input type="hidden" name="userId" th:value="${loginUser.userId}">
                 <!-- 이미지첨부 -->
                 <span class="form-text">최대 10장</span>
-                <input id="imageInput" name="file" class="form-control" type="file"  multiple>
+                <input id="imageInput" name="attachedFiles" class="form-control" type="file"  multiple>
                 <!-- 첨부파일 미리보기 -->
                 <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
                 <!-- 대표로 선택한 이미지가 넘어감 -->
-                <input type="hidden" id="representativeImage" name="representativeImage">
+                <input type="hidden" id="representativeImage" name="mainImgIndex">
                 <br>
                 <!-- 내용 -->
-                <textarea  id="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
+                <textarea  id="content" name="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" ></textarea>
                 <br>
                 <!-- 상품태그 영역 -->
                 <div class="d-flex justify-content-between">
@@ -260,7 +260,7 @@
                     </div>
                 </div>
 
-                <button type="button" id="btn-insert" onclick="alert('작성완료')" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">작성 완료</button>
+                <button type="submit" id="btn-insert" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">작성 완료</button>
             </form>
         </div>
     </div>

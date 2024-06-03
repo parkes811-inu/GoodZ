@@ -95,8 +95,8 @@
 
     <!-- 회원 가입 -->
     <insert id="join">
-        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url, account )
-        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl}, #{account})
+        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url)
+        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -174,23 +174,47 @@
     </select>
 
 
-    <!-- 주소록 등록하기 -->
-    <insert id="insertAddress">
-        INSERT INTO Shippingaddress (user_id, recipient_name, phone_number, address, zip_code) 
-        VALUES (#{userId}, #{recipientName}, #{phoneNumber}, #{address}, #{zipCode})
+    <insert id="insertAddress" parameterType="Shippingaddress">
+        INSERT INTO Shippingaddress (user_id, recipient_name, phone_number, address, zip_code, is_default, created_at, updated_at)
+        VALUES (#{userId}, #{recipientName}, #{phoneNumber}, #{address}, #{zipCode}, #{isDefault}, NOW(), NOW())
     </insert>
 
-    <!-- 기본 배송지 설정 -->
-    <update id="DefaultAddress" parameterType="string">
-        UPDATE Shippingaddress
-        SET is_default = 0
-        WHERE user_id = #{userId} AND is_default = 1
+    <!-- 주소 업데이트 (기본 배송지 등록 여부 포함)-->
+    <update id="updateAddress" parameterType="Shippingaddress">
+       UPDATE Shippingaddress
+        SET recipient_name = #{recipientName},
+            phone_number = #{phoneNumber},
+            address = #{address},
+            zip_code = #{zipCode},
+            is_default = #{isDefault},
+            updated_at = NOW()
+        WHERE address_no = #{addressNo}
     </update>
 
     <!-- 유저 아이디의 맞는 배송지 불러오기 -->
     <select id="selectByUserId" resultMap="shippingAddressMap">
-        SELECT *
-        FROM Shippingaddress
+        SELECT * FROM Shippingaddress 
         WHERE user_id = #{userId}
+        ORDER BY is_default DESC, updated_at DESC
     </select>
+
+
+    <!-- 배송지 단일 조회 -->
+    <select id="selectAddress" resultType="Shippingaddress" >
+        SELECT * FROM Shippingaddress 
+        WHERE address_no = #{addressNo}
+    </select>
+
+    <!-- 삭제 -->
+    <delete id="deleteAddress">
+        DELETE FROM Shippingaddress
+        WHERE address_no IN ( ${addressNo} )
+    </delete>
+
+    <!-- 유저 계좌 등록 -->
+    <update id="insertAccount">
+        UPDATE user
+          SET account = #{account}
+        WHERE user_id = #{userId}
+    </update>
 </mapper>

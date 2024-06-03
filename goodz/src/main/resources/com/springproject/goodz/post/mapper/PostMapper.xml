@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.post.mapper.PostMapper">
+
+
+    <!-- <select id="list" resultType="post">
+        SELECT *
+        FROM post
+    </select> -->
+
+    <select id="select" resultType="post">
+        SELECT *
+        FROM post
+        WHERE post_no = #{postNo}
+    </select>
+
+    <select id="selectById" resultType="post">
+        SELECT  p.post_no as post_no
+              , p.user_id as user_id
+              , p.content as contetnt
+              , f.no as file_no
+              , f.file_name as file_name
+              , f.file_path as file_path
+              , f.file_code as file_code
+        FROM post p inner join file f
+        on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
+    </select>
+
+    <select id="maxNo">
+        SELECT max(post_no) as maxNo
+        FROM post
+    </select>
+
+    <insert id="insert">
+        INSERT INTO post (user_id, content, parent_table)
+        VALUES (#{userId}, #{content}, 'post')
+    </insert>
+
+    <update id="update">
+
+    </update>
+
+    <delete id="delete">
+    
+    </delete>
+
+    
+
+</mapper>

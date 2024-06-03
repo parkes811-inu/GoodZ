@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.product.mapper.ProductOptionMapper">
+    
+    <!-- 상품 옵션 등록 -->
+    <insert id="insertProductOption">
+        INSERT INTO product_option (p_no, size, option_price, stock_quantity, status)
+        VALUES (#{pNo}, #{size}, #{optionPrice}, #{stockQuantity}, #{status})
+    </insert>
+
+    <!-- 상품 옵션 조회 -->
+    <select id="getProductOptionsByProductId" resultType="ProductOption">
+        SELECT * 
+        FROM product_option 
+        WHERE p_no = #{pNo}
+    </select>
+</mapper>

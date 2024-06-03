@@ -17,4 +17,12 @@ public class Shippingaddress {
     private Date createdAt;         
     private Date updatedAt;
 
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
 }

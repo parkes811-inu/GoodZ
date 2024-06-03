@@ -21,6 +21,9 @@ public class Post {
     List<MultipartFile> attachedFiles;
 
     // 대표 이미지의 인덱스 번호
-    private int representativeImageIndex;
+    private int mainImgIndex;
+
+    // 대표이미지 파일번호 (file_code = 1 인 파일)
+    private int fileNo;
 
 }

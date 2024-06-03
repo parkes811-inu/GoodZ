@@ -49,10 +49,21 @@ public interface UserMapper {
     // 유저 주소 등록
     public int insertAddress(Shippingaddress shippingaddress) throws Exception;
 
-    // 유저 기본 배송지
-    public void DefaultAddress(String userId) throws Exception;
+    // 유저 주소 업데이트 (기본 배송지 등록 여부 포함)
+    public int updateAddress(Shippingaddress shippingaddress) throws Exception;
 
     // 유저의 주소 목록
-    public List<Shippingaddress> selectByUserId() throws Exception;
-    
+    public List<Shippingaddress> selectByUserId(String userId) throws Exception;
+
+    // 배송지 단일 조회
+    public Shippingaddress selectAddress(int addressNo) throws Exception;
+
+    // 배송지 삭제
+    public int deleteAddress(int addressNo) throws Exception;
+
+    // 기본 배송지 여부 확인
+    public boolean isDefaultAddress(int addressNo) throws Exception;
+
+    // 유저 계좌 등록
+    public void insertAccount(@Param("userId") String userId, @Param("account") String account) throws Exception;
 }

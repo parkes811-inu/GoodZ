@@ -1,145 +1,163 @@
 package com.springproject.goodz.product.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductImage;
+import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.mapper.PriceHistoryMapper;
 import com.springproject.goodz.product.mapper.ProductMapper;
+import com.springproject.goodz.product.mapper.ProductOptionMapper;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
-    
+
+    @Value("${upload.path}")
+    private String uploadPath;
+
     @Autowired
     private ProductMapper productMapper;
 
-    @Value("${upload.path}")    // application.properties에 설정한 업로드 경로
-    private String uploadPath;
+    @Autowired
+    private ProductOptionMapper productOptionMapper;
 
-    /**
-     * 상품 목록 조회
-     */
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private PriceHistoryMapper priceHistoryMapper;
+
     @Override
     public List<Product> list() throws Exception {
-
-        List<Product> productList = productMapper.list();
-
-        return productList;
+        return productMapper.list();
     }
 
-    /**
-     * 메인화면에 최근 상품 4개 띄우기
-     */
     @Override
     public List<Product> newArrivals() throws Exception {
-        
-        List<Product> newArrivalsList = productMapper.newArrivals();
-
-        return newArrivalsList;
+        return productMapper.newArrivals();
     }
 
-    /**
-     *  상품 등록 처리
-     */
     @Override
-    public int insert(Product product) throws Exception {
+    public int insert(Product product, int mainImgIndex) throws Exception {
         log.info("상품 등록 처리 진행중...");
 
-        int result = 0;
-        List<MultipartFile> productFiles = product.getProductFiles();
+        int result = productMapper.insert(product);
 
-        if (productFiles != null && !productFiles.isEmpty()) {
-            // 파일 개수 제한
-            if (productFiles.size() > 10) {
-                throw new Exception("최대 10개의 이미지만 업로드할 수 있습니다.");
-            }
+        int pNo = product.getPNo();
+        if (result > 0 && pNo > 0) {
+            log.info("상품 등록 처리 완료, pNo: " + pNo);
 
-            // 파일 경로들을 저장할 StringBuilder 객체를 초기화
-            StringBuilder filePaths = new StringBuilder();
-
-            for (MultipartFile productFile : productFiles) {
-                if (productFile != null && !productFile.isEmpty()) {
-                    log.info("상품 이미지 처리 진행중...");
-                    
-                    String fileName = UUID.randomUUID().toString() + "_" + productFile.getOriginalFilename();
-                    File uploadFile = new File(uploadPath, fileName);
-                    FileCopyUtils.copy(productFile.getBytes(), uploadFile);
-
-                    String filePath = uploadPath + "/products/" + fileName;
-                    if (filePaths.length() > 0) {
-                        // StringBuilder에 파일 경로를 추가하기 전에 구분자(;)를 추가
-                        filePaths.append(";");
-                    }
-                    filePaths.append(filePath);
+            List<ProductOption> options = product.getOptions();
+            if (options != null && !options.isEmpty()) {
+                for (ProductOption option : options) {
+                    option.setPNo(pNo);
+                    productOptionMapper.insertProductOption(option);
                 }
             }
 
-            // 모든 파일 경로를 ;로 구분된 문자열로 설정하여 Product 객체의 imageUrl 속성에 저장
-            product.setImageUrl(filePaths.toString());
-        }
+            List<MultipartFile> requestFiles = product.getProductFiles();
+            if (requestFiles != null && !requestFiles.isEmpty()) {
+                for (int i = 0; i < requestFiles.size(); i++) {
+                    MultipartFile file = requestFiles.get(i);
+                    if (file != null && !file.isEmpty()) {
+                        Files fileInfo = new Files();
+                        fileInfo.setParentTable(product.getCategory());
+                        fileInfo.setParentNo(pNo);
+                        fileInfo.setFile(file); // 파일 설정 추가
 
-        result = productMapper.insert(product);
+                        // 파일의 번호가 mainImgIndex와 같으면 file_code를 1로 설정
+                        if (i == mainImgIndex) {
+                            fileInfo.setFileCode(1);
+                        } else {
+                            fileInfo.setFileCode(0);
+                        }
 
-        if (result > 0) {
-            log.info("상품 등록 처리 완료");
+                        // 파일이 한 개이고, 대표 이미지로 설정이 안되어서 넘어오면 그 사진이 대표이미지
+                        if (requestFiles.size() == 1 && mainImgIndex == -1) {
+                            fileInfo.setFileCode(1);
+                        }
+
+                        try {
+                            fileService.upload(fileInfo, product.getCategory());
+                            log.info("상품 파일 처리 완료: " + file.getOriginalFilename());
+                        } catch (Exception e) {
+                            log.error("파일 업로드에 실패하였습니다.", e);
+                            throw new Exception("파일 업로드에 실패하였습니다.", e);
+                        }
+                    } else {
+                        log.warn("파일이 비어있거나 null입니다.");
+                    }
+                }
+            } else {
+                log.warn("파일 리스트가 비어있거나 null입니다.");
+            }
+        } else {
+            throw new Exception("상품 등록에 실패하였습니다.");
         }
 
         return result;
     }
 
-    /**
-     * 상의만 보기
-     */
-    @Override
-    public List<Product> top() throws Exception {
-
-        List<Product> topList = productMapper.top();
-        
-        return topList;
-    }
-
-    /**
-     * 하의만 보기
-     */
-    @Override
-    public List<Product> pants() throws Exception {
-        
-        List<Product> pantsList = productMapper.pants();
-        
-        return pantsList;
-    }
-
-    /**
-     * 신발만 보기
-     */
-    @Override
-    public List<Product> shoes() throws Exception {
-
-        List<Product> shoesList = productMapper.shoes();
-        
-        return shoesList;
-    }
-
-    /**
-     * 악세사리만 보기
-     */
-    @Override
-    public List<Product> accessory() throws Exception {
-
-        List<Product> accessoryList = productMapper.accessory();
-        
-        return accessoryList;
-    }
-
     
 
+    @Override
+    public void makeHistory(int pNo, String size, int initialPrice) throws Exception {
+        log.info("가격 히스토리 등록 진행중...");
+        priceHistoryMapper.makeHistory(pNo, size, initialPrice);
+        log.info("가격 히스토리 등록 완료");
+    }
+
+    @Override
+    public List<Product> top() throws Exception {
+        return productMapper.top();
+    }
+
+    @Override
+    public List<Product> pants() throws Exception {
+        return productMapper.pants();
+    }
+
+    @Override
+    public List<Product> shoes() throws Exception {
+        return productMapper.shoes();
+    }
+
+    @Override
+    public List<Product> accessory() throws Exception {
+        return productMapper.accessory();
+    }
+
+    @Override
+    public Product getProductBypNo(int pNo) throws Exception {
+        return productMapper.getProductBypNo(pNo);
+    }
+
+    @Override
+    public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception {
+        return productOptionMapper.getProductOptionsByProductId(pNo);
+    }
+
+    @Override
+    public int insertProductOption(ProductOption productOption) throws Exception {
+        return productOptionMapper.insertProductOption(productOption);
+    }
+
+    @Override
+    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProductImagesByProductId'");
+    }
 }
