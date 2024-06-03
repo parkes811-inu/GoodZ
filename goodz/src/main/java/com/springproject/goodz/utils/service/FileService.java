@@ -23,7 +23,7 @@ public interface FileService {
     public int deleteByParent(Files file) throws Exception;
     
     // 파일 업로드
-    public boolean upload(Files file, String dir) throws Exception;
+    public boolean upload(Files file) throws Exception;
     // 파일 다운로드
     public Files download(int no) throws Exception;
     
