@@ -1,8 +1,12 @@
 package com.springproject.goodz.post.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,14 +47,17 @@ public class LikeController {
      * @throws Exception
      */
     @GetMapping("/count/{postNo}")
-    public String getMethodName(@PathVariable("postNo") int postNo, HttpSession session) throws Exception {
+    public ResponseEntity<Map<String, Long>> countLike(@PathVariable("postNo") int postNo, HttpSession session) throws Exception {
+        
+        long countLike = likeService.countLike(postNo);
 
-        int countLike = likeService.countLike(postNo);
+        Map<String, Long> response = new HashMap<>();
+        response.put("countLike", countLike );
         
 
-        return new String();
+        return ResponseEntity.ok(response);
     }
-    // cmmtController 참고해서 숫자 Map으로 반환하고 숫자 띄우는거 할 차례임
+    
     
     
 }
