@@ -110,7 +110,7 @@ public class PayController {
         model.addAttribute("hasAddress", !addresses.isEmpty());
         model.addAttribute("addresses", addresses);
         
-        return "pay/buy"; // 상품 구매 페이지로 이동합니다.
+        return "/pay/buy"; // 상품 구매 페이지로 이동합니다.
     }
 
     /**
