@@ -1,6 +1,5 @@
 package com.springproject.goodz.post.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -59,10 +58,13 @@ public class PostController {
      * @return
      */
     @GetMapping("")
-    public String list(Model model) throws Exception {
+    public String list(Model model, HttpSession session) throws Exception {
 
         List<Post> postList = postService.list();
         model.addAttribute("postList", postList);
+
+        Users loginUser = (Users)session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);
 
         return "/post/list";
     }
@@ -195,6 +197,6 @@ public class PostController {
 
         return "/post/user/profile";
     }
-    
+
     
 }

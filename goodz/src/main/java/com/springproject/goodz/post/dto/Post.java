@@ -13,8 +13,9 @@ public class Post {
     private int postNo;                 // 게시글 번호
     private String userId;              // 작성자 아이디
     private String nickname;            // 작성자 닉네임 - dto 조회용
-    private String profileImg;   // 작성자 프로필이미지 - dto 조회용
+    private String profileImg;          // 작성자 프로필이미지 - dto 조회용
     private String content;             // 작성내용
+    private int likeCount;              // 좋아요 갯수
     private Date createdAt;             // 작성일자
     private Date updatedAt;             // 수정일자
 

@@ -3,6 +3,7 @@ package com.springproject.goodz.post.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.mapper.LikeMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,14 @@ public class LikeServiceImpl implements LikeService{
         }
 
         return !ischecked;
+    }
+
+    // 좋아요 off -> on
+    @Override
+    public int likeOn (Like like) throws Exception {
+        int result = likeMapper.likeOn(like);
+
+        return result;
     }
 
     @Override

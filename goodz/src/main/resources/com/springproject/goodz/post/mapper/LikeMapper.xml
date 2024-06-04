@@ -4,15 +4,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.springproject.goodz.post.mapper.LikeMapper">
+
     <select id="listById">
         SELECT count(*)
-        FROM like
+        FROM `like`
         WHERE user_id = #{userId}, post_no = #{postNo}
     </select>
 
     <select id="countLike" resultType="int">
         SELECT count(*)
-        FROM like
+        FROM `like`
         WHERE post_no = #{postNo}
     </select>
+
+    <insert id="likeOn">
+        INSERT INTO `like` (user_id, post_no)
+        VALUES (#{userId}, #{postNo})
+    </insert>
 </mapper>
