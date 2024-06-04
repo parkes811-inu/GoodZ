@@ -8,7 +8,7 @@ import com.springproject.goodz.post.dto.Post;
 @Mapper
 public interface LikeMapper {
 
-    // 좋아요 여부 체크 - id 기준
+    // 좋아요 체크 여부 - id 기준
     public int listById(Like like) throws Exception;
 
     // 좋아요 갯수 가져오기

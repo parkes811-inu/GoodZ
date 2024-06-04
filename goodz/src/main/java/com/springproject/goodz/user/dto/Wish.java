@@ -5,10 +5,10 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Wishlist {
+public class Wish {
     private int wNo;
     private String userId;
-    private int pNo;
+    private String parentTable;
+    private int parentNo;
     private Date createdAt;
-    private Date updatedAt;
 }
