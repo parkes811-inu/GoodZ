@@ -289,12 +289,12 @@ CREATE TABLE `Tag` (
 CREATE TABLE `Wishlist` (
     `w_no` INT NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL,
-    `p_no` INT NOT NULL,
+    `parent_no` INT NOT NULL,
+    `parent_table` VARCHAR(100) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 6/4 필요 없어서 주석처리함 -도희-
     PRIMARY KEY (`w_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`)
 ) COMMENT='관심 목록';
 
 -- Sales 테이블 / 📁 pay
