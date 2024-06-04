@@ -1,3 +1,4 @@
+-- Active: 1716800736662@@127.0.0.1@3306@goodz
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
@@ -121,7 +122,7 @@ CREATE TABLE `Like` (
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (like_no),
-    FOREIGN KEY (c_no) REFERENCES Comment(c_no),
+    -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (post_no) REFERENCES Post(post_no)
 );
@@ -180,6 +181,8 @@ CREATE TABLE `Product` (
 --     PRIMARY KEY (`img_id`),
 --     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
 -- ) COMMENT='상품 이미지';
+-- / 쓸모없을거같다해서 주석해놓음!!! -6/3 도희-
+
 
 -- Product 옵션 테이블 / 📁 product
 CREATE TABLE `Product_option` (
