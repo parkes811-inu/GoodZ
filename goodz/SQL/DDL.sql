@@ -328,8 +328,10 @@ CREATE TABLE `Purchase` (
 	`p_no`				INT				NOT NULL,
 	`purchase_price`	INT				NOT NULL,
 	`payment_method`	VARCHAR(50)		NOT NULL,
-	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
+	`purchase_state`	ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled')	NOT NULL,
+    -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
 	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `paid_date` TIMESTAMP -- 결제 완료 시점에서 now로 
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (p_no) REFERENCES Product(p_no)

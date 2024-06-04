@@ -3,6 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.springproject.goodz.product.mapper.PayMapper">
+<mapper namespace="com.springproject.goodz.pay.mapper.PayMapper">
 
+<insert id="insertPurchase" parameterType="Purchase">
+    INSERT INTO Purchase (user_id, p_no, purchase_price, payment_method, purchase_state)
+    VALUES (#{userId}, #{pNo}, #{purchasePrice}, #{paymentMethod}, #{purchaseState})
+</insert>
 </mapper>

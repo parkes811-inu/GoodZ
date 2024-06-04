@@ -7,12 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>구매하기</title>
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
         .product_img {
             margin-right: 20px;
             text-align: left;
             margin-top: 20px; 
+            width: 200px;  /* 너비를 200px로 설정 */
+            height: auto;  /* 높이 비율 유지 */
         }
         .product_detail {
             margin-top: 20px;
@@ -97,7 +99,7 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form method="post">
+        <form method="post" action="/pay/savePurchase">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
@@ -105,11 +107,11 @@
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded">
                     <div class="product_info_area mb-4 d-flex align-items-center">
-                        <!-- 상품명과 사이즈 이미지 가져와야함 -->
+                        <!-- 상품 이미지 -->
                         <div class="product_img">
-                            <!-- <img src="/img/pay/test.png" class="img-fluid"> 상품 이미지 띄우는 건 해야함. -->
                             <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="img-fluid">
                         </div>
+                        <!-- 상품 정보 -->
                         <div class="product_detail">
                             <div class="product_info">
                                 <strong>상품명</strong><br><span th:text="${product.productName}"></span>
@@ -118,11 +120,6 @@
                                 <strong>사이즈</strong><br>
                                 <span th:text="${size}">사이즈</span>
                             </div>
-                            <div>
-                                <strong>가격</strong><br>
-                                <span th:text="${price}"></span>
-                            </div>
-                                
                         </div>
                     </div>
                 </div>
@@ -171,7 +168,7 @@
                                 <ul class="list-group">
                                     <li th:each="address : ${addresses}" 
                                         class="list-group-item list-group-item-action" 
-                                        th:onclick="selectAddress('[[${address.recipientName}]]', '[[${address.phoneNumber}]]', '[[${address.address}]]')"
+                                        th:onclick="'selectAddress('' + [[${address.recipientName}]] + '','' + [[${address.phoneNumber}]] + '','' + [[${address.address}]] + '')'"
                                         data-bs-dismiss="modal">
                                         <div><strong th:text="${address.recipientName}"></strong></div>
                                         <div th:text="${address.phoneNumber}"></div>
@@ -210,11 +207,11 @@
     
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded order_summary">
-                    <!-- 상품 가격 가져와야함 -->
+                    <!-- 최종 주문 정보 -->
                     <div class="section_header">최종 주문 정보</div>
                     <div class="summary_item">
                         <span>상품 가격</span>
-                        <span th:text="${product.price} + '원'"></span>
+                        <span th:text="${price} + '원'"></span>
                     </div>
                     <div class="summary_item">
                         <span>검수비</span>
@@ -225,9 +222,9 @@
                         <span>3,000원</span>
                     </div>
                     <div class="summary_item summary_total">
-                        <!-- 상품 가격 + 3000 로직 필요 -->
+                        <!-- 총 결제 금액 -->
                         <span>총 결제금액</span>
-                        <span th:text="${product.price + 3000} + '원'"></span>
+                        <span th:text="${price + 3000} + '원'"></span>
                     </div>
                 </div>
             </div>
@@ -238,68 +235,89 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const button = document.getElementById("payment-request-button");
-            const csrfToken = document.querySelector('input[name="_csrf"]').value; // CSRF 토큰 가져오기
-            const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
-            var amount = /*[[${product.price + 3000}]]*/ 0; // 총 결제금액과 일치하도록 설정
+    <script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("payment-request-button");
+        const csrfToken = /*[[${_csrf.token}]]*/ "";
+        // const recipientName = /*[[${defaultAddress.recipientName}]]*/ "";
+        // const phoneNumber = /*[[${defaultAddress.phoneNumber}]]*/ "";
+        // const productName = /*[[${product.productName}]]*/ "";
+        // const userId = /*[[${user.userId}]]*/ "";
+        // const pNo = /*[[${product.pNo}]]*/ 0;
+        // const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
+        // var amount = /*[[${price + 3000}]]*/ 0; // 총 결제금액과 일치하도록 설정
 
-            console.log("결제 위젯 초기화 시작");
-            // 결제위젯 초기화
-            const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 실제 클라이언트 키로 변경하세요.
-            const customerKey = generateRandomString();
-            const paymentWidget = PaymentWidget(clientKey, customerKey);
+        console.log("결제 위젯 초기화 시작");
+        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+        const customerKey = generateRandomString();
+        const paymentWidget = PaymentWidget(clientKey, customerKey);
 
-            // 결제 UI 렌더링
-            const paymentMethodWidget = paymentWidget.renderPaymentMethods(
-                "#payment-method",
-                { value: amount },
-                { variantKey: "DEFAULT" }
-            );
+        const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+            "#payment-method",
+            { value: amount },
+            { variantKey: "DEFAULT" }
+        );
 
-            // 이용약관 UI 렌더링
-            paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
+        paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
 
-            // 결제 UI 렌더링 완료 이벤트
-            paymentMethodWidget.on("ready", function () {
-                console.log("결제 위젯 렌더링 완료");
-                button.disabled = false;
-            });
-
-            // 결제하기 버튼 누르면 결제창 띄우기
-            button.addEventListener("click", function () {
-                console.log("결제 요청 시작");
-                paymentWidget.requestPayment({
-                    orderId: generateRandomString(),
-                    orderName: "토스 티셔츠 외 2건",
-                    successUrl: window.location.origin + "/pay/success",
-                    failUrl: window.location.origin + "/pay/fail",
-                    customerEmail: "customer123@gmail.com",
-                    customerName: "김토스",
-                    customerMobilePhone: "01012341234",
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken // CSRF 토큰을 헤더에 포함
-                    }
-                });
-            });
+        paymentMethodWidget.on("ready", function () {
+            console.log("결제 위젯 렌더링 완료");
+            button.disabled = false; // 결제 버튼 활성화
         });
 
-        function selectAddress(recipientName, phoneNumber, address) {
+        button.addEventListener("click", function () {
+            console.log("결제 요청 시작");
+            paymentWidget.requestPayment({
+                orderId: generateRandomString(),
+                orderName: productName,
+                successUrl: window.location.origin + "/pay/success",
+                failUrl: window.location.origin + "/pay/fail",
+                customerName: recipientName,
+                customerMobilePhone: phoneNumber,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            }).then((response) => {
+                if (response.status === 'SUCCESS') {
+                    // 결제 성공 시, Purchase 테이블에 데이터 저장
+                    fetch('/pay/savePurchase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            userId: userId,
+                            pNo: pNo,
+                            purchasePrice: amount,
+                            paymentMethod: response.paymentMethod
+                        })
+                    }).then(res => res.json())
+                      .then(data => {
+                          if (data.success) {
+                              window.location.href = window.location.origin + "/pay/success";
+                          } else {
+                              window.location.href = window.location.origin + "/pay/fail";
+                          }
+                      });
+                } else {
+                    window.location.href = window.location.origin + "/pay/fail";
+                }
+            });
+        });
+    });
 
-            // 모달에서 선택하면 "" 생겨서 치환
-            var recipientName = recipientName.replace(/"/g, "");
-            var phoneNumber = phoneNumber.replace(/"/g, "");
-            var address = address.replace(/"/g, "");
+    // 주소 선택 함수
+    function selectAddress(recipientName, phoneNumber, address) {
+        // 모달에서 선택하면 "" 생겨서 치환
+        recipientName = recipientName.replace(/"/g, "");
+        phoneNumber = phoneNumber.replace(/"/g, "");
+        address = address.replace(/"/g, "");
 
-            document.getElementById('recipientName').textContent = recipientName;
-            document.getElementById('phoneNumber').textContent = phoneNumber;
-            document.getElementById('address').textContent = address;
-        }
-        
-    </script>
-        
-
-
+        document.getElementById('recipientName').textContent = recipientName;
+        document.getElementById('phoneNumber').textContent = phoneNumber;
+        document.getElementById('address').textContent = address;
+    }
+</script>
 </body>
 </html>

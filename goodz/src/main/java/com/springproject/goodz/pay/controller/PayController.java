@@ -1,5 +1,6 @@
 package com.springproject.goodz.pay.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.springproject.goodz.pay.dto.Purchase;
+import com.springproject.goodz.pay.service.PayService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
@@ -40,6 +45,9 @@ public class PayController {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private PayService payService;
+
     /**
      * 결제 페이지 화면 
      * @param model
@@ -49,15 +57,14 @@ public class PayController {
      */
     @GetMapping("/buy/{p_no}")
     public String buy(@PathVariable("p_no") int pNo,
-                      @RequestParam("size") String size,
-                      Model model, HttpSession session) throws Exception {
+                    @RequestParam("size") String size,
+                    Model model, HttpSession session) throws Exception {
 
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
 
-        // 나중에 바꿔라 나연아
         // 단일 상품 조회
         Product product = productService.getProductBypNo(pNo);
         List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
@@ -74,14 +81,13 @@ public class PayController {
         }
 
         int price = 0;
-        for (int i = 0; i < options.size(); i++) {
-            if (options.get(i).getSize().equals(size)) {
-                price = options.get(i).getOptionPrice();
+        for (ProductOption option : options) {
+            if (option.getSize().equals(size)) {
+                price = option.getOptionPrice();
                 break; // 일치하는 사이즈를 찾으면 반복문을 종료
             }
         }
 
-        
         // 상품 이미지 설정
         Files file = new Files();
         file.setParentNo(product.getPNo());
@@ -107,6 +113,42 @@ public class PayController {
         return "pay/buy"; // 상품 구매 페이지로 이동합니다.
     }
 
+    /**
+     * Purchase 테이블에 데이터를 저장하는 엔드포인트
+     * @param payload
+     * @param session
+     * @return
+     */
+    @PostMapping("/savePurchase")
+    @ResponseBody
+    public Map<String, Object> savePurchase(@RequestBody Map<String, Object> payload, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            Users user = (Users) session.getAttribute("user");
+            if (user == null) {
+                response.put("success", false);
+                return response;
+            }
+
+            Purchase purchase = new Purchase();
+            purchase.setUserId((String) payload.get("userId"));
+            purchase.setPNo((Integer) payload.get("pNo"));
+            purchase.setPurchasePrice((Integer) payload.get("purchasePrice"));
+            purchase.setPaymentMethod((String) payload.get("paymentMethod"));
+            purchase.setPurchaseState("pending"); // 구매 상태를 pending으로 설정
+
+            payService.savePurchase(purchase); // Purchase 저장 로직
+
+            response.put("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+        }
+    
+        return response;
+    }
+    
     @GetMapping("/success")
     public String success() {
         return "/pay/success";
