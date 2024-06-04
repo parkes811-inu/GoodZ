@@ -1,16 +1,14 @@
 package com.springproject.goodz.product.service;
 
-import java.io.File;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Brand;
+import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.mapper.BrandMapper;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
@@ -42,6 +40,21 @@ public class BrandServiceImpl implements BrandService{
         return brandList; 
     }
 
+    /**
+     * 브랜드 목록 + 검색, 페이징
+     */
+    @Override
+    public List<Brand> brandList(Page page, String keyword) throws Exception {
+        
+        List<Brand> brandList = brandMapper.brandList(page, keyword);
+
+        return brandList; 
+    }
+
+    @Override
+    public int getTotalCount(String keyword) throws Exception {
+        return brandMapper.getTotalCount(keyword);
+    }
     // 마지막 브랜드 번호 가져오기 (첨부파일 등록시 사용됨)
     // @Override
     // public int maxNo() throws Exception {

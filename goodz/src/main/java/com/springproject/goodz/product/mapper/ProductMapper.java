@@ -3,7 +3,9 @@ package com.springproject.goodz.product.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.dto.ProductImage;
@@ -17,8 +19,14 @@ public interface ProductMapper {
     // 상품 목록 - 마이페이지 메인에 4개, (알아서 짜셈)
     public List<Product> latestAdd() throws Exception;
 
-    // 상품 목록 (페이징 추후 추가) - 관리자 전용 다 볼 수 있음
+    // 상품 목록 
     public List<Product> list() throws Exception;
+
+    // 상품 목록 - 관리자 페이징 + 검색
+    List<Product> productList(@Param("page") Page page, @Param("keyword") String keyword) throws Exception;
+    
+    // 전체 데이터 개수 가져오기
+    public int getTotalCount(@Param("keyword") String keyword) throws Exception;
 
     // <관심>상품 목록 (페이징 추후 추가) - 볼 수 있음(알아서 짜셈)
     public List<Product> userlist() throws Exception;

@@ -40,11 +40,22 @@
             margin: 0 5px;
         }
 
-        .pagination li a {
+        .pagination li a, .pagination li span.page-link {
             color: #000;
             text-decoration: none;
-            border: none; 
+            border: none;
+            background: none; /* 배경 없애기 */
         }
+
+        .pagination li.active span.page-link {
+            font-weight: bold;
+            color: black;
+        }
+
+        .pagination li a:hover, .pagination li a:focus {
+            text-decoration: underline; /* 호버 시 밑줄 표시 */
+        }
+
         .table th, .table td {
             text-align: center;
         }
@@ -62,46 +73,54 @@
         .custom-button svg {
             margin-right: 5px;
         }
-
     </style>
 </head>
 
 <body layout:fragment="content">
     <div class="content mt-5">
+        <div class="header">
+            <h2>상품 목록</h2>
+        </div>
+        
+        <!-- 검색 폼과 추가 버튼을 같은 줄에 배치 -->
+        <div class="d-flex justify-content-between mt-3 mb-3">
+            <form th:action="@{/admin/products}" method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" th:value="${keyword}" placeholder="상품명 또는 브랜드명 검색">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary" style="background-color: black; color: white;">검색</button>
+                    </div>
+                </div>
+            </form>
+            <a href="/admin/add_product" class="custom-button">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                추가
+            </a>
+        </div>
 
-            <div class="header">
-                <h2>상품 목록</h2>
-            </div>
-            <!-- 상품 전체 리스트 가져오기 -->
-            <div class="d-flex justify-content-end">
-                <a href="/admin/add_product" class="custom-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    추가
-                </a>
-            </div>
-            <div class="divider">
-                <table class="table">
-                    <thead>
-                      <tr>
+        <div class="divider">
+            <table class="table">
+                <thead>
+                    <tr>
                         <th scope="col" style="width: 100px;">상품 번호</th>
                         <th scope="col">브랜드명</th>
                         <th scope="col">상품명</th>
                         <th scope="col">등록일자</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                      <!-- if) 조회되는 브랜드 없을 시, -->
-                    <th:block th:if="${productList.isEmpty()}">
-                    <tr>
-                        <td colspan="5" align="center">
-                            조회된 상품이 없습니다.
-                        </td>
                     </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <!-- if) 조회되는 상품 없을 시, -->
+                    <th:block th:if="${productList.isEmpty()}">
+                        <tr>
+                            <td colspan="5" align="center">
+                                조회된 상품이 없습니다.
+                            </td>
+                        </tr>
                     </th:block>
 
-                    <!-- if) 브랜드 존재 시, 반복출력 -->
+                    <!-- if) 상품 존재 시, 반복출력 -->
                     <tr th:each="product : ${productList}">
                         <th scope="row" th:text="${product.pNo}" id="pNo"></th>
                         <td th:text="${product.bName}"></td>
@@ -115,31 +134,43 @@
                         
                         <td th:text="${#dates.format(product.createdAt, 'yyyy-MM-dd')}"></td>
                     </tr>
-                    </tbody>
-                  </table>
-            </div>
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                </tbody>
+            </table>
+        </div>
         
+        <!-- 페이지네이션 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" th:href="|/admin/products?page=${page.first}&keyword=${keyword}|">&laquo;</a>
+                </li>
+                <th:block th:if="${page.page != page.start}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/products?page=${page.prev}&keyword=${keyword}|">&lt;</a>
+                    </li>
+                </th:block>
+                <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
+                    <th:block th:if="${page.page == no}">
+                        <li class="page-item active">
+                            <span class="page-link" th:text="${no}"></span>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${page.page != no}">
+                        <li class="page-item">
+                            <a class="page-link" th:href="|/admin/products?page=${no}&keyword=${keyword}|" th:text="${no}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${page.page != page.last}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/products?page=${page.next}&keyword=${keyword}|">&gt;</a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:href="|/admin/products?page=${page.last}&keyword=${keyword}|">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
-</div>
 </body>
-
 </html>
