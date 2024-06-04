@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,12 @@ public class LikeController {
     //     return new String();
     // }
 
+    /**
+     * 좋아요 등록 요청 (off -> on)
+     * @param like
+     * @return
+     * @throws Exception
+     */
     @PostMapping("")
     public ResponseEntity<String> likeOn(@RequestBody Like like) throws Exception {
         log.info("좋아요 on 요청");
@@ -59,6 +66,22 @@ public class LikeController {
         //데이터 처리 성공
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> likeOff(@RequestBody Like like) throws Exception {
+        log.info("좋아요 off 요청");
+        log.info("요청게시글: " + like.getPostNo());
+
+        int result = likeService.likeOff(like);
+
+         if (result == 0) {
+            // 데이터 처리 실패
+            return new ResponseEntity<>("FAIL", HttpStatus.OK); // OK = 200
+        }
+        
+        //데이터 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+    } 
     
 
     /**

@@ -24,4 +24,9 @@
         INSERT INTO `like` (user_id, post_no)
         VALUES (#{userId}, #{postNo})
     </insert>
+
+    <delete id="likeOff">
+        DELETE FROM `like`
+        WHERE user_id = #{userId} and post_no = #{postNo}
+    </delete>
 </mapper>
