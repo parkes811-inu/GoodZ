@@ -1,12 +1,14 @@
 package com.springproject.goodz.post.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.springproject.goodz.post.mapper.LikeMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class LikeServiceImpl implements LikeService{
 
     
