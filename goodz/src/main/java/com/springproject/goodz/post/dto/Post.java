@@ -16,6 +16,7 @@ public class Post {
     private String profileImg;          // 작성자 프로필이미지 - dto 조회용
     private String content;             // 작성내용
     private int likeCount;              // 좋아요 갯수
+    private String isLiked;             // 좋아요 체크 여부  -> 'fill' / 'none'
     private Date createdAt;             // 작성일자
     private Date updatedAt;             // 수정일자
 

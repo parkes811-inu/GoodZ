@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.CommentService;
+import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
@@ -52,6 +53,9 @@ public class PostController {
 
     @Autowired
     private CommentService cmmtService;
+
+    @Autowired
+    private LikeService likeService;
     
     /**
      * 전체 게시글 목록
@@ -61,10 +65,32 @@ public class PostController {
     public String list(Model model, HttpSession session) throws Exception {
 
         List<Post> postList = postService.list();
-        model.addAttribute("postList", postList);
-
+        
         Users loginUser = (Users)session.getAttribute("user");
         model.addAttribute("loginUser", loginUser);
+        
+        if (loginUser == null) {
+            model.addAttribute("postList", postList);
+            
+            return "/post/list";
+
+        } else {
+            ;
+            for (Post post : postList) {
+                // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
+                Post temp = new Post();
+                temp.setUserId(loginUser.getUserId());
+                temp.setPostNo(post.getPostNo());
+                boolean ischecked = likeService.listById(temp);
+
+                if (!ischecked) {
+                    post.setIsLiked("none");
+                } else {
+                    post.setIsLiked("solid");
+                }
+            }
+            model.addAttribute("postList", postList);
+        }
 
         return "/post/list";
     }
