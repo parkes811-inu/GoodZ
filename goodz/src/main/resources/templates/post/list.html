@@ -51,12 +51,6 @@
     <div class="container">
         <div class="mainContainer">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
-            
-            <!-- for like & wishList -->
-            <th:block th:if="${loginUser != null}">
-                <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
-            </th:block>
 
             <!-- 게시글 X -->
             <th:block th:if="${postList.isEmpty()}">
@@ -106,109 +100,14 @@
                 </th:block>
             </div>
         </div>
-        
+
     </div>
 
-    
-    
-    <script>
-        let isLoggedIn = $('.btn-like').data('logged-in');
-        // function toggleIcon(element) {
-        //     event.preventDefault();
-            
-        //     var svgElement = element.querySelector('svg');
-            
-            
-        //     if (svgElement.getAttribute('fill') === 'none') {
-        //         svgElement.setAttribute('fill', 'currentColor');
-        //     } else {
-        //         svgElement.setAttribute('fill', 'none');
-        //     }
-        // }
+    <!-- for like & wishList -->
+    <th:block th:if="${loginUser != null}">
+        <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
+    </th:block>
 
-        /* 해당 게시글 좋아요 갯수 갱신*/
-        function updateAll(element, postNo) {
-            
-            let request = new XMLHttpRequest();
-
-            request.open('GET', '/like/count/' + postNo, true);
-            request.send();
-
-            request.onreadystatechange = function () {
-
-                if (request.readyState == request.DONE && request.status == 200) {
-                    
-                    let response = JSON.parse(request.responseText);
-                    
-                    console.log('좋아요 갯수 갱신 요청 완료');
-                    console.log('업데이트된 좋아요 수: ' + response.countLike);
-                    // 좋아요 갯수 갱신
-                    let updatedLikeCount = response.countLike;
-                    let $countLike = element.querySelector('.count-like');
-                    $countLike.innerText = '';
-                    $countLike.innerText = updatedLikeCount;
-                }
-            }
-        }
-
-        function btnLike(element, postNo) {
-            event.preventDefault();
-
-            // 로그인 체크
-            if (!isLoggedIn) {
-                alert('로그인 후 이용 가능합니다.');
-                let moveToLogin = confirm('로그인 페이지로 이동하시겠습니까?');
-
-                if (moveToLogin) {
-                    window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
-                    return;
-                }
-            }
-
-            let $like = element.querySelector('svg');
-            let $csrfToken = document.getElementById('csrfToken');
-            let csrfToken = $csrfToken.value;
-
-            //  좋아요 off -> on
-            if ($like.getAttribute('fill') === 'none') {
-                let $userId = document.getElementById('loginUserId');
-                let userId = $userId.value;
-
-                let data = {
-                    'postNo' : postNo,
-                    'userId' : userId
-                }
-
-                console.dir(data);
-
-                let request = new XMLHttpRequest();
-
-                request.open('POST', '/like');
-                request.setRequestHeader('content-Type', 'application/json');
-                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
-                request.send(JSON.stringify(data));
-
-                // 요청상태 체킹
-                request.onreadystatechange = function () {
-                    if (request.readyState == request.DONE && request.status == 200) {
-                        console.log('좋아요 등록 성공');
-
-                        let response = request.responseText;
-
-                        if (response == 'SUCCESS') {
-                            // 좋아요 색 채우기
-                            $like.setAttribute('fill', 'solid');
-
-                            // 좋아요 갯수 갱신
-                            updateAll(element, postNo)
-                        }
-                    }
-                }
-
-
-            }
-        }
-
-    </script>
 </body>
 </html>

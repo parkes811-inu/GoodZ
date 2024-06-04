@@ -24,9 +24,18 @@
     </select>
 
     <select id="select" resultType="post">
-        SELECT *
-        FROM post
-        WHERE post_no = #{postNo}
+        SELECT  p.post_no as post_no
+              , p.user_id as user_id
+              , p.content as contetnt
+              , f.no as file_no
+              , f.file_name as file_name
+              , f.file_path as file_path
+              , f.file_code as file_code
+              , IFNULL(l.like_count, 0) AS likeCount
+        FROM post p
+        inner join file f on post_no = parent_no and f.parent_table='post' and file_code = 1
+        LEFT JOIN (SELECT post_no, COUNT(*) AS like_count FROM `Like` GROUP BY post_no) l ON p.post_no = l.post_no
+        WHERE p.post_no = #{postNo};
     </select>
 
     <select id="selectById" resultType="post">
@@ -37,8 +46,10 @@
               , f.file_name as file_name
               , f.file_path as file_path
               , f.file_code as file_code
-        FROM post p inner join file f
-        on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
+              , IFNULL(l.like_count, 0) AS likeCount
+        FROM post p
+        inner join file f on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
+        LEFT JOIN (SELECT post_no, COUNT(*) AS like_count FROM `Like` GROUP BY post_no) l ON p.post_no = l.post_no
     </select>
 
     <select id="maxNo">
