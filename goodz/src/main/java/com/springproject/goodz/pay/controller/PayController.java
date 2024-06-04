@@ -81,11 +81,23 @@ public class PayController {
             }
         }
 
-        Files image = fileService.select(pNo);
+        
+        // 상품 이미지 설정
+        Files file = new Files();
+        file.setParentNo(product.getPNo());
+        file.setParentTable(product.getCategory());
+        List<Files> productImages = fileService.listByParent(file);
+        
+        // 첫 번째 이미지 URL 설정
+        if (!productImages.isEmpty()) {
+            product.setImageUrl(productImages.get(0).getFilePath());
+        } else {
+            product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+        }
 
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
         model.addAttribute("size", size);
-        model.addAttribute("image", image);
+        model.addAttribute("image", productImages);
         model.addAttribute("price", price);
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
