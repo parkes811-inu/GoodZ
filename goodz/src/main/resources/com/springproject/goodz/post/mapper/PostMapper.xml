@@ -7,16 +7,20 @@
 
 
     <select id="list" resultType="post">
-        SELECT	p.post_no as post_no
-               ,p.user_id as user_id
-               ,u.nickname as nickname
-               ,u.profile_picture_url as profileImg
-               ,f.no as file_no
-        FROM post p 
-        INNER JOIN user u on p.user_id = u.user_id
-        INNER JOIN file f on post_no = parent_no and f.parent_table='post' and file_code = 1;
-
-        
+        SELECT  p.post_no as post_no
+              , p.user_id as user_id
+              , u.nickname as nickname
+              , u.profile_picture_url as profileImg
+              , p.content as contetnt
+              , f.no as file_no
+              , f.file_name as file_name
+              , f.file_path as file_path
+              , f.file_code as file_code
+              , IFNULL(l.like_count, 0) AS likeCount
+        FROM post p
+        inner join file f on post_no = parent_no and f.parent_table='post' and file_code = 1
+        inner join user u on p.user_id = u.user_id
+        LEFT JOIN (SELECT post_no, COUNT(*) AS like_count FROM `Like` GROUP BY post_no) l ON p.post_no = l.post_no
     </select>
 
     <select id="select" resultType="post">
