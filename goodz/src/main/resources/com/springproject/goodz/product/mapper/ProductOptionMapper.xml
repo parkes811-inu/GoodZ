@@ -16,5 +16,6 @@
         SELECT * 
         FROM product_option 
         WHERE p_no = #{pNo}
+          AND status = 'on'
     </select>
 </mapper>

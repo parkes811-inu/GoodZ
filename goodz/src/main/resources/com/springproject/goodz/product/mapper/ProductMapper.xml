@@ -82,5 +82,22 @@
             );
     </select>
 
-
+    <!-- <select id="findSameBrandProducts" resultType="Product">
+        SELECT *
+          FROM product
+         WHERE b_name = #{brand}
+           AND category = #{category}
+           AND p_no != #{pNo}
+         ORDER BY created_at DESC
+         LIMIT 4
+    </select> -->
+    <select id="findSameBrandProducts" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE b_name = #{brand}
+        AND category = #{category}
+        AND p_no != #{pNo}
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
 </mapper>
