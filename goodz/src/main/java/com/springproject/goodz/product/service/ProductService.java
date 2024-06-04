@@ -46,4 +46,6 @@ public interface ProductService {
 
     // 제품과 최신 가격 변동 정보 조회
     public List<Product> UsedInPay(int pNo) throws Exception;
+
+
 }

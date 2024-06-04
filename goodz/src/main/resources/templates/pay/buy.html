@@ -107,15 +107,22 @@
                     <div class="product_info_area mb-4 d-flex align-items-center">
                         <!-- 상품명과 사이즈 이미지 가져와야함 -->
                         <div class="product_img">
-                            <img src="/img/pay/test.png" class="img-fluid">
+                            <!-- <img src="/img/pay/test.png" class="img-fluid"> 상품 이미지 띄우는 건 해야함. -->
+                            <img th:src="@{/files/img(imgUrl=${image})}" alt="상품 이미지" class="img-fluid">
                         </div>
                         <div class="product_detail">
                             <div class="product_info">
-                                <strong>상품명</strong><br><span th:text="${product?.productName}"></span>
+                                <strong>상품명</strong><br><span th:text="${product.productName}"></span>
                             </div>
                             <div class="product_info">
-                                <strong>사이즈</strong><br><span th:text="${product.size}"></span>
+                                <strong>사이즈</strong><br>
+                                <span th:text="${size}">사이즈</span>
                             </div>
+                            <div>
+                                <strong>가격</strong><br>
+                                <span th:text="${price}"></span>
+                            </div>
+                                
                         </div>
                     </div>
                 </div>
