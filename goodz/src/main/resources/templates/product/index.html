@@ -15,80 +15,26 @@
         <div class="mainContainer">
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
                 <!-- 반복문으로 최대 4개 까지 -->
-                <div class="col">
+                <div th:each="product : ${productList}" class="col">
                     <div class="card border-0">
                         <div class="card-body">
-                            <a href="/product/detail">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                            <a th:href="@{/product/detail/{id}(id=${product.pNo})}">
+                                <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                             </a>
                             <div class="card-text py-2">
                                 <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
+                                    <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
+                                </div>
+                                <div class="d-flex justify-content-start column-gap-1">
+                                    <p th:each="option : ${product.options}">
+                                        <span th:text="${option.optionPrice}"></span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <a href="/product/detail">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <a href="/product/detail">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <a href="/product/detail">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body">
-                            <a href="/product/detail">
-                                <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                            </a>
-                            <div class="card-text py-2">
-                                <div class="d-flex justify-content-start column-gap-1">
-                                    <p class="userId fw-bold m-0">nike airmax1</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- 반복문 끝 -->
             </div>
         </div>
     </div>

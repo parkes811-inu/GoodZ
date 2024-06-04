@@ -183,6 +183,7 @@ CREATE TABLE `Product` (
 -- ) COMMENT='상품 이미지';
 -- / 쓸모없을거같다해서 주석해놓음!!! -6/3 도희-
 
+
 -- Product 옵션 테이블 / 📁 product
 CREATE TABLE `Product_option` (
     `option_id` INT NOT NULL AUTO_INCREMENT,
