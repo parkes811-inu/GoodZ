@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/admin_layout}"
-      >
+      layout:decorate="~{/layouts/admin_layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 페이지 - 브랜드 등록</title>
+    <title>관리자 페이지 - 브랜드 목록</title>
     <style>
         .content {
             flex: 1;
@@ -42,11 +41,22 @@
             margin: 0 5px;
         }
 
-        .pagination li a {
+        .pagination li a, .pagination li span.page-link {
             color: #000;
             text-decoration: none;
-            border: none; 
+            border: none;
+            background: none; /* 배경 없애기 */
         }
+
+        .pagination li.active span.page-link {
+            font-weight: bold;
+            color: black;
+        }
+
+        .pagination li a:hover, .pagination li a:focus {
+            text-decoration: underline; /* 호버 시 밑줄 표시 */
+        }
+
         .table th, .table td {
             text-align: center;
         }
@@ -64,76 +74,107 @@
         .custom-button svg {
             margin-right: 5px;
         }
-
     </style>
 </head>
 
 <body layout:fragment="content">
-      <div class="mainContainer mt-4">
+    <div class="content mt-5">
         <div class="header">
             <h2>브랜드 목록</h2>
         </div>
-  
-        <div class="d-flex justify-content-end">
-            <a href="/admin/add_brand" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: end; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+
+        <!-- 검색 폼과 추가 버튼을 같은 줄에 배치 -->
+        <div class="d-flex justify-content-between mt-3 mb-3">
+            <form th:action="@{/admin/brands}" method="get" class="form-inline">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" th:value="${keyword}" placeholder="브랜드명 검색">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary" style="background-color: black; color: white;">검색</button>
+                    </div>
+                </div>
+            </form>
+            <a href="/admin/add_brand" class="custom-button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
             </a>
         </div>
+
         <div class="divider">
-            <table class="table" >
-              <!-- 제목행 -->
+            <table class="table">
+                <!-- 제목행 -->
                 <thead>
-                  <tr>
-                    <th scope="col" style="width: 120px;">브랜드 번호</th>
-                    <th scope="col" colspan="4">브랜드명</th>
-                  </tr>
+                    <tr>
+                        <th scope="col" style="width: 120px;">브랜드 번호</th>
+                        <th scope="col" colspan="4">브랜드명</th>
+                    </tr>
                 </thead>
 
                 <!-- 브랜드 목록 출력 영역 -->
                 <tbody class="table-group-divider">
-                  <!-- if) 조회되는 브랜드 없을 시, -->
-                  <th:block th:if="${brandList.isEmpty()}">
+                    <!-- if) 조회되는 브랜드 없을 시, -->
+                    <th:block th:if="${brandList.isEmpty()}">
                         <tr>
                             <td colspan="2" align="center">
                                 조회된 브랜드가 없습니다.
                             </td>
                         </tr>
-                  </th:block>
+                    </th:block>
 
-                  <!-- if) 브랜드 존재 시, 반복출력 -->
-                  <tr th:each="brand : ${brandList}">
-                    <th scope="row" th:text="${brand.bNo}"></th>
-                    <td th:text="${brand.bName}"></td>
-                  </tr>
-                  
-                  
+                    <!-- if) 브랜드 존재 시, 반복출력 -->
+                    <tr th:each="brand : ${brandList}">
+                        <th scope="row" th:text="${brand.bNo}"></th>
+                        <td th:text="${brand.bName}"></td>
+                    </tr>
                 </tbody>
-              </table>
+            </table>
         </div>
 
+        <!-- 페이지네이션 -->
         <nav aria-label="Page navigation">
-            <ul class="pagination">
+            <ul class="pagination justify-content-center">
+                <!-- [처음] -->
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    <a class="page-link" th:href="|/admin/brands?page=${page.first}&keyword=${keyword}|">&laquo;</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                
+                <!-- [이전] -->
+                <th:block th:if="${page.page != page.start}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/brands?page=${page.prev}&keyword=${keyword}|">&lt;</a>
+                    </li>
+                </th:block>
+                
+                <!-- [페이지 번호] -->
+                <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
+                    <!-- 현재 페이지 -->
+                    <th:block th:if="${page.page == no}">
+                        <li class="page-item active">
+                            <span class="page-link" th:text="${no}"></span>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${page.page != no}">
+                        <li class="page-item">
+                            <a class="page-link" th:href="|/admin/brands?page=${no}&keyword=${keyword}|" th:text="${no}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+        
+                <!-- [다음] -->
+                <th:block th:if="${page.page != page.last}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/brands?page=${page.next}&keyword=${keyword}|">&gt;</a>
+                    </li>
+                </th:block>
+        
+                <!-- [마지막] -->
                 <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    <a class="page-link" th:href="|/admin/brands?page=${page.last}&keyword=${keyword}|">&raquo;</a>
                 </li>
             </ul>
         </nav>
+        
     </div>
-</div>
 </body>
 
 </html>

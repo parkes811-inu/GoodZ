@@ -1,6 +1,5 @@
 package com.springproject.goodz.post.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -13,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.CommentService;
+import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
@@ -53,16 +54,47 @@ public class PostController {
 
     @Autowired
     private CommentService cmmtService;
+
+    @Autowired
+    private LikeService likeService;
     
     /**
      * 전체 게시글 목록
      * @return
      */
     @GetMapping("")
-    public String list(Model model) throws Exception {
+    public String list(Model model, HttpSession session) throws Exception {
 
         List<Post> postList = postService.list();
-        model.addAttribute("postList", postList);
+        
+        Users loginUser = (Users)session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);
+        
+        // 비 로그인 시, 좋아요 전체 해제
+        if (loginUser == null) {
+            for (Post post : postList) {
+                post.setIsLiked("none");
+            }
+            model.addAttribute("postList", postList);
+            
+            return "/post/list";
+
+        } else {
+            for (Post post : postList) {
+                // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
+                Like temp = new Like();
+                temp.setUserId(loginUser.getUserId());
+                temp.setPostNo(post.getPostNo());
+                boolean ischecked = likeService.listById(temp);
+
+                if (!ischecked) {
+                    post.setIsLiked("none");
+                } else {
+                    post.setIsLiked("solid");
+                }
+            }
+            model.addAttribute("postList", postList);
+        }
 
         return "/post/list";
     }
@@ -77,8 +109,7 @@ public class PostController {
 
         /* 게시글 조회 */
         Post post = postService.select(postNo);
-        model.addAttribute("post", post);
-
+        
         /* 첨부파일 조회 */
         Files file = new Files();
         file.setParentTable("post");
@@ -87,26 +118,41 @@ public class PostController {
         log.info("조회할 파일의 parentNo: " + file.getParentNo());
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
-
+        
         /* 게시글 작성자 정보 세팅 */
         Users writer = userService.select(post.getUserId());
         log.info("작성자: " + writer.toString()); 
         model.addAttribute("writer", writer);
-
+        
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
         model.addAttribute("loginUser", loginUser);
+        
+        /* 좋아요 체크 */
+        if (loginUser == null) {
+            // 비 로그인 시, 좋아요 표시 전체 해제
+            log.info("로그인이 되지않은 사용자");
+            
+            post.setIsLiked("none");
+            
+        } else {
+            // 로그인 시, 유저가 체크한 좋아요 표시
+            // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
+            Like temp = new Like();
+            temp.setUserId(loginUser.getUserId());
+            temp.setPostNo(post.getPostNo());
+            boolean ischecked = likeService.listById(temp);
+            
+            if (!ischecked) {
+                post.setIsLiked("none");
+            } else {
+                post.setIsLiked("solid");
+            }
+            
+        }
+        model.addAttribute("post", post);
 
         return "/post/read";
-    }
-
-    /**
-     * 게시글 상세 (무플버전 확인용)
-     * @return
-     */
-    @GetMapping("/cmmtX")
-    public String cmmtTest() {
-        return "/post/read_cmmtX";
     }
 
     /**
@@ -182,19 +228,42 @@ public class PostController {
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");    
 
-        if (loginUser == null) {
-            log.info("로그인이 되지않은 사용자");
-        }
-
         /* 게시글 조회 */
         List<Post> postList = postService.selectById(requested.getUserId());
-
+        
+        // 비 로그인 시, 좋아요 표시 전체 해제
+        if (loginUser == null) {
+            log.info("로그인이 되지않은 사용자");
+            
+            for (Post post : postList) {
+                post.setIsLiked("none");
+            }
+            
+            // 로그인 시, 유저가 체크한 좋아요 표시
+        } else {
+            
+            for (Post post : postList) {
+                // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
+                Like temp = new Like();
+                temp.setUserId(loginUser.getUserId());
+                temp.setPostNo(post.getPostNo());
+                boolean ischecked = likeService.listById(temp);
+                
+                if (!ischecked) {
+                    post.setIsLiked("none");
+                } else {
+                    post.setIsLiked("solid");
+                }
+            }
+        }
+        
+        
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("postList", postList);
 
         return "/post/user/profile";
     }
-    
+
     
 }

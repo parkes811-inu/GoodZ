@@ -4,15 +4,25 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+<<<<<<< HEAD
 import com.mysql.cj.protocol.ExportControlled;
+=======
+import com.springproject.goodz.product.dto.Page;
+>>>>>>> 84a91898e9f66f583851024518a317d9cfc9df0c
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.dto.ProductImage;
 
 public interface ProductService {
     
-    // 상품 목록 (페이징 추후 추가) - 관리자 전용 다 볼 수 있음
+    // 상품 목록
     List<Product> list() throws Exception;
+
+    // 상품 목록 - 관리자 페이징 + 검색
+    List<Product> productList(Page page, String keyword) throws Exception;
+    
+    // 전체 데이터 개수 가져오기
+    int getTotalCount(String keyword) throws Exception;
 
     // 상품 목록 - 메인화면에 최근입고 4개
     List<Product> newArrivals() throws Exception;

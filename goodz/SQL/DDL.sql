@@ -1,3 +1,4 @@
+-- Active: 1716800736662@@127.0.0.1@3306@goodz
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
@@ -121,7 +122,7 @@ CREATE TABLE `Like` (
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (like_no),
-    FOREIGN KEY (c_no) REFERENCES Comment(c_no),
+    -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (post_no) REFERENCES Post(post_no)
 );
@@ -180,6 +181,8 @@ CREATE TABLE `Product` (
 --     PRIMARY KEY (`img_id`),
 --     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
 -- ) COMMENT='상품 이미지';
+-- / 쓸모없을거같다해서 주석해놓음!!! -6/3 도희-
+
 
 -- Product 옵션 테이블 / 📁 product
 CREATE TABLE `Product_option` (
@@ -320,17 +323,32 @@ CREATE TABLE `Inspection` (
 
 -- Purchase 테이블 / 📁 pay
 CREATE TABLE `Purchase` (
-	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
-	`user_id`			VARCHAR(100)	NOT NULL,
-	`p_no`				INT				NOT NULL,
-	`purchase_price`	INT				NOT NULL,
-	`payment_method`	VARCHAR(50)		NOT NULL,
-	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
-	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
+    `user_id`           VARCHAR(100)    NOT NULL,
+    `p_no`              INT             NOT NULL,
+    `purchase_price`    INT             NOT NULL,
+    `payment_method`    VARCHAR(50)     NOT NULL,
+    `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
+    -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
+    `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (p_no) REFERENCES Product(p_no)
-)COMMENT='구매';
+) COMMENT='구매';
+
+-- purchase_date 컬럼 삭제
+ALTER TABLE Purchase DROP COLUMN purchase_date;
+
+-- ordered_at, created_at, updated_at 컬럼 추가
+ALTER TABLE Purchase
+    ADD COLUMN ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- purchase_state 컬럼 변경
+ALTER TABLE Purchase MODIFY COLUMN purchase_state ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending';
 
 
 -- Shipment 테이블 / 📁 pay
@@ -346,6 +364,7 @@ CREATE TABLE `Shipment` (
     FOREIGN KEY (`purchase_no`) REFERENCES `Purchase`(`purchase_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
 ) COMMENT='배송';
+
 
 -- Shippingaddress 테이블 / 📁 user
 CREATE TABLE `Shippingaddress` (

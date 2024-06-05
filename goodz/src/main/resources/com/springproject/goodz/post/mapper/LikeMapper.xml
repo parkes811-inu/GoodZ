@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.post.mapper.LikeMapper">
+
+    <!-- 좋아요 여부 체크 - id 기준 -->
+    <select id="listById" resultType="int">
+        SELECT count(*)
+        FROM `like`
+        WHERE user_id = #{userId} and post_no = #{postNo}
+    </select>
+
+    <!-- 좋아요 갯수 갱신 -->
+    <select id="countLike" resultType="int">
+        SELECT count(*)
+        FROM `like`
+        WHERE post_no = #{postNo}
+    </select>
+
+    <!-- 좋아요 off -> on -->
+    <insert id="likeOn">
+        INSERT INTO `like` (user_id, post_no)
+        VALUES (#{userId}, #{postNo})
+    </insert>
+
+    <delete id="likeOff">
+        DELETE FROM `like`
+        WHERE user_id = #{userId} and post_no = #{postNo}
+    </delete>
+</mapper>
