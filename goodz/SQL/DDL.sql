@@ -59,14 +59,14 @@ CREATE TABLE `Social_Login` (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='소셜로그인';
 
--- Following 테이블 / 📁 user
-CREATE TABLE `Following` (
-	`following_no`	INT				NOT NULL AUTO_INCREMENT,
-	`user_id`		VARCHAR(100)	NOT NULL,
-	`following_id`	VARCHAR(100),
-    PRIMARY KEY (following_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-) COMMENT='팔로잉';
+-- Following 테이블 / 📁 user --6/5 필요없어서 삭제함 -도희-
+-- CREATE TABLE `Following` (
+-- 	`following_no`	INT				NOT NULL AUTO_INCREMENT,
+-- 	`user_id`		VARCHAR(100)	NOT NULL,
+-- 	`following_id`	VARCHAR(100),
+--     PRIMARY KEY (following_no),
+--     FOREIGN KEY (user_id) REFERENCES User(user_id)
+-- ) COMMENT='팔로잉';
 
 
 -- Follower 테이블 / 📁 user
