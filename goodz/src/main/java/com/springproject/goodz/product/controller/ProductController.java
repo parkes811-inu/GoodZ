@@ -1,6 +1,8 @@
 package com.springproject.goodz.product.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +119,22 @@ public class ProductController {
         
         String category = product.getCategory();
         String brand = product.getBName();
-        
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> sizeMap = new HashMap<>();
+
+        if (category.equals("shoes")) {
+            sizeMap.put("sizes", new int[]{220, 230, 240, 250, 260, 270, 280});
+        } else if (category.equals("top") || category.equals("pants")) {
+            sizeMap.put("sizes", new String[]{"S", "M", "L"});
+        } else {
+            // accessory인 경우
+            sizeMap.put("sizes", "free");
+        }
+
+        String sizeJson = objectMapper.writeValueAsString(sizeMap);
+        model.addAttribute("sizeJson", sizeJson);
+
        // List<Product> brandProducts = productService.newArrivals();
        //List<Product> brandProducts = productService.findSameBrandProducts(brand, category, pNo); 
 
