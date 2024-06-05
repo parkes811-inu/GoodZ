@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-<<<<<<< HEAD
-import com.mysql.cj.protocol.ExportControlled;
-=======
 import com.springproject.goodz.product.dto.Page;
->>>>>>> 84a91898e9f66f583851024518a317d9cfc9df0c
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.dto.ProductImage;
