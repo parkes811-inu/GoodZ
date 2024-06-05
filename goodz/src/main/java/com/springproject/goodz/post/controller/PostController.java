@@ -269,6 +269,7 @@ public class PostController {
             
             for (Post post : postList) {
                 post.setIsLiked("none");
+                post.setIsWishlisted("none");
             }
             
             // 로그인 시, 유저가 체크한 좋아요 표시
