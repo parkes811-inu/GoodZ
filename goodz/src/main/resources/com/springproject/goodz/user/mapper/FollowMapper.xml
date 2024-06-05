@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.user.mapper.FollowMapper">
+
+    <resultMap type="Users" id="userMap">
+        <id property="userId" column="user_id" javaType="String"/>
+        <result property="username" column="username" />
+        <result property="nickname" column="nickname" />
+        <result property="password" column="password" />
+        <result property="birth" column="birth" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="profilePictureUrl" column="profile_picture_url" />
+        <result property="account" column="account" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+        <result property="enabled" column="enabled" />
+        <collection property="authList" resultMap="authMap" />
+        <collection property="FollowerList" resultMap="followMap" />
+        <collection property="FollowingList" resultMap="followMap" />
+    </resultMap>
+
+    <resultMap type="Follow" id="followMap">
+        <result property="no" column="no" />
+        <result property="userId" column="user_id" />
+        <result property="followerId" column="follower_id" />
+    </resultMap>
+
+    <!-- 팔로워 여부 조회 -->
+    <select id="isFollower">
+        SELECT *
+        FROM follow
+        WHERE user_id = #{userId} and follower_id = #{followerId}
+    </select>
+
+    <!-- 팔로워 조회 -->
+    <select id="followerList" resultType="follow">
+        SELECT *
+        FROM follow
+        WHERE user_id = #{userId};
+    </select>
+
+    <!-- 팔로잉 조회 -->
+    <select id="followingList" resultType="Users">
+        SELECT *
+        FROM follow
+        WHERE follower_id = #{followerId};
+    </select>
+
+    <!-- 팔로우 요청 -->
+    <insert id="addFollow">
+        INSERT INTO follow (user_id, follower_id)
+        VALUES (#{userId}, #{followerId})
+    </insert>
+
+    <!-- 언팔 요청 -->
+    <delete id="unfollow">
+        DELETE FROM follow
+        WHERE no = #{no} 
+    </delete>
+
+    <!-- 팔로워/팔로잉 수 조회 -->
+    <!-- <select id="followCount">
+        SELECT u.user_id
+              ,u.nickname
+              ,u.profile_picture_url
+	          ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS follower_count
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS following_count
+        FROM user u;
+    </select> -->
+
+    <!-- 팔로워 수 조회 -->
+    <!-- <select id="followerCount" resultType=>
+        SELECT 
+	           (SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS follower_count
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS following_count
+        FROM user u
+        WHERE user_id = {userId};
+    </select> -->
+</mapper>

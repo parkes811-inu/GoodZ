@@ -65,8 +65,8 @@
                                 </a>
                             </div>
                         </th:block>
-
                     </div>
+
                     <!-- 팔로우/팔로잉 정보 -->
                     <div class="followInfo d-flex text-start">
                         <button type="button" class="btn ps-0 pe-2 py-0"><span>팔로워 </span><span class="follower">99</span></button>
@@ -83,9 +83,13 @@
                     </svg>
                 </a>
             </div>
+            <!-- 비로그인하거나 작성자와 로그인한 유저가 다른 경우 -->
+            <th:block th:if="${loginUser == null or loginUser.userId != writer.userId}">
+                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick=""> 팔로우 </button>
+            </th:block>
         </div>
 
-        <hr>
+        <hr class="my-2">
 
         <!-- [DB] 게시글 반복 위치 -->
         <!-- 조회된 게시글이 없는 경우 -->

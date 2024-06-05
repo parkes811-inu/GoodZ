@@ -20,4 +20,7 @@ public class Users {
     private int enabled;
     private List<UserAuth> authList;
 
+    // private List<Follow> FollowerList;
+    // private List<Follow> FollowingList;
+
 }

@@ -69,9 +69,9 @@ CREATE TABLE `Social_Login` (
 -- ) COMMENT='팔로잉';
 
 
--- Follower 테이블 / 📁 user
-CREATE TABLE `Follower` (
-	`follower_no`	INT				NOT NULL AUTO_INCREMENT,
+-- Follow 테이블 / 📁 user
+CREATE TABLE `Follow` (
+	`no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
 	`follower_id`	VARCHAR(100),
     PRIMARY KEY (follower_no),
