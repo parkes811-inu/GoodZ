@@ -8,5 +8,6 @@ import com.springproject.goodz.pay.dto.Purchase;
 public interface PayMapper {
     
     // 구매 등록
-    public void insertPurchase(Purchase purchase) throws Exception;
+    public int insertPurchase(Purchase purchase) throws Exception;
+
 }

@@ -59,7 +59,7 @@ public class PayController {
     public String buy(@PathVariable("p_no") int pNo,
                     @RequestParam("size") String size,
                     Model model, HttpSession session) throws Exception {
-
+        
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
@@ -80,12 +80,34 @@ public class PayController {
             }
         }
 
-        int price = 0;
+        int purchasePrice = 0;
+        int optionId = 0;
         for (ProductOption option : options) {
+
             if (option.getSize().equals(size)) {
-                price = option.getOptionPrice();
-                break; // 일치하는 사이즈를 찾으면 반복문을 종료
+                purchasePrice = option.getOptionPrice();
             }
+
+            if (option.getPNo() == pNo && option.getSize().equals(size)) {
+                optionId = option.getOptionId();
+            }
+        }
+
+        // purchase 테이블에 user_id, p_no, optionPrice, option_id 등록
+        String userId = user.getUserId();
+
+        Purchase purchase = new Purchase();
+        purchase.setUserId(userId);
+        purchase.setPNo(pNo);
+        purchase.setPurchasePrice(purchasePrice);
+        purchase.setPaymentMethod("purchase");
+        purchase.setPurchaseState("pending"); // 구매 상태를 pending으로 설정
+        purchase.setOptionId(optionId);
+
+        int result = payService.savePurchase(purchase);
+
+        if (result == 0) {
+            return "redirect:/product/detail/" + pNo;
         }
 
         // 상품 이미지 설정
@@ -104,7 +126,7 @@ public class PayController {
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
         model.addAttribute("size", size);
         model.addAttribute("image", productImages);
-        model.addAttribute("price", price);
+        model.addAttribute("price", purchasePrice);
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("hasAddress", !addresses.isEmpty());
@@ -113,42 +135,6 @@ public class PayController {
         return "/pay/buy"; // 상품 구매 페이지로 이동합니다.
     }
 
-    /**
-     * Purchase 테이블에 데이터를 저장하는 엔드포인트
-     * @param payload
-     * @param session
-     * @return
-     */
-    @PostMapping("/savePurchase")
-    @ResponseBody
-    public Map<String, Object> savePurchase(@RequestBody Map<String, Object> payload, HttpSession session) {
-        Map<String, Object> response = new HashMap<>();
-        
-        try {
-            Users user = (Users) session.getAttribute("user");
-            if (user == null) {
-                response.put("success", false);
-                return response;
-            }
-
-            Purchase purchase = new Purchase();
-            purchase.setUserId((String) payload.get("userId"));
-            purchase.setPNo((Integer) payload.get("pNo"));
-            purchase.setPurchasePrice((Integer) payload.get("purchasePrice"));
-            purchase.setPaymentMethod((String) payload.get("paymentMethod"));
-            purchase.setPurchaseState("pending"); // 구매 상태를 pending으로 설정
-
-            payService.savePurchase(purchase); // Purchase 저장 로직
-
-            response.put("success", true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("success", false);
-        }
-    
-        return response;
-    }
-    
     @GetMapping("/success")
     public String success() {
         return "/pay/success";

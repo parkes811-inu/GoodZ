@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mysql.cj.protocol.ExportControlled;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
@@ -24,6 +25,8 @@ import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Slf4j
 @Controller
@@ -178,6 +181,12 @@ public class AdminController {
 
     @GetMapping("/purchase/detail")
     public String purchase_detail() {
+
+        // if (reuslt > 0 && status == 정산완료) {
+        //     int sival = productService.plusSize(1, S);
+        //     update id="plusSize"
+        //     update product_option set stock_quantity = stock_quantity + 1 where p_no = 1 and size = 'S';
+        // }
         return "/admin/purchase_detail";
     }
 
@@ -199,10 +208,22 @@ public class AdminController {
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
+
+        List<Brand> brandList = brandService.list();
+        model.addAttribute("brandList", brandList);
+
         model.addAttribute("product", product);
         model.addAttribute("option", option);
         model.addAttribute("images", images);
 
         return "/admin/product_detail";
     }
+
+    @PostMapping("/updateProduct")
+    public String getMethodName() throws Exception {
+        log.info("sdfasdfafafasdf");
+        return "/admin/product_detail/{pNo}";
+    }
+    
+
 }
