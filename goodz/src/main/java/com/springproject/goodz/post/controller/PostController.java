@@ -5,8 +5,11 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,14 +28,17 @@ import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
+
 /*
  * 스타일 게시글
- * [GET]    /styles                 전체 게시글 목록
- * [GET]    /styles/게시글번호       게시글 조회
- * [GET]    /styles/update          게시글 수정페이지
- * [GET]    /styles/insert          게시글 수정페이지
- * [POST]   /styles/insert          게시글 작성처리
- * [DELETE] /styles/게시글번호       게시글 조회
+ * [GET]    /styles                     전체 게시글 목록
+ * [GET]    /styles/게시글번호           게시글 조회
+ * [GET]    /styles/update/게시글번호    게시글 수정페이지
+ * [POST]   /styles/update              게시글 수정처리
+ * [GET]    /styles/insert              게시글 수정페이지
+ * [POST]   /styles/insert              게시글 작성처리
+ * [POST]   /styles/delete/게시글번호    게시글 삭제
  *     
  * 프로필    
  * [GET]    /styles/user/@닉네임     유저 프로필
@@ -127,13 +133,12 @@ public class PostController {
 
         /* 게시글 조회 */
         Post post = postService.select(postNo);
+        log.info("저장 갯수: "+post.getWishCount() + "개");
         
         /* 첨부파일 조회 */
         Files file = new Files();
         file.setParentTable("post");
         file.setParentNo(post.getPostNo());
-        log.info("조회할 파일의 parentTable: " + file.getParentTable());
-        log.info("조회할 파일의 parentNo: " + file.getParentNo());
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
         
@@ -239,13 +244,7 @@ public class PostController {
         model.addAttribute("loginUser", loginUser);
 
         return "redirect:/styles/user/@"+requested.getNickname();
-    }
-
-    @GetMapping("/update")
-    public String moveToUpdate() {
-        return "/post/update";
-    }
-    
+    }    
     
     /*
      * 유저 프로필
@@ -308,6 +307,92 @@ public class PostController {
         model.addAttribute("postList", postList);
 
         return "/post/user/profile";
+    }
+
+    /**
+     * 게시글 수정 페이지
+     * @param postNo
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/update/{postNo}")
+    public String moveToUpdate(@PathVariable("postNo")int postNo, Model model) throws Exception {
+
+        /* 게시글 조회 */
+        Post post = postService.select(postNo);
+        model.addAttribute("post", post);
+
+        /* 첨부파일 조회 */
+        Files file = new Files();
+        file.setParentTable("post");
+        file.setParentNo(post.getPostNo());
+        List<Files> fileList = fileService.listByParent(file);
+        model.addAttribute("fileList", fileList);
+
+        return "/post/update";
+    }
+
+    /**
+     * 게시글 수정 처리
+     * @param post
+     * @param model
+     * @return
+     */
+    @PostMapping("/update")
+    public String update(Post post, Model model) {
+
+        /* ⬇️ 게시글 수정 처리 ⬇️ */
+        int result;
+
+        try {
+            result = postService.update(post);
+        } catch (Exception e) {
+            System.err.println("게시글 수정 처리 시, 예외발생");
+            e.printStackTrace();
+            return "forward:/styles/update/" + post.getPostNo();
+        }
+
+        /* ⬇️ 게시글 조회 페이지로 리다이렉트 처리 ⬇️ */
+        log.info(post.getPostNo() + "번 게시글 수정 성공");
+        
+        return "redirect:/styles/"+post.getPostNo();
+    }
+    
+    /**
+     * 게시글 삭제 요청
+     * @param postNo
+     * @return
+     * @throws Exception
+     */
+    @DeleteMapping("/{postNo}")
+    public ResponseEntity<String> delete(@PathVariable("postNo") int postNo) throws Exception{
+        log.info("삭제할 게시글 번호: " + postNo);
+        Post post = postService.select(postNo);
+
+        /* ⬇️ 게시글 삭제처리 ⬇️ */
+        int result = postService.delete(postNo);
+        if (result == 0) {
+            // 삭제 처리 실패
+            return new ResponseEntity<>("FAIL", HttpStatus.OK);
+        }
+
+        // 댓글과 좋아요는 postNo가 외래키 ON DELETE CASCADE 조건으로 같이 삭제됨.
+        
+        /* ⬇️ 첨부파일 삭제처리 ⬇️ */
+        Files file = new Files();
+        file.setParentTable("post");    // parnetTable
+        file.setParentNo(postNo);                   // parentNo
+        fileService.deleteByParent(file);
+
+        /* ⬇️ wishlist 테이블 삭제처리 ⬇️ */
+        Wish wish = new Wish();
+        wish.setParentTable("post");    // parnetTable
+        wish.setParentNo(post.getPostNo());         // parentNo
+        wishListService.deleteAll(wish);
+
+        // 삭제 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
     

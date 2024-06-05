@@ -12,7 +12,7 @@ public interface PostService {
     // 게시글 조회
     public Post select(int no) throws Exception;
 
-    // 게시글 조회 - id 기준
+    // 게시글 조회 - id 기준 (프로필 조회시 게시글 불러오기)
     public List<Post> selectById(String userId) throws Exception;
 
     // 마지막 게시글번호 조회 - 첨부파일 등록 시 필요함

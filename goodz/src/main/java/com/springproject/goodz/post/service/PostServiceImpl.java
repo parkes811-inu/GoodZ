@@ -130,14 +130,23 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public int update(Post post) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+
+        int result = postMapper.update(post);
+
+        return result;
     }
 
     @Override
-    public int delete(int no) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public int delete(int postNo) throws Exception {
+        int result = postMapper.delete(postNo);
+
+        if (result == 0) {
+            log.info("게시글 삭제 실패");
+        }
+
+        log.info(postNo + "번 게시글 삭제 완료");
+
+        return result;
     }
     
 }

@@ -54,6 +54,14 @@ public class WishListServiceImpl implements WishListService {
         return result;
     }
 
+    // 종속된 저장들 모두 삭제
+    @Override
+    public int deleteAll(Wish wish) throws Exception {
+        int result = wishListMapper.deleteAll(wish);
+
+        return result;
+    }
+
 
     
 }

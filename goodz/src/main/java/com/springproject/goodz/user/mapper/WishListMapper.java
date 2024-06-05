@@ -18,5 +18,8 @@ public interface WishListMapper {
 
     // 저장 on -> off
     public int wishOff (Wish wish) throws Exception;
+
+    // 종속된 저장들 모두 삭제
+    public int deleteAll(Wish wish) throws Exception;
     
 }

@@ -31,5 +31,10 @@
         WHERE user_id = #{userId} and parent_table = #{parentTable} and parent_no = #{parentNo}
     </delete>
 
+    <!-- 종속된 저장들 모두 삭제 -->
+    <delete id="deleteAll">
+        DELETE FROM wishList
+        WHERE parent_table = #{parentTable} and parent_no = #{parentNo}
+    </delete>
 
 </mapper>
