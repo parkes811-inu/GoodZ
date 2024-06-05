@@ -25,13 +25,7 @@ CREATE TABLE `user` (
     PRIMARY KEY (`user_id`)
 ) COMMENT='유저';
 
-DROP TABLE IF EXISTS user_auth;
--- User_auth 테이블 / 📁 user
-CREATE TABLE `user_auth` (
-      `auth_no` INT PRIMARY KEY AUTO_INCREMENT
-    , `user_id` varchar(100) NOT NULL                      -- 회원 아이디
-    , `AUTH` VARCHAR(100) NOT NULL                          -- 권한 (ROLE_USER, ROLE_ADMIN, ...)
-);
+
 
 
 DROP TABLE IF EXISTS persistent_logins;
@@ -120,7 +114,7 @@ CREATE TABLE `Like` (
 	`user_id`	VARCHAR(100)	NOT NULL,
 	`post_no`	INT				NOT NULL,
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 6/5 like해제하면 삭제되므로 필요X
     PRIMARY KEY (like_no),
     -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
@@ -319,6 +313,7 @@ CREATE TABLE `file` (
   PRIMARY KEY (`no`)
 ) COMMENT='파일';
 
+DROP TABLE IF EXISTS user_auth;
 -- user_auth 테이블 / 📁 user
 CREATE TABLE `user_auth` (
     `auth_no` INT PRIMARY KEY AUTO_INCREMENT,
