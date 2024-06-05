@@ -246,17 +246,32 @@ CREATE TABLE `Inspection` (
 
 -- Purchase 테이블 / 📁 pay
 CREATE TABLE `Purchase` (
-	`purchase_no`		INT				NOT NULL AUTO_INCREMENT,
-	`user_id`			VARCHAR(100)	NOT NULL,
-	`p_no`				INT				NOT NULL,
-	`purchase_price`	INT				NOT NULL,
-	`payment_method`	VARCHAR(50)		NOT NULL,
-	`purchase_state`	ENUM('pending', 'shipped', 'delivered', 'cancelled')	NOT NULL,
-	`purchase_date`		timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
+    `user_id`           VARCHAR(100)    NOT NULL,
+    `p_no`              INT             NOT NULL,
+    `purchase_price`    INT             NOT NULL,
+    `payment_method`    VARCHAR(50)     NOT NULL,
+    `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
+    -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
+    `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (p_no) REFERENCES Product(p_no)
-)COMMENT='구매';
+) COMMENT='구매';
+
+-- purchase_date 컬럼 삭제
+ALTER TABLE Purchase DROP COLUMN purchase_date;
+
+-- ordered_at, created_at, updated_at 컬럼 추가
+ALTER TABLE Purchase
+    ADD COLUMN ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- purchase_state 컬럼 변경
+ALTER TABLE Purchase MODIFY COLUMN purchase_state ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending';
 
 
 -- Shipment 테이블 / 📁 pay
@@ -272,6 +287,7 @@ CREATE TABLE `Shipment` (
     FOREIGN KEY (`purchase_no`) REFERENCES `Purchase`(`purchase_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
 ) COMMENT='배송';
+
 
 -- Shippingaddress 테이블 / 📁 user
 CREATE TABLE `Shippingaddress` (

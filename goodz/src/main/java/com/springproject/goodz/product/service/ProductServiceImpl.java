@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
@@ -40,6 +41,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> list() throws Exception {
         return productMapper.list();
+    }
+
+    @Override
+    public List<Product> productList(Page page, String keyword) throws Exception {
+        return productMapper.productList(page, keyword);
+    }
+
+    @Override
+    public int getTotalCount(String keyword) throws Exception {
+        return productMapper.getTotalCount(keyword);
     }
 
     @Override
@@ -163,4 +174,6 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> UsedInPay(int pNo) throws Exception {
         return productMapper.UsedInPay(pNo);
     }
+
+    
 }

@@ -12,6 +12,24 @@
          ORDER BY category DESC
     </select>
 
+    <!-- 상품 목록 조회 -->
+    <select id="productList" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+        OR product_name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY p_no ASC
+        LIMIT #{page.index}, #{page.rows}
+    </select>
+
+    <!-- 전체 데이터 개수 조회 -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM product
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+        OR product_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
     <!-- 메인화면에 4개 띄우기 -->
     <select id="newArrivals" resultType="Product">
         SELECT *

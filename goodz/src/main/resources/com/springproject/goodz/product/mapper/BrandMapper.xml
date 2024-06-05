@@ -10,6 +10,18 @@
         FROM brand
     </select>
 
+    <select id="brandList" resultType="Brand">
+        SELECT *
+        FROM brand
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY b_no ASC
+        LIMIT #{page.index}, #{page.rows}
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*) FROM brand
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
     <select id="maxNo">
         SELECT max(b_no) as maxNo
         FROM brand

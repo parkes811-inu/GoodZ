@@ -2,14 +2,23 @@ package com.springproject.goodz.product.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.dto.ProductImage;
 
 public interface ProductService {
     
-    // 상품 목록 (페이징 추후 추가) - 관리자 전용 다 볼 수 있음
+    // 상품 목록
     List<Product> list() throws Exception;
+
+    // 상품 목록 - 관리자 페이징 + 검색
+    List<Product> productList(Page page, String keyword) throws Exception;
+    
+    // 전체 데이터 개수 가져오기
+    int getTotalCount(String keyword) throws Exception;
 
     // 상품 목록 - 메인화면에 최근입고 4개
     List<Product> newArrivals() throws Exception;
@@ -46,4 +55,6 @@ public interface ProductService {
 
     // 제품과 최신 가격 변동 정보 조회
     public List<Product> UsedInPay(int pNo) throws Exception;
+
+
 }

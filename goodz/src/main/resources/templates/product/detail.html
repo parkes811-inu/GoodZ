@@ -173,7 +173,7 @@
                             <p id="productPrice" class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
                         </div>
                         
-                        <input type="hidden" id="productNo" th:value="${product.pNo}">
+                        <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}">
 
                         <div class="product-options">
                             <button id="sizeButton" name="size" class="form-select w-100" data-bs-toggle="modal" data-bs-target="#sizeModal">
@@ -501,38 +501,24 @@
             });
         });
 
-         // 거래하기 버튼 클릭 이벤트 리스너 추가
+        // 거래하기 버튼 클릭 이벤트 리스너 추가
         document.getElementById('confirmTransactionButton').addEventListener('click', function() {
             if (selectedSize && selectedPrice) {
-                // 선택된 사이즈와 가격으로 거래 요청을 보냄 (예: AJAX 요청)
+                // 선택된 사이즈와 가격으로 거래 요청을 보냄
                 console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
-                fetch('/pay/buy', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        type: transactionType, 
-                        size: selectedSize, 
-                        price: selectedPrice, 
-                        productName: productName, 
-                        pNo: productNo 
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    // 모달 닫기
-                    var modalInstance = bootstrap.Modal.getInstance(modal);
-                    modalInstance.hide();
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+
+                const productNo = document.getElementById('productNo').value;
+
+                // GET 요청을 보내고 페이지를 이동
+                const url = new URL(`/pay/buy/${productNo}`, window.location.origin);
+                url.searchParams.append('size', selectedSize);
+
+                window.location.href = url;
             } else {
                 alert('사이즈를 선택해주세요.');
             }
         });
+
 
         // 차트 데이터 설정
         const chartData = [200000, 220000, 210000, 230000, 250000];
