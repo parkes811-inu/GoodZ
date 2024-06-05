@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;

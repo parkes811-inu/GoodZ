@@ -1,5 +1,6 @@
 package com.springproject.goodz.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.dto.UpdateProductRequest;
 import com.springproject.goodz.product.service.BrandService;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
@@ -220,10 +222,39 @@ public class AdminController {
     }
 
     @PostMapping("/updateProduct")
-    public String getMethodName() throws Exception {
-        log.info("sdfasdfafafasdf");
-        return "/admin/product_detail/{pNo}";
+    public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest,
+                                RedirectAttributes redirectAttributes) throws Exception {
+        
+        // DTO에서 값을 추출하여 Product 객체 생성 및 값 설정
+        Product product = new Product();
+        product.setPNo(updateProductRequest.getPNo());
+        product.setBName(updateProductRequest.getBName());
+        product.setCategory(updateProductRequest.getCategory());
+        product.setProductName(updateProductRequest.getProductName());
+        product.setInitialPrice(updateProductRequest.getInitialPrice());
+
+        // ProductOption 리스트 생성 및 값 설정
+        List<ProductOption> updatedOptions = new ArrayList<>();
+        for (String key : updateProductRequest.getOptionPrices().keySet()) {
+            ProductOption option = new ProductOption();
+            option.setPNo(updateProductRequest.getOptionPNo().get(key));
+            option.setSize(updateProductRequest.getSizes().get(key));
+            option.setOptionPrice(Integer.parseInt(updateProductRequest.getOptionPrices().get(key).replace(",", "")));
+            option.setStockQuantity(Integer.parseInt(updateProductRequest.getAddedStockQuantities().get(key).replace(",", "")));
+            option.setStatus(updateProductRequest.getStatus().get(key));
+            updatedOptions.add(option);
+        }
+        product.setOptions(updatedOptions);
+
+        // 서비스 메서드 호출하여 데이터베이스 업데이트
+        productService.updateProduct(product);
+
+        // 리다이렉트 시 성공 메시지 전달
+        redirectAttributes.addFlashAttribute("message", "상품 정보가 성공적으로 업데이트되었습니다.");
+
+        return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
     }
+
     
 
 }

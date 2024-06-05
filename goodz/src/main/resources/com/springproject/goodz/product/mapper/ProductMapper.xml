@@ -122,4 +122,20 @@
         ORDER BY created_at DESC
         LIMIT #{offset}, #{limit}
     </select>
+
+    <update id="updateProduct">
+        UPDATE Product
+        SET b_name = #{bName}, category = #{category}, product_name = #{productName}, initial_price = #{initialPrice}
+        WHERE p_no = #{pNo}
+    </update>
+
+    <select id="selectProductOptionById" resultType="com.springproject.goodz.product.dto.ProductOption">
+        SELECT * FROM ProductOption WHERE option_id = #{id}
+    </select>
+
+    <update id="updateProductOption">
+        UPDATE ProductOption
+        SET option_price = #{optionPrice}, stock_quantity = #{stockQuantity}, status = #{status}
+        WHERE option_id = #{id}
+    </update>
 </mapper>

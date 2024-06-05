@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
-import com.springproject.goodz.product.dto.ProductImage;
 
 public interface ProductService {
     
@@ -47,9 +46,6 @@ public interface ProductService {
     // 상품의 옵션 목록 조회
     List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
 
-    // 상품의 이미지 목록 조회
-    List<ProductImage> getProductImagesByProductId(int pNo) throws Exception;
-    
     // 상품 발매가 저장 -> priceHistory
     void makeHistory(int pNo, String size, int initialPrice) throws Exception;
 
@@ -63,4 +59,13 @@ public interface ProductService {
                                                @Param("pNo") int pNo,
                                                @Param("offset") int offset,
                                                @Param("limit") int limit) throws Exception;
+
+
+    
+    // 등록된 상품 정보 업데이트 하는데 사용
+    public void updateProduct(Product product) throws Exception;
+
+    public ProductOption getProductOptionById(int id) throws Exception;
+
+    public void updateProductOption(ProductOption option) throws Exception;
 }

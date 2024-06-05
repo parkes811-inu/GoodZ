@@ -17,9 +17,9 @@
     <div class="container">
         <div class="userMainContainer">
             <p class="fs-4 fw-bold p-0 mb-5">상품 수정</p>
-            <!-- <form action="/admin/updateProduct" method="post" class="mb-5" enctype="multipart/form-data"> multipart로 사진 업데이트까지 해야 됨 .-->
-                <form action="/admin/updateProduct" method="post" class="mb-5">
+            <form action="/admin/updateProduct" method="post" class="mb-5">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" name="pNo" th:value="${product.pNo}" />
                 <div class="d-flex flex-column justify-content-center">
                     <!-- 상품 이미지 -->
                     <div id="carouselExampleIndicators" class="carousel slide">
@@ -46,105 +46,100 @@
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
-                    
-                    
 
-                        <!-- 상품 이미지 변경 -->
-                        <div class="my-3">
-                            <label for="product-img">상품 이미지</label>
-                            <input type="file" id="imageInput" name="productFiles" class="form-control" multiple accept="image/*" max="10">
-                            <span id="passwordHelpInline" class="form-text">최대 10장</span>
-                                <!-- 첨부파일 미리보기 -->
-                            <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
-                            <!-- 대표로 선택한 이미지가 넘어감 -->
-                            <input type="hidden" id="representativeImage" name="mainImgIndex">
-                            <br>
+                    <!-- 상품 이미지 변경 -->
+                    <div class="my-3">
+                        <label for="product-img">상품 이미지</label>
+                        <input type="file" id="imageInput" name="productFiles" class="form-control" multiple accept="image/*" max="10">
+                        <span id="passwordHelpInline" class="form-text">최대 10장</span>
+                        <!-- 첨부파일 미리보기 -->
+                        <div id="imagePreview" style="height: 100%; padding: 15px;"></div>
+                        <!-- 대표로 선택한 이미지가 넘어감 -->
+                        <input type="hidden" id="representativeImage" name="mainImgIndex">
+                        <br>
+                    </div>
+
+                    <fieldset class="row mb-4">
+                        <!-- 상품의 브랜드 불러옴 -->
+                        <div class="col-md-8">
+                            <label for="brand" class="form-label">브랜드</label>
+                            <select class="form-select" name="bName" id="brand">
+                                <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
+                            </select>
                         </div>
-        
-                        <!-- 수정못하게 하는 fieldset의 disabled 속성 -->
-                        <fieldset class="row mb-4" >
-                            <!-- 상품의 브랜드 불러옴 -->
-                            <div class="col-md-8">
-                                <label for="brand" class="form-label">브랜드</label>
-                                <select class="form-select" name="bName" id="brand">
-                                    <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
-                                    <!-- Add options here -->
-                                </select>
-                            </div>
-                            
-                            <!-- 카테고리 선택 -->
-                            <div class="col-md-4">
-                                <label for="category" class="form-label">카테고리</label>
-                                <select class="form-select" id="category" name="category" required>
-                                    <option value="top" th:selected="${product.category == 'top'}">상의</option>
-                                    <option value="pants" th:selected="${product.category == 'pants'}">하의</option>
-                                    <option value="shoes" th:selected="${product.category == 'shoes'}">신발</option>
-                                    <option value="accessory" th:selected="${product.category == 'accessory'}">악세사리</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    카테고리를 선택해주세요.
-                                </div>
-                            </div>
-                            
-                            <!-- 상품번호 -->
-                            <input type="hidden" id="product-number" name="pNo" th:value="${product.pNo}" >
-        
-                            <!-- 상품명 -->
-                            <div class="form-group my-4">
-                                <label for="product-name">상품명</label>
-                                <input type="text" class="form-control" id="product-name" th:value="${product.productName}">
-                            </div>
 
-                            <!-- 발매 가격 -->
-                            <div class="form-group my-4">
-                                <label for="product-initialPrice">발매 가격</label>
-                                <input type="text" class="form-control" id="product-initialPrice" th:value="${product.initialPrice}">
+                        <!-- 카테고리 선택 -->
+                        <div class="col-md-4">
+                            <label for="category" class="form-label">카테고리</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="top" th:selected="${product.category == 'top'}">상의</option>
+                                <option value="pants" th:selected="${product.category == 'pants'}">하의</option>
+                                <option value="shoes" th:selected="${product.category == 'shoes'}">신발</option>
+                                <option value="accessory" th:selected="${product.category == 'accessory'}">악세사리</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                카테고리를 선택해주세요.
                             </div>
-                        </fieldset>
-        
-                        <!-- 수정가능 구역 -->
-                        <table class="table text-center mb-5">
-                            <thead class="text-center">
-                                <tr>
-                                    <th style="min-width: 80px;">상품번호</th>
-                                    <th>크기</th>
-                                    <th style="min-width: 90px;">옵션가격</th>
-                                    <th>재고</th>
-                                    <th style="min-width: 70px;">재고추가</th>
-                                    <th style="min-width: 140px;">상태</th>
-                                </tr>
-                            </thead>
-                        
-                            <tbody>
-                                <!-- 상품정보 불러와서 사이즈 별로 th:each로 반복 -->
-                                <tr th:each="opt, iterStat : ${option}">
-                                    <!-- 상품번호 -->
-                                    <td th:text="${opt.pNo}"></td>
-                                    <!-- 사이즈 -->
-                                    <td th:text="${opt.size}"></td>
-                                    <!-- 옵션가격 -->
-                                    <td><input type="text" class="form-control" th:value="${opt.optionPrice}"></td>
-                                    <!-- 현재 재고 -->
-                                    <td th:text="${opt.stockQuantity}"></td>
-                                    <!-- 재고 추가 -->
-                                    <td><input type="text" class="form-control" name="addedStockQuantities[${iterStat.index}]"></td>
-                                    <td>
-                                        <select class="form-select" name="status[${iterStat.index}]" id="status">
-                                            <option th:selected="${opt.status == 'on'}" value="on">판매중</option>
-                                            <option th:selected="${opt.status == 'off'}" value="off">판매중지</option>
-                                        </select>
-                                    </td>
-                                    <input type="hidden" name="optionPNo[${iterStat.index}]" th:value="${opt.pNo}">
-                                    <input type="hidden" name="sizes[${iterStat.index}]" th:value="${opt.size}">
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">수정 완료</button>
+                        </div>
+
+                        <!-- 상품번호 -->
+                        <input type="hidden" id="product-number" name="pNo" th:value="${product.pNo}" />
+
+                        <!-- 상품명 -->
+                        <div class="form-group my-4">
+                            <label for="product-name">상품명</label>
+                            <input type="text" class="form-control" id="product-name" name="productName" th:value="${product.productName}" />
+                        </div>
+
+                        <!-- 발매 가격 -->
+                        <div class="form-group my-4">
+                            <label for="product-initialPrice">발매 가격</label>
+                            <input type="text" class="form-control" id="product-initialPrice" name="initialPrice" th:value="${product.initialPrice}" />
+                        </div>
+                    </fieldset>
+
+                    <!-- 수정가능 구역 -->
+                    <table class="table text-center mb-5">
+                        <thead class="text-center">
+                            <tr>
+                                <th style="min-width: 80px;">상품번호</th>
+                                <th>크기</th>
+                                <th style="min-width: 90px;">옵션가격</th>
+                                <th>재고</th>
+                                <th style="min-width: 70px;">재고추가</th>
+                                <th style="min-width: 140px;">상태</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- 상품정보 불러와서 사이즈 별로 th:each로 반복 -->
+                            <tr th:each="opt, iterStat : ${option}">
+                                <!-- 상품번호 -->
+                                <td th:text="${opt.pNo}"></td>
+                                <!-- 사이즈 -->
+                                <td th:text="${opt.size}"></td>
+                                <!-- 옵션가격 -->
+                                <td><input type="text" class="form-control" name="optionPrices[${iterStat.index}]" th:value="${opt.optionPrice}" /></td>
+                                <!-- 현재 재고 -->
+                                <td th:text="${opt.stockQuantity}"></td>
+                                <!-- 재고 추가 -->
+                                <td><input type="text" class="form-control" name="addedStockQuantities[${iterStat.index}]" /></td>
+                                <td>
+                                    <select class="form-select" name="status[${iterStat.index}]" id="status">
+                                        <option th:selected="${opt.status == 'on'}" value="on">판매중</option>
+                                        <option th:selected="${opt.status == 'off'}" value="off">판매중지</option>
+                                    </select>
+                                </td>
+                                <input type="hidden" name="optionPNo[${iterStat.index}]" th:value="${opt.pNo}" />
+                                <input type="hidden" name="sizes[${iterStat.index}]" th:value="${opt.size}" />
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">수정 완료</button>
                 </form>
             </div>
         </div>
     </div>
-    
 </body>
 </html>

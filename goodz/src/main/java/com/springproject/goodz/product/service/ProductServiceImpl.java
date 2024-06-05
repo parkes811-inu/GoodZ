@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.mapper.PriceHistoryMapper;
 import com.springproject.goodz.product.mapper.ProductMapper;
@@ -164,12 +163,6 @@ public class ProductServiceImpl implements ProductService {
         return productOptionMapper.insertProductOption(productOption);
     }
 
-    @Override
-    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProductImagesByProductId'");
-    }
-
     // 제품과 최신 가격 변동 정보 조회
     @Override
     public List<Product> UsedInPay(int pNo) throws Exception {
@@ -185,5 +178,17 @@ public class ProductServiceImpl implements ProductService {
                                                @Param("limit") int limit) throws Exception {
 
         return productMapper.findSameBrandProducts(brand, category, pNo, offset, limit);
+    }
+
+    public void updateProduct(Product product) throws Exception {
+        productMapper.updateProduct(product);
+    }
+
+    public ProductOption getProductOptionById(int id) throws Exception {
+        return productMapper.selectProductOptionById(id);
+    }
+
+    public void updateProductOption(ProductOption option) throws Exception {
+        productMapper.updateProductOption(option);
     }
 }

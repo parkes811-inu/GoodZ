@@ -1,5 +1,6 @@
 package com.springproject.goodz.pay.service;
 
+import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 
 public interface PayService {
