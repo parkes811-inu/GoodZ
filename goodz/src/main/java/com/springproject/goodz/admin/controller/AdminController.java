@@ -94,29 +94,29 @@ public class AdminController {
     public String productList(Model model, Page page,
                           @RequestParam(value = "page", defaultValue = "1") int pageNumber,
                           @RequestParam(value = "keyword", defaultValue = "") String keyword) throws Exception {
-    // 페이지 번호 설정
-    page.setPage(pageNumber);
+        // 페이지 번호 설정
+        page.setPage(pageNumber);
 
-    // 전체 데이터 개수 설정
-    int total = productService.getTotalCount(keyword);
-    page.setTotal(total);
+        // 전체 데이터 개수 설정
+        int total = productService.getTotalCount(keyword);
+        page.setTotal(total);
 
-    // 데이터 요청
-    List<Product> productList = productService.productList(page, keyword);
+        // 데이터 요청
+        List<Product> productList = productService.productList(page, keyword);
 
-    // 페이징
-    log.info("page : " + page);
-    // 검색
-    log.info("keyword : " + keyword);
+        // 페이징
+        log.info("page : " + page);
+        // 검색
+        log.info("keyword : " + keyword);
 
-    // 모델 등록
-    model.addAttribute("productList", productList);
-    model.addAttribute("page", page);
-    model.addAttribute("keyword", keyword);
+        // 모델 등록
+        model.addAttribute("productList", productList);
+        model.addAttribute("page", page);
+        model.addAttribute("keyword", keyword);
 
-    // 뷰 페이지 지정
-    return "admin/product_list";
-}
+        // 뷰 페이지 지정
+        return "admin/product_list";
+    }
 
     @GetMapping("/add_product")
     public String moveToAddProduct(Model model) throws Exception {
