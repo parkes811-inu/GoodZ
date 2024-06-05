@@ -519,11 +519,12 @@
                     let url;
                     if (transactionType === 'purchase') {
                         url = new URL(`/pay/buy/${productNo}`, window.location.origin);
+                        url.searchParams.append('price', selectedPrice);                        
                     } else {
                         url = new URL(`/pay/sell/${productNo}`, window.location.origin);
+                        url.searchParams.append('price', discountedPrice);
                     }
                     url.searchParams.append('size', selectedSize);
-                    url.searchParams.append('price', discountedPrice);
                     window.location.href = url;
                 } else {
                     alert('사이즈를 선택해주세요.');

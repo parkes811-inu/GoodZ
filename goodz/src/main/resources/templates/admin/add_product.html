@@ -16,7 +16,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-
+        
         .form-group input,
         .form-group select {
             padding: 10px;
@@ -80,6 +80,10 @@
             padding-left: 10px;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .sizes {
+            width: 90px !important;
         }
     </style>
 </head>
@@ -166,7 +170,11 @@
                         <tbody id="optionContainer">
                             <tr>
                                 <td></td>
-                                <td><input type="text" class="form-control" name="sizes"></td>
+                                <td>
+                                    <select class="form-select sizes" name="sizes" id="sizesSelect">
+
+                                    </select>
+                                </td>
                                 <td><input type="text" class="form-control" name="optionPrices"></td>
                                 <td><input type="text" class="form-control" name="stockQuantities"></td>
                                 <td>
@@ -194,7 +202,44 @@
         const representativeImageInput = document.getElementById('representativeImage');
         const addOptionButton = document.getElementById('add_option');
         const optionContainer = document.getElementById('optionContainer');
-    
+        const categorySelect = document.getElementById('category');
+        const sizesSelect = document.getElementById('sizesSelect');
+
+        const shoeSizes = [220, 225, 230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280];
+        const clothingSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'FREE'];
+        const elseSize = ['FREE'];
+
+        function populateSizes(sizes) {
+            sizesSelect.innerHTML = ''; // Clear existing options
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size;
+                option.textContent = size;
+                sizesSelect.appendChild(option);
+            });
+        }
+
+        // 카테고리 선택 시 옵션 업데이트
+        categorySelect.addEventListener('change', function() {
+            const category = categorySelect.value;
+            if (category === 'shoes') {
+                populateSizes(shoeSizes);
+            } else if(category === 'pants' || category === 'top'){
+                populateSizes(clothingSizes);
+            } else {
+                populateSizes(elseSize);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const category = categorySelect.value; // Assuming the category value is set here
+            if (category === 'shoes') {
+                populateSizes(shoeSizes);
+            } else {
+                populateSizes(clothingSizes);
+            }
+        });
+
         imageInput.addEventListener('change', function() {
             imagePreview.innerHTML = '';
             Array.from(imageInput.files).forEach((file, index) => {
@@ -217,7 +262,11 @@
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td></td>
-                <td><input type="text" class="form-control" name="sizes"></td>
+                <td>
+                    <select class="form-select sizes" name="sizes">
+                        ${sizesSelect.innerHTML} <!-- Copy existing options -->
+                    </select>
+                </td>
                 <td><input type="text" class="form-control" name="optionPrices"></td>
                 <td><input type="text" class="form-control" name="stockQuantities"></td>
                 <td>

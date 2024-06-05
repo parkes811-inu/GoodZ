@@ -14,7 +14,12 @@ public class PayServiceImpl implements PayService{
 
 
     @Override
+    public int savePurchase(Purchase purchase) throws Exception {
+        return payMapper.insertPurchase(purchase);
+
     public int insertSale(Sales sales) throws Exception {
         return payMapper.insertSale(sales);
     }
+
+    
 }

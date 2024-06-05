@@ -5,15 +5,15 @@
 
 <mapper namespace="com.springproject.goodz.pay.mapper.PayMapper">
 
-	<insert id="insertPurchase" parameterType="Purchase">
-		INSERT INTO Purchase (user_id, p_no, purchase_price, payment_method, purchase_state)
-		VALUES (#{userId}, #{pNo}, #{purchasePrice}, #{paymentMethod}, #{purchaseState})
-	</insert>
+
+  <insert id="insertPurchase" parameterType="Purchase">
+    INSERT INTO Purchase (user_id, p_no, purchase_price, payment_method, purchase_state, option_id)
+    VALUES (#{userId}, #{pNo}, #{purchasePrice}, #{paymentMethod}, #{purchaseState}, #{optionId})
+  </insert>
 
 	<insert id="insertSale" parameterType="Sales">
 		INSERT INTO Sales (user_id, p_no, size, sale_tracking_no, address, sale_price, sale_state, sale_date)
 		VALUES (#{userId}, #{pNo}, #{size}, #{saleTrackingNo}, #{address}, #{salePrice}, #{saleState}, NOW())
 	</insert>
-
 
 </mapper>

@@ -222,14 +222,12 @@ CREATE TABLE `Sales` (
     `sale_tracking_no` VARCHAR(50) NOT NULL,
     `sale_price` INT NOT NULL,
     `size` VARCHAR(50) NOT NULL,
-    `address` VARCHAR(255) NOT NULL,
-    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL,
     `sale_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`s_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`)
 ) COMMENT='판매';
-
 
 -- Inspection 테이블 / 📁 pay
 CREATE TABLE `Inspection` (
@@ -246,8 +244,6 @@ CREATE TABLE `Purchase` (
     `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
     `user_id`           VARCHAR(100)    NOT NULL,
     `p_no`              INT             NOT NULL,
-    `option_id`         int     NOT NULL,
-    `order_id`          VARCHAR(100),
     `purchase_price`    INT             NOT NULL,
     `payment_method`    VARCHAR(50)     NOT NULL,
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
@@ -256,8 +252,7 @@ CREATE TABLE `Purchase` (
     `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (p_no) REFERENCES Product(p_no),
-    FOREIGN KEY (option_id) REFERENCES Product_option(option_id)
+    FOREIGN KEY (p_no) REFERENCES Product(p_no)
 ) COMMENT='구매';
 
 -- purchase_date 컬럼 삭제
@@ -272,8 +267,6 @@ ALTER TABLE Purchase
 -- purchase_state 컬럼 변경
 ALTER TABLE Purchase MODIFY COLUMN purchase_state ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending';
 
-ALTER TABLE `goodz`.`purchase` 
-ADD COLUMN `option_id` VARCHAR(50) NOT NULL AFTER `order_id`;
 
 -- Shipment 테이블 / 📁 pay
 CREATE TABLE `Shipment` (
