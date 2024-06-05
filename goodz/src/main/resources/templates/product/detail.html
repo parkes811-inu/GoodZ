@@ -479,7 +479,12 @@
                 const productNo = document.getElementById('productNo').value;
 
                 // GET 요청을 보내고 페이지를 이동
-                const url = new URL(`/pay/buy/${productNo}`, window.location.origin);
+                let url;
+                if (transactionType === 'purchase') {
+                    url = new URL(`/pay/buy/${productNo}`, window.location.origin);
+                } else {
+                    url = new URL(`/pay/sell/${productNo}`, window.location.origin);
+                }
                 url.searchParams.append('size', selectedSize);
 
                 window.location.href = url;
