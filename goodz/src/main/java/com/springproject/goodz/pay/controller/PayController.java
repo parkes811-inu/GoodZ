@@ -179,6 +179,19 @@ public class PayController {
         return "/pay/sell";
     }
 
+    /**
+     * 판매 등록 처리
+     * @param productNo
+     * @param courier
+     * @param trackingNumber
+     * @param size
+     * @param address
+     * @param salePrice
+     * @param session
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/sell")
     public String insertSale(@RequestParam("productNo") int productNo,
                              @RequestParam("courier") String courier,
@@ -210,10 +223,10 @@ public class PayController {
 
         // 저장 결과 처리
         if (result > 0) {
-            return "redirect:/pay/complete"; // 성공 시 완료 페이지로 리다이렉트
+            return "redirect:/pay/complete?type=sell"; // 성공 시 완료 페이지로 리다이렉트
         } else {
             model.addAttribute("errorMessage", "판매 정보를 저장하는 데 실패했습니다.");
-            return "sell"; // 실패 시 판매 페이지로 리다이렉트
+            return "/pay/sell"; // 실패 시 판매 페이지로 리다이렉트
         }
     }
 
@@ -230,7 +243,8 @@ public class PayController {
     }
 
     @GetMapping("/complete")
-    public String complete() {
+    public String complete(@RequestParam("type") String type, Model model) {
+        model.addAttribute("type", type);
         return "/pay/complete";
     }
 
