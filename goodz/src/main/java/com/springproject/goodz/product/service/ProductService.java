@@ -56,5 +56,11 @@ public interface ProductService {
     // 제품과 최신 가격 변동 정보 조회
     public List<Product> UsedInPay(int pNo) throws Exception;
 
-
+    // 같은 브랜드 상품 조회
+    // 상세 페이지 내에서 같은 브랜드 상품 조회
+    public List<Product> findSameBrandProducts(@Param("brand") String brand, 
+                                               @Param("category") String category, 
+                                               @Param("pNo") int pNo,
+                                               @Param("offset") int offset,
+                                               @Param("limit") int limit) throws Exception;
 }

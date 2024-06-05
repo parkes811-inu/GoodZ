@@ -26,6 +26,8 @@ public class Product {
     private String imageUrl;        // 첫 번째 이미지 URL을 저장할 필드
     private List<MultipartFile> productFiles; // 추가된 필드
 
+    private int minPrice; // 같은 상품 내 최저가 
+
     private String size;
     private int fluctuatedPrice;
     

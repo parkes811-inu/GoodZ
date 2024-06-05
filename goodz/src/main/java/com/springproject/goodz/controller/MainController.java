@@ -80,6 +80,17 @@ public class MainController {
             file.setParentTable(product.getCategory());
             List<Files> productImages = fileService.listByParent(file);
             
+            // 최저 가격 계산
+            if (!options.isEmpty()) {
+                int minPrice = options.stream()
+                                    .mapToInt(ProductOption::getOptionPrice)
+                                    .min()
+                                    .orElse(0);
+                product.setMinPrice(minPrice);
+            } else {
+                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+            }
+            
             // 첫 번째 이미지 URL 설정
             if (!productImages.isEmpty()) {
                 product.setImageUrl(productImages.get(0).getFilePath());

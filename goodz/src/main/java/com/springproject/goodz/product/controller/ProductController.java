@@ -5,11 +5,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,22 +54,37 @@ public class ProductController {
             file.setParentNo(product.getPNo());
             file.setParentTable(product.getCategory());
             List<Files> productImages = fileService.listByParent(file);
-            
+
+            // 최저 가격 계산
+            if (!options.isEmpty()) {
+                int minPrice = options.stream()
+                                    .mapToInt(ProductOption::getOptionPrice)
+                                    .min()
+                                    .orElse(0);
+                product.setMinPrice(minPrice);
+            } else {
+                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+            }
+
             // 첫 번째 이미지 URL 설정
             if (!productImages.isEmpty()) {
                 product.setImageUrl(productImages.get(0).getFilePath());
             } else {
                 product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
             }
+
+            // 디버깅을 위해 minPrice 값 출력
+            System.out.println("Product ID: " + product.getPNo() + ", Min Price: " + product.getMinPrice());
         }
 
         model.addAttribute("productList", productList);
         return "/product/index";
     }
 
-    @GetMapping("/product/size_table")
+
+    @GetMapping("/detail/product/size_table")
     public String productSizeInfoPage() {
-        return "/fragments/product/size_table";
+        return "fragments/product/size_table";
     }
 
     @GetMapping("/detail/{pNo}")
@@ -96,6 +114,45 @@ public class ProductController {
             options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
         );
         model.addAttribute("pricesJson", pricesJson);
+        
+        String category = product.getCategory();
+        String brand = product.getBName();
+        
+       // List<Product> brandProducts = productService.newArrivals();
+       //List<Product> brandProducts = productService.findSameBrandProducts(brand, category, pNo); 
+
+        // productService.findSameBrandProducts(product.getCategory(), product.getBName()); 
+        // for (Product brandProduct : brandProducts) {
+        //     // 상품 옵션 설정
+        //     List<ProductOption> options2 = productService.getProductOptionsByProductId(product.getPNo());
+        //     brandProduct.setOptions(options2);
+
+        //     // 상품 이미지 설정
+        //     Files file2 = new Files();
+        //     file2.setParentNo(brandProduct.getPNo());
+        //     file2.setParentTable(brandProduct.getCategory());
+        //     List<Files> productImages2 = fileService.listByParent(file2);
+            
+        //     // 최저 가격 계산
+        //     if (!options.isEmpty()) {
+        //         int minPrice2 = options.stream()
+        //                             .mapToInt(ProductOption::getOptionPrice)
+        //                             .min()
+        //                             .orElse(0);
+        //     brandProduct.setMinPrice(minPrice);
+        //     } else {
+        //         brandProduct.setMinPrice(brandProduct.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+        //     }
+            
+        //     // 첫 번째 이미지 URL 설정
+        //     if (!productImages2.isEmpty()) {
+        //         brandProduct.setImageUrl(productImages2.get(0).getFilePath());
+        //     } else {
+        //         brandProduct.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+        //     }
+        // }
+
+        // model.addAttribute("brandProducts", brandProducts);
 
         return "/product/detail";
     }
@@ -117,6 +174,17 @@ public class ProductController {
             file.setParentNo(product.getPNo());
             file.setParentTable(product.getCategory());
             List<Files> productImages = fileService.listByParent(file);
+            
+            // 최저 가격 계산
+            if (!options.isEmpty()) {
+                int minPrice = options.stream()
+                                    .mapToInt(ProductOption::getOptionPrice)
+                                    .min()
+                                    .orElse(0);
+                product.setMinPrice(minPrice);
+            } else {
+                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+            }
             
             // 첫 번째 이미지 URL 설정
             if (!productImages.isEmpty()) {
@@ -211,5 +279,22 @@ public class ProductController {
         model.addAttribute("accessoryList", accessoryList);
 
         return "/product/accessory";
+    }
+
+
+    // 인피니티 스크롤을 위한 컨트롤러
+    @GetMapping("/brand/products")
+    public ResponseEntity<List<Product>> getBrandProducts(@RequestParam("page") int page, 
+                                                        @RequestParam("size") int size,
+                                                        @RequestParam("brand") String brand,
+                                                        @RequestParam("category") String category,
+                                                        @RequestParam("pNo") int pNo) throws Exception {
+        // 페이지 번호와 사이즈에 따라 오프셋(offset) 계산
+        int offset = (page - 1) * size;
+        
+        // 페이지 번호와 사이즈를 이용하여 해당 브랜드의 상품 목록을 조회
+        List<Product> products = productService.findSameBrandProducts(brand, category, pNo, offset, size);
+        
+        return ResponseEntity.ok(products);
     }
 }

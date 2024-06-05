@@ -110,9 +110,10 @@
                                         <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
                                     </div>
                                     <div class="d-flex justify-content-start column-gap-1">
-                                        <p th:each="option : ${product.options}">
+                                        <!-- <p th:each="option : ${product.options}">
                                             <span th:text="${option.optionPrice}"></span>
-                                        </p>
+                                            </p> -->
+                                            <p id="productPrice" class="m-0 ms-2" th:text="${product.minPrice} + ' 원'"></p>
                                     </div>
                                 </div>
                             </div>

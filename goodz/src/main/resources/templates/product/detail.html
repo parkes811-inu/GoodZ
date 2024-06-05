@@ -143,23 +143,26 @@
             <div class="row">
                 <!-- 상품 상세 이미지 -->
                 <div class="col-md-6">
-                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="/img/product/product_img.png" class="d-block w-100" alt="Stussy Basic T-Shirt 1">
-                            </div>
-                            <div class="carousel-item">
-                                 <img src="/img/product/product_img.png" class="d-block w-100" alt="Stussy Basic T-Shirt 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="/img/product/product_img.png" class="d-block w-100" alt="Stussy Basic T-Shirt 3">
-                            </div>
+                    <div id="carouselExampleIndicators" class="carousel slide">
+                        <div class="carousel-indicators">
+                            <th:block th:each="image, iterStat : ${images}">
+                                <button type="button" data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${iterStat.index}" 
+                                        th:classappend="${iterStat.index == 0} ? 'active'" th:aria-current="${iterStat.index == 0} ? 'true' : null" 
+                                        th:aria-label="'Slide ' + (${iterStat.index} + 1)"></button>
+                            </th:block>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <div class="carousel-inner">
+                            <th:block th:each="image, iterStat : ${images}">
+                                <div th:class="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
+                                    <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}">
+                                </div>
+                            </th:block>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -339,61 +342,27 @@
                     </div>
                 </div>
         
-                <button id="loadMoreTagged" class="btn btn-primary mt-3 hidden">더보기</button>
-        
                 <h5 class="text-md-start fw-bold mt-5">이 브랜드의 다른 상품</h5>
                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
                     <!-- 반복문으로 최대 4개 까지 -->
-                    <div class="col">
+                    <div th:each="brand : ${brandProducts}" class="col">
                         <div class="card border-0">
                             <div class="card-body">
-                                <a href="#">
-                                    <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                                <a th:href="@{/product/detail/{id}(id=${brand.pNo})}">
+                                    <img th:src="@{/files/img(imgUrl=${brand.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                 </a>
                                 <div class="card-text py-2">
                                     <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="userId fw-bold m-0">nike airmax1</p>
+                                        <p class="user-id fw-bold m-0" th:text="${brand.productName}"></p>
+                                    </div>
+                                    <div class="d-flex justify-content-start column-gap-1">
+                                        <p id="productPrice" class="m-0 ms-2" th:text="${brand.minPrice} + ' 원'"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <a href="#">
-                                    <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                                </a>
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="userId fw-bold m-0">nike airmax1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <a href="#">
-                                    <img src="/img/product/product_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
-                                </a>
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="userId fw-bold m-0">nike airmax1</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    
                 </div>
-
-                <button id="loadMoreBrand" class="btn btn-primary mt-3 hidden">더보기</button>
             </div>
         </div>
     </div>
@@ -410,30 +379,30 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-        let selectedSize = '';
-        let selectedPrice = '';
-        let transactionType = '';
+            let selectedSize = '';
+            let selectedPrice = '';
+            let transactionType = '';
 
-        const sizeButton = document.getElementById('sizeButton');
-        const sizeModal = document.getElementById('sizeModal');
-        const sizeOptions = sizeModal.querySelectorAll('.size-option');
-        const confirmSizeButton = document.getElementById('confirmSizeButton');
-        const purchaseButton = document.querySelector('.btn-purchase'); // 구매 버튼 요소
-        const purchasePriceElement = purchaseButton.querySelector('.m-0.ms-2'); // 구매 버튼 가격 텍스트 요소
-        const productPriceElement = document.getElementById('productPrice'); // 상품 가격 텍스트 요소
+            const sizeButton = document.getElementById('sizeButton');
+            const sizeModal = document.getElementById('sizeModal');
+            const sizeOptions = sizeModal.querySelectorAll('.size-option');
+            const confirmSizeButton = document.getElementById('confirmSizeButton');
+            const purchaseButton = document.querySelector('.btn-purchase'); // 구매 버튼 요소
+            const purchasePriceElement = purchaseButton.querySelector('.m-0.ms-2'); // 구매 버튼 가격 텍스트 요소
+            const productPriceElement = document.getElementById('productPrice'); // 상품 가격 텍스트 요소
 
-        // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
-        sizeOptions.forEach(button => {
-            button.addEventListener('click', function() {
-                // 모든 버튼의 활성화 상태를 초기화
-                sizeOptions.forEach(btn => btn.classList.remove('active'));
-                // 클릭된 버튼을 활성화
-                this.classList.add('active');
-                // 선택된 사이즈 저장
-                selectedSize = this.dataset.size;
-                selectedPrice = this.dataset.price; // 선택된 사이즈의 가격 저장
+            // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
+            sizeOptions.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 모든 버튼의 활성화 상태를 초기화
+                    sizeOptions.forEach(btn => btn.classList.remove('active'));
+                    // 클릭된 버튼을 활성화
+                    this.classList.add('active');
+                    // 선택된 사이즈 저장
+                    selectedSize = this.dataset.size;
+                    selectedPrice = this.dataset.price; // 선택된 사이즈의 가격 저장
+                });
             });
-        });
 
         // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
         confirmSizeButton.addEventListener('click', function() {
@@ -564,12 +533,65 @@
         // 상품 종류에 따라 사이즈 테이블 로드
         const productType = 'clothing'; // 이 값을 동적으로 설정 가능
         if (productType === 'clothing') {
-            fetch('product/size_table')
+            fetch('/product/detail/product/size_table')
                 .then(response => response.text())
                 .then(data => {
                     document.getElementById('sizeTableContainer').innerHTML = data;
                 });
         }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let page = 0;
+        const size = 4;
+        const brandProductsContainer = document.getElementById('brandProducts');
+
+        const loadMoreProducts = () => {
+            fetch(`/brand/products?page=${page}&size=${size}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(product => {
+                            const col = document.createElement('div');
+                            col.classList.add('col');
+
+                            const card = `
+                                <div class="card border-0">
+                                    <div class="card-body">
+                                        <a href="/product/detail/${product.pNo}">
+                                            <img src="/files/img?imgUrl=${product.imageUrl}" alt="상품 이미지" class="rounded-4 w-100">
+                                        </a>
+                                        <div class="card-text py-2">
+                                            <div class="d-flex justify-content-start column-gap-1">
+                                                <p class="user-id fw-bold m-0">${product.productName}</p>
+                                            </div>
+                                            <div class="d-flex justify-content-start column-gap-1">
+                                                <p id="productPrice" class="m-0 ms-2">${product.minPrice} 원</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            col.innerHTML = card;
+                            brandProductsContainer.appendChild(col);
+                        });
+                        page++;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        };
+
+        const handleScroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                loadMoreProducts();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Initial load
+        loadMoreProducts();
     });
 
     </script>

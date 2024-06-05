@@ -2,6 +2,7 @@ package com.springproject.goodz.product.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -175,5 +176,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.UsedInPay(pNo);
     }
 
-    
+    // 상세 페이지 내에서 같은 브랜드 상품 조회
+    @Override
+    public List<Product> findSameBrandProducts(@Param("brand") String brand, 
+                                               @Param("category") String category, 
+                                               @Param("pNo") int pNo,
+                                               @Param("offset") int offset,
+                                               @Param("limit") int limit) throws Exception {
+
+        return productMapper.findSameBrandProducts(brand, category, pNo, offset, limit);
+    }
 }
