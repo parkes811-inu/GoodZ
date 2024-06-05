@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.user.mapper.WishListMapper">
+
+    <!-- 저장 체크 여부 - id 기준 -->
+    <select id="listById" resultType="int">
+        SELECT count(*)
+        FROM wishList
+        WHERE user_id = #{userId} and parent_table = #{parentTable} and parent_no = #{parentNo}
+    </select>
+
+    <!-- 저장 갯수 갱신 -->
+    <select id="countWish" resultType="int">
+        SELECT count(*)
+        FROM wishList
+        WHERE parent_table = #{parentTable} and parent_no = #{parentNo}
+    </select>
+
+    <!-- 저장 off -> on -->
+    <insert id="wishOn">
+        INSERT INTO wishList (user_id, parent_table, parent_no)
+        VALUES (#{userId}, #{parentTable}, #{parentNo})
+    </insert>
+
+    <!-- 저장 on -> off -->
+    <delete id="wishOff">
+        DELETE FROM wishList
+        WHERE user_id = #{userId} and parent_table = #{parentTable} and parent_no = #{parentNo}
+    </delete>
+
+
+</mapper>

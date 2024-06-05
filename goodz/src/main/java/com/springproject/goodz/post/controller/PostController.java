@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
-import com.springproject.goodz.post.service.CommentService;
 import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
@@ -53,10 +54,10 @@ public class PostController {
     private FileService fileService;
 
     @Autowired
-    private CommentService cmmtService;
+    private LikeService likeService;
 
     @Autowired
-    private LikeService likeService;
+    private WishListService wishListService;
     
     /**
      * 전체 게시글 목록
@@ -65,15 +66,19 @@ public class PostController {
     @GetMapping("")
     public String list(Model model, HttpSession session) throws Exception {
 
+        // 게시글 세팅
         List<Post> postList = postService.list();
         
+        // 세션 정보 세팅
         Users loginUser = (Users)session.getAttribute("user");
         model.addAttribute("loginUser", loginUser);
         
+        /* 좋아요 & 저장 세팅 */
         // 비 로그인 시, 좋아요 전체 해제
         if (loginUser == null) {
             for (Post post : postList) {
                 post.setIsLiked("none");
+                post.setIsWishlisted("none");
             }
             model.addAttribute("postList", postList);
             
@@ -82,15 +87,28 @@ public class PostController {
         } else {
             for (Post post : postList) {
                 // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
-                Like temp = new Like();
-                temp.setUserId(loginUser.getUserId());
-                temp.setPostNo(post.getPostNo());
-                boolean ischecked = likeService.listById(temp);
-
-                if (!ischecked) {
+                Like like = new Like();
+                like.setUserId(loginUser.getUserId());
+                like.setPostNo(post.getPostNo());
+                boolean isChecked_like = likeService.listById(like);
+                
+                if (!isChecked_like) {
                     post.setIsLiked("none");
                 } else {
                     post.setIsLiked("solid");
+                }
+
+                // 세션아이디와 게시글 번호 기준으로 저장 여부 확인
+                Wish wish = new Wish();
+                wish.setUserId(loginUser.getUserId());
+                wish.setParentTable("post");
+                wish.setParentNo(post.getPostNo());
+                boolean isChecked_wishlist = wishListService.listById(wish);
+
+                if (!isChecked_wishlist) {
+                    post.setIsWishlisted("none");
+                } else {
+                    post.setIsWishlisted("solid");
                 }
             }
             model.addAttribute("postList", postList);
@@ -128,28 +146,42 @@ public class PostController {
         Users loginUser = (Users)session.getAttribute("user");
         model.addAttribute("loginUser", loginUser);
         
-        /* 좋아요 체크 */
+        /* 좋아요 & 저장 세팅 */
         if (loginUser == null) {
             // 비 로그인 시, 좋아요 표시 전체 해제
             log.info("로그인이 되지않은 사용자");
             
             post.setIsLiked("none");
+            post.setIsWishlisted("none");
             
         } else {
-            // 로그인 시, 유저가 체크한 좋아요 표시
+            // 로그인 시, 유저가 체크한 좋아요&저장 표시
             // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
-            Like temp = new Like();
-            temp.setUserId(loginUser.getUserId());
-            temp.setPostNo(post.getPostNo());
-            boolean ischecked = likeService.listById(temp);
-            
-            if (!ischecked) {
+            Like like = new Like();
+            like.setUserId(loginUser.getUserId());
+            like.setPostNo(post.getPostNo());
+            boolean isChecked_like = likeService.listById(like);
+
+            if (!isChecked_like) {
                 post.setIsLiked("none");
             } else {
                 post.setIsLiked("solid");
             }
             
+            // 세션아이디와 게시글 번호 기준으로 저장 여부 확인
+            Wish wish = new Wish();
+            wish.setUserId(loginUser.getUserId());
+            wish.setParentTable("post");
+            wish.setParentNo(post.getPostNo());
+            boolean isChecked_wishlist = wishListService.listById(wish);
+
+            if (!isChecked_wishlist) {
+                post.setIsWishlisted("none");
+            } else {
+                post.setIsWishlisted("solid");
+            }
         }
+        
         model.addAttribute("post", post);
 
         return "/post/read";
@@ -244,19 +276,31 @@ public class PostController {
             
             for (Post post : postList) {
                 // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
-                Like temp = new Like();
-                temp.setUserId(loginUser.getUserId());
-                temp.setPostNo(post.getPostNo());
-                boolean ischecked = likeService.listById(temp);
+                Like like = new Like();
+                like.setUserId(loginUser.getUserId());
+                like.setPostNo(post.getPostNo());
+                boolean isChecked_like = likeService.listById(like);
                 
-                if (!ischecked) {
+                if (!isChecked_like) {
                     post.setIsLiked("none");
                 } else {
                     post.setIsLiked("solid");
                 }
+
+                // 세션아이디와 게시글 번호 기준으로 저장 여부 확인
+                Wish wish = new Wish();
+                wish.setUserId(loginUser.getUserId());
+                wish.setParentTable("post");
+                wish.setParentNo(post.getPostNo());
+                boolean isChecked_wishlist = wishListService.listById(wish);
+
+                if (!isChecked_wishlist) {
+                    post.setIsWishlisted("none");
+                } else {
+                    post.setIsWishlisted("solid");
+                }
             }
         }
-        
         
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);

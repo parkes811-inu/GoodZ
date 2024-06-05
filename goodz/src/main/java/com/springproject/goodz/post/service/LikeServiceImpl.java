@@ -23,7 +23,7 @@ public class LikeServiceImpl implements LikeService{
     @Override
     public boolean listById(Like like) throws Exception {
         int result = likeMapper.listById(like);
-        boolean ischecked = false;
+        boolean ischecked = false;  // 체크여부 off -> false / on -> true
 
         if (result == 0) {
             return ischecked;
@@ -32,13 +32,13 @@ public class LikeServiceImpl implements LikeService{
         return !ischecked;
     }
     
-        @Override
-        public int countLike(int postNo) throws Exception {
-            int result = likeMapper.countLike(postNo);
-    
-            return result;
-    
-        }
+    // 좋아요 갯수 갱신
+    @Override
+    public int countLike(int postNo) throws Exception {
+        int result = likeMapper.countLike(postNo);
+
+        return result;
+    }
 
     // 좋아요 off -> on
     @Override

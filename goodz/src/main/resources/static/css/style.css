@@ -243,3 +243,16 @@ body {
 /*
 ------------ cancel btn css ------------
 */
+
+
+/* 저장, 좋아요 버튼 및 갯수 css 시작 */
+.count-like, .count-wish {
+    font-size: medium;
+    margin: 0;
+}
+
+.btn-like, .btn-wish {
+    border: none;
+    background: none;
+}
+/* 저장, 좋아요 버튼 및 갯수 css 끝 */
