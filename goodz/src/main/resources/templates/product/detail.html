@@ -177,6 +177,8 @@
                         </div>
                         
                         <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}">
+                        <input type="hidden" id="category" name="category" th:value="${product.category}">
+                        <input type="hidden" id="initialPrice" name="initialPrice" th:value="${product.initialPrice}">
 
                         <div class="product-options">
                             <button id="sizeButton" name="size" class="form-select w-100" data-bs-toggle="modal" data-bs-target="#sizeModal">
@@ -190,9 +192,12 @@
                                         data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="purchase" th:data-prices="${pricesJson}">
                                     구매 <p class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
                                 </button>
-                                <button class="btn btn-success btn-sell mb-2 d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="sell" data-prices='["S"]'>
-                                    판매 <p class="m-0 ms-2">56,000 원</p>
+                                <button class="btn btn-success btn-sell mb-2 me-2 d-flex justify-content-between align-items-center" 
+                                        data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="sell" 
+                                        data-category="${product.category}" th:data-initial-price="${product.initialPrice}">
+                                    판매 <p class="m-0 ms-2" id="initialPriceText"></p>
                                 </button>
+
                             </div>
                             
                             <div class="mt-1 d-flex justify-content-center">
@@ -368,6 +373,22 @@
     </div>
     
     <script>
+
+        const sellButton = document.querySelector('.btn-sell');
+        if (sellButton) {
+            const initialPrice = parseFloat(document.getElementById('initialPrice').value);
+            if (!isNaN(initialPrice)) {
+                const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
+                document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
+                
+            } else {
+                console.error('Initial price is not a valid number');
+            }
+        } else {
+            console.error('Sell button not found');
+        }
+
+
         function showCm() {
             document.querySelector('.cm-table').style.display = 'table';
             document.querySelector('.inches-table').style.display = 'none';
@@ -382,6 +403,7 @@
             let selectedSize = '';
             let selectedPrice = '';
             let transactionType = '';
+            let discountedPrice = 0;
 
             const sizeButton = document.getElementById('sizeButton');
             const sizeModal = document.getElementById('sizeModal');
@@ -404,89 +426,109 @@
                 });
             });
 
-        // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
-        confirmSizeButton.addEventListener('click', function() {
-            if (selectedSize && selectedPrice) {
-                sizeButton.textContent = selectedSize;
-                purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
-                productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
-                var modal = bootstrap.Modal.getInstance(sizeModal);
-                modal.hide();
-            } else {
-                alert('사이즈를 선택해주세요.');
-            }
-        });
+            // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
+            confirmSizeButton.addEventListener('click', function() {
+                if (selectedSize && selectedPrice) {
+                    sizeButton.textContent = selectedSize;
+                    purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
+                    productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
+                    var modal = bootstrap.Modal.getInstance(sizeModal);
+                    modal.hide();
+                } else {
+                    alert('사이즈를 선택해주세요.');
+                }
+            });
 
-        const modal = document.getElementById('transactionModal');
-        modal.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget; // 모달을 트리거한 버튼
-            transactionType = button.getAttribute('data-type'); // 거래 타입 (구매 또는 판매)
-            let prices = button.getAttribute('data-prices');
-            const modalTitle = transactionType === 'purchase' ? '구매하기' : '판매하기';
-            
-            // 모달 제목 변경
-            modal.querySelector('.modal-title').textContent = modalTitle;
+            const modal = document.getElementById('transactionModal');
+            // Transaction Modal 이벤트 리스너
+            modal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget; // 모달을 트리거한 버튼
+                transactionType = button.getAttribute('data-type'); // 거래 타입 (구매 또는 판매)
+                let prices = button.getAttribute('data-prices');
+                const modalTitle = transactionType === 'purchase' ? '구매하기' : '판매하기';
+                
+                // 모달 제목 변경
+                modal.querySelector('.modal-title').textContent = modalTitle;
 
-            // 모달 바디 내용 초기화
-            const modalBody = modal.querySelector('.modal-body');
-            modalBody.innerHTML = '';
+                // 모달 바디 내용 초기화
+                const modalBody = modal.querySelector('.modal-body');
+                modalBody.innerHTML = '';
 
-            if (transactionType === 'purchase') {
-                prices = JSON.parse(prices); // 구매의 경우 JSON 객체
-                // 사이즈와 가격 버튼 생성
-                Object.keys(prices).forEach(size => {
-                    const price = prices[size];
-                    const button = document.createElement('button');
-                    button.className = 'btn btn-outline-secondary purchase-option';
-                    button.dataset.size = size;
-                    button.dataset.price = price;
-                    button.innerHTML = `${size}<br>${parseInt(price).toLocaleString()}원`;
-                    modalBody.appendChild(button);
-                });
-            } else {
-                prices = JSON.parse(prices); // 판매의 경우 JSON 배열
-                // 사이즈 버튼 생성 (판매의 경우 가격은 고정)
-                prices.forEach(size => {
-                    const button = document.createElement('button');
-                    button.className = 'btn btn-outline-secondary purchase-option';
-                    button.dataset.size = size;
-                    button.dataset.price = 56000; // 판매 고정 가격
-                    button.innerHTML = `${size}<br>56,000원`;
-                    modalBody.appendChild(button);
-                });
-            }
+                if (transactionType === 'purchase') {
+                    prices = JSON.parse(prices); // 구매의 경우 JSON 객체
+                    // 사이즈와 가격 버튼 생성
+                    Object.keys(prices).forEach(size => {
+                        const price = prices[size];
+                        const button = document.createElement('button');
+                        button.className = 'btn btn-outline-secondary purchase-option';
+                        button.dataset.size = size;
+                        button.dataset.price = price;
+                        button.innerHTML = `${size}<br>${parseInt(price).toLocaleString()}원`;
+                        modalBody.appendChild(button);
+                    });
+                } else {
+                    const category = document.getElementById('category').value;
+                    const initialPrice = parseFloat(document.getElementById('initialPrice').value);
 
-            // 각 버튼에 클릭 이벤트 리스너 추가
-            modal.querySelectorAll('.purchase-option').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // 모든 버튼의 활성화 상태를 초기화
-                    modal.querySelectorAll('.purchase-option').forEach(b => b.classList.remove('active'));
-                    // 클릭된 버튼을 활성화
-                    this.classList.add('active');
-                    // 선택된 사이즈와 가격 저장
-                    selectedSize = this.dataset.size;
-                    selectedPrice = this.dataset.price;
+                    let sizes = [];
+                    if (category === 'shoes') {
+                        sizes = [220, 230, 240, 250, 260, 270, 280];
+                    } else if (category === 'top' || category === 'pants') {
+                        sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+                    } else {
+                        sizes = ['free'];
+                    }
+
+                    // 사이즈 버튼 생성 (판매의 경우 가격은 발매가 * 0.9)
+                    sizes.forEach(size => {
+                        const button = document.createElement('button');
+                        button.className = 'btn btn-outline-secondary purchase-option';
+                        button.dataset.size = size;
+
+                        // 판매 가격 계산
+                        discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
+                        button.dataset.price = discountedPrice;
+                        button.innerHTML = `${size}<br>${discountedPrice.toLocaleString()}원`;
+                        modalBody.appendChild(button);
+                    });
+                }
+
+                // 각 버튼에 클릭 이벤트 리스너 추가
+                modal.querySelectorAll('.purchase-option').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        // 모든 버튼의 활성화 상태를 초기화
+                        modal.querySelectorAll('.purchase-option').forEach(b => b.classList.remove('active'));
+                        // 클릭된 버튼을 활성화
+                        this.classList.add('active');
+                        // 선택된 사이즈와 가격 저장
+                        selectedSize = this.dataset.size;
+                        selectedPrice = this.dataset.price;
+                    });
                 });
             });
-        });
 
-        // 거래하기 버튼 클릭 이벤트 리스너 추가
-        document.getElementById('confirmTransactionButton').addEventListener('click', function() {
-            if (selectedSize && selectedPrice) {
-                // 선택된 사이즈와 가격으로 거래 요청을 보냄
-                console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
+            // 거래하기 버튼 클릭 이벤트 리스너 추가
+            document.getElementById('confirmTransactionButton').addEventListener('click', function() {
+                if (selectedSize && selectedPrice) {
+                    // 선택된 사이즈와 가격으로 거래 요청을 보냄
+                    console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
 
-                const productNo = document.getElementById('productNo').value;
+                    const productNo = document.getElementById('productNo').value;
 
-                // GET 요청을 보내고 페이지를 이동
-                const url = new URL(`/pay/buy/${productNo}`, window.location.origin);
-                url.searchParams.append('size', selectedSize);
-
-                window.location.href = url;
-            } else {
-                alert('사이즈를 선택해주세요.');
-            }
-        });
+                    // GET 요청을 보내고 페이지를 이동
+                    let url;
+                    if (transactionType === 'purchase') {
+                        url = new URL(`/pay/buy/${productNo}`, window.location.origin);
+                    } else {
+                        url = new URL(`/pay/sell/${productNo}`, window.location.origin);
+                    }
+                    url.searchParams.append('size', selectedSize);
+                    url.searchParams.append('price', discountedPrice);
+                    window.location.href = url;
+                } else {
+                    alert('사이즈를 선택해주세요.');
+                }
+            });
 
 
         // 차트 데이터 설정
