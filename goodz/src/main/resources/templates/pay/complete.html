@@ -41,9 +41,10 @@
 <body layout:fragment="content">
     <div class="container complete">
         <img src="/img/pay/logo.png" alt="GoodZ" class="logo">
-        <h1>구매 완료</h1>
-        <p>구매가 완료되었습니다!</p>
-        <button onclick="location.href='/user/purchase'">구매내역으로 이동</button>
+        <h1 th:text="${type == 'buy' ? '구매 완료' : '판매 요청 완료'}"></h1>
+        <p th:text="${type == 'buy' ? '구매가 완료되었습니다!' : '판매 요청이 완료되었습니다!'}"></p>
+        <button th:if="${type == 'buy'}" onclick="location.href='/user/purchase'">구매내역으로 이동</button>
+        <button th:if="${type == 'sell'}" onclick="location.href='/user/sales'">판매내역으로 이동</button>
     </div>
 </body>
 </html>

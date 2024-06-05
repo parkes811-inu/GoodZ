@@ -244,6 +244,8 @@ CREATE TABLE `Purchase` (
     `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
     `user_id`           VARCHAR(100)    NOT NULL,
     `p_no`              INT             NOT NULL,
+    `option_id`         INT             NOT NULL,
+    `order_id`          VARCHAR(100),
     `purchase_price`    INT             NOT NULL,
     `payment_method`    VARCHAR(50)     NOT NULL,
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
@@ -252,7 +254,8 @@ CREATE TABLE `Purchase` (
     `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (p_no) REFERENCES Product(p_no)
+    FOREIGN KEY (p_no) REFERENCES Product(p_no),
+    FOREIGN KEY (option_id) REFERENCES Product_option(option_id)
 ) COMMENT='구매';
 
 -- purchase_date 컬럼 삭제
