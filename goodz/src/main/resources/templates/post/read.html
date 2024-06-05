@@ -149,7 +149,7 @@
                 <!-- 소셜버튼들 -->
                 <div class="d-flex justify-content-end column-gap-2 px-2">
                     <!-- 저장 -->
-                    <button class="btn-wish" th:onclick="'btnWish(this, \'post\', ' + ${post.postNo} + ')'" style="text-decoration: none; color: black;" th:data-logged-in="${loginUser != null}">
+                    <button class="btn-wish" th:onclick="'btnWish(this, \'post\', ' + ${post.postNo} + ')'" style="text-decoration: none; color: black;">
                         <svg xmlns="http://www.w3.org/2000/svg" th:fill="${post.isWishlisted}" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="26" height="26">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                         </svg>
@@ -260,6 +260,7 @@
     </div>
     <!-- for like & wishList -->
     <th:block th:if="${loginUser != null}">
+        <input type="hidden" id="isLoggedIn" th:data-logged-in="${loginUser != null}">
         <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
     </th:block>

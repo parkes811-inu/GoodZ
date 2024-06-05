@@ -181,6 +181,7 @@ public class PostController {
                 post.setIsWishlisted("solid");
             }
         }
+        
         model.addAttribute("post", post);
 
         return "/post/read";

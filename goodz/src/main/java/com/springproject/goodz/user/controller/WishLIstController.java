@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @Controller
 @RequestMapping("/wish")
-public class WishLIstController {
+public class WishListController {
 
     @Autowired
     private WishListService wishListService;
@@ -94,9 +94,12 @@ public class WishLIstController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/count?parentTable={parentTable}&parentNo={parentNo}")
-    public ResponseEntity<Map<String, Long>> countLike(@RequestParam("parentTable")String parentTable) throws Exception {
+    @GetMapping("/count")
+    public ResponseEntity<Map<String, Long>> countWish(@RequestParam("parentTable") String parentTable, @RequestParam("parentNo") int parentNo) throws Exception {
         
+        Wish wish = new Wish();
+        wish.setParentTable(parentTable);
+        wish.setParentNo(parentNo);
         long countWish = wishListService.countWish(wish);
 
         log.info("업데이트된 저장 수: " + countWish);
