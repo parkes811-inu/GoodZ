@@ -168,7 +168,9 @@
                                 <ul class="list-group">
                                     <li th:each="address : ${addresses}" 
                                         class="list-group-item list-group-item-action" 
-                                        th:onclick="'selectAddress('' + [[${address.recipientName}]] + '','' + [[${address.phoneNumber}]] + '','' + [[${address.address}]] + '')'"
+                                        th:data-recipient-name="${address.recipientName}"
+                                        th:data-phone-number="${address.phoneNumber}"
+                                        th:data-address="${address.address}"
                                         data-bs-dismiss="modal">
                                         <div><strong th:text="${address.recipientName}"></strong></div>
                                         <div th:text="${address.phoneNumber}"></div>
@@ -179,6 +181,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- 배송 방법 -->
                 <div class="section_unit mb-4">
@@ -219,7 +222,7 @@
                     </div>
                     <div class="summary_item">
                         <span>배송비</span>
-                        <span>3,000원</span>
+                        <span>3000원</span>
                     </div>
                     <div class="summary_item summary_total">
                         <!-- 총 결제 금액 -->
@@ -236,88 +239,80 @@
     </div>
 
     <script th:inline="javascript">
-    document.addEventListener("DOMContentLoaded", function () {
-        const button = document.getElementById("payment-request-button");
-        const csrfToken = /*[[${_csrf.token}]]*/ "";
-        // const recipientName = /*[[${defaultAddress.recipientName}]]*/ "";
-        // const phoneNumber = /*[[${defaultAddress.phoneNumber}]]*/ "";
-        // const productName = /*[[${product.productName}]]*/ "";
-        // const userId = /*[[${user.userId}]]*/ "";
-        // const pNo = /*[[${product.pNo}]]*/ 0;
-        // const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
-        // var amount = /*[[${price + 3000}]]*/ 0; // 총 결제금액과 일치하도록 설정
-
-        console.log("결제 위젯 초기화 시작");
-        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-        const customerKey = generateRandomString();
-        const paymentWidget = PaymentWidget(clientKey, customerKey);
-
-        const paymentMethodWidget = paymentWidget.renderPaymentMethods(
-            "#payment-method",
-            { value: amount },
-            { variantKey: "DEFAULT" }
-        );
-
-        paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
-
-        paymentMethodWidget.on("ready", function () {
-            console.log("결제 위젯 렌더링 완료");
-            button.disabled = false; // 결제 버튼 활성화
-        });
-
-        button.addEventListener("click", function () {
-            console.log("결제 요청 시작");
-            paymentWidget.requestPayment({
-                orderId: generateRandomString(),
-                orderName: productName,
-                successUrl: window.location.origin + "/pay/success",
-                failUrl: window.location.origin + "/pay/fail",
-                customerName: recipientName,
-                customerMobilePhone: phoneNumber,
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            }).then((response) => {
-                if (response.status === 'SUCCESS') {
-                    // 결제 성공 시, Purchase 테이블에 데이터 저장
-                    fetch('/pay/savePurchase', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        body: JSON.stringify({
-                            userId: userId,
-                            pNo: pNo,
-                            purchasePrice: amount,
-                            paymentMethod: response.paymentMethod
-                        })
-                    }).then(res => res.json())
-                      .then(data => {
-                          if (data.success) {
-                              window.location.href = window.location.origin + "/pay/success";
-                          } else {
-                              window.location.href = window.location.origin + "/pay/fail";
-                          }
-                      });
-                } else {
-                    window.location.href = window.location.origin + "/pay/fail";
+        document.addEventListener("DOMContentLoaded", function () {
+            // 주소 선택 함수
+            window.selectAddress = function (recipientName, phoneNumber, address) {
+                document.getElementById('recipientName').textContent = recipientName;
+                document.getElementById('phoneNumber').textContent = phoneNumber;
+                document.getElementById('address').textContent = address;
+            }
+        
+            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
+            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
+                const target = event.target.closest('li.list-group-item');
+                if (target) {
+                    const recipientName = target.getAttribute('data-recipient-name');
+                    const phoneNumber = target.getAttribute('data-phone-number');
+                    const address = target.getAttribute('data-address');
+                    selectAddress(recipientName, phoneNumber, address);
                 }
             });
+        
+            // 결제 관련 스크립트
+            const button = document.getElementById("payment-request-button");
+            const csrfToken = /*[[${_csrf.token}]]*/ "";
+            const amount = /*[[${price}]]*/ 0; // 상품 가격
+            const productName = /*[[${product.productName}]]*/ "상품명"; // 상품명
+            let recipientName = document.getElementById('recipientName').textContent;
+            let phoneNumber = document.getElementById('phoneNumber').textContent;
+        
+            // 전화번호에서 특수문자 제거
+            phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+        
+            function generateRandomString() {
+                return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            }
+        
+            console.log("결제 위젯 초기화 시작");
+            const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+            const customerKey = generateRandomString();
+            const paymentWidget = PaymentWidget(clientKey, customerKey);
+        
+            const paymentMethodWidget = paymentWidget.renderPaymentMethods(
+                "#payment-method",
+                { value: amount },
+                { variantKey: "DEFAULT" }
+            );
+        
+            paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
+        
+            paymentMethodWidget.on("ready", function () {
+                console.log("결제 위젯 렌더링 완료");
+                button.disabled = false; // 결제 버튼 활성화
+            });
+        
+            button.addEventListener("click", function () {
+                console.log("결제 요청 시작");
+                paymentWidget.requestPayment({
+                    orderId: generateRandomString(),
+                    orderName: productName,
+                    successUrl: window.location.origin + "/pay/success", // 주문 번호 넘겨줘
+                    failUrl: window.location.origin + "/pay/fail", 
+                    customerName: recipientName,
+                    customerMobilePhone: phoneNumber,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                }).then((response) => {
+                    if (response.status === 'SUCCESS') {
+                        window.location.href = window.location.origin + "/pay/success"; 
+                    } else {
+                        window.location.href = window.location.origin + "/pay/fail";
+                    }
+                });
+            });
         });
-    });
-
-    // 주소 선택 함수
-    function selectAddress(recipientName, phoneNumber, address) {
-        // 모달에서 선택하면 "" 생겨서 치환
-        recipientName = recipientName.replace(/"/g, "");
-        phoneNumber = phoneNumber.replace(/"/g, "");
-        address = address.replace(/"/g, "");
-
-        document.getElementById('recipientName').textContent = recipientName;
-        document.getElementById('phoneNumber').textContent = phoneNumber;
-        document.getElementById('address').textContent = address;
-    }
-</script>
+        </script>
+        
 </body>
 </html>

@@ -4,12 +4,16 @@
 </head>
 <body>
     <th:block th:fragment="script">
-        <!-- 좋아요, 관심 버튼 ON & OFF -->
+
         <script>
-            let isLoggedIn = $('.btn-like').data('logged-in');
-    
-            /* 해당 게시글 좋아요 갯수 갱신*/
-            function updateAll(element, postNo) {
+            
+            let isLoggedIn = $('#isLoggedIn').data('logged-in');
+            let $userId = document.getElementById('loginUserId');
+            let userId = $userId.value;
+
+            /* 좋아요 ON & OFF & 갯수 갱신 */
+            // 좋아요 갯수 갱신
+            function updateLikeCount(element, postNo) {
                 
                 let request = new XMLHttpRequest();
     
@@ -86,7 +90,7 @@
                                 $like.setAttribute('fill', 'solid');
     
                                 // 좋아요 갯수 갱신
-                                updateAll(element, postNo);
+                                updateLikeCount(element, postNo);
                             }
                         }
                     }
@@ -122,7 +126,134 @@
                                 $like.setAttribute('fill', 'none');
     
                                 // 좋아요 갯수 갱신
-                                updateAll(element, postNo);
+                                updateLikeCount(element, postNo);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* 관심 ON & OFF & 갯수 갱신 */
+            // 관심 갯수 갱신
+            function updateWishCount(element, parentTable, parentNo) {
+                
+                let request = new XMLHttpRequest();
+
+                request.open('GET', '/wish/count?parentTable='+parentTable+'&parentNo='+parentNo);
+                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                request.send();
+                
+                // 요청상태 체킹
+                request.onreadystatechange = function () {
+                    
+                    if (request.readyState == request.DONE && request.status == 200) {
+                        
+                        let response = JSON.parse(request.responseText);
+                        
+                        console.log('저장 갯수 갱신 요청 완료');
+                        console.log('업데이트된 저장 수: ' + response.countWish);
+                        // 저장 갯수 갱신
+                        let updatedWishCount = response.countWish;
+                        let $countWish = element.querySelector('.count-wish');
+                        $countWish.innerText = '';
+                        $countWish.innerText = updatedWishCount;
+                    }
+                }
+            }
+
+             /* 저장 on & off */
+             function btnWish(element, parentTable, parentNo) {
+                event.preventDefault();
+    
+                // 로그인 여부 체크; 비로그인 시, 로그인 페이지로 튕김
+                if (!isLoggedIn) {
+                    alert('로그인 후 이용 가능합니다.');
+                    let moveToLogin = confirm('로그인 페이지로 이동하시겠습니까?');
+    
+                    if (moveToLogin) {
+                        window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                        return;
+                    }
+                    return;
+                }
+                
+                // 로그인 시,
+                let $wish = element.querySelector('svg');
+                let $csrfToken = document.getElementById('csrfToken');
+                let csrfToken = $csrfToken.value;
+                
+                let $userId = document.getElementById('loginUserId');
+                let userId = $userId.value;
+    
+                //  좋아요 off -> on
+                if ($wish.getAttribute('fill') === 'none') {
+    
+                    let data = {
+                        'parentTable'   : parentTable,
+                        'parentNo'      : parentNo,
+                        'userId'        : userId
+                    };
+
+                    console.log("저장 off -> on");
+                    console.dir(data);
+    
+                    let request = new XMLHttpRequest();
+    
+                    request.open('POST', '/wish');
+                    request.setRequestHeader('content-Type', 'application/json');
+                    request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                    request.send(JSON.stringify(data));
+    
+                    // 요청상태 체킹
+                    request.onreadystatechange = function () {
+                        if (request.readyState == request.DONE && request.status == 200) {
+                            
+                            let response = request.responseText;
+                            
+                            if (response == 'SUCCESS') {
+                                console.log('저장 등록 성공');
+                                // 저장 색 채우기
+                                $wish.setAttribute('fill', 'solid');
+    
+                                // 저장 갯수 갱신
+                                updateWishCount(element, parentTable, parentNo);
+                            }
+                        }
+                    }
+                }
+    
+                //  저장 on -> off
+                else if ($wish.getAttribute('fill') === 'solid') {
+    
+                    let data = {
+                        'parentTable'   : parentTable,
+                        'parentNo'      : parentNo,
+                        'userId'        : userId
+                    }
+    
+                    console.log("저장 on -> off")
+                    console.dir(data);
+    
+                    let request = new XMLHttpRequest();
+    
+                    request.open('DELETE', '/wish');
+                    request.setRequestHeader('content-Type', 'application/json');
+                    request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                    request.send(JSON.stringify(data));
+    
+                    // 요청상태 체킹
+                    request.onreadystatechange = function () {
+                        if (request.readyState == request.DONE && request.status == 200) {
+                            console.log('저장 삭제 성공');
+    
+                            let response = request.responseText;
+    
+                            if (response == 'SUCCESS') {
+                                // 저장 색 빼기
+                                $wish.setAttribute('fill', 'none');
+    
+                                // 저장 갯수 갱신
+                                updateWishCount(element, parentTable, parentNo);
                             }
                         }
                     }

@@ -25,13 +25,7 @@ CREATE TABLE `user` (
     PRIMARY KEY (`user_id`)
 ) COMMENT='유저';
 
-DROP TABLE IF EXISTS user_auth;
--- User_auth 테이블 / 📁 user
-CREATE TABLE `user_auth` (
-      `auth_no` INT PRIMARY KEY AUTO_INCREMENT
-    , `user_id` varchar(100) NOT NULL                      -- 회원 아이디
-    , `AUTH` VARCHAR(100) NOT NULL                          -- 권한 (ROLE_USER, ROLE_ADMIN, ...)
-);
+
 
 
 DROP TABLE IF EXISTS persistent_logins;
@@ -120,7 +114,7 @@ CREATE TABLE `Like` (
 	`user_id`	VARCHAR(100)	NOT NULL,
 	`post_no`	INT				NOT NULL,
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 6/5 like해제하면 삭제되므로 필요X
     PRIMARY KEY (like_no),
     -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
@@ -208,93 +202,16 @@ CREATE TABLE `Pricehistory` (
     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`)
 ) COMMENT='가격변동';
 
--- Social_Login 테이블 / 📁 user
-CREATE TABLE `Social_Login` (
-    `social_login_id` VARCHAR(100) NOT NULL,
-    `user_id` VARCHAR(100) NOT NULL,
-    `provider` VARCHAR(50) NOT NULL,
-    `provider_user_id` VARCHAR(100) NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`social_login_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
-) COMMENT='소셜로그인';
-
--- Following 테이블 / 📁 user
-CREATE TABLE `Following` (
-    `following_no` INT NOT NULL AUTO_INCREMENT,
-    `user_id` VARCHAR(100) NOT NULL,
-    `following_id` VARCHAR(100),
-    PRIMARY KEY (`following_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
-) COMMENT='팔로잉';
-
--- Follower 테이블 / 📁 user
-CREATE TABLE `Follower` (
-    `follower_no` INT NOT NULL AUTO_INCREMENT,
-    `user_id` VARCHAR(100) NOT NULL,
-    `follower_id` VARCHAR(100),
-    PRIMARY KEY (`follower_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
-) COMMENT='팔로워';
-
--- Post 테이블 / 📁 post
-CREATE TABLE `Post` (
-    `post_no` INT NOT NULL AUTO_INCREMENT,
-    `user_id` VARCHAR(100) NOT NULL,
-    `content` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`post_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
-) COMMENT='게시글';
-
--- Comment 테이블 / 📁 post
-CREATE TABLE `Comment` (
-    `c_no` INT NOT NULL AUTO_INCREMENT,
-    `post_no` INT NOT NULL,
-    `user_id` VARCHAR(100) NOT NULL,
-    `comment` TEXT,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`c_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-    FOREIGN KEY (`post_no`) REFERENCES `Post`(`post_no`)
-) COMMENT='댓글';
-
--- Like 테이블 / 📁 post
-CREATE TABLE `Like` (
-    `like_no` INT NOT NULL AUTO_INCREMENT,
-    `c_no` INT NOT NULL,
-    `user_id` VARCHAR(100) NOT NULL,
-    `post_no` INT NOT NULL,
-    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`like_no`),
-    FOREIGN KEY (`c_no`) REFERENCES `Comment`(`c_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-    FOREIGN KEY (`post_no`) REFERENCES `Post`(`post_no`)
-) COMMENT='좋아요';
-
--- Tag 테이블 / 📁 post
-CREATE TABLE `Tag` (
-    `t_no` INT NOT NULL AUTO_INCREMENT,
-    `p_no` INT NOT NULL,
-    `post_no` INT NOT NULL,
-    PRIMARY KEY (`t_no`),
-    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`),
-    FOREIGN KEY (`post_no`) REFERENCES `Post`(`post_no`)
-) COMMENT='상품 태그';
-
 -- Wishlist 테이블 / 📁 user
 CREATE TABLE `Wishlist` (
     `w_no` INT NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL,
-    `p_no` INT NOT NULL,
+    `parent_no` INT NOT NULL,
+    `parent_table` VARCHAR(100) NOT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 6/4 필요 없어서 주석처리함 -도희-
     PRIMARY KEY (`w_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
-    FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`)
 ) COMMENT='관심 목록';
 
 -- Sales 테이블 / 📁 pay
@@ -331,7 +248,6 @@ CREATE TABLE `Purchase` (
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
     -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
     `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
@@ -341,10 +257,10 @@ CREATE TABLE `Purchase` (
 -- purchase_date 컬럼 삭제
 ALTER TABLE Purchase DROP COLUMN purchase_date;
 
--- ordered_at, created_at, updated_at 컬럼 추가
+-- ordered_at, updated_at 컬럼 추가
 ALTER TABLE Purchase
+    ADD COLUMN order_id varchar(100),
     ADD COLUMN ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
 -- purchase_state 컬럼 변경
@@ -396,6 +312,7 @@ CREATE TABLE `file` (
   PRIMARY KEY (`no`)
 ) COMMENT='파일';
 
+DROP TABLE IF EXISTS user_auth;
 -- user_auth 테이블 / 📁 user
 CREATE TABLE `user_auth` (
     `auth_no` INT PRIMARY KEY AUTO_INCREMENT,
