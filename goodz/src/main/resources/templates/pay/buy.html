@@ -99,7 +99,7 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form method="post" action="/pay/savePurchase">
+        <form method="post" >
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
