@@ -60,8 +60,14 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
+        
+        if (user == null) {
+            log.error("User not found for username: " + currentUserName);
+        } else {
+            log.info("User found: " + user);
+            model.addAttribute("user", user);
+        }
 
-        model.addAttribute("user", user);
         return "/user/index";
     }
 
@@ -249,7 +255,7 @@ public class UserController {
         // 모델에 findMan 속성을 추가합니다.
         model.addAttribute("findMan", findMan);
 
-        // 비밀번호 변경 페이지로 이동합
+        // 비밀번호 변경 페이지로 이동합니다.
         return "/user/changePW";
     }
 

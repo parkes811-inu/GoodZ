@@ -217,4 +217,57 @@
           SET account = #{account}
         WHERE user_id = #{userId}
     </update>
+
+    <!-- 소셜 회원 가입 -->
+    <insert id="insertSocial">
+        INSERT INTO user_social ( user_id, username, provider, social_id,  picture )
+        VALUES ( #{userId}, #{username}, #{provider}, #{socialId},  #{picture} )
+    </insert>
+
+
+    <!-- 소셜 회원 조회 -->
+    <select id="selectSocial" resultType="UserSocial">
+        SELECT * 
+        FROM user_social
+        WHERE provider = #{provider} 
+        AND social_id = #{socialId}
+    </select>
+
+
+    <!-- 소셜 회원 수정 -->
+    <update id="updateSocial">
+        UPDATE user_social
+           SET user_id = #{userId}
+              ,provider = #{provider}
+              ,social_id = #{socialId}
+              ,username = #{username}
+              ,picture = #{picture}
+              ,updated_at = #{updatedAt}
+        WHERE provider = #{provider} 
+        AND social_id = #{socialId}
+    </update>
+
+  <!-- 소셜정보로 회원 조회 -->
+<select id="selectBySocial" resultMap="userMap">
+    SELECT u.user_id
+          ,u.user_id
+          ,u.nickname
+          ,u.birth
+          ,u.phone_number
+          ,u.profile_picture_url
+          ,u.password
+          ,u.username
+          ,u.created_at
+          ,u.updated_at
+          ,auth.auth
+    FROM user u 
+         LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+    WHERE u.user_id = (
+                    SELECT user_id
+                      FROM user_social
+                    WHERE provider = #{provider} 
+                      AND social_id = #{socialId}
+                )
+</select>
+
 </mapper>
