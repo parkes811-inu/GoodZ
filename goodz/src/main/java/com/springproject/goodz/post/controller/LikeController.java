@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.service.LikeService;
-import com.springproject.goodz.user.dto.Users;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 좋아요
- * [GET]    /like                   체크 유/무
  * [POST]   /like                   체크 등록 요청
  * [DELETE] /like                   체크 해제 요청
  * [GET]    /like/count/게시글번호   게시글에 체크된 갯수
@@ -39,11 +37,6 @@ public class LikeController {
 
     @Autowired
     private LikeService likeService;
-    
-    // @GetMapping("")
-    // public String getMethodName(@RequestParam String param) {
-    //     return new String();
-    // }
 
     /**
      * 좋아요 등록 요청 (off -> on)
@@ -67,6 +60,12 @@ public class LikeController {
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
+    /**
+     * 좋아요 삭제 요청 (on -> off)
+     * @param like
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping("")
     public ResponseEntity<String> likeOff(@RequestBody Like like) throws Exception {
         log.info("좋아요 off 요청");
@@ -92,7 +91,7 @@ public class LikeController {
      * @throws Exception
      */
     @GetMapping("/count/{postNo}")
-    public ResponseEntity<Map<String, Long>> countLike(@PathVariable("postNo") int postNo, HttpSession session) throws Exception {
+    public ResponseEntity<Map<String, Long>> countLike(@PathVariable("postNo") int postNo) throws Exception {
         
         long countLike = likeService.countLike(postNo);
 
