@@ -3,6 +3,7 @@ package com.springproject.goodz.pay.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.mapper.PayMapper;
 
@@ -16,9 +17,15 @@ public class PayServiceImpl implements PayService{
     @Override
     public int savePurchase(Purchase purchase) throws Exception {
         return payMapper.insertPurchase(purchase);
-
+    }
+    
     public int insertSale(Sales sales) throws Exception {
         return payMapper.insertSale(sales);
+    }
+
+    @Override
+    public int updatePurchse(Purchase purchase) throws Exception {
+        return payMapper.updatePurchse(purchase);
     }
 
     

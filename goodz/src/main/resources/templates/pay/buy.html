@@ -99,8 +99,14 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form method="post" >
+        <form action="/pay/buy" id="buyForm" method="post" >
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+            <input type="hidden" id="initialPrice" th:value="${initialPrice}" />
+            <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
+            <input type="hidden" id="size" name="size" th:value="${size}" />
+            <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
+            <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
             </div>
@@ -234,7 +240,7 @@
         </form>
         
         <div class="btn-wrapper w-100 mb-5">
-            <button id="payment-request-button" class="btn btn-primary w-100" disabled>결제하기</button>
+            <button id="payment-button" class="btn btn-primary w-100" disabled>결제하기</button>
         </div>
     </div>
 
@@ -259,60 +265,65 @@
             });
         
             // 결제 관련 스크립트
-            const button = document.getElementById("payment-request-button");
-            const csrfToken = /*[[${_csrf.token}]]*/ "";
-            const amount = /*[[${price}]]*/ 0; // 상품 가격
+            const button = document.getElementById("payment-button"); // 결제 버튼 요소
+            const csrfToken = /*[[${_csrf.token}]]*/ ""; // CSRF 토큰
+            const amount = /*[[${price+3000}]]*/ 0; // 상품 가격
             const productName = /*[[${product.productName}]]*/ "상품명"; // 상품명
+            const purchaseNo = /*[[${purchaseNo}]]*/ 0; // purchaseNo
             let recipientName = document.getElementById('recipientName').textContent;
             let phoneNumber = document.getElementById('phoneNumber').textContent;
         
             // 전화번호에서 특수문자 제거
             phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         
+            // 랜덤 문자열 생성 함수
             function generateRandomString() {
                 return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             }
         
             console.log("결제 위젯 초기화 시작");
-            const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-            const customerKey = generateRandomString();
-            const paymentWidget = PaymentWidget(clientKey, customerKey);
+            const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 결제 위젯 클라이언트 키
+            const customerKey = generateRandomString(); // 고객 키
+            const paymentWidget = PaymentWidget(clientKey, customerKey); // 결제 위젯 초기화
         
+            // 결제 수단 UI 렌더링
             const paymentMethodWidget = paymentWidget.renderPaymentMethods(
                 "#payment-method",
                 { value: amount },
                 { variantKey: "DEFAULT" }
             );
         
+            // 약관 동의 렌더링
             paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
         
+            // 결제 위젯 렌더링 완료 시 결제 버튼 활성화
             paymentMethodWidget.on("ready", function () {
                 console.log("결제 위젯 렌더링 완료");
                 button.disabled = false; // 결제 버튼 활성화
             });
         
+            // 결제 버튼 클릭 이벤트
             button.addEventListener("click", function () {
                 console.log("결제 요청 시작");
                 paymentWidget.requestPayment({
-                    orderId: generateRandomString(),
-                    orderName: productName,
-                    successUrl: window.location.origin + "/pay/success", // 주문 번호 넘겨줘
-                    failUrl: window.location.origin + "/pay/fail", 
-                    customerName: recipientName,
-                    customerMobilePhone: phoneNumber,
+                    orderId: generateRandomString(), // 주문 ID
+                    orderName: productName, // 주문명
+                    successUrl: window.location.origin + "/pay/success?purchaseNo=" + purchaseNo, // 성공 URL
+                    failUrl: window.location.origin + "/pay/fail", // 실패 URL
+                    customerName: recipientName, // 고객 이름
+                    customerMobilePhone: phoneNumber, // 고객 전화번호
                     headers: {
-                        'X-CSRF-TOKEN': csrfToken
+                        'X-CSRF-TOKEN': csrfToken // CSRF 토큰
                     }
                 }).then((response) => {
                     if (response.status === 'SUCCESS') {
-                        window.location.href = window.location.origin + "/pay/success"; 
+                        window.location.href = window.location.origin + "/pay/success?purchaseNo=" + purchaseNo; // 성공 시 리다이렉트
                     } else {
-                        window.location.href = window.location.origin + "/pay/fail";
+                        window.location.href = window.location.origin + "/pay/fail"; // 실패 시 리다이렉트
                     }
                 });
             });
         });
-        </script>
-        
+    </script>
 </body>
 </html>

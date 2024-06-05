@@ -1,6 +1,6 @@
 package com.springproject.goodz.pay.controller;
 
-import java.util.HashMap;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -106,6 +105,7 @@ public class PayController {
         purchase.setOptionId(optionId);
 
         int result = payService.savePurchase(purchase);
+        int purchaseNo = purchase.getPurchaseNo();
 
         if (result == 0) {
             return "redirect:/product/detail/" + pNo;
@@ -128,15 +128,43 @@ public class PayController {
         model.addAttribute("size", size);
         model.addAttribute("image", productImages);
         model.addAttribute("price", purchasePrice);
+        model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
+        
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("hasAddress", !addresses.isEmpty());
         model.addAttribute("addresses", addresses);
         
-        return "/pay/buy"; // 상품 구매 페이지로 이동합니다.
+        return "/pay/buy"; // 상품 구매 페이지로 이동
     }
 
 
+    // 결제 성공 시 호출되는 메서드 (POST 요청)
+    @ResponseBody
+    @PostMapping("/success")
+    public String updatePurchase(@RequestParam("purchaseNo") int purchaseNo,
+                                @RequestParam("paymentKey") String paymentKey,
+                                @RequestParam("orderId") String orderId,
+                                @RequestParam("amount") int amount) throws Exception {
+       // Purchase 객체 생성 및 필드 설정
+        Purchase purchase = new Purchase();
+        purchase.setPurchaseNo(purchaseNo);
+        purchase.setOrderId(orderId);
+        purchase.setPurchaseState("paid");
+        purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // 현재 시간 설정
+
+        // 구매 정보 업데이트
+        int result = payService.updatePurchse(purchase);
+        if (result > 0) {
+            return "/pay/success";
+        }
+        return "/pay/fail";
+    }
+    
+    @GetMapping("/fail")
+    public String fail() {
+        return "/pay/fail";
+    }
     
 
     /**
@@ -254,18 +282,6 @@ public class PayController {
     }
 
 
-    
-
-    @GetMapping("/success")
-    public String success() {
-        return "/pay/success";
-    }
-
-    @GetMapping("/fail")
-    public String fail() {
-        return "/pay/fail";
-    }
-
     @GetMapping("/complete")
     public String complete(@RequestParam("type") String type, Model model) {
         model.addAttribute("type", type);
@@ -273,31 +289,5 @@ public class PayController {
     }
 
     
-
-    /**
-     * 성공시 그 내역들 불러오기
-     * @param params
-     * @param model
-     * @return
-     */
-    @PostMapping("/success")
-    public String handleSuccess(@RequestParam Map<String, String> params, Model model) {
-        // 성공 처리 로직 추가
-        model.addAttribute("params", params);
-        return "pay/success";
-    }
-
-    /**
-     * 실패시 그 내역을 불러오기
-     * @param params
-     * @param model
-     * @return
-     */
-    @PostMapping("/fail")
-    public String handleFail(@RequestParam Map<String, String> params, Model model) {
-        // 실패 처리 로직 추가
-        model.addAttribute("params", params);
-        return "pay/fail";
-    }
 }
 
