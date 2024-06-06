@@ -104,7 +104,7 @@
             <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="salePrice" name="salePrice" th:value="${price - 5000}" />
-            <input type="hidden" id="address" name="address" th:value="${defaultAddress.address}" />
+            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
 
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>
@@ -245,6 +245,7 @@
                         </div>
                     </div>
                 </div>
+
             </section>
 
             <!-- 최종 주문 정보 -->
@@ -269,16 +270,37 @@
                     </div>
                 </div>
             </div>
+
             <div class="btn-wrapper w-100 mb-5">
                 <button id="payment-button" class="btn btn-primary w-100" type="submit" disabled>판매하기</button>
             </div>
         </form>
-
     </div>
 
     <script>
-        // 폼 검증 스크립트
         document.addEventListener('DOMContentLoaded', function() {
+            // 주소 선택 함수
+            function selectAddress(recipientName, phoneNumber, address) {
+                document.getElementById('recipientName').textContent = recipientName;
+                document.getElementById('phoneNumber').textContent = phoneNumber;
+                document.getElementById('address').textContent = address;
+                document.getElementById('hiddenAddress').value = address; // hidden input field update
+            }
+
+            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
+            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
+                const target = event.target.closest('li.list-group-item');
+                if (target) {
+                    const recipientName = target.getAttribute('data-recipient-name');
+                    const phoneNumber = target.getAttribute('data-phone-number');
+                    const address = target.getAttribute('data-address');
+                    selectAddress(recipientName, phoneNumber, address);
+                    // 모달 닫기
+                    var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+                    addressModal.hide();
+                }
+            });
+
             const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
             const trackingNumberInput = document.getElementById('tracking-number'); // 운송장 번호 입력 요소
             const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
@@ -304,24 +326,6 @@
                 if (!courierSelect.value || !trackingNumberInput.value.trim()) {
                     event.preventDefault();
                     alert('모든 필드를 입력해주세요.');
-                }
-            });
-
-            // 주소 선택 함수
-            window.selectAddress = function (recipientName, phoneNumber, address) {
-                document.getElementById('recipientName').textContent = recipientName;
-                document.getElementById('phoneNumber').textContent = phoneNumber;
-                document.getElementById('address').textContent = address;
-            }
-
-            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
-            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
-                const target = event.target.closest('li.list-group-item');
-                if (target) {
-                    const recipientName = target.getAttribute('data-recipient-name');
-                    const phoneNumber = target.getAttribute('data-phone-number');
-                    const address = target.getAttribute('data-address');
-                    selectAddress(recipientName, phoneNumber, address);
                 }
             });
         });

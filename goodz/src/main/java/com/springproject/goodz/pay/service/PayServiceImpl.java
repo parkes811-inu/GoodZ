@@ -24,8 +24,8 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override
-    public int updatePurchse(Purchase purchase) throws Exception {
-        return payMapper.updatePurchse(purchase);
+    public int updatePurchase(Purchase purchase) throws Exception {
+        return payMapper.updatePurchase(purchase);
     }
 
     
