@@ -2,25 +2,19 @@ package com.springproject.goodz.user.service;
 
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.springproject.goodz.user.dto.CustomUser;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
+import com.springproject.goodz.user.dto.UserSocial;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.mapper.UserMapper;
 
@@ -47,11 +41,19 @@ public class UserServiceImpl implements UserService {
         UsernamePasswordAuthenticationToken token 
             = new UsernamePasswordAuthenticationToken(username, password);
         
+        // 토큰에 요청 정보 등록
+        // token.setDetails( new WebAuthenticationDetails(request) );
+
         // 토큰을 이용하여 인증
         Authentication authentication = authenticationManager.authenticate(token);
 
-        // 인증 여부 확인
+        // 인증된 사용자 확인
+        CustomUser loginUser = (CustomUser) authentication.getPrincipal();
+        log.info("인증된 사용자 아이디 : " + loginUser.getUser().getUsername());
         boolean result = authentication.isAuthenticated();
+
+        // // 인증 여부 확인
+        // boolean result = authentication.isAuthenticated();
 
         // 시큐리티 컨텍스트에 등록
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -246,6 +248,29 @@ public class UserServiceImpl implements UserService {
 
 
     
+    @Override
+    public int insertSocial(UserSocial userSocial) throws Exception {
+        int result = userMapper.insertSocial(userSocial);
+        return result;
+    }
+
+    @Override
+    public UserSocial selectSocial(UserSocial userSocial) throws Exception {
+        UserSocial selectedUserSocial = userMapper.selectSocial(userSocial);
+        return selectedUserSocial;
+    }
+
+    @Override
+    public int updateSocial(UserSocial userSocial) throws Exception {
+        int result = userMapper.updateSocial(userSocial);
+        return result;
+    }
+
+    @Override
+    public Users selectBySocial(UserSocial userSocial) throws Exception {
+        Users user = userMapper.selectBySocial(userSocial);
+        return user;
+    }
     
     
 

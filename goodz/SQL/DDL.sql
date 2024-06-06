@@ -1,4 +1,6 @@
--- Active: 1716800736662@@127.0.0.1@3306@goodz
+
+-- Active: 1715220502910@@127.0.0.1@3306@goodz
+
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
@@ -9,6 +11,15 @@ CREATE TABLE `Brand`(
     PRIMARY KEY (`b_no`),
     UNIQUE KEY `unique_b_name` (`b_name`)
 ) COMMENT='브랜드';
+
+DROP TABLE IF EXISTS `user`
+
+-- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
+
+ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
+
+ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
@@ -24,6 +35,7 @@ CREATE TABLE `user` (
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
 ) COMMENT='유저';
+
 
 
 
@@ -152,6 +164,22 @@ CREATE TABLE `Tag` (
 --      PRIMARY KEY (p_no),
 -- 	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
 -- ) COMMENT='상품';
+
+
+DROP TABLE IF EXISTS `user_social`
+
+CREATE TABLE `user_social` (
+    `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
+    `username` VARCHAR(100) NOT NULL,
+    `nickname` VARCHAR(100) NULL, -- 유저 닉네임
+    `PROVIDER` VARCHAR(50) NOT NULL,
+    `SOCIAL_ID` VARCHAR(255) NOT NULL,
+    `PICTURE` TEXT DEFAULT NULL, 
+    `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`)
+);
+
 
 -- Product 테이블 / 📁 product
 CREATE TABLE `Product` (

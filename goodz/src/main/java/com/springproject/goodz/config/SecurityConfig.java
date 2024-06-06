@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.springproject.goodz.security.LoginSuccessHandler;
+import com.springproject.goodz.user.service.OAuthService;
 import com.springproject.goodz.user.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private OAuthService oAuthService;
+    
     @Autowired
     private DataSource dataSource;
 
@@ -57,12 +61,20 @@ public class SecurityConfig {
         
          // OAuth 로그인 설정
          http.oauth2Login(login -> login
+
          .loginPage("/login")
           // .successHandler(authSuccessHandler)
           // .userInfoEndpoint()
           // .userService(customOAuth2UserService)
          )	
          ;
+
+                                .userInfoEndpoint()
+                                .userService(oAuthService));
+         // .successHandler(authSuccessHandler)
+         // .userInfoEndpoint()
+         // .userService(customOAuth2UserService)
+
 
 
         // ✅ 사용자 정의 인증 설정

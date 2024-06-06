@@ -2,10 +2,9 @@ package com.springproject.goodz.user.service;
 
 import java.util.List;
 
-import org.springframework.ui.Model;
-
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.UserAuth;
+import com.springproject.goodz.user.dto.UserSocial;
 import com.springproject.goodz.user.dto.Users;
 
 public interface UserService {
@@ -67,5 +66,16 @@ public interface UserService {
     // 유저 계좌 등록
     public void insertAccount(String userId, String account) throws Exception;
 
+    // 소셜 회원 가입
+    public int insertSocial(UserSocial userSocial) throws Exception;
+
+    // 소셜 회원 조회
+    public UserSocial selectSocial(UserSocial userSocial) throws Exception;
+
+    // 소셜 회원 수정
+    public int updateSocial(UserSocial userSocial) throws Exception;
+
+    // 소셜 정보로 회원 조회
+    public Users selectBySocial(UserSocial userSocial) throws Exception;
 
 }

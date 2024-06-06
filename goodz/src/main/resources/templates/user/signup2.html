@@ -272,14 +272,14 @@
                 return;
             }
 
-            // 이메일 유효성 검사 정규 표현식
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            // // 이메일 유효성 검사 정규 표현식
+            // var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            // 이메일 유효성 검사
-            if (!emailRegex.test(account)) {
-                alert('올바른 이메일 주소를 입력해주세요.');
-                return;
-            }
+            // // 이메일 유효성 검사
+            // if (!emailRegex.test(account)) {
+            //     alert('올바른 이메일 주소를 입력해주세요.');
+            //     return;
+            // }
 
             // 모든 조건이 충족되면 회원가입을 완료하고 로그인 페이지로 이동
             if(isUserIdAvailable && isNicknameAvailable) {
