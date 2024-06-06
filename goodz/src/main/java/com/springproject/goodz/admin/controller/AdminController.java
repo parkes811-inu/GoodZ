@@ -1,6 +1,8 @@
 package com.springproject.goodz.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.dto.UpdateProductRequest;
 import com.springproject.goodz.product.service.BrandService;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
@@ -203,7 +206,7 @@ public class AdminController {
     @GetMapping("/product/detail/{pNo}")
     public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {
         Product product = productService.getProductBypNo(pNo);
-        List<ProductOption> option =  productService.getProductOptionsByProductId(pNo);
+        List<ProductOption> option =  productService.adminOptionsByProductId(pNo);
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
@@ -220,9 +223,43 @@ public class AdminController {
     }
 
     @PostMapping("/updateProduct")
-    public String getMethodName() throws Exception {
-        log.info("sdfasdfafafasdf");
-        return "/admin/product_detail/{pNo}";
+    public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest, @RequestParam Map<String, String> params) throws Exception {
+        log.info("Received Update Request: {}", updateProductRequest);
+
+        Product product = new Product();
+        product.setPNo(updateProductRequest.getPNo());
+        product.setProductName(updateProductRequest.getProductName());
+        product.setInitialPrice(updateProductRequest.getInitialPrice());
+        product.setBName(updateProductRequest.getBName());
+        product.setCategory(updateProductRequest.getCategory());
+
+        List<ProductOption> options = new ArrayList<>();
+        int index = 0;
+        while (params.containsKey("optionIds[" + index + "]")) {
+            ProductOption option = new ProductOption();
+            option.setOptionId(Integer.parseInt(params.get("optionIds[" + index + "]")));
+            option.setPNo(Integer.parseInt(params.get("optionPNos[" + index + "]")));
+            option.setSize(params.get("sizes[" + index + "]"));
+            option.setOptionPrice(Integer.parseInt(params.get("optionPrices[" + index + "]")));
+            
+            String addedStockQuantityStr = params.get("addedStockQuantities[" + index + "]");
+            if (addedStockQuantityStr != null && !addedStockQuantityStr.isEmpty()) {
+                option.setAddedStockQuantity(Integer.parseInt(addedStockQuantityStr));
+            } else {
+                option.setAddedStockQuantity(0); // 기본값 설정
+            }
+            
+            option.setStatus(params.get("status[" + index + "]"));
+            options.add(option);
+            index++;
+        }
+        product.setOptions(options);
+
+        log.info("Product options: {}", product.getOptions());
+
+        productService.updateProduct(product);
+
+        return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
     }
     
 

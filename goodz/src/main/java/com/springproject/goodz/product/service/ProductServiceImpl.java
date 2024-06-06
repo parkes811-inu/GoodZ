@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.mapper.PriceHistoryMapper;
 import com.springproject.goodz.product.mapper.ProductMapper;
@@ -164,12 +163,6 @@ public class ProductServiceImpl implements ProductService {
         return productOptionMapper.insertProductOption(productOption);
     }
 
-    @Override
-    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProductImagesByProductId'");
-    }
-
     // 제품과 최신 가격 변동 정보 조회
     @Override
     public List<Product> UsedInPay(int pNo) throws Exception {
@@ -185,5 +178,30 @@ public class ProductServiceImpl implements ProductService {
                                                @Param("limit") int limit) throws Exception {
 
         return productMapper.findSameBrandProducts(brand, category, pNo, offset, limit);
+    }
+
+    @Override
+    public void updateProduct(Product product) {
+        try {
+            // 상품 정보 업데이트
+            productMapper.updateProduct(product);
+
+            // 옵션 정보 업데이트
+            List<ProductOption> options = product.getOptions();
+            if (options != null) {
+                for (ProductOption option : options) {
+                    option.setStockQuantity(option.getAddedStockQuantity());
+                    productMapper.updateOptionsByProductId(option);
+                }
+            }
+        } catch (Exception e) {
+            // 예외를 로그로 기록하고 재발생
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update product", e);
+        }
+    }
+
+    public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception {
+        return productOptionMapper.adminOptionsByProductId(pNo);
     }
 }

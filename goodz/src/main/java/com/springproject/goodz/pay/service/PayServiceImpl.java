@@ -8,7 +8,7 @@ import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.mapper.PayMapper;
 
 @Service
-public class PayServiceImpl implements PayService{
+public class PayServiceImpl implements PayService {
     
     @Autowired
     private PayMapper payMapper;

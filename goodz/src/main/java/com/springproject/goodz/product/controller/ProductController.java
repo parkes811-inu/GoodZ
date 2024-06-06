@@ -1,7 +1,10 @@
 package com.springproject.goodz.product.controller;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -19,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductImage;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
@@ -40,6 +42,9 @@ public class ProductController {
 
     @Autowired
     private FileService fileService;
+
+    // DecimalFormat 인스턴스 한 번 생성
+    DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
 
     @GetMapping("")
     public String index(Model model) throws Exception {
@@ -63,9 +68,14 @@ public class ProductController {
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
 
             // 첫 번째 이미지 URL 설정
@@ -74,9 +84,6 @@ public class ProductController {
             } else {
                 product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
             }
-
-            // 디버깅을 위해 minPrice 값 출력
-            System.out.println("Product ID: " + product.getPNo() + ", Min Price: " + product.getMinPrice());
         }
 
         model.addAttribute("productList", productList);
@@ -105,11 +112,18 @@ public class ProductController {
                             .mapToInt(ProductOption::getOptionPrice)
                             .min()
                             .orElse(0);
+        // 원화 형식으로 변환
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("ko", "KR"));
+        DecimalFormat decimalFormat = (DecimalFormat) currencyFormatter;
+        decimalFormat.applyPattern("#,### 원");
+        String formattedMinPrice = currencyFormatter.format(minPrice);
+        
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("formattedMinPrice", formattedMinPrice);
 
         model.addAttribute("product", product);
         model.addAttribute("options", options);
         model.addAttribute("images", images);
-        model.addAttribute("minPrice", minPrice);
 
         // 사이즈별 가격 정보를 JSON 형태로 변환
         String pricesJson = new ObjectMapper().writeValueAsString(
@@ -135,42 +149,6 @@ public class ProductController {
         String sizeJson = objectMapper.writeValueAsString(sizeMap);
         model.addAttribute("sizeJson", sizeJson);
 
-       // List<Product> brandProducts = productService.newArrivals();
-       //List<Product> brandProducts = productService.findSameBrandProducts(brand, category, pNo); 
-
-        // productService.findSameBrandProducts(product.getCategory(), product.getBName()); 
-        // for (Product brandProduct : brandProducts) {
-        //     // 상품 옵션 설정
-        //     List<ProductOption> options2 = productService.getProductOptionsByProductId(product.getPNo());
-        //     brandProduct.setOptions(options2);
-
-        //     // 상품 이미지 설정
-        //     Files file2 = new Files();
-        //     file2.setParentNo(brandProduct.getPNo());
-        //     file2.setParentTable(brandProduct.getCategory());
-        //     List<Files> productImages2 = fileService.listByParent(file2);
-            
-        //     // 최저 가격 계산
-        //     if (!options.isEmpty()) {
-        //         int minPrice2 = options.stream()
-        //                             .mapToInt(ProductOption::getOptionPrice)
-        //                             .min()
-        //                             .orElse(0);
-        //     brandProduct.setMinPrice(minPrice);
-        //     } else {
-        //         brandProduct.setMinPrice(brandProduct.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
-        //     }
-            
-        //     // 첫 번째 이미지 URL 설정
-        //     if (!productImages2.isEmpty()) {
-        //         brandProduct.setImageUrl(productImages2.get(0).getFilePath());
-        //     } else {
-        //         brandProduct.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-        //     }
-        // }
-
-        // model.addAttribute("brandProducts", brandProducts);
-
         return "/product/detail";
     }
 
@@ -180,6 +158,8 @@ public class ProductController {
     @GetMapping("/top")
     public String top(Model model) throws Exception {
         List<Product> topList = productService.top();
+
+        
 
         for (Product product : topList) {
             // 상품 옵션 설정
@@ -191,18 +171,23 @@ public class ProductController {
             file.setParentNo(product.getPNo());
             file.setParentTable(product.getCategory());
             List<Files> productImages = fileService.listByParent(file);
-            
+
             // 최저 가격 계산
             if (!options.isEmpty()) {
                 int minPrice = options.stream()
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
-            
+
             // 첫 번째 이미지 URL 설정
             if (!productImages.isEmpty()) {
                 product.setImageUrl(productImages.get(0).getFilePath());
@@ -214,6 +199,7 @@ public class ProductController {
         model.addAttribute("topList", topList);
         return "/product/top";
     }
+
 
     // 하의 카테고리
     @GetMapping("/pants")
@@ -237,9 +223,14 @@ public class ProductController {
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
 
             // 첫 번째 이미지 URL 설정
@@ -275,9 +266,14 @@ public class ProductController {
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
 
             // 첫 번째 이미지 URL 설정
@@ -314,9 +310,14 @@ public class ProductController {
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
             
             // 첫 번째 이미지 URL 설정
@@ -331,20 +332,21 @@ public class ProductController {
         return "/product/accessory";
     }
 
-
     // 인피니티 스크롤을 위한 컨트롤러
     @GetMapping("/brand/products")
     public ResponseEntity<List<Product>> getBrandProducts(@RequestParam("page") int page, 
-                                                        @RequestParam("size") int size,
-                                                        @RequestParam("brand") String brand,
-                                                        @RequestParam("category") String category,
-                                                        @RequestParam("pNo") int pNo) throws Exception {
-        // 페이지 번호와 사이즈에 따라 오프셋(offset) 계산
-        int offset = (page - 1) * size;
+                                                          @RequestParam("size") int size,
+                                                          @RequestParam("brand") String brand,
+                                                          @RequestParam("category") String category,
+                                                          @RequestParam("pNo") int pNo) throws Exception {
+        int offset = Math.max(0, (page - 1) * size);
         
-        // 페이지 번호와 사이즈를 이용하여 해당 브랜드의 상품 목록을 조회
+        // 쿼리 실행 후 결과 로그 출력
         List<Product> products = productService.findSameBrandProducts(brand, category, pNo, offset, size);
         
+        // 쿼리 결과를 로그로 확인
+        System.out.println("쿼리 결과: " + products);
+
         return ResponseEntity.ok(products);
     }
 }

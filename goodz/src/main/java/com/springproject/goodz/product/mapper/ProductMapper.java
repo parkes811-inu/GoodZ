@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
-import com.springproject.goodz.product.dto.ProductImage;
 
 @Mapper
 public interface ProductMapper {
@@ -61,14 +60,9 @@ public interface ProductMapper {
     // 상품의 옵션 목록 조회
     public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
 
-    // 상품의 이미지 목록 조회
-    public List<ProductImage> getProductImagesByProductId(int pNo) throws Exception;
-
     // 상품 옵션 추가
     public int insertProductOption(ProductOption productOption) throws Exception;
 
-    // 상품 이미지 추가
-    public int insertProductImage(ProductImage productImage) throws Exception;
 
     // 제품과 최신 가격 변동 정보 조회
     public List<Product> UsedInPay(int pNo) throws Exception;
@@ -79,4 +73,8 @@ public interface ProductMapper {
                                                @Param("pNo") int pNo,
                                                @Param("offset") int offset,
                                                @Param("limit") int limit) throws Exception;
+
+    // 등록된 상품 정보 업데이트 하는데 사용
+    public void updateProduct(Product product) throws Exception;
+    public void updateOptionsByProductId(ProductOption option) throws Exception;
 }
