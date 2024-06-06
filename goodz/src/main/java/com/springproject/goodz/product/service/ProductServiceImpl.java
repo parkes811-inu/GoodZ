@@ -180,15 +180,28 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.findSameBrandProducts(brand, category, pNo, offset, limit);
     }
 
-    public void updateProduct(Product product) throws Exception {
-        productMapper.updateProduct(product);
+    @Override
+    public void updateProduct(Product product) {
+        try {
+            // 상품 정보 업데이트
+            productMapper.updateProduct(product);
+
+            // 옵션 정보 업데이트
+            List<ProductOption> options = product.getOptions();
+            if (options != null) {
+                for (ProductOption option : options) {
+                    option.setStockQuantity(option.getAddedStockQuantity());
+                    productMapper.updateOptionsByProductId(option);
+                }
+            }
+        } catch (Exception e) {
+            // 예외를 로그로 기록하고 재발생
+            e.printStackTrace();
+            throw new RuntimeException("Failed to update product", e);
+        }
     }
 
-    public ProductOption getProductOptionById(int id) throws Exception {
-        return productMapper.selectProductOptionById(id);
-    }
-
-    public void updateProductOption(ProductOption option) throws Exception {
-        productMapper.updateProductOption(option);
+    public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception {
+        return productOptionMapper.adminOptionsByProductId(pNo);
     }
 }

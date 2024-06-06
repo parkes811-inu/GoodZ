@@ -40,6 +40,9 @@ public interface ProductService {
     // 상품 상세 조회
     Product getProductBypNo(int pNo) throws Exception;
 
+    // admin 페이지에서 상품 정보 수정 시 상품 옵션 목록 조회
+    public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception;
+    
     // 상품 옵션 등록
     int insertProductOption(ProductOption productOption) throws Exception;
     
@@ -64,8 +67,4 @@ public interface ProductService {
     
     // 등록된 상품 정보 업데이트 하는데 사용
     public void updateProduct(Product product) throws Exception;
-
-    public ProductOption getProductOptionById(int id) throws Exception;
-
-    public void updateProductOption(ProductOption option) throws Exception;
 }

@@ -26,6 +26,7 @@ public class Product {
     private List<MultipartFile> productFiles; // 추가된 필드
 
     private int minPrice; // 같은 상품 내 최저가 
+    private String formattedMinPrice; // 최저가 상품을 원화 형식으로 표현하기 위한 변수
 
     private String size;
     private int fluctuatedPrice;

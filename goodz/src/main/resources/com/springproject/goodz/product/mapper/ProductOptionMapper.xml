@@ -18,4 +18,12 @@
         WHERE p_no = #{pNo}
           AND status = 'on'
     </select>
+
+    <!-- admin 상품 수정 시 옵션 조회 -->
+    <select id="adminOptionsByProductId" resultType="ProductOption">
+        SELECT * 
+        FROM product_option 
+        WHERE p_no = #{pNo}
+    </select>
+    
 </mapper>

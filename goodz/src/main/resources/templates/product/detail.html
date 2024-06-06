@@ -173,11 +173,12 @@
                     <div class="product-details">
                         <h3 id="productName" th:text="${product.productName}"></h3>
                         <div class="product-price">
-                            <p id="productPrice" class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
+                            <p id="productPrice" class="m-0 ms-2" th:text="${formattedMinPrice}"></p>
                         </div>
                         
                         <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}">
                         <input type="hidden" id="category" name="category" th:value="${product.category}">
+                        <input type="hidden" id="brand" name="brand" th:value="${product.bName}">
                         <input type="hidden" id="initialPrice" name="initialPrice" th:value="${product.initialPrice}">
 
                         <div class="product-options">
@@ -190,8 +191,8 @@
                             <div class="buy-buttons mt-3 d-flex justify-content-end">
                                 <button class="btn btn-danger btn-purchase mb-2 me-2 d-flex justify-content-between align-items-center" 
                                         data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="purchase" th:data-prices="${pricesJson}">
-                                    구매 <p class="m-0 ms-2" th:text="${minPrice + ' 원'}"></p>
-                                </button>
+                                   구매 <p class="m-0 ms-2" th:if="${minPrice > 0}" th:text="${formattedMinPrice}"></p>
+                                    </button>
                                 <button class="btn btn-success btn-sell mb-2 me-2 d-flex justify-content-between align-items-center" 
                                         data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="sell" 
                                         data-category="${product.category}" th:data-initial-price="${product.initialPrice}">
@@ -219,9 +220,7 @@
                                     <div class="modal-body">
                                         <!-- 사이즈 옵션이 여기에 동적으로 삽입됩니다 -->
                                         <th:block th:each="option : ${options}">
-                                            <!-- <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:text="${option.size}"></button> -->
                                             <button class="btn btn-outline-secondary size-option" th:data-size="${option.size}" th:data-price="${option.optionPrice}" th:text="${option.size}"></button>
-
                                         </th:block>
                                     </div>
                                     <div class="modal-footer">
@@ -320,7 +319,6 @@
                 </div>
             </div>
 
-
             <div class="container mt-4">
                 <h5 class="text-md-start fw-bold mt-5" style="padding-right: 100px;">태그된 스타일</h5>
                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="taggedStyles">
@@ -346,22 +344,24 @@
                         </div>
                     </div>
                 </div>
-        
-                <h5 class="text-md-start fw-bold mt-5">이 브랜드의 다른 상품</h5>
-                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
-                    <!-- 반복문으로 최대 4개 까지 -->
-                    <div th:each="brand : ${brandProducts}" class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <a th:href="@{/product/detail/{id}(id=${brand.pNo})}">
-                                    <img th:src="@{/files/img(imgUrl=${brand.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
-                                </a>
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p class="user-id fw-bold m-0" th:text="${brand.productName}"></p>
-                                    </div>
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <p id="productPrice" class="m-0 ms-2" th:text="${brand.minPrice} + ' 원'"></p>
+                
+                <div class="container mt-4">
+                    <h5 class="text-md-start fw-bold mt-5">이 브랜드의 다른 상품</h5>
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
+                        <!-- 반복문으로 최대 4개 까지 -->
+                        <div th:each="brand : ${brandProducts}" class="col">
+                            <div class="card border-0">
+                                <div class="card-body">
+                                    <a th:href="@{/product/detail/{id}(id=${brand.pNo})}">
+                                        <img th:src="@{/files/img(imgUrl=${brand.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
+                                    </a>
+                                    <div class="card-text py-2">
+                                        <div class="d-flex justify-content-start column-gap-1">
+                                            <p class="user-id fw-bold m-0" th:text="${brand.productName}"></p>
+                                        </div>
+                                        <div class="d-flex justify-content-start column-gap-1">
+                                            <p id="productPrice" class="m-0 ms-2" th:text="${brand.minPrice} + ' 원'"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -373,21 +373,18 @@
     </div>
     
     <script>
-
         const sellButton = document.querySelector('.btn-sell');
         if (sellButton) {
             const initialPrice = parseFloat(document.getElementById('initialPrice').value);
             if (!isNaN(initialPrice)) {
                 const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
                 document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
-                
             } else {
                 console.error('Initial price is not a valid number');
             }
         } else {
             console.error('Sell button not found');
         }
-
 
         function showCm() {
             document.querySelector('.cm-table').style.display = 'table';
@@ -426,6 +423,16 @@
                 });
             });
 
+            // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
+            sizeModal.addEventListener('show.bs.modal', function(event) {
+                const sizeOptions = sizeModal.querySelectorAll('.size-option');
+                if (sizeOptions.length === 0) {
+                    alert('구매 가능한 사이즈가 없습니다.');
+                    event.preventDefault(); // 모달 창 열림 방지
+                    return;
+                }
+            });
+
             // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
             confirmSizeButton.addEventListener('click', function() {
                 if (selectedSize && selectedPrice) {
@@ -456,6 +463,14 @@
 
                 if (transactionType === 'purchase') {
                     prices = JSON.parse(prices); // 구매의 경우 JSON 객체
+
+                    // 가격 객체가 비어 있으면 알림 메시지 표시하고 모달 창 열지 않음
+                    if (Object.keys(prices).length === 0) {
+                        alert('구매 가능한 사이즈가 없습니다.');
+                        event.preventDefault(); // 모달 창 열림 방지
+                        return;
+                    }
+
                     // 사이즈와 가격 버튼 생성
                     Object.keys(prices).forEach(size => {
                         const price = prices[size];
@@ -531,111 +546,120 @@
                 }
             });
 
-
-        // 차트 데이터 설정
-        const chartData = [200000, 220000, 210000, 230000, 250000];
-        const labels = ['1개월', '3개월', '6개월', '1년', '전체'];
-        const chartOptions = {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '가격 변동',
-                    data: chartData,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    },
-                    y: {
-                        beginAtZero: true
+            // 차트 데이터 설정
+            const chartData = [200000, 220000, 210000, 230000, 250000];
+            const labels = ['1개월', '3개월', '6개월', '1년', '전체'];
+            const chartOptions = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '가격 변동',
+                        data: chartData,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
+            };
+
+            // 차트 초기화
+            const ctxAllTime = document.getElementById('priceChartAllTime').getContext('2d');
+            const ctx1Month = document.getElementById('priceChart1Month').getContext('2d');
+            const ctx3Months = document.getElementById('priceChart3Months').getContext('2d');
+            const ctx6Months = document.getElementById('priceChart6Months').getContext('2d');
+            const ctx1Year = document.getElementById('priceChart1Year').getContext('2d');
+            
+            new Chart(ctxAllTime, chartOptions);
+            new Chart(ctx1Month, chartOptions);
+            new Chart(ctx3Months, chartOptions);
+            new Chart(ctx6Months, chartOptions);
+            new Chart(ctx1Year, chartOptions);
+
+            // 상품 종류에 따라 사이즈 테이블 로드
+            const productType = 'clothing'; // 이 값을 동적으로 설정 가능
+            if (productType === 'clothing') {
+                fetch('/product/detail/product/size_table')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('sizeTableContainer').innerHTML = data;
+                    });
             }
-        };
+        });
 
-        // 차트 초기화
-        const ctxAllTime = document.getElementById('priceChartAllTime').getContext('2d');
-        const ctx1Month = document.getElementById('priceChart1Month').getContext('2d');
-        const ctx3Months = document.getElementById('priceChart3Months').getContext('2d');
-        const ctx6Months = document.getElementById('priceChart6Months').getContext('2d');
-        const ctx1Year = document.getElementById('priceChart1Year').getContext('2d');
-        
-        new Chart(ctxAllTime, chartOptions);
-        new Chart(ctx1Month, chartOptions);
-        new Chart(ctx3Months, chartOptions);
-        new Chart(ctx6Months, chartOptions);
-        new Chart(ctx1Year, chartOptions);
+        document.addEventListener('DOMContentLoaded', function() {
+            let page = 0;
+            const size = 4;
+            const brandProductsContainer = document.getElementById('brandProducts');
 
-        // 상품 종류에 따라 사이즈 테이블 로드
-        const productType = 'clothing'; // 이 값을 동적으로 설정 가능
-        if (productType === 'clothing') {
-            fetch('/product/detail/product/size_table')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('sizeTableContainer').innerHTML = data;
-                });
-        }
-    });
+            const loadMoreProducts = () => {
+                // URL에 필요한 파라미터를 추가
+                const brand = encodeURIComponent(document.getElementById('brand').value);
+                const category = document.getElementById('category').value;
+                const pNo = document.getElementById('productNo').value;
+                const encodedBrand = encodeURIComponent(brand);
 
+                fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(product => {
+                                const col = document.createElement('div');
+                                col.classList.add('col');
 
-    document.addEventListener('DOMContentLoaded', function() {
-        let page = 0;
-        const size = 4;
-        const brandProductsContainer = document.getElementById('brandProducts');
-
-        const loadMoreProducts = () => {
-            fetch(`/brand/products?page=${page}&size=${size}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        data.forEach(product => {
-                            const col = document.createElement('div');
-                            col.classList.add('col');
-
-                            const card = `
-                                <div class="card border-0">
-                                    <div class="card-body">
-                                        <a href="/product/detail/${product.pNo}">
-                                            <img src="/files/img?imgUrl=${product.imageUrl}" alt="상품 이미지" class="rounded-4 w-100">
-                                        </a>
-                                        <div class="card-text py-2">
-                                            <div class="d-flex justify-content-start column-gap-1">
-                                                <p class="user-id fw-bold m-0">${product.productName}</p>
-                                            </div>
-                                            <div class="d-flex justify-content-start column-gap-1">
-                                                <p id="productPrice" class="m-0 ms-2">${product.minPrice} 원</p>
+                                const card = `
+                                    <div class="card border-0">
+                                        <div class="card-body">
+                                            <a href="/product/detail/${product.pNo}">
+                                                <img src="/files/img?imgUrl=${product.imageUrl}" alt="상품 이미지" class="rounded-4 w-100">
+                                            </a>
+                                            <div class="card-text py-2">
+                                                <div class="d-flex justify-content-start column-gap-1">
+                                                    <p class="user-id fw-bold m-0">${product.productName}</p>
+                                                </div>
+                                                <div class="d-flex justify-content-start column-gap-1">
+                                                    <p id="productPrice" class="m-0 ms-2">${product.minPrice} 원</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            `;
-                            col.innerHTML = card;
-                            brandProductsContainer.appendChild(col);
-                        });
-                        page++;
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        };
+                                `;
+                                col.innerHTML = card;
+                                brandProductsContainer.appendChild(col);
+                            });
+                            page++;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
 
-        const handleScroll = () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
-                loadMoreProducts();
-            }
-        };
+            const handleScroll = () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                    loadMoreProducts();
+                }
+            };
 
-        window.addEventListener('scroll', handleScroll);
+            window.addEventListener('scroll', handleScroll);
 
-        // Initial load
-        loadMoreProducts();
-    });
+            // Initial load
+            loadMoreProducts();
+        });
 
     </script>
 </body>

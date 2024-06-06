@@ -64,7 +64,11 @@
                         <div class="col-md-8">
                             <label for="brand" class="form-label">브랜드</label>
                             <select class="form-select" name="bName" id="brand">
-                                <option th:each="brand : ${brandList}" th:value="${brand.bName}" th:text="${brand.bName}"></option>
+                                <option th:each="brand : ${brandList}" 
+                                        th:value="${brand.bName}" 
+                                        th:text="${brand.bName}" 
+                                        th:selected="${brand.bName == product.bName}">
+                                </option>
                             </select>
                         </div>
 
@@ -119,19 +123,20 @@
                                 <!-- 사이즈 -->
                                 <td th:text="${opt.size}"></td>
                                 <!-- 옵션가격 -->
-                                <td><input type="text" class="form-control" name="optionPrices[${iterStat.index}]" th:value="${opt.optionPrice}" /></td>
+                                <td><input type="text" class="form-control" th:name="optionPrices[__${iterStat.index}__]" th:value="${opt.optionPrice}" /></td>
                                 <!-- 현재 재고 -->
                                 <td th:text="${opt.stockQuantity}"></td>
                                 <!-- 재고 추가 -->
-                                <td><input type="text" class="form-control" name="addedStockQuantities[${iterStat.index}]" /></td>
+                                <td><input type="text" class="form-control" th:name="addedStockQuantities[__${iterStat.index}__]" /></td>
                                 <td>
-                                    <select class="form-select" name="status[${iterStat.index}]" id="status">
+                                    <select class="form-select" th:name="status[__${iterStat.index}__]" id="status">
                                         <option th:selected="${opt.status == 'on'}" value="on">판매중</option>
                                         <option th:selected="${opt.status == 'off'}" value="off">판매중지</option>
                                     </select>
                                 </td>
-                                <input type="hidden" name="optionPNo[${iterStat.index}]" th:value="${opt.pNo}" />
-                                <input type="hidden" name="sizes[${iterStat.index}]" th:value="${opt.size}" />
+                                <input type="hidden" th:name="optionIds[__${iterStat.index}__]" th:value="${opt.optionId}" />
+                                <input type="hidden" th:name="optionPNos[__${iterStat.index}__]" th:value="${opt.pNo}" />
+                                <input type="hidden" th:name="sizes[__${iterStat.index}__]" th:value="${opt.size}" />
                             </tr>
                         </tbody>
                     </table>

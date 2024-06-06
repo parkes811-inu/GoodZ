@@ -60,7 +60,6 @@ public interface ProductMapper {
     // 상품의 옵션 목록 조회
     public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
 
-
     // 상품 옵션 추가
     public int insertProductOption(ProductOption productOption) throws Exception;
 
@@ -77,8 +76,5 @@ public interface ProductMapper {
 
     // 등록된 상품 정보 업데이트 하는데 사용
     public void updateProduct(Product product) throws Exception;
-
-    public ProductOption selectProductOptionById(int id) throws Exception;
-
-    public void updateProductOption(ProductOption option) throws Exception;
+    public void updateOptionsByProductId(ProductOption option) throws Exception;
 }
