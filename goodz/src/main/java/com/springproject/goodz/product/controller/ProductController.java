@@ -343,7 +343,42 @@ public class ProductController {
         
         // 쿼리 실행 후 결과 로그 출력
         List<Product> products = productService.findSameBrandProducts(brand, category, pNo, offset, size);
-        
+
+        for (Product product : products) {
+            // 상품 옵션 설정
+            List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+            product.setOptions(options);
+
+            // 상품 이미지 설정
+            Files file = new Files();
+            file.setParentNo(product.getPNo());
+            file.setParentTable(product.getCategory());
+            List<Files> productImages = fileService.listByParent(file);
+            
+            // 최저 가격 계산
+            if (!options.isEmpty()) {
+                int minPrice = options.stream()
+                                    .mapToInt(ProductOption::getOptionPrice)
+                                    .min()
+                                    .orElse(0);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
+            } else {
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
+            }
+            
+            // 첫 번째 이미지 URL 설정
+            if (!productImages.isEmpty()) {
+                product.setImageUrl(productImages.get(0).getFilePath());
+            } else {
+                product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+            }
+        }
+
         // 쿼리 결과를 로그로 확인
         System.out.println("쿼리 결과: " + products);
 
