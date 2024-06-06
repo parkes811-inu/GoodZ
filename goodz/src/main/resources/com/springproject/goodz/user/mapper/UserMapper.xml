@@ -18,8 +18,6 @@
         <result property="updatedAt" column="updated_at" />
         <result property="enabled" column="enabled" />
         <collection property="authList" resultMap="authMap" />
-        <collection property="FollowerList" resultMap="followMap" />
-        <collection property="FollowingList" resultMap="followMap" />
     </resultMap>
 
         
@@ -27,12 +25,6 @@
         <result property="authNo" column="auth_no" />
         <result property="userId" column="user_id" />
         <result property="auth" column="auth" />
-    </resultMap>
-
-    <resultMap type="Follow" id="followMap">
-        <result property="no" column="no" />
-        <result property="userId" column="user_id" />
-        <result property="follower_id" column="follower_id" />
     </resultMap>
 
     <resultMap type="ShippingAddress" id="shippingAddressMap">

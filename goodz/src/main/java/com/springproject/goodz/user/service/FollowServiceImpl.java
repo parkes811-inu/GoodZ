@@ -1,6 +1,9 @@
 package com.springproject.goodz.user.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ public class FollowServiceImpl implements FollowService{
     
     @Autowired
     private FollowMapper followMapper;
+
+    @Autowired
+    private UserService userService;
 
     // 팔로워 여부 조회
     @Override
@@ -37,18 +43,52 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public List<Follow> followerList(String userId) throws Exception {
 
-        List<Follow> followerList = followerList(userId);
+        List<Follow> followerList = followMapper.followerList(userId);
 
         return followerList;
+    }
+
+    // 팔로워 목록과 수 조회
+    @Override
+    public Map<String, Object> getFollowerDetails(String userId) throws Exception {
+        List<Follow> followers = followerList(userId);
+        List<Users> followerList = new ArrayList<>();
+
+        for (Follow follow : followers) {
+            Users follower = userService.select(follow.getFollowerId());
+            followerList.add(follower);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("followerList", followerList);
+        result.put("followerCount", followerList.size());
+
+        return result;
     }
 
     // 팔로잉 조회
     @Override
     public List<Follow> followingList(String followerId) throws Exception {
 
-        List<Follow> followingList = followingList(followerId);
+        List<Follow> followingList = followMapper.followingList(followerId);
 
         return followingList;
+    }
+
+    // 팔로잉 목록과 수 조회
+    @Override
+    public Map<String, Object> getFollowingDetails(String userId) throws Exception{
+        List<Follow> followings = followingList(userId);
+        List<Users> followingList = new ArrayList<>();
+
+        for (Follow follow : followings) {
+            Users following = userService.select(follow.getFollowingId());
+            followingList.add(following);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("followingList", followingList);
+        result.put("followingCount", followingList.size());
+
+        return result;
     }
 
     // 팔로우 요청

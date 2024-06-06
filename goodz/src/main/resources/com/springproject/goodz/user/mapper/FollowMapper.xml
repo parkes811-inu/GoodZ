@@ -5,28 +5,6 @@
 
 <mapper namespace="com.springproject.goodz.user.mapper.FollowMapper">
 
-    <resultMap type="Users" id="userMap">
-        <id property="userId" column="user_id" javaType="String"/>
-        <result property="username" column="username" />
-        <result property="nickname" column="nickname" />
-        <result property="password" column="password" />
-        <result property="birth" column="birth" />
-        <result property="phoneNumber" column="phone_number" />
-        <result property="profilePictureUrl" column="profile_picture_url" />
-        <result property="account" column="account" />
-        <result property="createdAt" column="created_at" />
-        <result property="updatedAt" column="updated_at" />
-        <result property="enabled" column="enabled" />
-        <collection property="authList" resultMap="authMap" />
-        <collection property="FollowerList" resultMap="followMap" />
-        <collection property="FollowingList" resultMap="followMap" />
-    </resultMap>
-
-    <resultMap type="Follow" id="followMap">
-        <result property="no" column="no" />
-        <result property="userId" column="user_id" />
-        <result property="followerId" column="follower_id" />
-    </resultMap>
 
     <!-- 팔로워 여부 조회 -->
     <select id="isFollower">
@@ -43,7 +21,7 @@
     </select>
 
     <!-- 팔로잉 조회 -->
-    <select id="followingList" resultType="Users">
+    <select id="followingList" resultType="follow">
         SELECT *
         FROM follow
         WHERE follower_id = #{followerId};

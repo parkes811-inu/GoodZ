@@ -20,7 +20,9 @@ public class Users {
     private int enabled;
     private List<UserAuth> authList;
 
-    // private List<Follow> FollowerList;
-    // private List<Follow> FollowingList;
+    private List<Users> followList;  // 팔로워/잉 목록
+
+    private int followerCount;          // 팔로워 수
+    private int followingCount;          // 팔로잉 수
 
 }

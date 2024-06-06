@@ -5,14 +5,17 @@ import lombok.Data;
 @Data
 public class Follow {
 
-    private int no;             // 고유번호
-    private String userId;      // 기준 아이디
-    private String followerId;  // 팔로워 아이디
-    
-    private String nickname;    // 닉네임 - 프로필 URL경로 때문에 필요함
+    private int no;                     // 고유번호
+    private String userId;              // 프로필 아이디
 
-    private int followerCount;  // 팔로워 수
-    private int followingCount; // 팔로잉 수
+    private String followerId;          // 팔로워 아이디
+    private String followerNickname;    // 팔로워 닉네임
+    
+    private String followingId;         // 팔로워 아이디
+    private String followingNickname;   // 팔로워 닉네임
+    
+    private int followerCount;          // 팔로워 수
+    private int followingCount;         // 팔로잉 수
 
 
     /** 예시

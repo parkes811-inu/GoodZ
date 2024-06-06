@@ -1,0 +1,15 @@
+<th:block th:if="${profileUser.followList.isEmpty()}">
+    <p class="text-center text-secondary">조회된 유저가 없습니다!</p>
+</th:block>
+<th:block th:each="follow : ${profileUser.followList}">
+    <div class="follow d-flex justify-content-between mb-3">
+        <a href="#" class="d-flex" style="text-decoration: none; color: black;">
+            <div class="follow_img me-2">
+                <img th:src="${follow.profilePictureUrl}" alt="프로필 이미지" class="follow_img" >
+            </div>
+            <span class="fw-bold my-auto" th:text="${follow.nickname}">유저닉네임</span>
+        </a>
+        <!-- <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" th:onclick="'updateFollow(this,' + ${follow.userId} + ')'"> 팔로우 </button> -->
+        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+    </div>
+</th:block>

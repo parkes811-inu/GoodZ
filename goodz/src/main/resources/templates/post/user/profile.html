@@ -42,6 +42,38 @@
             border: none;
             background: none;
         }
+        
+    </style>
+    <!-- 팔로워/팔로잉 모달 -->
+    <style>
+        .modal-dialog {
+            width: 40%;
+            min-width: 320px;
+            max-width: 400px;
+        }
+        .follow_img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* 둥근 모서리 */
+            overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
+        }
+        .follow_img img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+        }
+        .follow button {
+            height: 30px;
+            margin: auto 0;
+        }
+        /* followBtn 클래스를 가진 모든 버튼의 hover 효과 없애기 */
+        .followBtn:hover {
+            background-color: inherit !important;
+            border-color: inherit !important;
+            color: inherit !important;
+            
+        }
+
     </style>
 </head>
 <body layout:fragment="content">
@@ -67,12 +99,45 @@
                         </th:block>
                     </div>
 
-                    <!-- 팔로우/팔로잉 정보 -->
+                    <!-- 팔로워/팔로잉 정보 -->
                     <div class="followInfo d-flex text-start">
-                        <button type="button" class="btn ps-0 pe-2 py-0"><span>팔로워 </span><span class="follower">99</span></button>
+                        <button type="button" class="btn ps-0 pe-2 py-0" data-bs-toggle="modal" data-bs-target="#modal-follower"><span>팔로워 </span><span class="follower">99</span></button>
                         <span class="text-body-tertiary ">|</span>
-                        <button type="button" class="btn ps-2 pe-0 py-0"><span>팔로잉 </span><span class="following">99</span></button>
+                        <button type="button" class="btn ps-2 pe-0 py-0" data-bs-toggle="modal" data-bs-target="#modal-following"><span>팔로잉 </span><span class="following">99</span></button>
                     </div>
+
+                    <!-- 팔로워 모달 -->
+                    <div class="modal fade" tabindex="-1" id="modal-follower">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center">팔로워</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <!-- [DB] 팔로워 목록 -->
+                                <div class="modal-body" id="followerList">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 팔로잉 모달 -->
+                    <div class="modal fade" tabindex="-1" id="modal-following">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title text-center">팔로잉</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <!-- [DB] 팔로잉 목록 -->
+                                <div class="modal-body" id="followingList">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div th:if="${loginUser != null and loginUser.userId == requested.userId}">
@@ -84,7 +149,7 @@
                 </a>
             </div>
             <!-- 비로그인하거나 작성자와 로그인한 유저가 다른 경우 -->
-            <th:block th:if="${loginUser == null or loginUser.userId != writer.userId}">
+            <th:block th:if="${loginUser == null or loginUser.userId != requested.userId}">
                 <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick=""> 팔로우 </button>
             </th:block>
         </div>
@@ -129,13 +194,156 @@
             </th:block>
         </div>
     </div>
-
+    
     <!-- for like & wishList -->
     <th:block th:if="${loginUser != null}">
         <input type="hidden" id="isLoggedIn" th:data-logged-in="${loginUser != null}">
         <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
     </th:block>
+    
+    <script>
+        let profileId = "[[${requested.userId}]]";
+        
+        
+        followerList();
+        followingList();
+        
 
+        /* 종속된 팔로워 조회 */
+        function followerList() {
+            let request = new XMLHttpRequest();
+    
+            // 팔로워 조회
+            request.open('GET', '/follower/'+profileId);
+            request.send();
+    
+            request.onreadystatechange = function () {
+                
+                // 요청 성공 시,
+                if (request.readyState == request.DONE && request.status == 200) {
+                    // 팔로워 목록 출력
+                    let response = request.responseText;
+    
+                    // 서버에서 렌더링한 HTML로 갱신(SSR)
+                    let data = response;
+    
+                    let followerList = document.getElementById('followerList');
+                    followerList.innerHTML = data;
+                }
+            }
+        }
+
+        /* 종속된 팔로잉 조회 */
+        function followingList() {
+            let request = new XMLHttpRequest();
+    
+            // 팔로잉 조회
+            request.open('GET', '/following/' +profileId);
+            request.send();
+    
+            request.onreadystatechange = function () {
+                
+                // 요청 성공 시,
+                if (request.readyState == request.DONE && request.status == 200) {
+                    // 팔로워 목록 출력
+                    let response = request.responseText;
+    
+                    // 서버에서 렌더링한 HTML로 갱신(SSR)
+                    let data = response;
+    
+                    let followingList = document.getElementById('followingList');
+                    followingList.innerHTML = data;
+                }
+            }
+        }
+
+        function updateFollow(element) {
+            
+            // 로그인 여부 체크; 비로그인 시, 로그인 페이지로 튕김
+            if (!isLoggedIn) {
+                alert('로그인 후 이용 가능합니다.');
+                let moveToLogin = confirm('로그인 페이지로 이동하시겠습니까?');
+                
+                if (moveToLogin) {
+                    window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                    return;
+                }
+                return;
+            }
+
+            let requestId = element.getAttribute('data-profileId');
+            let $csrfToken = document.getElementById('csrfToken');
+            let csrfToken = $csrfToken.value;
+
+            let data = {
+                'userId' : requestId,
+                'followerId' : userId
+            };
+            
+            let $button = element.getAttribute('class');
+
+            //팔로우 요청
+            if ($button === 'followBtn btn btn-dark btn-sm') {
+
+                console.log("팔로우 요청" + userId + " -> " + requestId);
+                console.dir(data);
+
+                let request = new XMLHttpRequest();
+    
+                request.open('POST', '/follow');
+                request.setRequestHeader('content-Type', 'application/json');
+                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                request.send(JSON.stringify(data));
+
+                // 요청상태 체킹
+                request.onreadystatechange = function () {
+                    if (request.readyState == request.DONE && request.status == 200) {
+                        
+                        let response = request.responseText;
+                        
+                        if (response == 'SUCCESS') {
+                            console.log('팔로우 등록 성공');
+
+                            // 버튼 변경: 팔로우 -> 팔로잉
+                            element.setAttribute('class', 'followBtn btn btn-outline-secondary btn-sm');
+                            element.innerText = '팔로잉';
+                        }
+                    }
+                }
+                
+
+            // 언팔 요청
+            } else if($button === 'followBtn btn btn-outline-secondary btn-sm') {
+
+                console.log("언팔 요청" + userId + " -/-> " + requestId);
+                console.dir(data);
+
+                let request = new XMLHttpRequest();
+
+                request.open('DELETE', '/follow');
+                request.setRequestHeader('content-Type', 'application/json');
+                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                request.send(JSON.stringify(data));
+
+                // 요청상태 체킹
+                request.onreadystatechange = function () {
+                    if (request.readyState == request.DONE && request.status == 200) {
+                        console.log('언팔처리 성공');
+
+                        let response = request.responseText;
+
+                        if (response == 'SUCCESS') {
+                            element.setAttribute('class', 'followBtn btn btn-dark btn-sm');
+                            element.innerText = '팔로우';
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    </script>
 </body>
 </html>
