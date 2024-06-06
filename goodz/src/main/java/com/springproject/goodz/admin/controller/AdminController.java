@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mysql.cj.protocol.ExportControlled;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;

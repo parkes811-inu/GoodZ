@@ -2,7 +2,6 @@ package com.springproject.goodz.pay.controller;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,7 +29,6 @@ import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Controller
 @RequestMapping("/pay")
@@ -49,17 +47,19 @@ public class PayController {
     private PayService payService;
 
     /**
-     * 결제 페이지 화면 
-     * @param model
-     * @param session
-     * @return
+     * 결제 페이지 화면
+     * @param pNo 상품 번호
+     * @param size 상품 사이즈
+     * @param model 모델
+     * @param session 세션
+     * @return 결제 페이지
      * @throws Exception
      */
     @GetMapping("/buy/{p_no}")
     public String buy(@PathVariable("p_no") int pNo,
-                    @RequestParam("size") String size,
-                    Model model, HttpSession session) throws Exception {
-        
+                      @RequestParam("size") String size,
+                      Model model, HttpSession session) throws Exception {
+
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
@@ -83,7 +83,6 @@ public class PayController {
         int purchasePrice = 0;
         int optionId = 0;
         for (ProductOption option : options) {
-
             if (option.getSize().equals(size)) {
                 purchasePrice = option.getOptionPrice();
             }
@@ -116,7 +115,7 @@ public class PayController {
         file.setParentNo(product.getPNo());
         file.setParentTable(product.getCategory());
         List<Files> productImages = fileService.listByParent(file);
-        
+
         // 첫 번째 이미지 URL 설정
         if (!productImages.isEmpty()) {
             product.setImageUrl(productImages.get(0).getFilePath());
@@ -129,62 +128,67 @@ public class PayController {
         model.addAttribute("image", productImages);
         model.addAttribute("price", purchasePrice);
         model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
-        
+
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("hasAddress", !addresses.isEmpty());
         model.addAttribute("addresses", addresses);
-        
+
         return "/pay/buy"; // 상품 구매 페이지로 이동
     }
 
-
-    // 결제 성공 시 호출되는 메서드 (POST 요청)
+    /**
+     * 결제 성공 시 호출되는 메서드 (POST 요청)
+     * @param purchaseNo 구매 번호
+     * @param paymentKey 결제 키
+     * @param orderId 주문 ID
+     * @param amount 결제 금액
+     * @return 결제 결과
+     * @throws Exception
+     */
     @ResponseBody
-    @PostMapping("/success")
+    @PostMapping("/buy")
     public String updatePurchase(@RequestParam("purchaseNo") int purchaseNo,
-                                @RequestParam("paymentKey") String paymentKey,
-                                @RequestParam("orderId") String orderId,
-                                @RequestParam("amount") int amount) throws Exception {
-       // Purchase 객체 생성 및 필드 설정
+                                 @RequestParam("paymentKey") String paymentKey,
+                                 @RequestParam("orderId") String orderId,
+                                 @RequestParam("amount") int amount) throws Exception {
+        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
+
         Purchase purchase = new Purchase();
         purchase.setPurchaseNo(purchaseNo);
         purchase.setOrderId(orderId);
         purchase.setPurchaseState("paid");
-        purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // 현재 시간 설정
+        purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
-        // 구매 정보 업데이트
-        int result = payService.updatePurchse(purchase);
+        log.info("Purchase 객체 생성됨: {}", purchase);
+
+        int result = payService.updatePurchase(purchase);
         if (result > 0) {
-            return "/pay/success";
+            log.info("구매 업데이트 성공");
+            return "success";
         }
-        return "/pay/fail";
+        log.info("구매 업데이트 실패");
+        return "fail";
     }
-    
-    @GetMapping("/fail")
-    public String fail() {
-        return "/pay/fail";
-    }
-    
 
     /**
      * 판매 페이지 화면
-     * @param pNo
-     * @param size
-     * @param price
-     * @param model
-     * @param session
-     * @return
+     * @param pNo 상품 번호
+     * @param size 상품 사이즈
+     * @param price 상품 가격
+     * @param model 모델
+     * @param session 세션
+     * @return 판매 페이지
      * @throws Exception
      */
     @GetMapping("/sell/{p_no}")
     public String sell(@PathVariable("p_no") int pNo,
-                    @RequestParam("size") String size,
-                    @RequestParam("price") int price,
-                    Model model, HttpSession session) throws Exception{
-        
+                       @RequestParam("size") String size,
+                       @RequestParam("price") int price,
+                       Model model, HttpSession session) throws Exception {
+
         Users user = (Users) session.getAttribute("user");
-        if(user == null){
+        if (user == null) {
             return "redirect:/user/login";
         }
 
@@ -232,15 +236,15 @@ public class PayController {
 
     /**
      * 판매 등록 처리
-     * @param productNo
-     * @param courier
-     * @param trackingNumber
-     * @param size
-     * @param address
-     * @param salePrice
-     * @param session
-     * @param model
-     * @return
+     * @param productNo 상품 번호
+     * @param courier 택배사
+     * @param trackingNumber 운송장 번호
+     * @param size 상품 사이즈
+     * @param address 배송 주소
+     * @param salePrice 판매 가격
+     * @param session 세션
+     * @param model 모델
+     * @return 판매 등록 결과 페이지
      * @throws Exception
      */
     @PostMapping("/sell")
@@ -281,13 +285,15 @@ public class PayController {
         }
     }
 
-
+    /**
+     * 결제 또는 판매 완료 페이지
+     * @param type 완료 타입 (buy 또는 sell)
+     * @param model 모델
+     * @return 완료 페이지
+     */
     @GetMapping("/complete")
     public String complete(@RequestParam("type") String type, Model model) {
         model.addAttribute("type", type);
         return "/pay/complete";
     }
-
-    
 }
-

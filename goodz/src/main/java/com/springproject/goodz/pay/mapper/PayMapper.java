@@ -12,7 +12,7 @@ public interface PayMapper {
     public int insertPurchase(Purchase purchase) throws Exception;
 
     // 구매 업데이트
-    public int updatePurchse(Purchase purchase) throws Exception;
+    public int updatePurchase(Purchase purchase) throws Exception;
 
     // 판매
     public int insertSale(Sales sales) throws Exception;

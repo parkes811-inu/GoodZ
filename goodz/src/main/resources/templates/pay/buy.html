@@ -5,9 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>구매하기</title>
     <script src="https://js.tosspayments.com/v1/payment-widget"></script>
-    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         .product_img {
             margin-right: 20px;
@@ -99,14 +101,16 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form action="/pay/buy" id="buyForm" method="post" >
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <form action="/pay/buy" id="buyForm" method="post">
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
             <input type="hidden" id="initialPrice" th:value="${initialPrice}" />
             <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
             <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
+            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
+            <input type="hidden" id="productName" name="productName" th:value="${product.productName}" />
+
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
             </div>
@@ -130,7 +134,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- 배송 주소 -->
             <section>
                 <div class="section_unit mb-4">
@@ -188,7 +192,6 @@
                     </div>
                 </div>
 
-
                 <!-- 배송 방법 -->
                 <div class="section_unit mb-4">
                     <div class="section_content p-3 border rounded mb-4">
@@ -203,7 +206,7 @@
                     </div>
                 </div>
             </section>
-    
+
             <!-- 결제 방법 : toss payment api-->
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded">
@@ -213,7 +216,7 @@
                     <div id="agreement"></div>
                 </div>
             </div>
-    
+
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded order_summary">
                     <!-- 최종 주문 정보 -->
@@ -244,15 +247,16 @@
         </div>
     </div>
 
-    <script th:inline="javascript">
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             // 주소 선택 함수
             window.selectAddress = function (recipientName, phoneNumber, address) {
                 document.getElementById('recipientName').textContent = recipientName;
                 document.getElementById('phoneNumber').textContent = phoneNumber;
                 document.getElementById('address').textContent = address;
+                document.getElementById('hiddenAddress').value = address; // hidden input field update
             }
-        
+    
             // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
             document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
                 const target = event.target.closest('li.list-group-item');
@@ -263,64 +267,100 @@
                     selectAddress(recipientName, phoneNumber, address);
                 }
             });
-        
+    
             // 결제 관련 스크립트
             const button = document.getElementById("payment-button"); // 결제 버튼 요소
-            const csrfToken = /*[[${_csrf.token}]]*/ ""; // CSRF 토큰
-            const amount = /*[[${price+3000}]]*/ 0; // 상품 가격
-            const productName = /*[[${product.productName}]]*/ "상품명"; // 상품명
-            const purchaseNo = /*[[${purchaseNo}]]*/ 0; // purchaseNo
+            // const csrfToken = document.querySelector('input[name="_csrf"]').value; // CSRF 토큰
+            const amount = parseInt(document.getElementById('purchasePrice').value) + 3000; // 상품 가격에 3000 더하기
+            const productName = document.getElementById('productName').value; // 상품명
+            const purchaseNo = document.getElementById('purchaseNo').value; // purchaseNo
+    
             let recipientName = document.getElementById('recipientName').textContent;
             let phoneNumber = document.getElementById('phoneNumber').textContent;
-        
+    
+            var csrfToken = $("meta[name='_csrf']").attr("content");
+            var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            
             // 전화번호에서 특수문자 제거
             phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
-        
+    
             // 랜덤 문자열 생성 함수
             function generateRandomString() {
                 return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             }
-        
+    
             console.log("결제 위젯 초기화 시작");
             const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 결제 위젯 클라이언트 키
             const customerKey = generateRandomString(); // 고객 키
             const paymentWidget = PaymentWidget(clientKey, customerKey); // 결제 위젯 초기화
-        
+    
             // 결제 수단 UI 렌더링
             const paymentMethodWidget = paymentWidget.renderPaymentMethods(
                 "#payment-method",
                 { value: amount },
                 { variantKey: "DEFAULT" }
             );
-        
+    
             // 약관 동의 렌더링
             paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
-        
+    
             // 결제 위젯 렌더링 완료 시 결제 버튼 활성화
             paymentMethodWidget.on("ready", function () {
                 console.log("결제 위젯 렌더링 완료");
                 button.disabled = false; // 결제 버튼 활성화
             });
-        
+    
             // 결제 버튼 클릭 이벤트
             button.addEventListener("click", function () {
                 console.log("결제 요청 시작");
                 paymentWidget.requestPayment({
                     orderId: generateRandomString(), // 주문 ID
                     orderName: productName, // 주문명
-                    successUrl: window.location.origin + "/pay/success?purchaseNo=" + purchaseNo, // 성공 URL
-                    failUrl: window.location.origin + "/pay/fail", // 실패 URL
+                    successUrl: window.location.origin + "/pay/complete?type=buy", // 성공 URL
+                    failUrl: window.location.origin + "/pay/complete?type=fail", // 실패 URL
                     customerName: recipientName, // 고객 이름
                     customerMobilePhone: phoneNumber, // 고객 전화번호
+                    purchaseNo: purchaseNo,
                     headers: {
                         'X-CSRF-TOKEN': csrfToken // CSRF 토큰
                     }
                 }).then((response) => {
+                    console.log("결제 요청 응답:", response);
                     if (response.status === 'SUCCESS') {
-                        window.location.href = window.location.origin + "/pay/success?purchaseNo=" + purchaseNo; // 성공 시 리다이렉트
+                        console.log("결제 성공, 서버에 결제 성공 상태 업데이트 시작");
+                        // Ajax를 사용하여 서버에 결제 성공 상태 업데이트
+                        $.ajax({
+                            type: "POST",
+                            url: "/pay/buy", // 결제 성공 처리 엔드포인트
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            data: {
+                                paymentKey: response.paymentKey,
+                                orderId: response.orderId,
+                                amount: amount,
+                                purchaseNo: purchaseNo
+                            },
+                            success: function (result) {
+                                console.log("서버 결제 성공 상태 업데이트 응답:", result);
+                                if (result === "success") {
+                                    window.location.href = window.location.origin + `/pay/complete?type=buy`; // 성공 시 리다이렉트
+                                } else {
+                                    window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error confirming payment:", error);
+                                window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                            }
+                        });
                     } else {
-                        window.location.href = window.location.origin + "/pay/fail"; // 실패 시 리다이렉트
+                        console.error("결제 실패:", response);
+                        window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
                     }
+                }).catch((error) => {
+                    console.error("결제 요청 중 에러:", error);
+                    window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
                 });
             });
         });
