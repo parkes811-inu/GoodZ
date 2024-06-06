@@ -66,11 +66,8 @@ public class SecurityConfig {
           // .successHandler(authSuccessHandler)
           // .userInfoEndpoint()
           // .userService(customOAuth2UserService)
-         )	
-         ;
-
-                                .userInfoEndpoint()
-                                .userService(oAuthService));
+            .userInfoEndpoint()
+            .userService(oAuthService));
          // .successHandler(authSuccessHandler)
          // .userInfoEndpoint()
          // .userService(customOAuth2UserService)

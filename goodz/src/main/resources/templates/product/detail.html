@@ -349,24 +349,13 @@
                     <h5 class="text-md-start fw-bold mt-5">이 브랜드의 다른 상품</h5>
                     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
                         <!-- 반복문으로 최대 4개 까지 -->
-                        <div th:each="brand : ${brandProducts}" class="col">
-                            <div class="card border-0">
-                                <div class="card-body">
-                                    <a th:href="@{/product/detail/{id}(id=${brand.pNo})}">
-                                        <img th:src="@{/files/img(imgUrl=${brand.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
-                                    </a>
-                                    <div class="card-text py-2">
-                                        <div class="d-flex justify-content-start column-gap-1">
-                                            <p class="user-id fw-bold m-0" th:text="${brand.productName}"></p>
-                                        </div>
-                                        <div class="d-flex justify-content-start column-gap-1">
-                                            <p id="productPrice" class="m-0 ms-2" th:text="${brand.minPrice} + ' 원'"></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
+                    <p id="noProductsMessage" style="display: none;"> 
+                        <br><br> <strong>조회된 상품이 없습니다.</strong>
+                        <br><br>
+                    </p>
+
                 </div>
             </div>
         </div>
@@ -601,14 +590,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             let page = 0;
             const size = 4;
+            const maxPages = 10;
             const brandProductsContainer = document.getElementById('brandProducts');
+            const noProductsMessage = document.getElementById('noProductsMessage');
+            let allProductsLoaded = false;
 
             const loadMoreProducts = () => {
-                // URL에 필요한 파라미터를 추가
+                if (allProductsLoaded || page >= maxPages) return;
+
                 const brand = encodeURIComponent(document.getElementById('brand').value);
                 const category = document.getElementById('category').value;
                 const pNo = document.getElementById('productNo').value;
-                const encodedBrand = encodeURIComponent(brand);
 
                 fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
                     .then(response => {
@@ -618,6 +610,16 @@
                         return response.json();
                     })
                     .then(data => {
+                        if (data.length === 0 && page === 0) {
+                            noProductsMessage.style.display = 'block';
+                        } else {
+                            noProductsMessage.style.display = 'none';
+                        }
+
+                        if (data.length < size) {
+                            allProductsLoaded = true;
+                        }
+
                         if (data.length > 0) {
                             data.forEach(product => {
                                 const col = document.createElement('div');
@@ -627,14 +629,14 @@
                                     <div class="card border-0">
                                         <div class="card-body">
                                             <a href="/product/detail/${product.pNo}">
-                                                <img src="/files/img?imgUrl=${product.imageUrl}" alt="상품 이미지" class="rounded-4 w-100">
+                                                <img src="/files/img?imgUrl=${encodeURIComponent(product.imageUrl)}" alt="상품 이미지" class="rounded-4 w-100">
                                             </a>
                                             <div class="card-text py-2">
                                                 <div class="d-flex justify-content-start column-gap-1">
                                                     <p class="user-id fw-bold m-0">${product.productName}</p>
                                                 </div>
                                                 <div class="d-flex justify-content-start column-gap-1">
-                                                    <p id="productPrice" class="m-0 ms-2">${product.minPrice} 원</p>
+                                                    <p id="productPrice" class="m-0 ms-2">${product.formattedMinPrice}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -650,14 +652,12 @@
             };
 
             const handleScroll = () => {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
                     loadMoreProducts();
                 }
             };
 
             window.addEventListener('scroll', handleScroll);
-
-            // Initial load
             loadMoreProducts();
         });
 
