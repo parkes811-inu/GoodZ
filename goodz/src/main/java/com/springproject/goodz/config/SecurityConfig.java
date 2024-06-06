@@ -59,22 +59,14 @@ public class SecurityConfig {
         );
        
         
-         // OAuth 로그인 설정
-         http.oauth2Login(login -> login
-
-         .loginPage("/login")
-          // .successHandler(authSuccessHandler)
-          // .userInfoEndpoint()
-          // .userService(customOAuth2UserService)
-         )	
-         ;
-
-                                .userInfoEndpoint()
-                                .userService(oAuthService));
-         // .successHandler(authSuccessHandler)
-         // .userInfoEndpoint()
-         // .userService(customOAuth2UserService)
-
+        // OAuth 로그인 설정
+        http.oauth2Login(login -> login
+        .loginPage("/login")
+        // .successHandler(authSuccessHandler)
+        // .userInfoEndpoint()
+        // .userService(customOAuth2UserService)
+        )	
+        ;
 
 
         // ✅ 사용자 정의 인증 설정
