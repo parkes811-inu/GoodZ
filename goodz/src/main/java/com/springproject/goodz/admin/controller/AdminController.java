@@ -27,7 +27,6 @@ import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j

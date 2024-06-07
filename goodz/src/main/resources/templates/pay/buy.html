@@ -316,52 +316,54 @@
                 paymentWidget.requestPayment({
                     orderId: generateRandomString(), // 주문 ID
                     orderName: productName, // 주문명
-                    successUrl: window.location.origin + "/pay/complete?type=buy", // 성공 URL
+                    successUrl: window.location.origin + `/pay/complete?type=buy&purchaseNo=${purchaseNo}`, // 성공 URL
                     failUrl: window.location.origin + "/pay/complete?type=fail", // 실패 URL
                     customerName: recipientName, // 고객 이름
                     customerMobilePhone: phoneNumber, // 고객 전화번호
-                    purchaseNo: purchaseNo,
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken // CSRF 토큰
-                    }
-                }).then((response) => {
-                    console.log("결제 요청 응답:", response);
-                    if (response.status === 'SUCCESS') {
-                        console.log("결제 성공, 서버에 결제 성공 상태 업데이트 시작");
-                        // Ajax를 사용하여 서버에 결제 성공 상태 업데이트
-                        $.ajax({
-                            type: "POST",
-                            url: "/pay/buy", // 결제 성공 처리 엔드포인트
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            data: {
-                                paymentKey: response.paymentKey,
-                                orderId: response.orderId,
-                                amount: amount,
-                                purchaseNo: purchaseNo
-                            },
-                            success: function (result) {
-                                console.log("서버 결제 성공 상태 업데이트 응답:", result);
-                                if (result === "success") {
-                                    window.location.href = window.location.origin + `/pay/complete?type=buy`; // 성공 시 리다이렉트
-                                } else {
-                                    window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("Error confirming payment:", error);
-                                window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
-                            }
-                        });
-                    } else {
-                        console.error("결제 실패:", response);
-                        window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
-                    }
-                }).catch((error) => {
-                    console.error("결제 요청 중 에러:", error);
-                    window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
-                });
+                    // purchaseNo: purchaseNo,
+                    // headers: {
+                    //     'X-CSRF-TOKEN': csrfToken // CSRF 토큰
+                    // }
+                })
+                // .then((response) => {
+                //     console.log("결제 요청 응답:", response);
+                //     if (response.status === 'SUCCESS') {
+                //         console.log("결제 성공, 서버에 결제 성공 상태 업데이트 시작");
+                //         // Ajax를 사용하여 서버에 결제 성공 상태 업데이트
+                //         $.ajax({
+                //             type: "POST",
+                //             url: "/pay/buy", // 결제 성공 처리 엔드포인트
+                //             headers: {
+                //                 'X-CSRF-TOKEN': csrfToken
+                //             },
+                //             data: {
+                //                 paymentKey: response.paymentKey,
+                //                 orderId: response.orderId,
+                //                 amount: amount,
+                //                 purchaseNo: purchaseNo
+                //             },
+                //             success: function (result) {
+                //                 console.log("서버 결제 성공 상태 업데이트 응답:", result);
+                //                 if (result === "success") {
+                //                     // 여기로
+                //                     window.location.href = window.location.origin + `/pay/complete?type=buy&purchaseNo=${purchaseNo}`; // 성공 시 리다이렉트
+                //                 } else {
+                //                     window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                //                 }
+                //             },
+                //             error: function (xhr, status, error) {
+                //                 console.error("Error confirming payment:", error);
+                //                 window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                //             }
+                //         });
+                //     } else {
+                //         console.error("결제 실패:", response);
+                //         window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                //     }
+                // }).catch((error) => {
+                //     console.error("결제 요청 중 에러:", error);
+                //     window.location.href = window.location.origin + `/pay/complete?type=fail`; // 실패 시 리다이렉트
+                // });
             });
         });
     </script>
