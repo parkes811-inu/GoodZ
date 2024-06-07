@@ -8,8 +8,15 @@ import org.apache.ibatis.annotations.Param;
 public interface AdminMapper {
     
     // 유저가 판매한 상품 단일 조회
-    public Map<String, Object> userSale(int sNo) throws Exception;
+    Map<String, Object> userSale(@Param("saleNo") int saleNo) throws Exception;
 
     // 유저가 판매한 상품 상태 변경
-    public void updateUserSaleState(@Param("sNo") int sNo, @Param("saleState") String saleState) throws Exception;
+    void updateUserSaleState(@Param("sNo") int sNo, @Param("saleState") String saleState) throws Exception;
+
+    // 판매 완료 시 상품 옵션의 재고 수량 증가 (상태가 completed가 되었을때)
+    void incrementStockQuantity(@Param("pNo") int pNo, @Param("size") String size) throws Exception;
+
+    // 정산 완료에서 다른 상태로 변경 시 상품 옵션의 재고 수량 감소
+    void decrementStockQuantity(@Param("pNo") int pNo, @Param("size") String size) throws Exception;
 }
+

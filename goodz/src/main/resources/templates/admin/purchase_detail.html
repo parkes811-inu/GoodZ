@@ -85,8 +85,8 @@
                 <input type="text" id="user-ID" th:value="${saleDetail.userId}" readonly>
             </div>
             <div class="form-group">
-                <label for="user-ID">반송 주소</label>
-                <input type="text" id="user-ID" th:value="${saleDetail.address}" readonly>
+                <label for="address">반송 주소</label>
+                <input type="text" id="address" th:value="${saleDetail.address}" readonly>
             </div>
             <div class="form-group">
                 <label for="sales-number">판매 번호</label>
@@ -97,16 +97,20 @@
                 <input type="text" id="product-number" th:value="${saleDetail.productNo}" readonly>
             </div>
             <div class="form-group">
-                <label for="product-number">상품명</label>
-                <input type="text" id="product-number" th:value="${saleDetail.productName}" readonly>
+                <label for="product-name">상품명</label>
+                <input type="text" id="product-name" th:value="${saleDetail.productName}" readonly>
             </div>
             <div class="form-group">
-                <label for="product-number">사이즈</label>
-                <input type="text" id="product-number" th:value="${saleDetail.size}" readonly>
+                <label for="size">사이즈</label>
+                <input type="text" id="size" th:value="${saleDetail.size}" readonly>
             </div>
             <div class="form-group">
                 <label for="tracking-no">운송장 번호</label>
                 <input type="text" id="tracking-no" th:value="${saleDetail.saleTrackingNo}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="account">정산 계좌</label>
+                <input type="text" id="account" th:value="${saleDetail.account}" readonly>
             </div>
             
             <div class="form-group">
