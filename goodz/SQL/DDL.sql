@@ -14,12 +14,14 @@ CREATE TABLE `Brand`(
 
 DROP TABLE IF EXISTS `user`
 
--- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
--- ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
+ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
 
--- ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
+ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
 
--- ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+
+-- 카카오 로그인 할때 터미널에 에러 뜨면 user에 쟤네들을 NULL 줘야합니다 / 정용
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
@@ -166,19 +168,19 @@ CREATE TABLE `Tag` (
 -- ) COMMENT='상품';
 
 
--- DROP TABLE IF EXISTS `user_social`
-
--- CREATE TABLE `user_social` (
---     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
---     `username` VARCHAR(100) NOT NULL,
---     `nickname` VARCHAR(100) NULL, -- 유저 닉네임
---     `PROVIDER` VARCHAR(50) NOT NULL,
---     `SOCIAL_ID` VARCHAR(255) NOT NULL,
---     `PICTURE` TEXT DEFAULT NULL, 
---     `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     PRIMARY KEY (`user_id`)
--- );
+DROP TABLE IF EXISTS `user_social`
+-- 해당 테이블은 카카오 소셜 로그인 할때 쓰는 테이블입니다 /정용
+CREATE TABLE `user_social` (
+    `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
+    `username` VARCHAR(100) NOT NULL,
+    `nickname` VARCHAR(100) NULL, -- 유저 닉네임
+    `PROVIDER` VARCHAR(50) NOT NULL,
+    `SOCIAL_ID` VARCHAR(255) NOT NULL,
+    `PICTURE` TEXT DEFAULT NULL, 
+    `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`)
+);
 
 
 -- Product 테이블 / 📁 product
