@@ -73,6 +73,29 @@
         WHERE post_no = #{postNo}
     </delete>
 
-    
+    <!-- 인기게시글 4개 - 메인화면 조회용 -->
+    <select id="popularPosts" resultType="post">
+        <!-- SELECT post_no
+              ,COUNT(*) AS like_count
+        FROM  `like`
+        GROUP BY post_no
+        ORDER BY like_count DESC
+        LIMIT 4; -->
+        SELECT  p.post_no AS post_no,
+                p.user_id AS user_id,
+                u.nickname AS nickname,
+                u.profile_picture_url AS profileImg,
+                p.created_at,
+                f.no AS file_no,
+                f.file_name AS file_name,
+                f.file_path AS file_path,
+                f.file_code AS file_code,
+                IFNULL((SELECT COUNT(*) FROM `like` l WHERE l.post_no = p.post_no), 0) AS likeCount
+            FROM post p
+            INNER JOIN file f ON p.post_no = f.parent_no AND f.parent_table = 'post' AND f.file_code = 1
+            INNER JOIN user u ON p.user_id = u.user_id
+            ORDER BY likeCount DESC, p.created_at DESC
+            LIMIT 4;
+    </select>
 
 </mapper>

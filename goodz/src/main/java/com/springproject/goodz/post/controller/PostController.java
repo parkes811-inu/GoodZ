@@ -188,6 +188,12 @@ public class PostController {
             } else {
                 post.setIsWishlisted("solid");
             }
+
+            // 세션아이디의 팔로우 목록 가져오기
+            // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
+            Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
+            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         }
         
         model.addAttribute("post", post);

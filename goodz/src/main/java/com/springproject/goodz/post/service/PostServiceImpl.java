@@ -148,5 +148,13 @@ public class PostServiceImpl implements PostService{
 
         return result;
     }
+
+    // 인기게시글 4개 - 메인화면 조회용
+    @Override
+    public List<Post> popularPosts() throws Exception {
+        List<Post> popularPosts = postMapper.popularPosts();
+
+        return popularPosts;
+    }
     
 }

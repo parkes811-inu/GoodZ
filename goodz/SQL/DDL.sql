@@ -2,7 +2,7 @@
 -- Active: 1717144908698@@127.0.0.1@3306@goodz
 
 -- Drop existing tables if they exist
-DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
+DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `ing`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
 -- Brand 테이블 / 📁 product
 CREATE TABLE `Brand`(

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
@@ -31,6 +33,9 @@ public class MainController {
     
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private PostService postService;
 
     // DecimalFormat 인스턴스 한 번 생성
     DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
@@ -68,6 +73,7 @@ public class MainController {
     public String newArrivals(Model model) throws Exception {
         List<Product> newArrivalsList = productService.newArrivals();
 
+        // 👔 최근 입고 제품
         for (Product product : newArrivalsList) {
             // 상품 옵션 설정
             List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
@@ -105,6 +111,11 @@ public class MainController {
         }
 
         model.addAttribute("newArrivalsList", newArrivalsList);
+
+        // 📄인기게시글 4개
+        List<Post> popularPosts = postService.popularPosts();
+        model.addAttribute("popularPosts", popularPosts);
+
         return "/index";
     }
 
