@@ -184,6 +184,13 @@ public class AdminController {
         return "/admin/purchase_state";
     }
 
+    /**
+     * 유저가 판매한 번호를 기준으로 단일 조회
+     * @param sNo
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/purchase/detail/{sNo}")
     public String purchaseDetail(@PathVariable("sNo") int sNo, Model model) throws Exception {
         Map<String, Object> saleDetail = adminService.userSale(sNo);
@@ -191,17 +198,26 @@ public class AdminController {
         return "/admin/purchase_detail";
     }
 
+    /**
+     * 유저의 단일 판매 내역 상태 변경
+     * @param sNo
+     * @param saleState
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/purchase/update")
     public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
         adminService.updateUserSaleState(sNo, saleState);
         return "redirect:/admin/purchase/detail/" + sNo;
     }
 
+    // 유저가 구매한 내역
     @GetMapping("/pay_history")
     public String pay_history() {
         return "/admin/pay_history";
     }
 
+    // 유저가 구매한 내역 단일 조회
     @GetMapping("/pay_history/detail")
     public String pay_history_detail() {
         return "/admin/pay_history_detail";
