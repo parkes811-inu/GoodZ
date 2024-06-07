@@ -5,14 +5,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>구매하기</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <title>판매하기</title>
+    
     <style>
         .product_img {
             margin-right: 20px;
             text-align: left;
             margin-top: 20px; 
+            width: 200px;  /* 너비를 200px로 설정 */
+            height: auto;  /* 높이 비율 유지 */
         }
         .product_detail {
             margin-top: 20px;
@@ -97,7 +98,13 @@
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form method="post">
+        <form action="/pay/sell" id="sellForm" method="post">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+            <input type="hidden" id="initialPrice" th:value="${initialPrice}" />
+            <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
+            <input type="hidden" id="size" name="size" th:value="${size}" />
+            <input type="hidden" id="salePrice" name="salePrice" th:value="${price - 5000}" />
+            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
 
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>
@@ -105,22 +112,24 @@
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded">
                     <div class="product_info_area mb-4 d-flex align-items-center">
+                        <!-- 상품 이미지 -->
                         <div class="product_img">
-                            <img src="/img/pay/test.png" class="img-fluid">
+                            <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="img-fluid">
                         </div>
-                        <!-- 상품명과 사이즈 가져와야함 -->
+                        <!-- 상품 정보 -->
                         <div class="product_detail">
                             <div class="product_info">
-                                <strong>상품명</strong><br>Stussy Basic Stussy T-Shirt Berry 2024
+                                <strong>상품명</strong><br><span th:text="${product.productName}"></span>
                             </div>
                             <div class="product_info">
-                                <strong>사이즈</strong><br>M
+                                <strong>사이즈</strong><br>
+                                <span th:text="${size}">사이즈</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    
+
             <!-- 상품 보내는 주소 -->
             <section>
                 <div class="section_unit mb-4">
@@ -144,7 +153,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- 발송 방법 -->
                 <div class="section_unit mb-4">
                     <div class="section_content p-3 border rounded mb-4">
@@ -158,15 +167,15 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <!-- 운송장 번호 입력 -->
                 <div class="section_unit mb-4">
                     <div class="section_content p-3 border rounded mb-4">
                         <div class="section_header">운송장 번호</div>
                         <div class="form-group mb-3">
                             <label for="courier" class="form-label">택배사</label>
-                            <select id="courier" class="form-select">
-                                <option selected>택배사를 선택해주세요</option>
+                            <select id="courier" name="courier" class="form-select" required>
+                                <option selected disabled>택배사를 선택해주세요</option>
                                 <option value="cj">CJ대한통운</option>
                                 <option value="lotte">롯데택배</option>
                                 <option value="hanjin">한진택배</option>
@@ -176,80 +185,150 @@
                         </div>
                         <div class="form-group">
                             <label for="tracking-number" class="form-label">운송장 번호</label>
-                            <input type="text" id="tracking-number" class="form-control" placeholder="운송장 번호를 입력해주세요">
+                            <input type="text" id="tracking-number" name="trackingNumber" class="form-control" placeholder="운송장 번호를 입력해주세요" required>
                         </div>
                     </div>
                 </div>
-                
-                <!-- 고객 반송 주소 -->
-                <!-- 유저의 주소를 가져와야함 없으면 주소추가하는 부분 있어야함 (추가해야함) -->
+
+                <!-- 반송 주소 -->
                 <div class="section_unit mb-4">
                     <div class="section_content p-3 border rounded mb-4">
                         <div class="section_header">반송 주소</div>
-                        <div class="delivery_info d-flex align-items-center">
+                        <div th:if="${hasAddress}" class="delivery_info d-flex align-items-center">
+                            <!-- 기본 배송지 정보가 있는 경우 -->
                             <div class="info_list">
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">받는 분</div>
-                                    <div class="desc">김조은</div>
+                                    <div class="desc" id="recipientName" th:text="${defaultAddress.recipientName}"></div>
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">연락처</div>
-                                    <div class="desc">010-1234-5678</div>
+                                    <div class="desc" id="phoneNumber" th:text="${defaultAddress.phoneNumber}"></div>
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">배송 주소</div>
-                                    <div class="desc">서울특별시 OO구 OO동 한강리버사이드 자이아파트 102동 3103호</div>
+                                    <div class="desc" id="address" th:text="${defaultAddress.address}"></div>
                                 </div>
                             </div>
-                            <button id="change_address_btn" class="btn btn-secondary ms-3">변경</button>
+                            <button class="btn btn-outline-secondary ms-3" type="button" data-bs-toggle="modal" data-bs-target="#addressModal">변경</button>
                         </div>
-                        <p id="no_address_msg" class="text-danger" style="display: none;">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
-                        <button id="add_address_btn" class="btn btn-primary mt-2" style="display: none;">새 배송지 주소 추가</button>
+                        <div th:if="${!hasAddress}" class="text-center">
+                            <!-- 기본 배송지 정보가 없는 경우 -->
+                            <p class="text-secondary">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
+                            <a id="add_address_btn" class="btn btn-outline-secondary" href="/user/add_address">새 배송지 주소 추가</a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 반송 주소 변경 모달 -->
+                <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addressModalLabel">배송 주소 변경</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="list-group">
+                                    <li th:each="address : ${addresses}" 
+                                        class="list-group-item list-group-item-action" 
+                                        th:data-recipient-name="${address.recipientName}"
+                                        th:data-phone-number="${address.phoneNumber}"
+                                        th:data-address="${address.address}"
+                                        data-bs-dismiss="modal">
+                                        <div><strong th:text="${address.recipientName}"></strong></div>
+                                        <div th:text="${address.phoneNumber}"></div>
+                                        <div th:text="${address.address}"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </section>
-    
-            <!-- 최종 주문 정보-->
+
+            <!-- 최종 주문 정보 -->
             <div class="section_unit mb-4">
                 <div class="section_content p-3 border rounded order_summary">
                     <div class="section_header">최종 주문 정보</div>
                     <div class="summary_item">
-                        <!-- 가격을 불러오고 검수비와 수수료는 기존 가격의 퍼센트를 정해서 자동으로 계산되게함-->
-                        <!-- 총 판매금액도 자동으로 계산되게 함-->
-                        <span>판매 가격</span>
-                        <span>56,000원</span>
+                        <span>상품 가격</span>
+                        <span id="productPrice" th:text="${price} + '원'"></span>
                     </div>
                     <div class="summary_item">
                         <span>검수비</span>
-                        <span>- 5,600원</span>
-                    </div>
-                    <div class="summary_item">
-                        <span>수수료</span>
-                        <span>- 10,000원</span>
+                        <span>-5000원</span>
                     </div>
                     <div class="summary_item">
                         <span>배송비</span>
-                        <span>선불|판매자 부담</span>
+                        <span>선불 ・ 착불시 정산금액에서 차감</span>
                     </div>
                     <div class="summary_item summary_total">
-                        <span>총 판매금액</span>
-                        <span>40,400원</span>
+                        <span>총 결제금액</span>
+                        <span th:text="${price - 5000} + '원'"></span>
                     </div>
                 </div>
             </div>
+
+            <div class="btn-wrapper w-100 mb-5">
+                <button id="payment-button" class="btn btn-primary w-100" type="submit" disabled>판매하기</button>
+            </div>
         </form>
-        
-        <div class="btn-wrapper w-100 mb-5">
-            <button id="payment-button" class="btn btn-primary w-100" onclick="payment()">판매하기</button>
-        </div>
     </div>
 
-    <script type="module" src="/js/pay/pay.js"></script>                    
-
     <script>
-        function payment() {
-            window.location.href = '/pay/complete';
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // 주소 선택 함수
+            function selectAddress(recipientName, phoneNumber, address) {
+                document.getElementById('recipientName').textContent = recipientName;
+                document.getElementById('phoneNumber').textContent = phoneNumber;
+                document.getElementById('address').textContent = address;
+                document.getElementById('hiddenAddress').value = address; // hidden input field update
+            }
+
+            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
+            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
+                const target = event.target.closest('li.list-group-item');
+                if (target) {
+                    const recipientName = target.getAttribute('data-recipient-name');
+                    const phoneNumber = target.getAttribute('data-phone-number');
+                    const address = target.getAttribute('data-address');
+                    selectAddress(recipientName, phoneNumber, address);
+                    // 모달 닫기
+                    var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+                    addressModal.hide();
+                }
+            });
+
+            const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
+            const trackingNumberInput = document.getElementById('tracking-number'); // 운송장 번호 입력 요소
+            const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
+            const sellForm = document.getElementById('sellForm'); // 판매 폼
+
+            // 폼의 유효성을 검사하는 함수
+            function validateForm() {
+                if (courierSelect.value && trackingNumberInput.value.trim()) {
+                    paymentButton.removeAttribute('disabled');
+                } else {
+                    paymentButton.setAttribute('disabled', 'disabled');
+                }
+            }
+
+            // 택배사 선택이 변경될 때마다 validateForm 함수를 호출합니다.
+            courierSelect.addEventListener('change', validateForm);
+
+            // 운송장 번호 입력이 변경될 때마다 validateForm 함수를 호출합니다.
+            trackingNumberInput.addEventListener('input', validateForm);
+
+            // 폼이 제출될 때 실행되는 이벤트 리스너를 추가합니다.
+            sellForm.addEventListener('submit', function(event) {
+                if (!courierSelect.value || !trackingNumberInput.value.trim()) {
+                    event.preventDefault();
+                    alert('모든 필드를 입력해주세요.');
+                }
+            });
+        });
     </script>
 </body>
 </html>

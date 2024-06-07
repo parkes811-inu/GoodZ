@@ -1,4 +1,6 @@
--- Active: 1716800736662@@127.0.0.1@3306@goodz
+
+-- Active: 1717144908698@@127.0.0.1@3306@goodz
+
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
@@ -9,6 +11,15 @@ CREATE TABLE `Brand`(
     PRIMARY KEY (`b_no`),
     UNIQUE KEY `unique_b_name` (`b_name`)
 ) COMMENT='브랜드';
+
+DROP TABLE IF EXISTS `user`
+
+-- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+-- ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
+
+-- ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
+
+-- ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
@@ -24,6 +35,7 @@ CREATE TABLE `user` (
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
 ) COMMENT='유저';
+
 
 
 
@@ -153,6 +165,22 @@ CREATE TABLE `Tag` (
 -- 	 FOREIGN KEY (b_name) REFERENCES Brand(b_name)
 -- ) COMMENT='상품';
 
+
+-- DROP TABLE IF EXISTS `user_social`
+
+-- CREATE TABLE `user_social` (
+--     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
+--     `username` VARCHAR(100) NOT NULL,
+--     `nickname` VARCHAR(100) NULL, -- 유저 닉네임
+--     `PROVIDER` VARCHAR(50) NOT NULL,
+--     `SOCIAL_ID` VARCHAR(255) NOT NULL,
+--     `PICTURE` TEXT DEFAULT NULL, 
+--     `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     PRIMARY KEY (`user_id`)
+-- );
+
+
 -- Product 테이블 / 📁 product
 CREATE TABLE `Product` (
     `p_no` INT NOT NULL AUTO_INCREMENT,
@@ -221,7 +249,9 @@ CREATE TABLE `Sales` (
     `p_no` INT NOT NULL,
     `sale_tracking_no` VARCHAR(50) NOT NULL,
     `sale_price` INT NOT NULL,
-    `sale_state` ENUM('pending', 'completed', 'cancelled') NOT NULL,
+    `size` VARCHAR(50) NOT NULL,
+    `address` VARCHAR(255) NOT NULL,
+    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
     `sale_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`s_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
@@ -239,29 +269,32 @@ CREATE TABLE `Inspection` (
 ) COMMENT='검수';
 
 -- Purchase 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Purchase`;
 CREATE TABLE `Purchase` (
     `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
     `user_id`           VARCHAR(100)    NOT NULL,
     `p_no`              INT             NOT NULL,
+    `option_id`         INT             NOT NULL,
+    `order_id`          VARCHAR(100),
     `purchase_price`    INT             NOT NULL,
     `payment_method`    VARCHAR(50)     NOT NULL,
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
     -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
     `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (purchase_no),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (p_no) REFERENCES Product(p_no)
+    FOREIGN KEY (p_no) REFERENCES Product(p_no),
+    FOREIGN KEY (option_id) REFERENCES Product_option(option_id)
 ) COMMENT='구매';
 
 -- purchase_date 컬럼 삭제
 ALTER TABLE Purchase DROP COLUMN purchase_date;
 
--- ordered_at, created_at, updated_at 컬럼 추가
+-- ordered_at, updated_at 컬럼 추가
 ALTER TABLE Purchase
+    ADD COLUMN order_id varchar(100),
     ADD COLUMN ordered_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
 -- purchase_state 컬럼 변경
@@ -269,6 +302,7 @@ ALTER TABLE Purchase MODIFY COLUMN purchase_state ENUM('pending', 'paid', 'shipp
 
 
 -- Shipment 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Shipment`;
 CREATE TABLE `Shipment` (
     `shipment_no` INT NOT NULL AUTO_INCREMENT,
     `purchase_no` INT NOT NULL,

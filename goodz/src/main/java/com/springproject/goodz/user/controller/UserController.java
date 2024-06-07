@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,6 @@ import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
 
-import groovyjarjarantlr4.v4.codegen.model.ExceptionClause;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -60,8 +58,14 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
+        
+        if (user == null) {
+            log.error("User not found for username: " + currentUserName);
+        } else {
+            log.info("User found: " + user);
+            model.addAttribute("user", user);
+        }
 
-        model.addAttribute("user", user);
         return "/user/index";
     }
 
@@ -249,7 +253,7 @@ public class UserController {
         // 모델에 findMan 속성을 추가합니다.
         model.addAttribute("findMan", findMan);
 
-        // 비밀번호 변경 페이지로 이동합
+        // 비밀번호 변경 페이지로 이동합니다.
         return "/user/changePW";
     }
 

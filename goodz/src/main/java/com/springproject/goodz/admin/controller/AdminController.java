@@ -1,6 +1,8 @@
 package com.springproject.goodz.admin.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +20,14 @@ import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.dto.UpdateProductRequest;
 import com.springproject.goodz.product.service.BrandService;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @Controller
@@ -94,29 +98,29 @@ public class AdminController {
     public String productList(Model model, Page page,
                           @RequestParam(value = "page", defaultValue = "1") int pageNumber,
                           @RequestParam(value = "keyword", defaultValue = "") String keyword) throws Exception {
-    // 페이지 번호 설정
-    page.setPage(pageNumber);
+        // 페이지 번호 설정
+        page.setPage(pageNumber);
 
-    // 전체 데이터 개수 설정
-    int total = productService.getTotalCount(keyword);
-    page.setTotal(total);
+        // 전체 데이터 개수 설정
+        int total = productService.getTotalCount(keyword);
+        page.setTotal(total);
 
-    // 데이터 요청
-    List<Product> productList = productService.productList(page, keyword);
+        // 데이터 요청
+        List<Product> productList = productService.productList(page, keyword);
 
-    // 페이징
-    log.info("page : " + page);
-    // 검색
-    log.info("keyword : " + keyword);
+        // 페이징
+        log.info("page : " + page);
+        // 검색
+        log.info("keyword : " + keyword);
 
-    // 모델 등록
-    model.addAttribute("productList", productList);
-    model.addAttribute("page", page);
-    model.addAttribute("keyword", keyword);
+        // 모델 등록
+        model.addAttribute("productList", productList);
+        model.addAttribute("page", page);
+        model.addAttribute("keyword", keyword);
 
-    // 뷰 페이지 지정
-    return "admin/product_list";
-}
+        // 뷰 페이지 지정
+        return "admin/product_list";
+    }
 
     @GetMapping("/add_product")
     public String moveToAddProduct(Model model) throws Exception {
@@ -178,6 +182,12 @@ public class AdminController {
 
     @GetMapping("/purchase/detail")
     public String purchase_detail() {
+
+        // if (reuslt > 0 && status == 정산완료) {
+        //     int sival = productService.plusSize(1, S);
+        //     update id="plusSize"
+        //     update product_option set stock_quantity = stock_quantity + 1 where p_no = 1 and size = 'S';
+        // }
         return "/admin/purchase_detail";
     }
 
@@ -194,15 +204,61 @@ public class AdminController {
     @GetMapping("/product/detail/{pNo}")
     public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {
         Product product = productService.getProductBypNo(pNo);
-        List<ProductOption> option =  productService.getProductOptionsByProductId(pNo);
+        List<ProductOption> option =  productService.adminOptionsByProductId(pNo);
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
+
+        List<Brand> brandList = brandService.list();
+        model.addAttribute("brandList", brandList);
+
         model.addAttribute("product", product);
         model.addAttribute("option", option);
         model.addAttribute("images", images);
 
         return "/admin/product_detail";
     }
+
+    @PostMapping("/updateProduct")
+    public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest, @RequestParam Map<String, String> params) throws Exception {
+        log.info("Received Update Request: {}", updateProductRequest);
+
+        Product product = new Product();
+        product.setPNo(updateProductRequest.getPNo());
+        product.setProductName(updateProductRequest.getProductName());
+        product.setInitialPrice(updateProductRequest.getInitialPrice());
+        product.setBName(updateProductRequest.getBName());
+        product.setCategory(updateProductRequest.getCategory());
+
+        List<ProductOption> options = new ArrayList<>();
+        int index = 0;
+        while (params.containsKey("optionIds[" + index + "]")) {
+            ProductOption option = new ProductOption();
+            option.setOptionId(Integer.parseInt(params.get("optionIds[" + index + "]")));
+            option.setPNo(Integer.parseInt(params.get("optionPNos[" + index + "]")));
+            option.setSize(params.get("sizes[" + index + "]"));
+            option.setOptionPrice(Integer.parseInt(params.get("optionPrices[" + index + "]")));
+            
+            String addedStockQuantityStr = params.get("addedStockQuantities[" + index + "]");
+            if (addedStockQuantityStr != null && !addedStockQuantityStr.isEmpty()) {
+                option.setAddedStockQuantity(Integer.parseInt(addedStockQuantityStr));
+            } else {
+                option.setAddedStockQuantity(0); // 기본값 설정
+            }
+            
+            option.setStatus(params.get("status[" + index + "]"));
+            options.add(option);
+            index++;
+        }
+        product.setOptions(options);
+
+        log.info("Product options: {}", product.getOptions());
+
+        productService.updateProduct(product);
+
+        return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
+    }
+    
+
 }

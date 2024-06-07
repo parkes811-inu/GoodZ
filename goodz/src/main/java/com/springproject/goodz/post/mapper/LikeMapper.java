@@ -3,7 +3,6 @@ package com.springproject.goodz.post.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.springproject.goodz.post.dto.Like;
-import com.springproject.goodz.post.dto.Post;
 
 @Mapper
 public interface LikeMapper {

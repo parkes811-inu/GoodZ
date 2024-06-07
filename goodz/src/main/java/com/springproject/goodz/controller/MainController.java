@@ -1,15 +1,11 @@
 package com.springproject.goodz.controller;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
-
-import javax.servlet.http.Cookie;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +31,9 @@ public class MainController {
     
     @Autowired
     private FileService fileService;
+
+    // DecimalFormat 인스턴스 한 번 생성
+    DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
 
     @GetMapping("/{page}")
     public String page(@PathVariable("page") String page) {
@@ -79,18 +78,24 @@ public class MainController {
             file.setParentNo(product.getPNo());
             file.setParentTable(product.getCategory());
             List<Files> productImages = fileService.listByParent(file);
-            
+
             // 최저 가격 계산
             if (!options.isEmpty()) {
                 int minPrice = options.stream()
                                     .mapToInt(ProductOption::getOptionPrice)
                                     .min()
                                     .orElse(0);
-                product.setMinPrice(minPrice);
+                // 원화 형식으로 변환
+                String formattedMinPrice = decimalFormat.format(minPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             } else {
-                product.setMinPrice(product.getInitialPrice()); // 옵션이 없는 경우 기본 가격 설정
+                // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                int initialPrice = product.getInitialPrice();
+                String formattedMinPrice = decimalFormat.format(initialPrice);
+                product.setFormattedMinPrice(formattedMinPrice);
             }
-            
+
+
             // 첫 번째 이미지 URL 설정
             if (!productImages.isEmpty()) {
                 product.setImageUrl(productImages.get(0).getFilePath());

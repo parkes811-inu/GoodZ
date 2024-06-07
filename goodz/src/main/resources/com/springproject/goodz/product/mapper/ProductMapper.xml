@@ -9,7 +9,7 @@
     <select id="list" resultType="Product">
         SELECT *
           FROM product
-         ORDER BY category DESC
+         ORDER BY category DESC, created_at DESC
     </select>
 
     <!-- 상품 목록 조회 -->
@@ -49,6 +49,7 @@
         SELECT *
         FROM product
         WHERE category = 'top'
+        ORDER BY created_at DESC
     </select>
 
     <!-- 하의 목록 -->
@@ -56,6 +57,7 @@
         SELECT *
         FROM product
         WHERE category = 'pants'
+        ORDER BY created_at DESC
     </select>
 
     <!-- 신발 목록 -->
@@ -63,6 +65,7 @@
         SELECT *
         FROM product
         WHERE category = 'shoes'
+        ORDER BY created_at DESC
     </select>
 
     <!-- 악세사리 목록 -->
@@ -70,6 +73,7 @@
         SELECT *
         FROM product
         WHERE category = 'accessory'
+        ORDER BY created_at DESC
     </select>
 
     <!-- 제품 조회 -->
@@ -100,22 +104,31 @@
             );
     </select>
 
-    <!-- <select id="findSameBrandProducts" resultType="Product">
+    <select id="findSameBrandProducts" resultType="Product">
         SELECT *
           FROM product
          WHERE b_name = #{brand}
            AND category = #{category}
            AND p_no != #{pNo}
-         ORDER BY created_at DESC
-         LIMIT 4
-    </select> -->
-    <select id="findSameBrandProducts" resultType="Product">
-        SELECT *
-        FROM product
-        WHERE b_name = #{brand}
-        AND category = #{category}
-        AND p_no != #{pNo}
         ORDER BY created_at DESC
         LIMIT #{offset}, #{limit}
     </select>
+
+    <update id="updateProduct">
+        UPDATE product
+        SET b_name = #{bName}, category = #{category}, product_name = #{productName}, initial_price = #{initialPrice}
+        WHERE p_no = #{pNo}
+    </update>
+
+    <update id="updateOptionsByProductId" parameterType="ProductOption">
+        UPDATE product_option
+        SET option_price = #{optionPrice}, 
+            stock_quantity = stock_quantity + #{stockQuantity}, 
+            status = #{status}
+        WHERE option_id = #{optionId} 
+        AND p_no = #{pNo}
+    </update>
+
+    
+
 </mapper>

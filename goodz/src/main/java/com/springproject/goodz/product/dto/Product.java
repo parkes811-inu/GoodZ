@@ -21,24 +21,16 @@ public class Product {
     private Date createdAt;         // 상품 등록 날짜
     private Date updatedAt;         // 상품 수정 날짜
     
-    private List<ProductImage> images; // 연관된 이미지 목록 -> 이걸 과연 써야 할까?
     private List<ProductOption> options; // 연관된 옵션 목록
     private String imageUrl;        // 첫 번째 이미지 URL을 저장할 필드
     private List<MultipartFile> productFiles; // 추가된 필드
 
     private int minPrice; // 같은 상품 내 최저가 
+    private String formattedMinPrice; // 최저가 상품을 원화 형식으로 표현하기 위한 변수
 
     private String size;
     private int fluctuatedPrice;
     
-    // 첫 번째 이미지 URL을 가져오는 메서드
-    public String getFirstImageUrl() {
-        if (images != null && !images.isEmpty()) {
-            return images.get(0).getImageUrl();
-        }
-        return null;
-    }
-
     // imageUrl의 Getter와 Setter
     public String getImageUrl() {
         return imageUrl;
