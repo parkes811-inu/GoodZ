@@ -85,7 +85,7 @@ public class PostServiceImpl implements PostService{
         String dir = "post";
         int parentNo = postMapper.maxNo(); // 방금 등록처리된 게시글 번호를 가져옴
         log.info("게시글 번호: " + parentNo);
-
+        
         List<MultipartFile> attachedFiles = post.getAttachedFiles();
 
         // 이미지 업로드
