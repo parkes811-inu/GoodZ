@@ -3,6 +3,7 @@ package com.springproject.goodz.admin.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -180,7 +181,18 @@ public class AdminController {
 
 
     @GetMapping("/purchase_state")
-    public String purchase_state() {
+    public String userSaleList(Model model) throws Exception {
+        List<Map<String, Object>> saleList = adminService.userSaleList();
+        model.addAttribute("saleList", saleList);
+
+        List<Map<String, Object>> saleStateCounts = adminService.countUserSalesByState();
+        Map<String, Integer> saleStateMap = saleStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("sale_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        model.addAttribute("saleStateCounts", saleStateMap);
+
         return "/admin/purchase_state";
     }
 
@@ -211,13 +223,20 @@ public class AdminController {
         return "redirect:/admin/purchase/detail/" + sNo;
     }
 
-    // 유저가 구매한 내역
+
+    /**
+     * 유저가 구매한 내역
+     * @return
+     */
     @GetMapping("/pay_history")
     public String pay_history() {
         return "/admin/pay_history";
     }
 
-    // 유저가 구매한 내역 단일 조회
+    /**
+     * 유저가 구매한 내역 단일 조회
+     * @return
+     */
     @GetMapping("/pay_history/detail")
     public String pay_history_detail() {
         return "/admin/pay_history_detail";
