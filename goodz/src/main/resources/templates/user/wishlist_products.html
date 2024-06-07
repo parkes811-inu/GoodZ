@@ -95,7 +95,7 @@
                     <button class="filter-button" onclick="location.href='/user/wishlist/styles'">스타일</button>
                 </div>
                 <div class="sort-order" onclick="filter()">
-                    <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+                    <span id="sort-text">기본</span> <span id="sort-icon"></span>
                 </div>        
             </div>
             
@@ -109,60 +109,70 @@
             <div class="row wishlist row-cols-2 row-cols-sm-2 row-cols-lg-4 g-3">
                 <!-- 상품 테이블에 저장된 사진과 제품명 가져오기 -->
                 <!-- 상품 클릭 시 해당 상품의 판매 페이지로-->
-                <th:block th:if="${wishlistProducts.size() > 0}">
-                    <th:block th:each="product : ${wishlistProducts}">
-                        <div class="col">
-                            <div class="card border-0">
-                                <div class="card-body">
-                                    <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
-                                        <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
-                                    </a>
-                                    <div class="card-text py-2">
-                                        <div class="d-flex justify-content-start column-gap-1">
-                                            <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
-                                        </div>
-                                        <div class="d-flex justify-content-start column-gap-1">
-                                            <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
-                                        </div>
+                <th:block th:each="product : ${wishlistProducts}">
+                    <div class="col" th:data-price="${product.formattedMinPrice}">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
+                                    <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
+                                </a>
+                                <div class="card-text py-2">
+                                    <div class="d-flex justify-content-start column-gap-1">
+                                        <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
+                                    </div>
+                                    <div class="d-flex justify-content-start column-gap-1">
+                                        <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <th:block th:if="${wishlistProducts.size() == 0}">
+                        <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
                     </th:block>
-                </th:block>
-                <th:block th:if="${wishlistProducts.size() == 0}">
-                    <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
                 </th:block>
             </div>
         </div>
     </div>
     <script>
-        // 정렬하는 방식을 어떻게 할 것인지 기준 정하고 다시 작성하기
-        // 아마 관심이 등록이 최신인거 순으로 가져오는게 디폴트이지 않을까 (DB 연결후)
+        // 가격을 기준으로 정렬하는 함수
         function filter() {
-            var productList = document.getElementById('product-list');
-            var items = productList.getElementsByClassName('product-item');
-            var itemsArray = [];
-            
-            for (var i = 0; i < items.length; i++) {
-                itemsArray.push(items[i]);
-            }
-            
-            itemsArray.reverse();
-            
-            for (var i = 0; i < itemsArray.length; i++) {
-                productList.appendChild(itemsArray[i]);
-            }
-            
+            var wishlistContainer = document.querySelector('.wishlist');
+            var items = wishlistContainer.querySelectorAll('.col');
+            var itemsArray = Array.from(items);
+    
+            console.log("Before sorting:", itemsArray.map(item => item.getAttribute('data-price')));
+    
+            // 현재 정렬 상태를 확인하고, 반대로 정렬
             var sortIcon = document.getElementById('sort-icon');
             var sortText = document.getElementById('sort-text');
-            if (sortIcon.innerHTML === '▼') {
+            
+            if (sortText.innerHTML === '기본' || sortText.innerHTML === '낮은가격순') {
+                // 높은가격순 정렬
+                itemsArray.sort((a, b) => {
+                    let priceA = parseInt(a.getAttribute('data-price').replace(/[^0-9]/g, ''));
+                    let priceB = parseInt(b.getAttribute('data-price').replace(/[^0-9]/g, ''));
+                    return priceB - priceA; // 높은가격순
+                });
                 sortIcon.innerHTML = '▲';
-                sortText.innerHTML = '오름차순';
+                sortText.innerHTML = '높은가격순';
             } else {
+                // 낮은가격순 정렬
+                itemsArray.sort((a, b) => {
+                    let priceA = parseInt(a.getAttribute('data-price').replace(/[^0-9]/g, ''));
+                    let priceB = parseInt(b.getAttribute('data-price').replace(/[^0-9]/g, ''));
+                    return priceA - priceB; // 낮은가격순
+                });
                 sortIcon.innerHTML = '▼';
-                sortText.innerHTML = '내림차순';
+                sortText.innerHTML = '낮은가격순';
             }
+    
+            console.log("After sorting:", itemsArray.map(item => item.getAttribute('data-price')));
+    
+            // 정렬된 항목들을 다시 DOM에 추가
+            itemsArray.forEach(item => {
+                wishlistContainer.appendChild(item);
+            });
         }
     </script>
 </body>

@@ -176,7 +176,7 @@
                     <div class="product-details">
                         <h3 id="productName" th:text="${product.productName}"></h3>
                         <div class="product-price">
-                            <p id="productPrice" class="m-0 ms-2" th:text="${formattedMinPrice}"></p>
+                            <p id="productPrice" class="m-0 ms-2" th:if="${formattedMinPrice} != '0 원'" th:text="${formattedMinPrice}"></p>
                         </div>
                         
                         <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}">

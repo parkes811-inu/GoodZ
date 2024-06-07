@@ -1,5 +1,9 @@
 package com.springproject.goodz.pay.service;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 
@@ -17,5 +21,6 @@ public interface PayService {
     // 판매
     public int insertSale(Sales sales) throws Exception;
     
-
+    // 유저별 구매 내역 조회
+    public List<Purchase> findPurchasesByUserId(@Param("userId") String userId) throws Exception;
 }

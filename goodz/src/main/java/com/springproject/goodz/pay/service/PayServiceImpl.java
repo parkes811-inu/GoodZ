@@ -1,5 +1,8 @@
 package com.springproject.goodz.pay.service;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +36,10 @@ public class PayServiceImpl implements PayService {
         return payMapper.selectPurchase(purchaseNo);
     }
 
+    // 유저별 구매 내역 조회
+    @Override
+    public List<Purchase> findPurchasesByUserId(@Param("userId") String userId) throws Exception {
+        return payMapper.findPurchasesByUserId(userId);
+    }
     
 }
