@@ -42,6 +42,11 @@
             width: 100%;
             height: 100%;
         }
+
+        .followBtn{
+            margin: auto 0;
+            height: 30px;
+        }
         
     </style>
     <!-- 모달창 css -->
@@ -120,7 +125,17 @@
                         <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
-                <button type="button" class="btn btn-dark btn-sm" id="follow" onclick="followSwitch()"> 팔로우 </button>
+                <div>
+                    <!-- 로그인한 유저이고 작성자와 로그인한 유저가 같은 사람인 경우 -->
+                    <th:block th:if="${loginUser != null and loginUser.userId == writer.userId}">
+                        <a type="button" th:href="|/styles/update/${post.postNo}|" class="followBtn btn btn-light btn-sm" id="update"> 수정 </a>
+                        <button type="button" onclick="deletePost()" class="followBtn btn btn-light btn-sm" id="delete"> 삭제 </button>
+                    </th:block>
+                    <!-- 비로그인하거나 작성자와 로그인한 유저가 다른 경우 -->
+                    <th:block th:if="${loginUser == null or loginUser.userId != writer.userId}">
+                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick=""> 팔로우 </button>
+                    </th:block>
+                </div>
             </div>
             
             <!-- 게시글 이미지 -->
@@ -174,7 +189,7 @@
                 </div>
     
                 <!-- 게시글 내용 -->
-                <div class="social_text my-5">
+                <div class="social_text mt-2 mb-5">
                     <p class="text_title fs-4 text-start" th:text="${post.content}"></p>
                 </div>
             </div>
@@ -369,7 +384,7 @@
 
         /* 댓글 삭제*/
         function deleteCmmt(cNo) {
-            let $csrfToken = document.getElementById('myToken');
+            let $csrfToken = document.getElementById('csrfToken');
             let csrfToken = $csrfToken.value;
 
             const doubleCheck = confirm('정말로 삭제하시겠습니까?');
@@ -416,6 +431,39 @@
                 }
             }
         });
+
+    // 게시글 삭제
+    function deletePost() {
+
+        let $csrfToken = document.getElementById('csrfToken');
+        let csrfToken = $csrfToken.value;
+
+        console.log('CSRF Token:', csrfToken);
+        console.log(postNo)
+
+        if (!confirm("정말 삭제하시겠습니까?")) {
+            return;
+        }
+        let request = new XMLHttpRequest();
+
+        request.open('DELETE', '/styles/' + postNo);
+        request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+        request.send()
+
+        // 요청 상태 체킹
+        request.onreadystatechange = function () {
+            
+            if (request.readyState == request.DONE && request.status == 200) {
+                let response = request.responseText;
+                
+                if (response == 'FAIL') {
+                    alert('게시글 삭제에 실패했습니다.')
+                } 
+                
+                window.location.href = '/styles';
+            }
+        }
+    }
     </script>
 </body>
 

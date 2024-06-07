@@ -167,17 +167,17 @@
         <div class="my-5 d-flex flex-column align-items-center">
            <p class="fs-3 fw-bold" style="width:600px">게시글 수정</p>
 
-           <!-- CSRF 토큰 추가 해야함 / action값 써야함_action="/styles/게시글번호" -->
-            <form  id="form" method="post" style="width: 600px;">
-                <!-- input hidden으로 유저 아이디 혹은 게시글 번호가 들어가있어야함 -->
-                <input type="hidden" value="여기는유저의 아이디or 게시글번호가 들어와야함">
+            <form action="/styles/update" id="form" method="post" style="width: 600px;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" name="userId" th:value="${post.userId}">
+                <input type="hidden" name="postNo" th:value="${post.postNo}">
                 <!-- 첨부이미지는 수정불가 -->
                 <!-- <span id="passwordHelpInline" class="form-text">최대 10장</span>
                 <input id="file" class="form-control" type="file"  multiple>
                 <br> -->
 
                 <!-- [DB] 내용 -->
-                <textarea  id="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" >기존 글이 DB에서 불러와져야 합니다.</textarea>
+                <textarea  id="content" name="content" class="form-control" type="text" placeholder="내용을 입력하세요" style="box-shadow: none !important;font-size: smaller; height: 150px;" th:text="${post.content}"></textarea>
                 <br>
                 <!-- 상품태그 영역 -->
                 <div class="d-flex justify-content-between">
@@ -256,7 +256,7 @@
                     </div>
                 </div>
 
-                <button type="button" id="btn-update" onclick="alert('수정완료')" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">수정 완료</button>
+                <button type="submit" id="btn-update" class="btn my-5" style="color: white; background-color: #393E46; width: 600px;">수정 완료</button>
             </form>
         </div>
     </div>
