@@ -86,11 +86,13 @@ public class UserController {
     public String index(Model model) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
+        log.info(currentUserName);
         Users user = userService.findUserByUsername(currentUserName);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
+            return "redirect:/user/login";
         } else {
             log.info("User found: " + user);
             model.addAttribute("user", user);
@@ -445,6 +447,8 @@ public class UserController {
 
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
+            return "redirect:/user/login";
+
         } else {
             model.addAttribute("user", user);
         }

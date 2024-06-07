@@ -224,7 +224,6 @@ public class PayController {
 
         String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
         purchase.setAddress(decodedAddress);
-        log.info("시발1----------------------------------------------\n" + decodedAddress);
         log.info("Purchase 객체 생성됨: {}", purchase);
 
         int result = payService.updatePurchase(purchase);
