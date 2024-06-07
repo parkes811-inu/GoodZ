@@ -30,6 +30,12 @@
         DELETE FROM wishList
         WHERE user_id = #{userId} and parent_table = #{parentTable} and parent_no = #{parentNo}
     </delete>
-
+    
+    <!-- 유저 관심에 담긴 상품 리스트 조회 -->
+    <select id="listNumByUserId" resultType="int">
+        SELECT parent_no
+          FROM wishList
+         WHERE user_id = #{userId}
+    </select>
 
 </mapper>

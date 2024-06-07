@@ -129,4 +129,9 @@
         AND p_no = #{pNo}
     </update>
 
+    <select id="findUserWishList" resultType="Product">
+        SELECT * 
+          FROM product
+         WHERE p_no = #{pNo}
+    </select>
 </mapper>
