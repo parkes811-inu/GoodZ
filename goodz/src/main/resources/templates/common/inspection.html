@@ -1,16 +1,96 @@
+
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/main_layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Inspection Guidelines</title>
+    <style>
+        body {
+        font-size: 14px; /* 기본 크기보다 작은 값으로 조정 */
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+       
+        h1 {
+            font-weight: bold;
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .right-align {
+            text-align: right;
+        }
+
+        li {
+            font-size: 14px; /* 원하는 크기로 조정 */
+            
+        }
+        .underline {
+        border-top: 2px solid #000000; /* 밑줄추가 */
+        margin-top: 10px; /* 원하는 여백 조절 */
+        }
+
+        .fs-2 {
+        font-weight: bold; /* 글꼴을 굵게 설정 */
+        }
+
+
+    </style>
+
+    <title>검수기준 - Goodz</title>
 </head>
-<body>
-    <h1>Inspection Guidelines</h1>
-    <!-- Cancel button -->
-    <div th:replace="fragments/common/cancel :: cancel"></div>
-    <p>여기에 검수 기준 내용을 작성하십시오.</p>
+<body layout:fragment="content">
+    <div class="container">
+        <div class="mainContainer">
+     
+    <div>
+        <div class="mt-4 mb-3">
+            <button id="closeButton" class="btn btn-dark btn-sm" style="float: right;">메인화면으로</button>
+            <p class="fs-2">검수기준</p>
+            <div class="underline"></div>
+        </div>
+
+        <h2>검수기준은 거래 당사자간 원활한 거래와 보다 균형있는 검수기준 확립을 위해 지속적으로 업데이트 되고 있습니다. 거래에 앞서 최신 검수기준을 참고하시기 바랍니다.</h2>
+
+        <h1>1. 유의사항</h1>
+        <ul>
+            <li>모조품/가품 판매 및 페널티 회피 시 해당 계정은 회원 자격이 정지되며, 새로운 아이디로 가입을 하여도 이전 거래 기록을 근거로 서비스 이용을 제재할 수 있습니다.</li>
+            <li>GoodZ 통해 거래된 모든 상품은 입고 시 자동화 처리를 위해 고유의 정보를 포함한 스티커가 부착됩니다. 부착 위치는 제품에 따라 차이가 있으며 이는 발송(반송) 시에도 제거되지 않습니다.</li>
+        </ul>
+
+        <h1>2. 판매 관련</h1>
+        <ul>
+            <li>GoodZ 전문 검수팀이 제품의 정·가품 확인을 마친 후 아래와 같은 항목을 점검해 제품의 컨디션을 최종 확인합니다.</li>
+            <li>제품의 오리지널 박스와 브랜드 보증서가 필요하며, 보증서 상 스탬핑/서명 여부는 검수 기준에 포함되지 않습니다.</li>
+        </ul>
+
+        <h1>3. 구매 관련</h1>
+        <ul>
+            <li>GoodZ 구입한 시계는 엄격한 검수를 통과한 정품임을 보증하는 KREAM의 인증서가 동봉됩니다.</li>
+            <li>상품에 따라 외부 감정 기관을 통해 이중 검수를 진행할 수 있으며 이 경우 패키지에 외부 감정 기관의 인증서가 포함됩니다.</li>
+            <li>브랜드 보증서는 일반적으로 양도가 불가한 점 참고 부탁드립니다.</li>
+        </ul>
+
+        <h1>수령한 제품에 대한 자세한 문의가 필요할 경우, 고객센터(1234-5678) 문의를 통해 연락해주시기 바랍니다.</h1>
+    </div>   
+    </div>
+    </div>
+    <script>
+        // X 버튼을 클릭했을 때 메인 화면으로 이동하는 함수
+        document.getElementById("closeButton").addEventListener("click", function() {
+            window.location.href = "/"; // 메인 화면 URL로 이동
+        });
+    </script>
 </body>
-<script th:src="@{/js/policy.js}"></script>
 </html>
+

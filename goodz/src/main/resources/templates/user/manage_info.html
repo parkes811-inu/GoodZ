@@ -144,7 +144,7 @@
                         
 
                         <div class="form-group">
-                            <label for="password_check">비밀번호 입력 확인*</label>
+                            <label for="password_check">비밀번호 확인*</label>
                             <div class="input-group">
                                 <input type="password" class="form-control me-2 rounded-1" id="password_check" name="password_check" placeholder="비밀번호를 다시 입력해주세요." style="max-width: 640px;">
                                 <span class="input-group-text toggle-password" onclick="togglePasswordVisibility('password_check')">
@@ -189,7 +189,7 @@
 
         var isNicknameAvailable = false; // 닉네임 중복 체크 상태를 저장하는 변수
 
-       function checkNickname(callback) {
+        function checkNickname(callback) {
             var userId = $('#userId').text();
             var nickname = $('#nickName').val().trim(); // trim()으로 공백 제거
             var hiddenNickname = $('#hiddenNickName').val(); // 히든 필드의 값 가져오기
@@ -233,38 +233,34 @@
             });
         }
 
+                //     function checkPassword(callback) {
+            // var password = $('#password').val();
+            // var userId = $('#userId').text();
+            // var csrfToken = $('input[name=_csrf]').val();
 
-    //     function checkPassword(callback) {
-    // var password = $('#password').val();
-    // var userId = $('#userId').text();
-    // var csrfToken = $('input[name=_csrf]').val();
+            // console.log("Password: " + password); // 콘솔에 비밀번호 출력
+            // console.log("UserId: " + userId); // 콘솔에 UserId 출력
 
-    // console.log("Password: " + password); // 콘솔에 비밀번호 출력
-    // console.log("UserId: " + userId); // 콘솔에 UserId 출력
+        //     $.ajax({
+        //         url: '/user/checkPassword',
+        //         type: 'POST',
+        //         contentType: 'application/json',
+        //         data: JSON.stringify({ userId: userId, password: password }),
+        //         beforeSend: function(xhr) {
+        //             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+        //         },
+        //         success: function(response) {
+        //             console.log("Server Response: ", response); // 서버 응답 출력
+        //             callback(true);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.log("Server Error: ", xhr.responseText); // 서버 오류 응답 출력
+        //             alert('비밀번호가 일치하지 않습니다.');
+        //             callback(false);
+        //         }
+        //     });
+        // }
 
-//     $.ajax({
-//         url: '/user/checkPassword',
-//         type: 'POST',
-//         contentType: 'application/json',
-//         data: JSON.stringify({ userId: userId, password: password }),
-//         beforeSend: function(xhr) {
-//             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-//         },
-//         success: function(response) {
-//             console.log("Server Response: ", response); // 서버 응답 출력
-//             callback(true);
-//         },
-//         error: function(xhr, status, error) {
-//             console.log("Server Error: ", xhr.responseText); // 서버 오류 응답 출력
-//             alert('비밀번호가 일치하지 않습니다.');
-//             callback(false);
-//         }
-//     });
-// }
-
-
-
-        
         function formatPhoneNumber(phone) {
             // 숫자만 추출
             var cleaned = ('' + phone).replace(/\D/g, '');
@@ -274,68 +270,68 @@
             }
             return null;
         }
-
         function check() {
             var firstPw = $('#password').val();
-            var secondPw = $('#passwordCheck').val();
+            var secondPw = $('#password_check').val(); // 비밀번호 확인 값 가져오기
             var phone = $('#phoneNumber').val();
             var formattedPhone = formatPhoneNumber(phone);
-            console.log(formattedPhone);
-            console.log(formattedPhone);
-            console.log(formattedPhone);
-            console.log(formattedPhone);
-            console.log(formattedPhone);
 
-            if(formattedPhone !== null && !formattedPhone) {
+            if (formattedPhone === null) {
                 alert('올바른 휴대폰 번호를 입력해주세요.');
                 return;
             }
 
-            if (firstPw !== secondPw) {
-                alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+            // 비밀번호 유효성 검사 정규 표현식
+            var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
+
+            // 비밀번호 유효성 검사
+            if (!passwordRegex.test(firstPw)) {
+                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
                 return;
             }
 
-            checkNickname(function(isNicknameValid) {
+            // 비밀번호 일치 확인
+            if (firstPw !== secondPw) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+    checkNickname(function(isNicknameValid) {
                 if (!isNicknameValid) {
                     return;
                 }
-                checkPassword(function(isPasswordValid) {
-                    if (!isPasswordValid) {
-                        return;
-                    }
-                    // 모든 조건이 충족되면 사용자 정보를 저장
-                    var userData = new FormData(); // FormData 객체 생성
-                    userData.append('userId', $('#userId').text()); // 추가
-                    userData.append('nickname', $('#nickName').val());
-                    if (formattedPhone) {
-                        userData.append('phoneNumber', formattedPhone); // phoneNumber 추가
-                    }
-                    
-                    var fileInput = $('#file')[0];
-                    if (fileInput.files.length > 0) {
-                        userData.append('file', fileInput.files[0]); // 파일 추가
-                    }
 
-                    var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
+                // 모든 조건이 충족되면 사용자 정보를 저장
+                var userData = new FormData(); // FormData 객체 생성
+                userData.append('userId', $('#userId').text()); // 추가
+                userData.append('nickname', $('#nickName').val() || $('#hiddenNickName').val()); // 텍스트 필드가 비어있으면 히든 필드 값 사용
+                if (formattedPhone) {
+                    userData.append('phoneNumber', formattedPhone); // phoneNumber 추가
+                }
 
-                    $.ajax({
-                        url: '/user/update',
-                        type: 'POST',
-                        data: userData,
-                        processData: false,
-                        contentType: false,
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                        },
-                        success: function(response) {
-                            alert('회원 정보 수정이 완료되었습니다.');
-                            window.location.href = '/user/login';
-                        },
-                        error: function(xhr, status, error) {
-                            alert('회원 정보 수정에 실패했습니다. 다시 시도해 주세요.');
-                        }
-                    });
+                var fileInput = $('#file')[0];
+                if (fileInput.files.length > 0) {
+                    userData.append('file', fileInput.files[0]); // 파일 추가
+                }
+
+                var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
+
+                $.ajax({
+                    url: '/user/update',
+                    type: 'POST',
+                    data: userData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+                    },
+                    success: function(response) {
+                        alert('회원 정보 수정이 완료되었습니다.');
+                        window.location.href = '/user/login';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('회원 정보 수정에 실패했습니다. 다시 시도해 주세요.');
+                    }
                 });
             });
         }
@@ -343,7 +339,7 @@
         document.getElementById('profile-form').addEventListener('submit', function(event) {
             event.preventDefault(); // 기본 폼 제출을 막음
             check(); // 검증 및 AJAX 요청 수행
-        });
-    </script>
-</body>
-</html>
+                });
+            </script>
+        </body>
+        </html>

@@ -1,16 +1,107 @@
+
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/main_layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Community Guidelines</title>
+    <style>
+        body {
+        font-size: 14px; /* 기본 크기보다 작은 값으로 조정 */
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+       
+        h1 {
+            font-weight: bold;
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        .right-align {
+            text-align: right;
+        }
+
+        li {
+            font-size: 14px; /* 원하는 크기로 조정 */
+            
+        }
+        .underline {
+        border-top: 2px solid #000000; /* 밑줄추가 */
+        margin-top: 10px; /* 원하는 여백 조절 */
+        }
+
+        .fs-2 {
+        font-weight: bold; /* 글꼴을 굵게 설정 */
+        }
+
+
+    </style>
+
+    <title>커뮤니티 가이드라인 - Goodz</title>
 </head>
-<body>
-    <!-- Cancel button -->
-    <div th:replace="fragments/common/cancel :: cancel"></div>
-    <h1>Community Guidelines</h1>
-    <p>여기에 커뮤니티 가이드라인 내용을 작성하십시오.</p>
+<body layout:fragment="content">
+    <div class="container">
+        <div class="mainContainer">
+     
+    <div>
+        <div class="mt-4 mb-3">
+            <button id="closeButton" class="btn btn-dark btn-sm" style="float: right;">메인화면으로</button>
+            <p class="fs-2">커뮤니티 가이드라인</p>
+            <div class="underline"></div>
+        </div>
+
+        <h2>커뮤니티 가이드라인은 서비스를 안전하게 유지하고 보호하기 위해 만들어진 정책입니다. GoodZ을 사용하면 이 가이드라인과 이용약관에 동의하게 됩니다. 이 가이드라인을 위반하는 경우 콘텐츠가 삭제되거나, 계정이 비활성화되는 등의 제재를 받을 수 있습니다.</h2>
+
+        <h1>1. 커뮤니티 활동</h1>
+        <ul>
+            <li>커뮤니티 활동이란 회원이 GoodZ의 STYLE 서비스에 사진 및 의견을 포함한 콘텐츠를 게시하는 활동입니다.</li>
+            <li>회원의 커뮤니티 활동은 다른 서비스 이용자가 콘텐츠를 다운로드하여 열람하거나 개인의 가정에서 비영리적인 목적으로 사적 이용하는 것을 허락한 것으로 간주합니다.</li>
+            <li>회원은 GoodZ의 이용약관에 어긋나지 않는 콘텐츠만을 게시할 수 있습니다.</li>
+            <li>회원이 서비스 내에 게시하는 게시물은 서비스 및 관련 프로모션 등에 노출될 수 있으며, 해당 노출을 위해 필요한 범위 내에서는 일부 수정 또는 편집되어 게시될 수 있습니다.</li>
+        </ul>
+
+        <h1>2. 콘텐츠의 내용과 형식</h1>
+        <ul>
+            <li>직접 촬영했거나 공유할 권한이 있는 콘텐츠만 공유하세요.  </li>
+            <li>모두가 즐길 수 있는 콘텐츠를 게시하세요.</li>
+            <li>부적절한 콘텐츠는 조치 대상이 될 수 있어요.</li>
+
+        </ul>
+
+        <h1>3. 콘텐츠의 저작권</h1>
+        <ul>
+            <li>회원이 서비스 내에 게시한 콘텐츠의 저작권은 해당 게시물의 저작자에게 귀속됩니다.</li>
+            <li>회원이 게시한 콘텐츠는 저작권법에 의하여 보호를 받으며, GoodZ이 작성한 저작물에 대한 저작권 및 기타 지적재산권은 GoodZ에 귀속합니다.</li>
+        </ul>
+
+        <h1>4. 콘텐츠의 관리 및 임시조치</h1>
+        <ul>
+            <li>회원의 게시물이 정보통신망법 및 저작권법 등 관련법에 위반되는 내용을 포함하는 경우, 관련법이 정한 절차에 따라 해당 게시물의 게시중단 및 삭제 등의 임시조치를 요청할 수 있으며 GoodZ은 관련법에 따라 조치를 하여야 합니다. 고객센터로 문의하시기 바랍니다.</li>
+            <li>GoodZ은 권리자의 요청이 없는 경우라도 권리침해가 인정될 만한 사유가 있거나 기타 서비스 운영방침 및 관련법에 따라 해당 게시물에 대해 임시조치 등을 취할 수 있습니다</li>
+            <li>GoodZ은 콘텐츠와 관련한 문제에 대응하고 게시자와 신고자에게 안내를 진행합니다. 단, 불법, 음란, 성인 관련 콘텐츠의 경우 안내 없이 조치합니다.</li>
+            <li>그 외에 서비스의 신뢰도를 떨어뜨리는 콘텐츠 활용 및 부적절한 활동이 확인되는 경우, 해당 계정의 활동 전체가 제한할 수 있습니다.</li>
+        </ul>
+
+        <h1>자세한 문의가 필요할 경우, 고객센터(1234-5678) 문의를 통해 연락해주시기 바랍니다.</h1>
+    </div>   
+    </div>
+    </div>
+    <script>
+        // X 버튼을 클릭했을 때 메인 화면으로 이동하는 함수
+        document.getElementById("closeButton").addEventListener("click", function() {
+            window.location.href = "/"; // 메인 화면 URL로 이동
+        });
+    </script>
 </body>
-<script th:src="@{/js/policy.js}"></script>
 </html>
+
