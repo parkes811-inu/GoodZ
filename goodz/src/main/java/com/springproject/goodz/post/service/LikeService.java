@@ -1,7 +1,6 @@
 package com.springproject.goodz.post.service;
 
 import com.springproject.goodz.post.dto.Like;
-import com.springproject.goodz.post.dto.Post;
 
 public interface LikeService{
 

@@ -1,0 +1,42 @@
+<!-- 프로필 계정의 팔로잉/팔로워 목록이 비어 있을 때 -->
+<th:block th:if="${profileUser.followList.isEmpty()}">
+    <p class="text-center text-secondary">조회된 유저가 없습니다!</p>
+</th:block>
+
+<!-- 프로필 계정의 팔로잉/팔로워 목록이 있을 때 -->
+<th:block th:each="follow : ${profileUser.followList}">
+    <div class="follow d-flex justify-content-between mb-3">
+        <a th:href="|/styles/user/@${follow.nickname}|" class="d-flex" style="text-decoration: none; color: black;">
+            <div class="follow_img me-2">
+                <img th:src="${follow.profilePictureUrl}" alt="프로필 이미지" class="follow_img">
+            </div>
+            <span class="fw-bold my-auto" th:text="${follow.nickname}">유저닉네임</span>
+        </a>
+        
+        <!-- 로그인 여부에 따라 다른 버튼 표시 -->
+        <th:block th:if="${loginUser == null}">
+            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+        </th:block>
+
+        <!-- 로그인 유저일 때 -->
+        <th:block th:if="${loginUser != null}">
+            <!-- 팔로우/팔로잉 버튼 숨기기: 로그인 계정이 팔로잉/팔로워 목록에 있을 경우 버튼을 숨김 -->
+            <th:block th:unless="${follow.userId == loginUser.userId}">
+                <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
+                <th:block th:if="${loginUserFollowingList.isEmpty()}">
+                    <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+                </th:block>
+
+                <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
+                <th:block th:unless="${loginUserFollowingList.isEmpty()}">
+                    <th:block th:if="${#lists.contains(loginUserFollowingList, follow)}">
+                        <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로잉</button>
+                    </th:block>
+                    <th:block th:unless="${#lists.contains(loginUserFollowingList, follow)}">
+                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </th:block>
+    </div>
+</th:block>

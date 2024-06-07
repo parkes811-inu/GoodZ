@@ -1,5 +1,5 @@
 
--- Active: 1715220502910@@127.0.0.1@3306@goodz
+-- Active: 1717144908698@@127.0.0.1@3306@goodz
 
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `Following`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
@@ -14,12 +14,14 @@ CREATE TABLE `Brand`(
 
 DROP TABLE IF EXISTS `user`
 
--- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
 ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
 
 ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
 
 ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+
+-- 카카오 로그인 할때 터미널에 에러 뜨면 user에 쟤네들을 NULL 줘야합니다 / 정용
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
@@ -71,23 +73,23 @@ CREATE TABLE `Social_Login` (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='소셜로그인';
 
--- Following 테이블 / 📁 user
-CREATE TABLE `Following` (
-	`following_no`	INT				NOT NULL AUTO_INCREMENT,
-	`user_id`		VARCHAR(100)	NOT NULL,
-	`following_id`	VARCHAR(100),
-    PRIMARY KEY (following_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-) COMMENT='팔로잉';
+-- Following 테이블 / 📁 user --6/5 필요없어서 삭제함 -도희-
+-- CREATE TABLE `Following` (
+-- 	`following_no`	INT				NOT NULL AUTO_INCREMENT,
+-- 	`user_id`		VARCHAR(100)	NOT NULL,
+-- 	`following_id`	VARCHAR(100),
+--     PRIMARY KEY (following_no),
+--     FOREIGN KEY (user_id) REFERENCES User(user_id)
+-- ) COMMENT='팔로잉';
 
 
--- Follower 테이블 / 📁 user
-CREATE TABLE `Follower` (
-	`follower_no`	INT				NOT NULL AUTO_INCREMENT,
+-- Follow 테이블 / 📁 user
+CREATE TABLE `Follow` (
+	`no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
 	`follower_id`	VARCHAR(100),
     PRIMARY KEY (follower_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY fk_follower_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 ) COMMENT='팔로워';
 
 
@@ -101,7 +103,7 @@ CREATE TABLE `Post` (
 	`created_at` timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (post_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY fk_post_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 ) COMMENT='게시글';
 
 
@@ -115,8 +117,8 @@ CREATE TABLE `Comment` (
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (c_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+    FOREIGN KEY fk_comment_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_comment_post(post_no) REFERENCES Post(post_no) ON DELETE CASCADE
 ) COMMENT='댓글';
 
 
@@ -129,8 +131,8 @@ CREATE TABLE `Like` (
     -- `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 6/5 like해제하면 삭제되므로 필요X
     PRIMARY KEY (like_no),
     -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+    FOREIGN KEY fk_like_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_like_post(post_no) REFERENCES Post(post_no) ON DELETE CASCADE
 );
 
 
@@ -167,7 +169,7 @@ CREATE TABLE `Tag` (
 
 
 DROP TABLE IF EXISTS `user_social`
-
+-- 해당 테이블은 카카오 소셜 로그인 할때 쓰는 테이블입니다 /정용
 CREATE TABLE `user_social` (
     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
     `username` VARCHAR(100) NOT NULL,
@@ -269,6 +271,7 @@ CREATE TABLE `Inspection` (
 ) COMMENT='검수';
 
 -- Purchase 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Purchase`;
 CREATE TABLE `Purchase` (
     `purchase_no`       INT             NOT NULL AUTO_INCREMENT,
     `user_id`           VARCHAR(100)    NOT NULL,
@@ -301,6 +304,7 @@ ALTER TABLE Purchase MODIFY COLUMN purchase_state ENUM('pending', 'paid', 'shipp
 
 
 -- Shipment 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Shipment`;
 CREATE TABLE `Shipment` (
     `shipment_no` INT NOT NULL AUTO_INCREMENT,
     `purchase_no` INT NOT NULL,

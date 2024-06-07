@@ -5,6 +5,9 @@ import com.springproject.goodz.pay.dto.Sales;
 
 public interface PayService {
 
+    // 구매 조회
+    public Purchase selectPurchase(int purchaseNo) throws Exception;
+
     // 구매 등록
     public int savePurchase(Purchase purchase) throws Exception;
     

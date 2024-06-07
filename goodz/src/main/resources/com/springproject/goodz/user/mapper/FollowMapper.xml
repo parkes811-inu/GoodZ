@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.user.mapper.FollowMapper">
+
+
+    <!-- 팔로워 여부 조회 -->
+    <select id="isFollower">
+        SELECT *
+        FROM follow
+        WHERE user_id = #{userId} and follower_id = #{followerId}
+    </select>
+
+    <!-- 팔로워 조회 -->
+    <select id="followerList" resultType="follow">
+        SELECT *
+        FROM follow
+        WHERE user_id = #{userId};
+    </select>
+
+    <!-- 팔로잉 조회 -->
+    <select id="followingList" resultType="follow">
+        SELECT *
+        FROM follow
+        WHERE follower_id = #{followerId};
+    </select>
+
+    <!-- 팔로우 요청 -->
+    <insert id="addFollow">
+        INSERT INTO follow (user_id, follower_id)
+        VALUES (#{userId}, #{followerId})
+    </insert>
+
+    <!-- 언팔 요청 -->
+    <delete id="unfollow">
+        DELETE FROM follow
+        WHERE user_id = #{userId} and follower_id = #{followerId} 
+    </delete>
+
+    <!-- 팔로워/팔로잉 수 조회 -->
+    <select id="countFollow" resultType="Users">
+        SELECT u.user_id
+              ,u.nickname
+              ,u.profile_picture_url
+	          ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
+        FROM user u
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 팔로워 수 조회 -->
+    <!-- <select id="followerCount" resultType=>
+        SELECT 
+	           (SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS follower_count
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS following_count
+        FROM user u
+        WHERE user_id = {userId};
+    </select> -->
+</mapper>

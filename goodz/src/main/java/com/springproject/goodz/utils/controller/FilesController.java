@@ -124,7 +124,6 @@ public class FilesController {
      */
     @GetMapping("/{file_no}")
     public ResponseEntity<byte[]> LoadMainImg(@PathVariable("file_no") int file_no) throws Exception {
-        log.info("fileController");
 
         // 파일 경로로 전달받은 파일 번호로, 파일 정보 조회
         Files requestFile = fileService.select(file_no);

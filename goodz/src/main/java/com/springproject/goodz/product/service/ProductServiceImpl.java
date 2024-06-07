@@ -201,13 +201,20 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
     public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception {
         return productOptionMapper.adminOptionsByProductId(pNo);
     }
 
 
     // 제품 번호로 조회
+    @Override
     public Product findUserWishList (int pNo) throws Exception {
         return productMapper.findUserWishList(pNo);
+    }
+
+    @Override
+    public ProductOption getProductOptionByOptionId(int optionId) throws Exception {
+        return productOptionMapper.getProductOptionByOptionId(optionId);
     }
 }

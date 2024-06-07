@@ -28,5 +28,10 @@ public class PayServiceImpl implements PayService {
         return payMapper.updatePurchase(purchase);
     }
 
+    @Override
+    public Purchase selectPurchase(int purchaseNo) throws Exception {
+        return payMapper.selectPurchase(purchaseNo);
+    }
+
     
 }
