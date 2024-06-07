@@ -204,4 +204,9 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception {
         return productOptionMapper.adminOptionsByProductId(pNo);
     }
+
+    @Override
+    public ProductOption getProductOptionByOptionId(int optionId) throws Exception {
+        return productOptionMapper.getProductOptionByOptionId(optionId);
+    }
 }

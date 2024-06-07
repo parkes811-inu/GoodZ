@@ -17,4 +17,7 @@ public interface ProductOptionMapper {
 
     // 새로운 상품 옵션 추가
     int insertProductOption(ProductOption productOption) throws Exception;
+
+    // optionId 로 옵션 단일 조회
+    public ProductOption getProductOptionByOptionId(int optionId) throws Exception;
 }

@@ -25,5 +25,12 @@
         FROM product_option 
         WHERE p_no = #{pNo}
     </select>
+
+    <!-- optionId 로 옵션 단일 조회 -->
+    <select id="getProductOptionByOptionId" resultType="ProductOption">
+        SELECT *
+        FROM product_option
+        WHERE option_id = #{optionId}
+    </select>
     
 </mapper>

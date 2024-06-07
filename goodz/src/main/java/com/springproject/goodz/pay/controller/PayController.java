@@ -55,8 +55,8 @@ public class PayController {
      * @return 결제 페이지
      * @throws Exception
      */
-    @GetMapping("/buy/{p_no}")
-    public String buy(@PathVariable("p_no") int pNo,
+    @GetMapping("/buy")
+    public String buy(@RequestParam("pNo") int pNo,
                       @RequestParam("size") String size,
                       Model model, HttpSession session) throws Exception {
 
@@ -64,11 +64,6 @@ public class PayController {
         if (user == null) {
             return "redirect:/user/login";
         }
-
-        // 단일 상품 조회
-        Product product = productService.getProductBypNo(pNo);
-        List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
-        product.setOptions(options);
 
         // 기본 배송지를 찾기 위한 로직
         Shippingaddress defaultAddress = null;
@@ -79,6 +74,12 @@ public class PayController {
                 break;
             }
         }
+
+        // 단일 상품 조회
+        Product product = productService.getProductBypNo(pNo);
+        List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+        product.setOptions(options);
+
 
         int purchasePrice = 0;
         int optionId = 0;
@@ -103,12 +104,91 @@ public class PayController {
         purchase.setPurchaseState("pending"); // 구매 상태를 pending으로 설정
         purchase.setOptionId(optionId);
 
+        // 주문 등록
         int result = payService.savePurchase(purchase);
         int purchaseNo = purchase.getPurchaseNo();
+        log.info(":::::::::::::::::::::::::::::::::::::::::::::");
+        log.info("purchaseNo : " + purchaseNo);
 
         if (result == 0) {
             return "redirect:/product/detail/" + pNo;
         }
+
+        // 상품 이미지 설정
+        // Files file = new Files();
+        // file.setParentNo(product.getPNo());
+        // file.setParentTable(product.getCategory());
+        // List<Files> productImages = fileService.listByParent(file);
+
+        // // 첫 번째 이미지 URL 설정
+        // if (!productImages.isEmpty()) {
+        //     product.setImageUrl(productImages.get(0).getFilePath());
+        // } else {
+        //     product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+        // }
+
+        // model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
+        // model.addAttribute("size", size);
+        // model.addAttribute("image", productImages);
+        // model.addAttribute("price", purchasePrice);
+        // model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
+
+        // // 기본 배송지가 있는지 여부를 모델에 추가
+        // model.addAttribute("defaultAddress", defaultAddress);
+        // model.addAttribute("hasAddress", !addresses.isEmpty());
+        // model.addAttribute("addresses", addresses);
+
+        return "redirect:/pay/buy/" + purchaseNo; // 상품 구매 페이지로 이동
+    }
+
+
+    /**
+     * 결제 하기 
+     * @param purchaseNo
+     * @return
+     * @throws Exception 
+     */
+    @GetMapping("/buy/{purchaseNo}")
+    public String getMethodName(@PathVariable("purchaseNo") int purchaseNo
+                               ,Model model
+                               ,HttpSession session) throws Exception {
+        // TODO: purchaseNo 확인
+        log.info("purchaseNo : " + purchaseNo);
+        
+        Users user = (Users) session.getAttribute("user");
+        // TODO : 나중에 시큐리티로 권한 처리할 것..
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+
+        // userId 가져 와서 
+        // Shippingaddress 조회
+        Shippingaddress defaultAddress = null;
+        List<Shippingaddress> addresses = userService.selectByUserId(user.getUserId());
+        for (Shippingaddress address : addresses) {
+            if (userService.isDefaultAddress(address.getAddressNo())) {
+                defaultAddress = address;
+                break;
+            }
+        }
+        
+
+        // purchaseNo 조회
+        // - p_no,  option_id 꺼내옴
+        Purchase purchase = payService.selectPurchase(purchaseNo);
+
+        
+        // Product 조회
+        int pNo = purchase.getPNo();
+        log.info("::::::::::::::::::::::::::::::::::::::::::");
+        log.info("pNo : " + pNo);
+        Product product = productService.getProductBypNo(pNo);
+        
+        // ProductOption 조회
+        int optionId = purchase.getOptionId();
+        log.info("::::::::::::::::::::::::::::::::::::::::::");
+        log.info("optionId : " + optionId);
+        ProductOption productOption = productService.getProductOptionByOptionId(optionId);
 
         // 상품 이미지 설정
         Files file = new Files();
@@ -123,10 +203,11 @@ public class PayController {
             product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
         }
 
+
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
-        model.addAttribute("size", size);
+        model.addAttribute("size", productOption.getSize());
         model.addAttribute("image", productImages);
-        model.addAttribute("price", purchasePrice);
+        model.addAttribute("price", purchase.getPurchasePrice());
         model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
 
         // 기본 배송지가 있는지 여부를 모델에 추가
@@ -134,8 +215,10 @@ public class PayController {
         model.addAttribute("hasAddress", !addresses.isEmpty());
         model.addAttribute("addresses", addresses);
 
-        return "/pay/buy"; // 상품 구매 페이지로 이동
+        return "/pay/buy";
     }
+    
+
 
     /**
      * 결제 성공 시 호출되는 메서드 (POST 요청)
@@ -290,10 +373,51 @@ public class PayController {
      * @param type 완료 타입 (buy 또는 sell)
      * @param model 모델
      * @return 완료 페이지
+     * @throws Exception 
      */
     @GetMapping("/complete")
-    public String complete(@RequestParam("type") String type, Model model) {
+    public String complete(@RequestParam("purchaseNo") int purchaseNo,
+                           @RequestParam("paymentKey") String paymentKey,
+                           @RequestParam("orderId") String orderId,
+                           @RequestParam("amount") int amount,
+                           @RequestParam("type") String type, Model model) throws Exception {
+        
+
+        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
+
+        Purchase purchase = new Purchase();
+        purchase.setPurchaseNo(purchaseNo);
+        purchase.setOrderId(orderId);
+        purchase.setPurchaseState("paid");
+        purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+        log.info("Purchase 객체 생성됨: {}", purchase);
+
+        int result = payService.updatePurchase(purchase);
+        if (result > 0) {
+            log.info("구매 업데이트 성공");
+            model.addAttribute("type", type);
+            return "redirect:/pay/buy/complete/" + purchaseNo + "?type="+type;
+        }
+        log.info("구매 업데이트 실패");
+        type = "fail";
+        model.addAttribute("type", type);
+        return "redirect:/pay/fail" + purchaseNo;
+    }
+
+    /**
+     * 결제 완료 페이지
+     * @param purchaseNo
+     * @param type : buy
+     * @param model
+     * @return
+     */
+    @GetMapping("/buy/complete/{purchaseNo}")
+    public String getMethodName(@PathVariable("purchaseNo") String purchaseNo
+                               ,@RequestParam("type") String type
+                               ,Model model) {
         model.addAttribute("type", type);
         return "/pay/complete";
     }
+    
 }
