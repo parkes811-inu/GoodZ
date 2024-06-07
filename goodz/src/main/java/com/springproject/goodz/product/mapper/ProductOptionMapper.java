@@ -20,4 +20,13 @@ public interface ProductOptionMapper {
 
     // optionId 로 옵션 단일 조회
     public ProductOption getProductOptionByOptionId(int optionId) throws Exception;
+
+    // 구매 업데이트 성공 시 재고 수량 - 1
+    public void minusQuantityByProductId(int optionId) throws Exception;
+
+    // 옵션 아이디 별 재고 수량 확인
+    public int checkStockQuantity(int optionId) throws Exception;
+
+    // 상품 상태 업데이트 
+    public void changeStatus(int optionId) throws Exception;
 }
