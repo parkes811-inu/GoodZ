@@ -42,21 +42,21 @@
     <div class="container">
         <div class="userMainContainer">
 
-            <!-- [DB] 구매내역 요약창 / 유저의 구매내역 Stauts에 맞게 count값을 가져옴 -->
+            <!-- [DB] 구매내역 요약창 / 유저의 구매내역 Status에 맞게 count값을 가져옴 -->
             <div class="box d-flex flex-column border rounded-3 p-3 w-100">
                 <p class="fs-4 fw-bold">구매 내역</p>
                 <div class="d-flex text-center">
                     <div class="col border-end my-3">
-                        <p class="fw-bold">요청</p>
-                        <p>0</p>
+                        <p class="fw-bold">결제 완료</p>
+                        <p th:text="${paidPurchases.size()}"></p>
                     </div>
                     <div class="col border-end my-3">
-                        <p class="fw-bold">진행중</p>
-                        <p>0</p>
+                        <p class="fw-bold">배송 중</p>
+                        <p th:text="${shippingPurchases.size()}"></p>
                     </div>
                     <div class="col my-3">
-                        <p class="fw-bold">종료</p>
-                        <p>0</p>
+                        <p class="fw-bold">배송 완료</p>
+                        <p th:text="${deliveredPurchases.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -68,87 +68,36 @@
                 </div>        
                 
                 <!-- [DB] 구매 상품 리스트 반복문으로 출력-->
-                <div class="product_list mb-5 d-flex flex-column" id="product_list">
-
-                    <div class="product_item" data-date="2024/05/21">
+                <div class="product_list mb-5 d-flex flex-column" th:each="purchase : ${allPurchases}" id="product_list">
+                    <div class="product_item" th:data-ordered-at="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}">
                         <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
                         <div class="d-flex">
                             <!-- 상품 이미지 -->
-                            <img src="/img/product/product_img.png">
+                            <a th:href="@{/product/detail/{pNo}(pNo=${purchase.pNo})}">
+                                <img th:src="@{/files/img(imgUrl=${purchase.imageUrl})}" alt="상품 이미지" class="rounded-4 w-30">
+                            </a>
                             <!-- 브랜드/상품명 -->
                             <div class="product_details d-flex flex-column my-auto ms-3">
-                                <p class=" fw-bold">Nike</p>
-                                <p>Air Force 1 '07</p>
+                                <p class=" fw-bold" th:text="${purchase.bName}"></p>
+                                <p th:text="${purchase.productName}"></p>
                             </div>
                         </div>
                         <div class="product_date_price">
-                            <!-- 구매 status -->
-                            <p>요청</p>
+                            <!-- 구매 상태 -->
+                            <p th:if="${purchase.purchaseState} == 'paid'" th:text="'결제완료'"></p>
+                            <p th:if="${purchase.purchaseState} == 'shipping'" th:text="'배송중'"></p>
+                            <p th:if="${purchase.purchaseState} == 'delivered'" th:text="'배송완료'"></p>
+                            <p th:if="${purchase.purchaseState} == 'cancelled'" th:text="'구매취소'"></p>
+
                             <div>
                                 <!-- 구매일자/가격 -->
-                                <p>2024/05/21</p>
-                                <p>2555555원</p>
+                                <p th:text="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}"></p>
+                                <p th:text="${purchase.purchasePrice} + '원'"></p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="product_item" data-date="2024/05/20">
-                         <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
-                         <div class="d-flex">
-                             <img src="/img/product/product_img.png">
-                             <div class="product_details d-flex flex-column my-auto ms-3">
-                                 <p class=" fw-bold">Nike</p>
-                                 <p>Air Force 1 '07</p>
-                             </div>
-                         </div>
-                         <div class="product_date_price">
-                            <p>진행중</p>
-                            <div>
-                                <p>2024/05/20</p>
-                                <p>2555555원</p>
-                            </div>
-                         </div>
-                    </div>
-
-                    <div class="product_item"  data-date="2024/05/19">
-                        <div class="d-flex">
-                            <img src="/img/product/product_img.png">
-                             <div class="product_details d-flex flex-column my-auto ms-3">
-                                 <p class=" fw-bold">Nike</p>
-                                 <p>Air Force 1 '07</p>
-                             </div>
-                        </div>
-                         <div class="product_date_price">
-                            <p>종료</p>
-                            <div>
-                                <p>2024/05/19</p>
-                                <p>2555555원</p>
-                            </div>
-                         </div>
-                    </div>
-
-                    <div class="product_item" data-date="2024/05/18">
-                        <div class="d-flex">
-                            <img src="/img/product/product_img.png">
-                             <div class="product_details d-flex flex-column my-auto ms-3">
-                                 <p class=" fw-bold">Nike</p>
-                                 <p>Air Force 1 '07</p>
-                             </div>
-                        </div>
-                         <div class="product_date_price">
-                            <p>종료</p>
-                            <div>
-                                <p>2024/05/18</p>
-                                <p>2555555원</p>
-                            </div>
-                         </div>
-                    </div>
-                    
                 </div>
             </div>
-
-
-
         </div>
     </div>
 
@@ -156,28 +105,30 @@
         function filter() {
             var productList = document.getElementById('product_list');
             var items = productList.getElementsByClassName('product_item');
-            var itemsArray = [];
-            
-            for (var i = 0; i < items.length; i++) {
-                itemsArray.push(items[i]);
-            }
-    
-            itemsArray.reverse();
-            
-            for (var i = 0; i < itemsArray.length; i++) {
-                productList.appendChild(itemsArray[i]);
-            }
-    
+            var itemsArray = Array.from(items);
+
+            // 현재 정렬 상태를 확인하고, 반대로 정렬
             var sortIcon = document.getElementById('sort-icon');
             var sortText = document.getElementById('sort-text');
-            if (sortIcon.innerHTML === '▼') {
-                sortIcon.innerHTML = '▲';
-                sortText.innerHTML = '오름차순';
-            } else {
-                sortIcon.innerHTML = '▼';
-                sortText.innerHTML = '내림차순';
-            }
+            var isDescending = sortIcon.innerHTML === '▼';
+
+            // 날짜를 기준으로 정렬
+            itemsArray.sort(function(a, b) {
+                var dateA = new Date(a.getAttribute('data-ordered-at'));
+                var dateB = new Date(b.getAttribute('data-ordered-at'));
+                return isDescending ? dateB - dateA : dateA - dateB;
+            });
+
+            // 정렬된 항목들을 다시 DOM에 추가
+            itemsArray.forEach(function(item) {
+                productList.appendChild(item);
+            });
+
+            // 정렬 상태 토글
+            sortIcon.innerHTML = isDescending ? '▲' : '▼';
+            sortText.innerHTML = isDescending ? '오름차순' : '내림차순';
         }
+
     </script>
     
     

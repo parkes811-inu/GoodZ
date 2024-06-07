@@ -63,16 +63,16 @@
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
                     <div class="col">
-                        <p>전체</p>
-                        <p>0</p>
+                        <p>결제 완료</p>
+                        <p th:text="${paidPurchases.size()}"></p>
                     </div>
                     <div class="col">
                         <p>배송중</p>
-                        <p>0</p>
+                        <p th:text="${shippingPurchases.size()}"></p>
                     </div>
                     <div class="col">
                         <p>배송완료</p>
-                        <p>0</p>
+                        <p th:text="${deliveredPurchases.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -107,27 +107,28 @@
                     <div class="col-12 d-flex justify-content-end">
                         <a href="/user/wishlist/products" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
                     </div>
-                    <th:block th:if="${wishlistProducts.size() > 0}">
-                        <th:block th:each="product : ${wishlistProducts}">
-                            <div class="col">
-                                <div class="card border-0">
-                                    <div class="card-body">
-                                        <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
-                                            <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
-                                        </a>
-                                        <div class="card-text py-2">
-                                            <div class="d-flex justify-content-start column-gap-1">
-                                                <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
-                                            </div>
-                                            <div class="d-flex justify-content-start column-gap-1">
-                                                <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
+                        <th:block th:if="${wishlistProducts.size() > 0}">
+                            <th:block th:each="product : ${wishlistProducts}">
+                                <div class="col">
+                                    <div class="card border-0">
+                                        <div class="card-body">
+                                            <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
+                                                <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
+                                            </a>
+                                            <div class="card-text py-2">
+                                                <div class="d-flex justify-content-start column-gap-1">
+                                                    <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
+                                                </div>
+                                                <div class="d-flex justify-content-start column-gap-1">
+                                                    <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </th:block>
-                    </th:block>
+                    </div>
                     <th:block th:if="${wishlistProducts.size() == 0}">
                         <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
                     </th:block>

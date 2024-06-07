@@ -34,4 +34,22 @@
 		WHERE purchase_no = #{purchaseNo}
 	</select>
 
+	<select id="findPurchasesByUserId">
+		SELECT 
+			purchase_no AS purchaseNo,
+			user_id AS userId,
+			p_no AS pNo,
+			option_id AS optionId,
+			order_id AS orderId,
+			purchase_price AS purchasePrice,
+			payment_method AS paymentMethod,
+			purchase_state AS purchaseState,
+			ordered_at AS orderedAt,
+			updated_at AS updatedAt
+		FROM 
+			Purchase
+		WHERE 
+			user_id = #{userId}
+	</select>	
+
 </mapper>
