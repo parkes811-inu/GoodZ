@@ -2,6 +2,7 @@ package com.springproject.goodz.user.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +33,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.user.service.WishListService;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +56,15 @@ public class UserController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private WishListService wishListService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private FileService fileService;
+
     @Value("${upload.path}")
     private String uploadPath;
   
@@ -58,7 +73,8 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
-        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
         } else {
@@ -66,6 +82,32 @@ public class UserController {
             model.addAttribute("user", user);
         }
 
+        if (auth != null && auth.getPrincipal() instanceof UserDetails) {
+
+            // 사용자 ID를 사용하여 관심 목록 제품 조회
+            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            List<Product> wishlistProducts = new ArrayList<Product>();
+            for (Integer pNo : wishListNum) {
+                Product product = new Product();
+                product = productService.findUserWishList(pNo);
+
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(product.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    product.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+
+                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+            }
+            model.addAttribute("wishlistProducts", wishlistProducts);
+        }
         return "/user/index";
     }
 
@@ -312,6 +354,31 @@ public class UserController {
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
             Users user = userService.findUserByUsername(userDetails.getUsername());
             model.addAttribute("user", user);
+
+
+            // 사용자 ID를 사용하여 관심 목록 제품 조회
+            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            List<Product> wishlistProducts = new ArrayList<Product>();
+            for (Integer pNo : wishListNum) {
+                Product product = new Product();
+                product = productService.findUserWishList(pNo);
+
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(product.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    product.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+
+                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+            }
+            model.addAttribute("wishlistProducts", wishlistProducts);
         }
         return "/user/wishlist_products";
     }

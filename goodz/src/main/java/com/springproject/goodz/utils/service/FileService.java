@@ -15,7 +15,7 @@ public interface FileService {
     // 파일 수정
     public int update(Files file) throws Exception;
     // 파일 삭제
-    public int delete(int parentNo) throws Exception;
+    public int delete(int no) throws Exception;
 
     // 파일 목록 - 부모 기준
     public List<Files> listByParent(Files file) throws Exception;

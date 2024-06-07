@@ -79,4 +79,7 @@ public interface ProductMapper {
     public void updateOptionsByProductId(ProductOption option) throws Exception;
 
 
+    public Product findUserWishList (int pNo) throws Exception;
+
 }
+

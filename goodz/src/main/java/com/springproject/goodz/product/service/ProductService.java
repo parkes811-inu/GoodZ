@@ -69,6 +69,9 @@ public interface ProductService {
     // 등록된 상품 정보 업데이트 하는데 사용
     public void updateProduct(Product product) throws Exception;
 
+    // 제품 번호로 조회
+    public Product findUserWishList (int pNo) throws Exception;
+    
     // optionId 로 옵션 단일 조회
     public ProductOption getProductOptionByOptionId(int optionId) throws Exception;
 
@@ -80,4 +83,5 @@ public interface ProductService {
 
     // 상품 상태 업데이트 
     public void changeStatus(int optionId) throws Exception;
+
 }

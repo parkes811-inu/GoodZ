@@ -1,5 +1,7 @@
 package com.springproject.goodz.user.service;
 
+import java.util.List;
+
 import com.springproject.goodz.user.dto.Wish;
 
 public interface WishListService {
@@ -16,5 +18,10 @@ public interface WishListService {
     // 저장 on -> off
     public int wishOff (Wish wish) throws Exception;
     
+    // 관심에 담긴 상품 번호 리스트 반환
+    public List<Integer> listNumByUserId (String userId) throws Exception;
+
+    // 종속된 저장들 모두 삭제
+    public int deleteAll(Wish wish) throws Exception;
     
 }
