@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.springproject.goodz.admin.service.AdminService;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
@@ -42,6 +43,9 @@ public class AdminController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private AdminService adminService;
     
     @GetMapping("")
     public String index() {
@@ -180,15 +184,17 @@ public class AdminController {
         return "/admin/purchase_state";
     }
 
-    @GetMapping("/purchase/detail")
-    public String purchase_detail() {
-
-        // if (reuslt > 0 && status == 정산완료) {
-        //     int sival = productService.plusSize(1, S);
-        //     update id="plusSize"
-        //     update product_option set stock_quantity = stock_quantity + 1 where p_no = 1 and size = 'S';
-        // }
+    @GetMapping("/purchase/detail/{sNo}")
+    public String purchaseDetail(@PathVariable("sNo") int sNo, Model model) throws Exception {
+        Map<String, Object> saleDetail = adminService.userSale(sNo);
+        model.addAttribute("saleDetail", saleDetail);
         return "/admin/purchase_detail";
+    }
+
+    @PostMapping("/purchase/update")
+    public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
+        adminService.updateUserSaleState(sNo, saleState);
+        return "redirect:/admin/purchase/detail/" + sNo;
     }
 
     @GetMapping("/pay_history")
@@ -259,6 +265,7 @@ public class AdminController {
 
         return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
     }
+    
     
 
 }

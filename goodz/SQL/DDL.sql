@@ -253,7 +253,7 @@ CREATE TABLE `Sales` (
     `sale_price` INT NOT NULL,
     `size` VARCHAR(50) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
-    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `sale_state` ENUM('pending','reception','checking', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
     `sale_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`s_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),

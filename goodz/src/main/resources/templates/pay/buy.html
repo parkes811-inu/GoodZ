@@ -108,7 +108,7 @@
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
             <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
-            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
+            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
             <input type="hidden" id="productName" name="productName" th:value="${product.productName}" />
 
             <div class="section_unit mb-4 text-center">
