@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Users findUserByUsername(String username) throws Exception {
-        return userMapper.select(username); // 'select' 메서드를 재사용하여 사용자 정보 조회
+        return userMapper.findUserByUsername(username);
     }
 
 

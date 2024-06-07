@@ -84,4 +84,7 @@ public interface ProductService {
     // 상품 상태 업데이트 
     public void changeStatus(int optionId) throws Exception;
 
+    // 조회 수 기능
+    public void updateViews(int pNo) throws Exception;
+
 }

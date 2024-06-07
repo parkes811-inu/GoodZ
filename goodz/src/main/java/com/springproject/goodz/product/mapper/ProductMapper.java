@@ -81,5 +81,7 @@ public interface ProductMapper {
 
     public Product findUserWishList (int pNo) throws Exception;
 
+    public void updateViews(int pNo);
+
 }
 

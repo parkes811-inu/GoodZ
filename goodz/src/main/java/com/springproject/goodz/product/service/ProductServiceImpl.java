@@ -233,4 +233,10 @@ public class ProductServiceImpl implements ProductService {
     public void changeStatus(int optionId) throws Exception {
         productOptionMapper.changeStatus(optionId);
     }
+
+    // 조회수 증가
+    public void updateViews(int pNo) throws Exception {
+        productMapper.updateViews(pNo);
+    }
+
 }

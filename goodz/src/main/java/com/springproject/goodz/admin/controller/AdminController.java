@@ -173,7 +173,6 @@ public class AdminController {
             }
 
         } else {
-            // error 페이지 만드러야 댐.....
             return "/common/error";
         }
         return "redirect:/admin/products";
@@ -220,7 +219,7 @@ public class AdminController {
     @PostMapping("/purchase/update")
     public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
         adminService.updateUserSaleState(sNo, saleState);
-        return "redirect:/admin/purchase/detail/" + sNo;
+        return "redirect:/admin/purchase_state";
     }
 
 

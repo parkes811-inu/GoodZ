@@ -78,5 +78,8 @@ public interface UserMapper {
 
     // 소셜 정보로 회원 조회
     public Users selectBySocial(UserSocial userSocial) throws Exception;
-    
+
+    // 유저 조회
+    public Users findUserByUsername(String username) throws Exception;
+
 }

@@ -158,7 +158,7 @@
                                       #strings.equalsIgnoreCase(sale.sale_state, 'reception') ? '수취완료' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'checking') ? '검수중' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'completed') ? '정산완료' : '취소됨'}"></td>
-                        <td th:text="${sale.sale_date}"></td>
+                        <td th:text="${#dates.format(sale.sale_date, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </tbody>
             </table>

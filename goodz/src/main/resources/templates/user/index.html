@@ -81,21 +81,21 @@
             <div class="box border rounded-3 p-3">
                 <div class="d-flex justify-content-between">
                     <p class="fw-bold">판매 내역</p>
-                    <a href="/user/purchase" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
+                    <a href="/user/sales" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
                 </div>
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
                     <div class="col">
-                        <p>요청</p>
-                        <p>0</p>
+                        <p>판매접수</p>
+                        <p th:text="${paidSales.size()}"></p>
                     </div>
                     <div class="col">
                         <p>진행중</p>
-                        <p>0</p>
+                        <p th:text="${shippingSales.size()}"></p>
                     </div>
                     <div class="col">
                         <p>정산완료</p>
-                        <p>0</p>
+                        <p th:text="${deliveredSales.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                                 <div class="col">
                                     <div class="card border-0">
                                         <div class="card-body">
-                                            <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
+                                            <a th:href="@{/product/{pNo}(pNo=${product.pNo})}">
                                                 <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                             </a>
                                             <div class="card-text py-2">

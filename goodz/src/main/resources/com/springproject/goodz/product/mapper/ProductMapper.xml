@@ -135,5 +135,9 @@
          WHERE p_no = #{pNo}
     </select>
     
-    
+    <update id="updateViews">
+        UPDATE product
+           SET views = views + 1
+         WHERE p_no = #{pNo}
+    </update>
 </mapper>
