@@ -22,7 +22,7 @@ public interface UserService {
     public int join(Users user) throws Exception;
 
     // 회원 수정
-    public int update(Users user) throws Exception;
+    public int updateUser(Users user) throws Exception;
 
     // 회원 권한 등록
     public int insertAuth(UserAuth userAuth) throws Exception;

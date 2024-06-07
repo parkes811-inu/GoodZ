@@ -3,10 +3,13 @@ package com.springproject.goodz.user.dto;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
 public class Users {
+    private int no;                     // 번호 -> 프로필 사진 parentNo.
     private String userId;
     private String username;
     private String nickname;
@@ -14,6 +17,8 @@ public class Users {
     private String birth;
     private String phoneNumber;
     private String profilePictureUrl;
+    private int profileImgNo;           // 프로필 이미지 번호
+    private MultipartFile profileImgfile; 
     private String account;
     private Date createdAt;
     private Date updatedAt;

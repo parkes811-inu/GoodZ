@@ -46,7 +46,7 @@
               , IFNULL((SELECT count(*) from `like` l where l.post_no = p.post_no),0) as likeCount
               , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
         FROM post p
-        inner join file f on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
+        INNER JOIN file f on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
     </select>
 
     <!-- 최근 등록한 게시글 번호 - 첨부파일 등록 시 필요 -->

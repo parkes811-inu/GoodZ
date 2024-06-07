@@ -52,7 +52,6 @@
             margin: 0;
         }
         .profile-info .nickname {
-            font-size: 0.875rem; 
             margin: 0;
         }
         .profile-buttons {
@@ -81,7 +80,7 @@
         <div class="UserMainContainer">
             
             <div class="row mx-auto">
-                <div class="col-md-9 content">
+                <div class="col-md-9 content" style="max-width: 640px;">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title-section">
@@ -90,8 +89,8 @@
                                         <img th:src="${user != null and user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
                                     </div>
                                     <div class="profile-info">
-                                        <p class="nickname" id="nickname" th:text="${user != null ? user.nickname : 'Error'}"></p>
-                                        <p class="user-id" id="userId" name="userId" th:text="${user != null ? user.userId : 'Error'}"></p>
+                                        <p class="nickname  fw-bold m-0" th:text="${user != null ? user.nickname : 'Error'}"></p>
+                                        <p class="user_id m-0" style="font-size: medium;" th:text="${user.userId}"></p>
                                     </div>
                                 </div>
                                 <div class="profile-buttons">
@@ -101,69 +100,55 @@
                         </div>
                     </div>
                     
-                    <form class="row g-3 needs-validation" method="POST" action="/upload" enctype="multipart/form-data" novalidate id="profile-form">
+                    <form id="form" class="row g-3 needs-validation mb-5" method="POST" action="/user/update" enctype="multipart/form-data">
+                        <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <!-- 유저의 기존 정보 -닉네임 변경 유무 체크하기위해- -->
+                        <input type="hidden" name="no" th:value="${user.no}">
+                        <input type="hidden" name="userId" id="userId" th:value="${user.userId}">
+                        <input type="hidden" name="originalNickname" id="originalNickname" th:value="${user.nickname}">
+                        <input type="hidden" name="originalFileNo" th:value="${user.profileImgNo}">
+                        <input type="hidden" name="originalPassword" th:value="${user.password}">
 
                         <div class="form-group">
                             <label for="formFile" class="form-label">프로필 사진 수정*</label>
                             <div class="input-group" style="max-width: 640px;">
-                                <input type="file" class="form-control rounded-1" name="file" id="file" placeholder="첨부파일을 등록해주세요.">
+                                <input type="file" class="form-control rounded-1" name="profileImgfile" id="file" placeholder="첨부파일을 등록해주세요.">
                             </div>
                         </div>
                         
-                        <div class="position-relative" style="max-width: 655px;">
-                            <label for="nickName" class="form-label">닉네임*</label>
-                            <input type="hidden" id="hiddenNickName" th:value="${user.nickname}">
-                            <input type="text" class="form-control" id="nickName" name="nickname" placeholder="" required style="width: 100%;">
-                            <button class="btn btn-dark rounded-1" type="button" id="check-nickname" onclick="checkNickname()">중복체크</button>
+                        <div class="position-relative">
+                            <label for="nickName" class="form-label m-0">닉네임*</label>
+                            <div class="input-group mb-3">
+                                <input type="text" name="nickname" id="nickname" class="form-control" placeholder="영문, 숫자, 특수문자 조합 (한글사용불가)" aria-describedby="nickname" th:value="${user.nickname}">
+                                <button class="btn btn-outline-secondary" type="button" id="nicknameBtn" onclick="checkNickname()" >중복체크</button>
+                            </div>
                         </div>
                         
-<!--                     
+                    
                         <div class="form-group">
                             <label for="password">비밀번호*</label>
                             <div class="input-group">
-                                <input type="password" class="form-control me-2 rounded-1" id="password" placeholder="********" style="max-width: 640px;">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="영문, 숫자, 특수문자 조합 7-16자" aria-describedby="password">
+                                <button class="btn btn-outline-secondary" type="button" id="passwordkBtn" onclick="togglePasswordVisibility('password')" style="min-width: 90px;"><i class="fa fa-eye-slash"></i></button>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="password_check">비밀번호 확인*</label>
                             <div class="input-group">
-                                <input type="password" class="form-control me-2 rounded-1" id="passwordCheck" placeholder="********" style="max-width: 640px;">
-                            </div>
-                        </div> -->
-
-                        <div class="form-group">
-                            <label for="password">비밀번호 입력*</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control me-2 rounded-1" id="password" name="password" placeholder="영문, 숫자, 특수문자 조합 7-16자" style="max-width: 640px;">
-                                <span class="input-group-text toggle-password" onclick="togglePasswordVisibility('password')">
-                                    <i class="fa fa-eye-slash"></i>
-                                </span>
-                            </div>
-                        </div>
-                        
-
-                        <div class="form-group">
-                            <label for="password_check">비밀번호 확인*</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control me-2 rounded-1" id="password_check" name="password_check" placeholder="비밀번호를 다시 입력해주세요." style="max-width: 640px;">
-                                <span class="input-group-text toggle-password" onclick="togglePasswordVisibility('password_check')">
-                                    <i class="fa fa-eye-slash"></i>
-                                </span>
+                                <input type="password" class="form-control" id="checkPassword" placeholder="영문, 숫자, 특수문자 조합 7-16자" aria-describedby="checkPassword">
+                                <button class="btn btn-outline-secondary" type="button" id="checkPasswordBtn" onclick="togglePasswordVisibility('checkPassword')" style="min-width: 90px;"><i class="fa fa-eye-slash"></i></button>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="phone_number">핸드폰 번호 수정*</label>
                             <div class="input-group">
-                                <input type="text" class="form-control me-2 rounded-1" id="phoneNumber" 
-                                    style="max-width: 640px;" placeholder="'-'을 제외하고 입력해주세요.">
+                                <input type="text" class="form-control me-2 rounded-1" name="phoneNumber" id="phoneNumber" placeholder="'-'을 제외하고 입력해주세요.">
                             </div>
                         </div>
 
-                        <div class="col-12 d-flex justify-content-end"  style="max-width: 640px;">
-                            <button class="btn btn-dark" type="button" onclick="check()">저장</button>
-                        </div>
+                        <button class="btn btn-dark" type="button" onclick="check()" style="background-color: #393E46; border: none;">저장</button>
                     </form>
                 </div>
             </div>
@@ -172,174 +157,139 @@
     
     <script>
 
+
+        // 기존 정보 가져오기
+        let originalNickname = document.getElementById('originalNickname').value;
+        var csrfToken = document.getElementById('csrfToken').value;
+        let userId = document.getElementById('userId').value;
+
+        let $inputNickname = document.getElementById('nickname');
+        let form = document.getElementById('form');
+        
+
+        // 체크 여부
+        let isNicknameChecked = false;
+        
+
+        // 닉네임 입력 input칸이 수정될때마다 중복체크 여부 false로 다시 설정
+        $inputNickname.addEventListener('input', function() {
+            isNicknameChecked = false;
+        });
+
+        // 비밀번호 입력 보이기 토글버튼
         function togglePasswordVisibility(elementId) {
             var input = document.getElementById(elementId);
             var togglePassword = input.nextElementSibling.querySelector('i');
-
+            
             if (input.type === 'password') {
                 input.type = 'text';
                 togglePassword.classList.remove('fa-eye-slash');
                 togglePassword.classList.add('fa-eye');
-            } else {
-                input.type = 'password';
-                togglePassword.classList.remove('fa-eye');
-                togglePassword.classList.add('fa-eye-slash');
-            }
-        }
-
-        var isNicknameAvailable = false; // 닉네임 중복 체크 상태를 저장하는 변수
-
-        function checkNickname(callback) {
-            var userId = $('#userId').text();
-            var nickname = $('#nickName').val().trim(); // trim()으로 공백 제거
-            var hiddenNickname = $('#hiddenNickName').val(); // 히든 필드의 값 가져오기
-            var csrfToken = $('input[name=_csrf]').val(); // CSRF 토큰 값 가져오기
-
-            // nickname이 빈 값일 때 hiddenNickname 사용
-            if (nickname === '') {
-                nickname = hiddenNickname;
-            }
-
-            if (nickname === '') {
-                alert('닉네임을 입력해주세요.');
-                return false;
-            }
-
-            var data = {
-                userId: userId,
-                nickname: nickname
-            };
-
-            $.ajax({
-                url: '/user/check',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
-                },
-                success: function(response) {
-                    alert('사용 가능한 닉네임 입니다.')
-                    callback(true);
-                },
-                error: function(xhr, status, error) {
-                    if(xhr.status === 409) {
-                        alert('이미 사용 중인 닉네임입니다.');
-                    } else {
-                        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+                } else {
+                    input.type = 'password';
+                    togglePassword.classList.remove('fa-eye');
+                    togglePassword.classList.add('fa-eye-slash');
                     }
-                    callback(false);
-                }
-            });
-        }
+                    }
+                    
+            function check() {
+                
+                let inputNickname = document.getElementById('nickname').value;
+                let password = document.getElementById('password').value; 
+                let checkPassword = document.getElementById('checkPassword').value;
+                let phoneNumber = document.getElementById('phoneNumber').value;
+                var fileInput = document.getElementById('file');
 
-                //     function checkPassword(callback) {
-            // var password = $('#password').val();
-            // var userId = $('#userId').text();
-            // var csrfToken = $('input[name=_csrf]').val();
-
-            // console.log("Password: " + password); // 콘솔에 비밀번호 출력
-            // console.log("UserId: " + userId); // 콘솔에 UserId 출력
-
-        //     $.ajax({
-        //         url: '/user/checkPassword',
-        //         type: 'POST',
-        //         contentType: 'application/json',
-        //         data: JSON.stringify({ userId: userId, password: password }),
-        //         beforeSend: function(xhr) {
-        //             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-        //         },
-        //         success: function(response) {
-        //             console.log("Server Response: ", response); // 서버 응답 출력
-        //             callback(true);
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.log("Server Error: ", xhr.responseText); // 서버 오류 응답 출력
-        //             alert('비밀번호가 일치하지 않습니다.');
-        //             callback(false);
-        //         }
-        //     });
-        // }
-
-        function formatPhoneNumber(phone) {
-            // 숫자만 추출
-            var cleaned = ('' + phone).replace(/\D/g, '');
-            var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
-            if (match) {
-                return match[1] + '-' + match[2] + '-' + match[3];
-            }
-            return null;
-        }
-        function check() {
-            var firstPw = $('#password').val();
-            var secondPw = $('#password_check').val(); // 비밀번호 확인 값 가져오기
-            var phone = $('#phoneNumber').val();
-            var formattedPhone = formatPhoneNumber(phone);
-
-            if (formattedPhone === null) {
-                alert('올바른 휴대폰 번호를 입력해주세요.');
+            // 변동사항이 있는지 체크
+            if (fileInput.files.length === 0 && inputNickname === originalNickname && password == "" && checkPassword == "" && phoneNumber == "") {
+                alert('저장할 변동사항이 없습니다.');
                 return;
             }
 
+            /* ✅ 1. 닉네임 변경 유무 및 중복체크 여부 체크 */
+            if (!isNicknameChecked) {
+                if (inputNickname != originalNickname) {
+                    alert('닉네임 중복체크가 필요합니다.')
+                    return;
+                }
+            }
+                    
+            /* ✅ 2. 비밀번호 정규화 체크 및 비밀번호 확인 일치여부 체크 */
+            
             // 비밀번호 유효성 검사 정규 표현식
             var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
-
             // 비밀번호 유효성 검사
-            if (!passwordRegex.test(firstPw)) {
-                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+            if (password !== '' || checkPassword !== '') {
+                if (!passwordRegex.test(password)) {
+                    alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                    return;
+                }
+            }
+            if (password != checkPassword) {
+                alert('입력한 비밀번호가 서로 일치하지 않습니다.');
                 return;
             }
 
-            // 비밀번호 일치 확인
-            if (firstPw !== secondPw) {
-                alert('비밀번호가 일치하지 않습니다.');
-                return;
-            }
+            // ✅ 3. 휴대폰 번호 유효성 검사
+            const phoneNumberRegex = /^(01[016789]{1})[1-9]{1}[0-9]{3,4}[0-9]{4}$/;
 
-    checkNickname(function(isNicknameValid) {
-                if (!isNicknameValid) {
+            if (phoneNumber != "") {
+                if (!phoneNumberRegex.test(phoneNumber)) {
+                    alert('휴대폰 번호를 올바르게 입력해주세요.')
                     return;
                 }
 
-                // 모든 조건이 충족되면 사용자 정보를 저장
-                var userData = new FormData(); // FormData 객체 생성
-                userData.append('userId', $('#userId').text()); // 추가
-                userData.append('nickname', $('#nickName').val() || $('#hiddenNickName').val()); // 텍스트 필드가 비어있으면 히든 필드 값 사용
-                if (formattedPhone) {
-                    userData.append('phoneNumber', formattedPhone); // phoneNumber 추가
-                }
+            }
+            
+            // ✔️ 폼 전송
+            form.submit();
 
-                var fileInput = $('#file')[0];
-                if (fileInput.files.length > 0) {
-                    userData.append('file', fileInput.files[0]); // 파일 추가
-                }
-
-                var csrfToken = $('input[name="_csrf"]').val(); // CSRF 토큰 값 가져오기
-
-                $.ajax({
-                    url: '/user/update',
-                    type: 'POST',
-                    data: userData,
-                    processData: false,
-                    contentType: false,
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-                    },
-                    success: function(response) {
-                        alert('회원 정보 수정이 완료되었습니다.');
-                        window.location.href = '/user/login';
-                    },
-                    error: function(xhr, status, error) {
-                        alert('회원 정보 수정에 실패했습니다. 다시 시도해 주세요.');
-                    }
-                });
-            });
         }
 
-        document.getElementById('profile-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // 기본 폼 제출을 막음
-            check(); // 검증 및 AJAX 요청 수행
-                });
-            </script>
-        </body>
-        </html>
+
+        function checkNickname() {
+
+            // 입력된 닉네임 가져오기
+            let inputNickname = document.getElementById('nickname').value;
+
+            if (inputNickname === '') {
+                alert('닉네임을 입력해주세요.');
+                return;
+            }
+
+            // 기존 닉네임과 입력된 닉네임이 같은지 비교
+            if (originalNickname === inputNickname) {
+                isNicknameChecked = true;
+                alert('변경사항이 없습니다.')
+            } else {
+                var requestData = {
+                    "userId": userId,
+                    "nickname": inputNickname,
+                };
+
+                // POST 요청 보내기
+                let request = new XMLHttpRequest();
+                request.open("POST", "/user/check", true);
+                request.setRequestHeader("Content-Type", "application/json");
+                request.setRequestHeader("X-CSRF-TOKEN", csrfToken);
+                request.send(JSON.stringify(requestData));
+
+                request.onreadystatechange = function () {
+                    // 응답성공
+                    if (request.readyState === 4) {
+                        // 상태코드
+                        if (request.status === 200) {
+                            alert(request.responseText); // 결과 메시지를 알림으로 표시
+
+                            isNicknameChecked = true;
+                        } else {
+                            alert(request.responseText); // 에러 메시지를 알림으로 표시
+                        }
+                    }
+                };
+            }
+        }
+    </script>
+</body>
+</html>
+

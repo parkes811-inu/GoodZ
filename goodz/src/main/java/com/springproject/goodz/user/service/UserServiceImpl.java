@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.user.dto.CustomUser;
 import com.springproject.goodz.user.dto.Shippingaddress;
@@ -17,6 +18,8 @@ import com.springproject.goodz.user.dto.UserAuth;
 import com.springproject.goodz.user.dto.UserSocial;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.mapper.UserMapper;
+import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private FileService fileService;
 
 
     @Override
@@ -94,8 +100,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int update(Users user) throws Exception {
-        int result = userMapper.update(user);
+    public int updateUser(Users user) throws Exception {
+
+        // int result = userMapper.update(user);
+        String dir = "user";
+        int parentNo = user.getNo();
+        
+        MultipartFile profileImgFile = user.getProfileImgfile();
+
+        if (profileImgFile.isEmpty()) {
+            log.info("빈 파일인데?");
+        }
+
+        // fileService 에 매개변수로 넘길 file 객체 세팅
+        Files uploadFile = new Files();
+        uploadFile.setParentNo(parentNo);           // 유저번호
+        uploadFile.setFile(profileImgFile);           // 첨부했던 파일을 dto에 담음
+
+        boolean uploadcheck = fileService.upload(uploadFile, dir);
+        
+        int result = 0;
+
+        if (uploadcheck) {
+            log.info("프사 등록 성공");
+            result = 1;
+        }
+
         return result;
     }
 
