@@ -7,6 +7,9 @@
 
 
   <insert id="insertPurchase" parameterType="Purchase">
+	<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
+		SELECT LAST_INSERT_ID()
+	</selectKey>
     INSERT INTO Purchase (user_id, p_no, purchase_price, payment_method, purchase_state, option_id)
     VALUES (#{userId}, #{pNo}, #{purchasePrice}, #{paymentMethod}, #{purchaseState}, #{optionId})
   </insert>
@@ -23,5 +26,11 @@
 		INSERT INTO Sales (user_id, p_no, size, sale_tracking_no, address, sale_price, sale_state, sale_date)
 		VALUES (#{userId}, #{pNo}, #{size}, #{saleTrackingNo}, #{address}, #{salePrice}, #{saleState}, NOW())
 	</insert>
+
+	<select id="selectPurchase" resultType="Purchase">
+		SELECT *
+		FROM Purchase
+		WHERE purchase_no = #{purchaseNo}
+	</select>
 
 </mapper>

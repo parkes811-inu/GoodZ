@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.springproject.goodz.security.LoginSuccessHandler;
-import com.springproject.goodz.user.service.OAuthService;
+// import com.springproject.goodz.user.service.OAuthService;
 import com.springproject.goodz.user.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private OAuthService oAuthService;
+    // @Autowired
+    // private OAuthService oAuthService;
     
     @Autowired
     private DataSource dataSource;
