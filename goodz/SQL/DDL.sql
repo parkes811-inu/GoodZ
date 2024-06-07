@@ -278,6 +278,7 @@ CREATE TABLE `Purchase` (
     `order_id`          VARCHAR(100),
     `purchase_price`    INT             NOT NULL,
     `payment_method`    VARCHAR(50)     NOT NULL,
+    `address`           VARCHAR(255),
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
     -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
     `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -18,6 +18,7 @@
 		UPDATE Purchase
 		SET purchase_state = #{purchaseState},
 			order_id = #{orderId},
+			address = #{address},
 			updated_at = CURRENT_TIMESTAMP
 		WHERE purchase_no = #{purchaseNo}
 	</update>

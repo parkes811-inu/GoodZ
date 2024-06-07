@@ -1,5 +1,6 @@
 package com.springproject.goodz.pay.controller;
 
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -114,30 +115,6 @@ public class PayController {
             return "redirect:/product/detail/" + pNo;
         }
 
-        // 상품 이미지 설정
-        // Files file = new Files();
-        // file.setParentNo(product.getPNo());
-        // file.setParentTable(product.getCategory());
-        // List<Files> productImages = fileService.listByParent(file);
-
-        // // 첫 번째 이미지 URL 설정
-        // if (!productImages.isEmpty()) {
-        //     product.setImageUrl(productImages.get(0).getFilePath());
-        // } else {
-        //     product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-        // }
-
-        // model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
-        // model.addAttribute("size", size);
-        // model.addAttribute("image", productImages);
-        // model.addAttribute("price", purchasePrice);
-        // model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
-
-        // // 기본 배송지가 있는지 여부를 모델에 추가
-        // model.addAttribute("defaultAddress", defaultAddress);
-        // model.addAttribute("hasAddress", !addresses.isEmpty());
-        // model.addAttribute("addresses", addresses);
-
         return "redirect:/pay/buy/" + purchaseNo; // 상품 구매 페이지로 이동
     }
 
@@ -209,6 +186,7 @@ public class PayController {
         model.addAttribute("image", productImages);
         model.addAttribute("price", purchase.getPurchasePrice());
         model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
+        model.addAttribute("optionId", optionId);
 
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
@@ -234,8 +212,9 @@ public class PayController {
     public String updatePurchase(@RequestParam("purchaseNo") int purchaseNo,
                                  @RequestParam("paymentKey") String paymentKey,
                                  @RequestParam("orderId") String orderId,
-                                 @RequestParam("amount") int amount) throws Exception {
-        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
+                                 @RequestParam("amount") int amount,
+                                 @RequestParam("address") String address) throws Exception {
+        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}, address={}", purchaseNo, orderId, amount, address);
 
         Purchase purchase = new Purchase();
         purchase.setPurchaseNo(purchaseNo);
@@ -243,6 +222,9 @@ public class PayController {
         purchase.setPurchaseState("paid");
         purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
+        String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
+        purchase.setAddress(decodedAddress);
+        log.info("시발1----------------------------------------------\n" + decodedAddress);
         log.info("Purchase 객체 생성됨: {}", purchase);
 
         int result = payService.updatePurchase(purchase);
@@ -380,8 +362,10 @@ public class PayController {
                            @RequestParam("paymentKey") String paymentKey,
                            @RequestParam("orderId") String orderId,
                            @RequestParam("amount") int amount,
+                           @RequestParam("address") String address,
                            @RequestParam("type") String type, Model model) throws Exception {
         
+        String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
 
         log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
 
@@ -390,6 +374,7 @@ public class PayController {
         purchase.setOrderId(orderId);
         purchase.setPurchaseState("paid");
         purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        purchase.setAddress(decodedAddress);
 
         log.info("Purchase 객체 생성됨: {}", purchase);
 
@@ -397,6 +382,17 @@ public class PayController {
         if (result > 0) {
             log.info("구매 업데이트 성공");
             model.addAttribute("type", type);
+            
+            Purchase optionId = payService.selectPurchase(purchaseNo);
+            int cnt = productService.checkStockQuantity(optionId.getOptionId());
+
+            if((cnt - 1) == 0) {
+                productService.minusQuantityByProductId(optionId.getOptionId());
+                productService.changeStatus(optionId.getOptionId());
+            } else {
+                productService.minusQuantityByProductId(optionId.getOptionId());
+            }
+
             return "redirect:/pay/buy/complete/" + purchaseNo + "?type="+type;
         }
         log.info("구매 업데이트 실패");

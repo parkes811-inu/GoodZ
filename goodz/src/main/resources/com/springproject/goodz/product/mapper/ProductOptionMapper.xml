@@ -33,4 +33,25 @@
         WHERE option_id = #{optionId}
     </select>
     
+    <!-- 구매 업데이트 성공 시 재고 수량 - 1 -->
+    <update id="minusQuantityByProductId">
+        UPDATE product_option
+           SET stock_quantity = stock_quantity - 1 
+         WHERE option_id = #{optionId} 
+    </update>
+
+    <!-- 옵션 아이디 별 재고 수량 확인 -->
+    <select id="checkStockQuantity">
+        SELECT stock_quantity
+          FROM product_option
+         WHERE option_id = #{optionId}
+           AND status = 'on'
+    </select>
+
+    <!-- 상품 상태 업데이트 -->
+    <update id="changeStatus">
+        UPDATE product_option
+           SET status = 'off'
+         WHERE option_id = #{optionId} 
+    </update>
 </mapper>
