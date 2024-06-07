@@ -3,6 +3,7 @@ package com.springproject.goodz.admin.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.springproject.goodz.admin.service.AdminService;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
@@ -42,6 +44,9 @@ public class AdminController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private AdminService adminService;
     
     @GetMapping("")
     public String index() {
@@ -176,26 +181,62 @@ public class AdminController {
 
 
     @GetMapping("/purchase_state")
-    public String purchase_state() {
+    public String userSaleList(Model model) throws Exception {
+        List<Map<String, Object>> saleList = adminService.userSaleList();
+        model.addAttribute("saleList", saleList);
+
+        List<Map<String, Object>> saleStateCounts = adminService.countUserSalesByState();
+        Map<String, Integer> saleStateMap = saleStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("sale_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        model.addAttribute("saleStateCounts", saleStateMap);
+
         return "/admin/purchase_state";
     }
 
-    @GetMapping("/purchase/detail")
-    public String purchase_detail() {
-
-        // if (reuslt > 0 && status == 정산완료) {
-        //     int sival = productService.plusSize(1, S);
-        //     update id="plusSize"
-        //     update product_option set stock_quantity = stock_quantity + 1 where p_no = 1 and size = 'S';
-        // }
+    /**
+     * 유저가 판매한 번호를 기준으로 단일 조회
+     * @param sNo
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/purchase/detail/{sNo}")
+    public String purchaseDetail(@PathVariable("sNo") int sNo, Model model) throws Exception {
+        Map<String, Object> saleDetail = adminService.userSale(sNo);
+        model.addAttribute("saleDetail", saleDetail);
         return "/admin/purchase_detail";
     }
 
+    /**
+     * 유저의 단일 판매 내역 상태 변경
+     * @param sNo
+     * @param saleState
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/purchase/update")
+    public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
+        adminService.updateUserSaleState(sNo, saleState);
+        return "redirect:/admin/purchase/detail/" + sNo;
+    }
+
+
+    /**
+     * 유저가 구매한 내역
+     * @return
+     */
     @GetMapping("/pay_history")
     public String pay_history() {
         return "/admin/pay_history";
     }
 
+    /**
+     * 유저가 구매한 내역 단일 조회
+     * @return
+     */
     @GetMapping("/pay_history/detail")
     public String pay_history_detail() {
         return "/admin/pay_history_detail";
@@ -259,6 +300,7 @@ public class AdminController {
 
         return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
     }
+    
     
 
 }

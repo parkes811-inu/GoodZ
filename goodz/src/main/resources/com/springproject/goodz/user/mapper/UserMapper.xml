@@ -7,12 +7,14 @@
 
     <resultMap type="Users" id="userMap">
         <id property="userId" column="user_id" javaType="String"/>
+        <result property="no" column="no" />
         <result property="username" column="username" />
         <result property="nickname" column="nickname" />
         <result property="password" column="password" />
         <result property="birth" column="birth" />
         <result property="phoneNumber" column="phone_number" />
         <result property="profilePictureUrl" column="profile_picture_url" />
+        <result property="profileImgNo" column="file_no" />
         <result property="account" column="account" />
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
@@ -61,7 +63,7 @@
 
     <!-- 회원 조회 - id -->
     <select id="select" resultMap="userMap">
-        SELECT u.user_id
+        <!-- SELECT u.user_id
               ,u.username
               ,u.nickname
               ,u.password
@@ -75,6 +77,25 @@
               ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
 	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
         FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        WHERE u.user_id = #{userId} -->
+        SELECT u.no as no
+			  ,u.user_id
+              ,u.username
+              ,u.nickname
+              ,u.password
+              ,u.birth
+              ,u.profile_picture_url
+              ,f.no as file_no
+              ,u.account
+              ,u.created_at
+              ,u.updated_at
+              ,1 enabled
+              ,auth
+              ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
+        FROM user u
+        LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        INNER JOIN file f on u.no = parent_no and f.parent_table='user'
         WHERE u.user_id = #{userId}
     </select>
 

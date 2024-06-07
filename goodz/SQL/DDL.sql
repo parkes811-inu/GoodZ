@@ -25,6 +25,7 @@ ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
+    `no` INT NOT NULL,              -- 번호
     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
     `username` VARCHAR(50) NOT NULL, -- 유저 이름
     `nickname` VARCHAR(100) NOT NULL, -- 유저 닉네임
@@ -35,7 +36,8 @@ CREATE TABLE `user` (
     `account` VARCHAR(255),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`)
+    PRIMARY KEY (`user_id`),
+    UNIQUE KEY `unique_no` (`no`)
 ) COMMENT='유저';
 
 
@@ -253,7 +255,7 @@ CREATE TABLE `Sales` (
     `sale_price` INT NOT NULL,
     `size` VARCHAR(50) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
-    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `sale_state` ENUM('pending','reception','checking', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
     `sale_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`s_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
