@@ -17,6 +17,8 @@ public class Follow {
     private int followerCount;          // 팔로워 수
     private int followingCount;         // 팔로잉 수
 
+    private boolean isFollowed;         // 팔로우 여부; true-> 세션아이디 기준 팔로잉중. false -> 팔로잉X
+
 
     /** 예시
      * 

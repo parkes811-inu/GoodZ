@@ -101,9 +101,9 @@
 
                     <!-- 팔로워/팔로잉 정보 -->
                     <div class="followInfo d-flex text-start">
-                        <button type="button" class="btn ps-0 pe-2 py-0" data-bs-toggle="modal" data-bs-target="#modal-follower"><span>팔로워 </span><span class="follower">99</span></button>
+                        <button type="button" class="btn ps-0 pe-2 py-0" data-bs-toggle="modal" data-bs-target="#modal-follower"><span>팔로워 </span><span class="follower" id="countFollower" th:text="${requested.countFollower}"></span></button>
                         <span class="text-body-tertiary ">|</span>
-                        <button type="button" class="btn ps-2 pe-0 py-0" data-bs-toggle="modal" data-bs-target="#modal-following"><span>팔로잉 </span><span class="following">99</span></button>
+                        <button type="button" class="btn ps-2 pe-0 py-0" data-bs-toggle="modal" data-bs-target="#modal-following"><span>팔로잉 </span><span class="following" id="countFollowing" th:text="${requested.countFollowing}"></span></button>
                     </div>
 
                     <!-- 팔로워 모달 -->
@@ -140,18 +140,38 @@
 
                 </div>
             </div>
-            <div th:if="${loginUser != null and loginUser.userId == requested.userId}">
-                <!-- 게시글 등록버튼 -->
-                <a href="/styles/insert" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                </a>
+            <!-- 로그인 유저일 때 -->
+            <div th:if="${loginUser != null}">
+                <th:block th:if="${loginUser.userId == requested.userId}">
+                    <!-- 게시글 등록버튼 -->
+                    <a href="/styles/insert" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </a>
+                </th:block>
+                <th:block th:if="${loginUser.userId != requested.userId}">
+                    <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
+                    <th:block th:if="${loginUserFollowingList.isEmpty()}">
+                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+                    </th:block>
+                    <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
+                    <th:block th:unless="${loginUserFollowingList.isEmpty()}">
+                        <th:block th:if="${#lists.contains(loginUserFollowingList, requested)}">
+                            <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로잉</button>
+                        </th:block>
+                        <th:block th:unless="${#lists.contains(loginUserFollowingList, requested)}">
+                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로우</button>
+                        </th:block>
+                    </th:block>
+                </th:block>
             </div>
-            <!-- 비로그인하거나 작성자와 로그인한 유저가 다른 경우 -->
-            <th:block th:if="${loginUser == null or loginUser.userId != requested.userId}">
-                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick=""> 팔로우 </button>
+            
+            <!-- 비로그인하거나 프로필계정과 로그인한 유저가 다른 경우 -->
+            <th:block th:if="${loginUser == null}">
+                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${requested.userId}"> 팔로우 </button>
             </th:block>
+            
         </div>
 
         <hr class="my-2">
@@ -205,11 +225,9 @@
     <script>
         let profileId = "[[${requested.userId}]]";
         
-        
         followerList();
         followingList();
         
-
         /* 종속된 팔로워 조회 */
         function followerList() {
             let request = new XMLHttpRequest();
@@ -308,6 +326,10 @@
                             // 버튼 변경: 팔로우 -> 팔로잉
                             element.setAttribute('class', 'followBtn btn btn-outline-secondary btn-sm');
                             element.innerText = '팔로잉';
+
+                            followerList();
+                            followingList();
+                            countFollow()
                         }
                     }
                 }
@@ -336,13 +358,51 @@
                         if (response == 'SUCCESS') {
                             element.setAttribute('class', 'followBtn btn btn-dark btn-sm');
                             element.innerText = '팔로우';
+
+                            followerList();
+                            followingList();
+                            countFollow()
                         }
                     }
                 }
             }
+            
         }
 
+        // 팔로워/팔로잉 조회숫자 갱신
+        function countFollow() {
+            
 
+            let request = new XMLHttpRequest();
+    
+            request.open('GET', '/follow/count/' + profileId);
+            request.send();
+
+            request.onreadystatechange = function () {
+    
+                if (request.readyState == request.DONE && request.status == 200) {
+                    
+                    let response = JSON.parse(request.responseText);
+                    
+                    console.log('팔로우 갯수 갱신 요청 완료');
+                    console.log('업데이트된 팔로워 수: ' + response.countFollower);
+                    console.log('업데이트된 팔로잉 수: ' + response.countFollowing);
+
+                    // 팔로워/팔로잉 조회 숫자 갱신
+                    // - 팔로워
+                    let updatedFollowerCount = response.countFollower;
+                    let $followerCount = document.getElementById('countFollower');
+                    $followerCount.innerText = '';
+                    $followerCount.innerText = updatedFollowerCount;
+                    
+                    // - 팔로잉
+                    let updatedFollowingCount = response.countFollowing;
+                    let $followingCount = document.getElementById('countFollowing');
+                    $followingCount.innerText = '';
+                    $followingCount.innerText = updatedFollowingCount;
+                }
+            }
+        }
 
     </script>
 </body>

@@ -17,6 +17,8 @@
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
         <result property="enabled" column="enabled" />
+        <result property="countFollower" column="count_follower" />
+        <result property="countFollowing" column="count_following" />
         <collection property="authList" resultMap="authMap" />
     </resultMap>
 
@@ -70,6 +72,8 @@
               ,u.updated_at
               ,1 enabled
               ,auth
+              ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
         FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
         WHERE u.user_id = #{userId}
     </select>
@@ -87,6 +91,8 @@
               ,u.updated_at
               ,1 enabled
               ,auth
+              ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
         FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
         WHERE u.nickname = #{nickname}
     </select>

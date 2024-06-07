@@ -36,18 +36,19 @@
     <!-- 언팔 요청 -->
     <delete id="unfollow">
         DELETE FROM follow
-        WHERE no = #{no} 
+        WHERE user_id = #{userId} and follower_id = #{followerId} 
     </delete>
 
     <!-- 팔로워/팔로잉 수 조회 -->
-    <!-- <select id="followCount">
+    <select id="countFollow" resultType="Users">
         SELECT u.user_id
               ,u.nickname
               ,u.profile_picture_url
-	          ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS follower_count
-	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS following_count
-        FROM user u;
-    </select> -->
+	          ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
+	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
+        FROM user u
+        WHERE user_id = #{userId}
+    </select>
 
     <!-- 팔로워 수 조회 -->
     <!-- <select id="followerCount" resultType=>

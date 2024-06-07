@@ -51,6 +51,7 @@ public class FollowServiceImpl implements FollowService{
     // 팔로워 목록과 수 조회
     @Override
     public Map<String, Object> getFollowerDetails(String userId) throws Exception {
+        
         List<Follow> followers = followerList(userId);
         List<Users> followerList = new ArrayList<>();
 
@@ -77,11 +78,12 @@ public class FollowServiceImpl implements FollowService{
     // 팔로잉 목록과 수 조회
     @Override
     public Map<String, Object> getFollowingDetails(String userId) throws Exception{
+    
         List<Follow> followings = followingList(userId);
         List<Users> followingList = new ArrayList<>();
 
         for (Follow follow : followings) {
-            Users following = userService.select(follow.getFollowingId());
+            Users following = userService.select(follow.getUserId());
             followingList.add(following);
         }
         Map<String, Object> result = new HashMap<>();
@@ -105,13 +107,29 @@ public class FollowServiceImpl implements FollowService{
 
     // 언팔 요청
     @Override
-    public int unfollow(int no) throws Exception {
+    public int unFollow(Follow follow) throws Exception {
 
-        int result = followMapper.unfollow(no);
+        int result = followMapper.unfollow(follow);
 
         if (result == 0) {
             log.info("언팔 요청 실패");
         }
+
+        return result;
+    }
+
+    // 팔로워/팔로잉 수 조회
+    @Override
+    public Map<String, Integer> countFollow(String profileId) throws Exception {
+        Users user = userService.select(profileId);
+        
+        log.info("조회할 유저: " + user.getUserId());
+        log.info("팔로워 수: " + user.getCountFollower());
+        log.info("팔로잉 수: " + user.getCountFollowing());
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("countFollower", user.getCountFollower());
+        result.put("countFollowing", user.getCountFollowing());
 
         return result;
     }

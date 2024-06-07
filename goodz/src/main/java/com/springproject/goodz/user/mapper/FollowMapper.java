@@ -23,5 +23,8 @@ public interface FollowMapper {
     public int addFollow(Follow follow) throws Exception;
     
     // 언팔 요청
-    public int unfollow(int no) throws Exception;
+    public int unfollow(Follow follow) throws Exception;
+
+    // 팔로워/팔로잉 수 조회
+    public Users countFollow(String UserId) throws Exception;
 }
