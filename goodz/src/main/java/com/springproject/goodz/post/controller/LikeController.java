@@ -49,7 +49,7 @@ public class LikeController {
 
         int result = likeService.likeOn(like);
 
-         if (result == 0) {
+        if (result == 0) {
             // 데이터 처리 실패
             return new ResponseEntity<>("FAIL", HttpStatus.OK); // OK = 200
         }

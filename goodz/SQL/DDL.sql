@@ -71,23 +71,23 @@ CREATE TABLE `Social_Login` (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 ) COMMENT='소셜로그인';
 
--- Following 테이블 / 📁 user
-CREATE TABLE `Following` (
-	`following_no`	INT				NOT NULL AUTO_INCREMENT,
-	`user_id`		VARCHAR(100)	NOT NULL,
-	`following_id`	VARCHAR(100),
-    PRIMARY KEY (following_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-) COMMENT='팔로잉';
+-- Following 테이블 / 📁 user --6/5 필요없어서 삭제함 -도희-
+-- CREATE TABLE `Following` (
+-- 	`following_no`	INT				NOT NULL AUTO_INCREMENT,
+-- 	`user_id`		VARCHAR(100)	NOT NULL,
+-- 	`following_id`	VARCHAR(100),
+--     PRIMARY KEY (following_no),
+--     FOREIGN KEY (user_id) REFERENCES User(user_id)
+-- ) COMMENT='팔로잉';
 
 
--- Follower 테이블 / 📁 user
-CREATE TABLE `Follower` (
-	`follower_no`	INT				NOT NULL AUTO_INCREMENT,
+-- Follow 테이블 / 📁 user
+CREATE TABLE `Follow` (
+	`no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
 	`follower_id`	VARCHAR(100),
     PRIMARY KEY (follower_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY fk_follower_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 ) COMMENT='팔로워';
 
 
@@ -101,7 +101,7 @@ CREATE TABLE `Post` (
 	`created_at` timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (post_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY fk_post_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 ) COMMENT='게시글';
 
 
@@ -115,8 +115,8 @@ CREATE TABLE `Comment` (
 	`created_at`	 timestamp 		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (c_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+    FOREIGN KEY fk_comment_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_comment_post(post_no) REFERENCES Post(post_no) ON DELETE CASCADE
 ) COMMENT='댓글';
 
 
@@ -129,8 +129,8 @@ CREATE TABLE `Like` (
     -- `updated_at`	 timestamp		NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 6/5 like해제하면 삭제되므로 필요X
     PRIMARY KEY (like_no),
     -- FOREIGN KEY (c_no) REFERENCES Comment(c_no),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+    FOREIGN KEY fk_like_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_like_post(post_no) REFERENCES Post(post_no) ON DELETE CASCADE
 );
 
 

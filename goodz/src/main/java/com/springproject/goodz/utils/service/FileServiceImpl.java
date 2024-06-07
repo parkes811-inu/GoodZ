@@ -33,13 +33,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public Files select(int no) throws Exception {
 
-        log.info("::::::::::fileService::::::::::");
-        log.info("조회할 파일 번호: " + no);
-
         Files file = fileMapper.select(no);
 
-        log.info("조회된 파일 정보: " + file);
-        
         return file;
     }
 
@@ -53,19 +48,34 @@ public class FileServiceImpl implements FileService {
         return fileMapper.update(file);
     }
 
+    /**
+     * 파일 삭제 (시스템 상 실제파일 & DB 데이터 삭제)
+     */
     @Override
     public int delete(int no) throws Exception {
+
+        // 파일 정보 세팅
         Files file = fileMapper.select(no);
+
+        // DB 에 있는 파일 정보 삭제
         int result = fileMapper.delete(no);
 
+        // 파일 시스템의 파일 삭제
         if (result > 0) {
-            String filePath = file.getFilePath();
+            // 미리 세팅해서 저장해둔 객체 정보로 삭제
+            String filePath = file.getFilePath(); 
             File deleteFile = new File(filePath);
 
-            if (deleteFile.exists() && deleteFile.delete()) {
-                log.info("파일이 정상적으로 삭제되었습니다. file: " + filePath);
+            // 파일 존재 확인
+            if ( !deleteFile.exists() ) {
+                return result;
+            }
+
+            // 파일 삭제
+            if (deleteFile.delete()) {
+                log.info("파일이 정상적으로 삭제되었습니다.");
             } else {
-                log.info("파일 삭제에 실패하였습니다. file: " + filePath);
+                log.info("파일 삭제에 실패하였습니다.");
             }
         }
         return result;
@@ -76,16 +86,21 @@ public class FileServiceImpl implements FileService {
         return fileMapper.listByParent(file);
     }
 
+    /**
+     * 게시글에 종속된 첨부파일 꺼내서 삭제 요청.
+     */
     @Override
     public int deleteByParent(Files file) throws Exception {
+
+        int result = 0;
+
+        // 종속된 파일 리스트 꺼내기
         List<Files> fileList = fileMapper.listByParent(file);
-        int result = fileMapper.deleteByParent(file);
-
+        
         for (Files deleteFile : fileList) {
-            delete(deleteFile.getNo());
+            int no = deleteFile.getNo(); // 파일번호
+            result += delete(no);
         }
-
-        log.info(result + "개의 파일을 삭제하였습니다.");
         return result;
     }
 

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.springproject.goodz.post.mapper.PostMapper">
 
-
+    <!-- 전체 게시글 조회 - /styles  -->
     <select id="list" resultType="post">
         SELECT  p.post_no as post_no
               , p.user_id as user_id
@@ -23,21 +23,18 @@
         INNER JOIN user u on p.user_id = u.user_id
     </select>
 
+    <!-- 게시글 상세 조회 - /styles/게시글번호  -->
     <select id="select" resultType="post">
-        SELECT  p.post_no as post_no
-                , p.user_id as user_id
-                , p.content as contetnt
-                , f.no as file_no
-                , f.file_name as file_name
-                , f.file_path as file_path
-                , f.file_code as file_code
-                , IFNULL((SELECT count(*) from `like` l where l.post_no = p.post_no),0) as likeCount
-                , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
+        SELECT post_no
+             , user_id
+             , content
+             , IFNULL((SELECT count(*) from `like` l where l.post_no = p.post_no),0) as likeCount
+             , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
         FROM post p
-        INNER JOIN file f on post_no = parent_no and f.parent_table='post' and file_code = 1
         WHERE post_no = #{postNo};
     </select>
 
+    <!-- 프로필 유저의 게시글 조회 - /styles/user/@유저닉네임  -->
     <select id="selectById" resultType="post">
         SELECT  p.post_no as post_no
               , p.user_id as user_id
@@ -52,22 +49,28 @@
         inner join file f on post_no = parent_no and f.parent_table='post' and user_id = #{userId} and file_code = 1
     </select>
 
+    <!-- 최근 등록한 게시글 번호 - 첨부파일 등록 시 필요 -->
     <select id="maxNo">
         SELECT max(post_no) as maxNo
         FROM post
     </select>
 
+    <!-- 게시글 등록 -->
     <insert id="insert">
         INSERT INTO post (user_id, content)
         VALUES (#{userId}, #{content})
     </insert>
 
+    <!-- 게시글 수정 -->
     <update id="update">
-
+        UPDATE post
+           SET content = #{content}
+        WHERE post_no = #{postNo}
     </update>
 
     <delete id="delete">
-    
+        DELETE FROM post
+        WHERE post_no = #{postNo}
     </delete>
 
     
