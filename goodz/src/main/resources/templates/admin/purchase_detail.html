@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 페이지 - 상품 수정</title>
+    <title>관리자 페이지 - 매입 상태 변경(유저판매)</title>
     <style>
         .content {
             flex: 1;
@@ -74,46 +74,53 @@
             <h2>매입현황</h2>
         </div>
         
-        <form id="purchase-form" method="post">
-            <!-- 판매 번호 기준으로 불러와야함-->
+        <form id="purchase-form" method="post" th:action="@{/admin/purchase/update}">
+            <input type="hidden" name="sNo" th:value="${saleDetail.saleNo}" />
             <div class="form-group">
-                <label for="sales-number">판매 번호</label>
-                <input type="text" id="sales-number" value="283451" readonly>
-            </div>
-            <div class="form-group">
-                <label for="product-number">상품 번호</label>
-                <input type="text" id="product-number" value="283451" readonly>
+                <label for="sale-date">판매 요청 일자</label>
+                <input type="text" id="sale-date" th:value="${saleDetail.saleDate}" readonly>
             </div>
             <div class="form-group">
                 <label for="user-ID">유저 ID</label>
-                <input type="text" id="user-ID" value="Stussy Basic Stussy T-Shirt Berry 2024" readonly>
+                <input type="text" id="user-ID" th:value="${saleDetail.userId}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="user-ID">반송 주소</label>
+                <input type="text" id="user-ID" th:value="${saleDetail.address}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="sales-number">판매 번호</label>
+                <input type="text" id="sales-number" th:value="${saleDetail.saleNo}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-number">상품 번호</label>
+                <input type="text" id="product-number" th:value="${saleDetail.productNo}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-number">상품명</label>
+                <input type="text" id="product-number" th:value="${saleDetail.productName}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="product-number">사이즈</label>
+                <input type="text" id="product-number" th:value="${saleDetail.size}" readonly>
             </div>
             <div class="form-group">
                 <label for="tracking-no">운송장 번호</label>
-                <input type="text" id="tracking-no" value="124" readonly>
+                <input type="text" id="tracking-no" th:value="${saleDetail.saleTrackingNo}" readonly>
             </div>
+            
             <div class="form-group">
-                <label for="sale-date">판매 요청 일자</label>
-                <input type="text" id="sale-date" value="2024-05-23" readonly>
-            </div>
-            <div class="form-group">
-                <label for="brand-name">브랜드</label>
-                <select id="brand-name" class="form-control">
-                    <option value="판매요청">판매요청</option>
-                    <option value="수취완료">수취완료</option>
-                    <option value="검수중">검수중</option>
-                    <option value="정산완료">정산완료</option>
+                <label for="sale-state">상태</label>
+                <select id="sale-state" class="form-control" name="saleState" th:value="${saleDetail.saleState}">
+                    <option value="pending" th:selected="${saleDetail.saleState == 'pending'}">판매요청</option>
+                    <option value="reception" th:selected="${saleDetail.saleState == 'reception'}">수취완료</option>
+                    <option value="checking" th:selected="${saleDetail.saleState == 'checking'}">검수중</option>
+                    <option value="completed" th:selected="${saleDetail.saleState == 'completed'}">정산완료</option>
+                    <option value="cancelled" th:selected="${saleDetail.saleState == 'cancelled'}">취소됨</option>
                 </select>
             </div>
             <button type="submit" class="submit-btn">등록 완료</button>
         </form>
     </div>
-
-    <script>
-        document.getElementById('purchase-form').addEventListener('submit', function(event) {
-            event.preventDefault();  // 기본 폼 제출 방지
-            location.href = '/admin/purchase_state';  // 새로운 경로로 이동
-        });
-    </script>
 </body>
 </html>

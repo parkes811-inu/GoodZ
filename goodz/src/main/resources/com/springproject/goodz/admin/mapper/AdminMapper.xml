@@ -4,5 +4,30 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.springproject.goodz.admin.mapper.AdminMapper">
+	<!-- 유저가 판매한 상품 단일 조회 -->
+	<select id="userSale" resultType="map">
+		SELECT
+			s.sale_date AS 'saleDate',
+			s.user_id AS 'userId',
+			s.s_no AS 'saleNo',
+			s.p_no AS 'productNo',
+			p.product_name AS 'productName',
+			s.size AS 'size',
+			s.sale_tracking_no AS 'saleTrackingNo',
+			s.sale_state AS 'saleState',
+			s.address AS 'address'
+		FROM
+			Sales s
+		JOIN
+			Product p ON s.p_no = p.p_no
+		WHERE
+			s.s_no = #{saleNo}
+	</select>
 
+	<!-- 유저가 판매한 상품 상태 업데이트-->
+	<update id="updateUserSaleState">
+		UPDATE Sales
+		SET sale_state = #{saleState}
+		WHERE s_no = #{sNo}
+	</update>
 </mapper>
