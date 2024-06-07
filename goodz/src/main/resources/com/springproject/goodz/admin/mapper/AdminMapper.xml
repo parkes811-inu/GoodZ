@@ -4,5 +4,47 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.springproject.goodz.admin.mapper.AdminMapper">
+	<!-- 유저가 판매한 상품 단일 조회 -->
+	<select id="userSale" resultType="map">
+		SELECT
+			s.sale_date AS 'saleDate',
+			s.user_id AS 'userId',
+			s.s_no AS 'saleNo',
+			s.p_no AS 'productNo',
+			p.product_name AS 'productName',
+			s.size AS 'size',
+			s.sale_tracking_no AS 'saleTrackingNo',
+			s.sale_state AS 'saleState',
+			s.address AS 'address',
+			u.account AS 'account'
+		FROM
+			Sales s
+		JOIN
+			Product p ON s.p_no = p.p_no
+		JOIN
+			user u ON s.user_id = u.user_id
+		WHERE
+			s.s_no = #{saleNo}
+	</select>
 
+	<!-- 유저가 판매한 상품 상태 업데이트 -->
+	<update id="updateUserSaleState">
+		UPDATE Sales
+		SET sale_state = #{saleState}
+		WHERE s_no = #{sNo}
+	</update>
+	
+	<!-- 판매 완료 시 상품 옵션의 재고 수량 증가 -->
+	<update id="incrementStockQuantity">
+		UPDATE Product_option
+		SET stock_quantity = stock_quantity + 1
+		WHERE p_no = #{pNo} AND size = #{size}
+	</update>
+
+	<!-- 정산 완료에서 다른 상태로 변경 시 상품 옵션의 재고 수량 감소 -->
+    <update id="decrementStockQuantity">
+        UPDATE Product_option
+        SET stock_quantity = stock_quantity - 1
+        WHERE p_no = #{pNo} AND size = #{size}
+    </update>
 </mapper>

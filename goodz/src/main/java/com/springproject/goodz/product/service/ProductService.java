@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.mysql.cj.protocol.ExportControlled;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
@@ -68,6 +69,19 @@ public interface ProductService {
     // 등록된 상품 정보 업데이트 하는데 사용
     public void updateProduct(Product product) throws Exception;
 
+    // 제품 번호로 조회
+    public Product findUserWishList (int pNo) throws Exception;
+    
     // optionId 로 옵션 단일 조회
     public ProductOption getProductOptionByOptionId(int optionId) throws Exception;
+
+    // 구매 업데이트 성공 시 재고 수량 - 1
+    public void minusQuantityByProductId(int optionId) throws Exception;
+
+    // 옵션 아이디 별 재고 수량 확인
+    public int checkStockQuantity(int optionId) throws Exception;
+
+    // 상품 상태 업데이트 
+    public void changeStatus(int optionId) throws Exception;
+
 }

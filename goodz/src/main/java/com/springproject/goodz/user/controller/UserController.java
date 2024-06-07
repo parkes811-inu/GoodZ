@@ -1,14 +1,19 @@
 package com.springproject.goodz.user.controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,10 +35,19 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.mysql.cj.log.Log;
+import com.springproject.goodz.pay.dto.Purchase;
+import com.springproject.goodz.pay.service.PayService;
+import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.dto.ProductOption;
+import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.service.UserService;
+import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
+import com.springproject.goodz.utils.service.FileService;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,15 +63,32 @@ public class UserController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private WishListService wishListService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private PayService payService;
+
+    // DecimalFormat 인스턴스 한 번 생성
+    DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
+
     @Value("${upload.path}")
     private String uploadPath;
   
+    // index Controller 정리 해야함 - 은서
     @GetMapping("")
     public String index(Model model) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
-        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
         } else {
@@ -65,6 +96,97 @@ public class UserController {
             model.addAttribute("user", user);
         }
 
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            // 사용자 ID를 사용하여 구매 내역 조회
+            List<Purchase> purchases = payService.findPurchasesByUserId(user.getUserId());
+            
+            List<Purchase> paidPurchases = new ArrayList<>();
+            List<Purchase> shippingPurchases = new ArrayList<>();
+            List<Purchase> deliveredPurchases = new ArrayList<>();
+
+            for (Purchase purchase : purchases) {
+                // 상품 정보 설정
+                Product product = productService.getProductBypNo(purchase.getPNo());
+                purchase.setProductName(product.getProductName());
+                purchase.setBName(product.getBName());  // 브랜드 이름 설정
+
+                // 상품 옵션 설정
+                List<ProductOption> options = productService.getProductOptionsByProductId(purchase.getPNo());
+                purchase.setOptions(options);
+                log.info("-------------------------" + purchase.getPNo());
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(purchase.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+                log.info("*********************************************************");
+                log.info("imageList = " + productImages);
+                log.info("*********************************************************");
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    purchase.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    purchase.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+                
+                // 최저 가격 계산
+                if (!options.isEmpty()) {
+                    int minPrice = options.stream()
+                                        .mapToInt(ProductOption::getOptionPrice)
+                                        .min()
+                                        .orElse(0);
+                    // 원화 형식으로 변환
+                    String formattedMinPrice = decimalFormat.format(minPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                } else {
+                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                    int initialPrice = product.getInitialPrice();
+                    String formattedMinPrice = decimalFormat.format(initialPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                }
+
+                // 상태별로 구매 내역 필터링
+                if ("paid".equals(purchase.getPurchaseState())) {
+                    paidPurchases.add(purchase);
+                } else if ("shipping".equals(purchase.getPurchaseState())) {
+                    shippingPurchases.add(purchase);
+                } else if ("delivered".equals(purchase.getPurchaseState())) {
+                    deliveredPurchases.add(purchase);
+                }
+            }
+
+            model.addAttribute("paidPurchases", paidPurchases);
+            model.addAttribute("shippingPurchases", shippingPurchases);
+            model.addAttribute("deliveredPurchases", deliveredPurchases);
+            model.addAttribute("allPurchases", purchases); // 통합된 구매 내역 추가
+        }
+
+        if (auth != null && auth.getPrincipal() instanceof UserDetails) {
+
+            // 사용자 ID를 사용하여 관심 목록 제품 조회
+            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            List<Product> wishlistProducts = new ArrayList<Product>();
+            for (Integer pNo : wishListNum) {
+                Product product = new Product();
+                product = productService.findUserWishList(pNo);
+
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(product.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    product.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+
+                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+            }
+            model.addAttribute("wishlistProducts", wishlistProducts);
+        }
         return "/user/index";
     }
 
@@ -316,9 +438,88 @@ public class UserController {
     }
 
     @GetMapping("/purchase")
-    public String purchase() {
+    public String purchase(Model model) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        Users user = userService.findUserByUsername(currentUserName);
+
+        if (user == null) {
+            log.error("User not found for username: " + currentUserName);
+        } else {
+            model.addAttribute("user", user);
+        }
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            // 사용자 ID를 사용하여 구매 내역 조회
+            List<Purchase> purchases = payService.findPurchasesByUserId(user.getUserId());
+            
+            List<Purchase> paidPurchases = new ArrayList<>();
+            List<Purchase> shippingPurchases = new ArrayList<>();
+            List<Purchase> deliveredPurchases = new ArrayList<>();
+
+            for (Purchase purchase : purchases) {
+                // 상품 정보 설정
+                Product product = productService.getProductBypNo(purchase.getPNo());
+                purchase.setProductName(product.getProductName());
+                purchase.setBName(product.getBName());  // 브랜드 이름 설정
+
+                // 상품 옵션 설정
+                List<ProductOption> options = productService.getProductOptionsByProductId(purchase.getPNo());
+                purchase.setOptions(options);
+                log.info("-------------------------" + purchase.getPNo());
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(purchase.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+                log.info("*********************************************************");
+                log.info("imageList = " + productImages);
+                log.info("*********************************************************");
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    purchase.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    purchase.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+                
+                // 최저 가격 계산
+                if (!options.isEmpty()) {
+                    int minPrice = options.stream()
+                                        .mapToInt(ProductOption::getOptionPrice)
+                                        .min()
+                                        .orElse(0);
+                    // 원화 형식으로 변환
+                    String formattedMinPrice = decimalFormat.format(minPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                } else {
+                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                    int initialPrice = product.getInitialPrice();
+                    String formattedMinPrice = decimalFormat.format(initialPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                }
+
+                // 상태별로 구매 내역 필터링
+                if ("paid".equals(purchase.getPurchaseState())) {
+                    paidPurchases.add(purchase);
+                } else if ("shipping".equals(purchase.getPurchaseState())) {
+                    shippingPurchases.add(purchase);
+                } else if ("delivered".equals(purchase.getPurchaseState())) {
+                    deliveredPurchases.add(purchase);
+                }
+            }
+
+            model.addAttribute("paidPurchases", paidPurchases);
+            model.addAttribute("shippingPurchases", shippingPurchases);
+            model.addAttribute("deliveredPurchases", deliveredPurchases);
+            model.addAttribute("allPurchases", purchases); // 통합된 구매 내역 추가
+        }
+
         return "/user/purchase";
     }
+
+
+
+
 
     @GetMapping("/sales")
     public String sales() {
@@ -332,6 +533,50 @@ public class UserController {
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
             Users user = userService.findUserByUsername(userDetails.getUsername());
             model.addAttribute("user", user);
+
+
+            // 사용자 ID를 사용하여 관심 목록 제품 조회
+            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            List<Product> wishlistProducts = new ArrayList<Product>();
+            for (Integer pNo : wishListNum) {
+                Product product = new Product();
+                product = productService.findUserWishList(pNo);
+                // 상품 옵션 설정
+                List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                product.setOptions(options);
+
+                // 상품 이미지 설정
+                Files file = new Files();
+                file.setParentNo(product.getPNo());
+                file.setParentTable(product.getCategory());
+                List<Files> productImages = fileService.listByParent(file);
+
+                // 최저 가격 계산
+                if (!options.isEmpty()) {
+                    int minPrice = options.stream()
+                                        .mapToInt(ProductOption::getOptionPrice)
+                                        .min()
+                                        .orElse(0);
+                    // 원화 형식으로 변환
+                    String formattedMinPrice = decimalFormat.format(minPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                } else {
+                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                    int initialPrice = product.getInitialPrice();
+                    String formattedMinPrice = decimalFormat.format(initialPrice);
+                    product.setFormattedMinPrice(formattedMinPrice);
+                }
+
+                // 첫 번째 이미지 URL 설정
+                if (!productImages.isEmpty()) {
+                    product.setImageUrl(productImages.get(0).getFilePath());
+                } else {
+                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                }
+
+                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+            }
+            model.addAttribute("wishlistProducts", wishlistProducts);
         }
         return "/user/wishlist_products";
     }

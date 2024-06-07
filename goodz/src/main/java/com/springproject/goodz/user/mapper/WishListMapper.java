@@ -1,8 +1,11 @@
 package com.springproject.goodz.user.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.springproject.goodz.user.dto.Wish;
+
 
 @Mapper
 public interface WishListMapper {
@@ -21,5 +24,8 @@ public interface WishListMapper {
 
     // 종속된 저장들 모두 삭제
     public int deleteAll(Wish wish) throws Exception;
+    
+    // 관심에 담긴 상품 번호 리스트 반환
+    public List<Integer> listNumByUserId (String userId) throws Exception;
     
 }

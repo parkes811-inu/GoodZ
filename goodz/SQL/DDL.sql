@@ -14,12 +14,14 @@ CREATE TABLE `Brand`(
 
 DROP TABLE IF EXISTS `user`
 
--- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
--- ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
+ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
 
--- ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
+ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
 
--- ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+
+-- 카카오 로그인 할때 터미널에 에러 뜨면 user에 쟤네들을 NULL 줘야합니다 / 정용
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
@@ -168,19 +170,19 @@ CREATE TABLE `Tag` (
 -- ) COMMENT='상품';
 
 
--- DROP TABLE IF EXISTS `user_social`
-
--- CREATE TABLE `user_social` (
---     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
---     `username` VARCHAR(100) NOT NULL,
---     `nickname` VARCHAR(100) NULL, -- 유저 닉네임
---     `PROVIDER` VARCHAR(50) NOT NULL,
---     `SOCIAL_ID` VARCHAR(255) NOT NULL,
---     `PICTURE` TEXT DEFAULT NULL, 
---     `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---     `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
---     PRIMARY KEY (`user_id`)
--- );
+DROP TABLE IF EXISTS `user_social`
+-- 해당 테이블은 카카오 소셜 로그인 할때 쓰는 테이블입니다 /정용
+CREATE TABLE `user_social` (
+    `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
+    `username` VARCHAR(100) NOT NULL,
+    `nickname` VARCHAR(100) NULL, -- 유저 닉네임
+    `PROVIDER` VARCHAR(50) NOT NULL,
+    `SOCIAL_ID` VARCHAR(255) NOT NULL,
+    `PICTURE` TEXT DEFAULT NULL, 
+    `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`)
+);
 
 
 -- Product 테이블 / 📁 product
@@ -253,7 +255,7 @@ CREATE TABLE `Sales` (
     `sale_price` INT NOT NULL,
     `size` VARCHAR(50) NOT NULL,
     `address` VARCHAR(255) NOT NULL,
-    `sale_state` ENUM('pending', 'checking' 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    `sale_state` ENUM('pending','reception','checking', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
     `sale_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`s_no`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
@@ -280,6 +282,7 @@ CREATE TABLE `Purchase` (
     `order_id`          VARCHAR(100),
     `purchase_price`    INT             NOT NULL,
     `payment_method`    VARCHAR(50)     NOT NULL,
+    `address`           VARCHAR(255),
     `purchase_state`    ENUM('pending', 'paid', 'shipping', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
     -- 미결제, 결제된, 배송중, 배송완료, 취소(환불)
     `ordered_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,

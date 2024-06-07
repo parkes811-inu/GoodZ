@@ -201,12 +201,36 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
     public List<ProductOption> adminOptionsByProductId(int pNo) throws Exception {
         return productOptionMapper.adminOptionsByProductId(pNo);
+    }
+
+
+    // 제품 번호로 조회
+    @Override
+    public Product findUserWishList (int pNo) throws Exception {
+        return productMapper.findUserWishList(pNo);
     }
 
     @Override
     public ProductOption getProductOptionByOptionId(int optionId) throws Exception {
         return productOptionMapper.getProductOptionByOptionId(optionId);
+    }
+
+    // 구매 업데이트 성공 시 재고 수량 - 1
+    @Override
+    public void minusQuantityByProductId(int optionId) throws Exception {
+        productOptionMapper.minusQuantityByProductId(optionId);
+    }
+
+    // 옵션 아이디 별 재고 수량 확인
+    public int checkStockQuantity(int optionId) throws Exception {
+        return productOptionMapper.checkStockQuantity(optionId);
+    }
+
+    // 상품 상태 업데이트 
+    public void changeStatus(int optionId) throws Exception {
+        productOptionMapper.changeStatus(optionId);
     }
 }
