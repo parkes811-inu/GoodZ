@@ -55,4 +55,10 @@
 			user_id = #{userId}
 	</select>	
 
+
+	<select id="findSalesByUserId">
+		SELECT *
+		  FROM sales
+		 WHERE user_id = #{userId}
+	</select>
 </mapper>

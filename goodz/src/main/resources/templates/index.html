@@ -102,7 +102,7 @@
                     <div th:each="product : ${newArrivalsList}" class="col">
                         <div class="card border-0">
                             <div class="card-body">
-                                <a th:href="@{/product/detail/{id}(id=${product.pNo})}">
+                                <a th:href="@{/product/{id}(id=${product.pNo})}">
                                     <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                 </a>
                                 <div class="card-text py-2">
@@ -122,11 +122,10 @@
             <!-- Popular Styles -->
             <div class="PopularStyles mb-5">
                 <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
+                <th:block th:if="${popularPosts.isEmpty()}">
+                    <h2 class="text-body-tertiary text-center">조회된 게시글이 없습니다.</h2>
+                </th:block>
                 <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="stylesList">
-                    <th:block th:if="${popularPosts.isEmpty()}">
-                        <h2 class="text-body-tertiary text-center">조회된 게시글이 없습니다.</h2>
-                    </th:block>
-                    
                     <th:block th:each="post : ${popularPosts}">
                         <!-- [DB] 반복문으로 최대 4개 까지 -->
                         <div class="col">

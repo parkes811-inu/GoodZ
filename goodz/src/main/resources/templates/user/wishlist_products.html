@@ -107,16 +107,14 @@
 
             <!-- 리스트 돗자리 -->
             <div class="row wishlist row-cols-2 row-cols-sm-2 row-cols-lg-4 g-3">
-                <th:block th:if="${wishlistProducts.size() == 0}">
-                    <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
-                </th:block>
+                
                 <!-- 상품 테이블에 저장된 사진과 제품명 가져오기 -->
                 <!-- 상품 클릭 시 해당 상품의 판매 페이지로-->
                 <th:block th:each="product : ${wishlistProducts}">
                     <div class="col" th:data-price="${product.formattedMinPrice}">
                         <div class="card border-0">
                             <div class="card-body">
-                                <a th:href="@{/product/detail/{pNo}(pNo=${product.pNo})}">
+                                <a th:href="@{/product/{pNo}(pNo=${product.pNo})}">
                                     <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                 </a>
                                 <div class="card-text py-2">
@@ -132,6 +130,10 @@
                     </div>
                 </th:block>
             </div>
+            <th:block th:if="${wishlistProducts.size() == 0}">
+                <br><br><br><br><br><br>
+                <h2 class="text-body-tertiary text-center">관심 목록에 추가된 상품이 없습니다.</h2>
+            </th:block>
         </div>
     </div>
     <script>

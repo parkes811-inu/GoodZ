@@ -23,4 +23,8 @@ public interface PayService {
     
     // 유저별 구매 내역 조회
     public List<Purchase> findPurchasesByUserId(@Param("userId") String userId) throws Exception;
+
+    // 유저별 판매 내역 조회
+    public List<Sales> findSalesByUserId(@Param("userId") String userId) throws Exception;
+    
 }
