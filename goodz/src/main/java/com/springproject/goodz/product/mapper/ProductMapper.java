@@ -1,82 +1,137 @@
-package com.springproject.goodz.product.mapper;
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
-import com.springproject.goodz.product.dto.Page;
-import com.springproject.goodz.product.dto.Product;
-import com.springproject.goodz.product.dto.ProductOption;
-
-@Mapper
-public interface ProductMapper {
+<mapper namespace="com.springproject.goodz.product.mapper.ProductMapper">
     
-    // 상품 목록 - 메인화면에 최근입고 4개
-    public List<Product> newArrivals() throws Exception;
+    <!-- 관리자 목록 조회 -->
+    <select id="list" resultType="Product">
+        SELECT *
+          FROM product
+         ORDER BY category DESC, created_at DESC
+    </select>
 
-    // 상품 목록 - 마이페이지 메인에 4개, (알아서 짜셈)
-    public List<Product> latestAdd() throws Exception;
+    <!-- 상품 목록 조회 -->
+    <select id="productList" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+        OR product_name LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY p_no ASC
+        LIMIT #{page.index}, #{page.rows}
+    </select>
 
-    // 상품 목록 
-    public List<Product> list() throws Exception;
+    <!-- 전체 데이터 개수 조회 -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM product
+        WHERE b_name LIKE CONCAT('%', #{keyword}, '%')
+        OR product_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
 
-    // 상품 목록 - 관리자 페이징 + 검색
-    List<Product> productList(@Param("page") Page page, @Param("keyword") String keyword) throws Exception;
-    
-    // 전체 데이터 개수 가져오기
-    public int getTotalCount(@Param("keyword") String keyword) throws Exception;
+    <!-- 메인화면에 4개 띄우기 -->
+    <select id="newArrivals" resultType="Product">
+        SELECT *
+        FROM product
+        ORDER BY created_at DESC
+        LIMIT 4
+    </select>
 
-    // <관심>상품 목록 (페이징 추후 추가) - 볼 수 있음(알아서 짜셈)
-    public List<Product> userlist() throws Exception;
-    
-    // 상품 목록 - 상의
-    public List<Product> top() throws Exception;
+    <!-- 상품 등록 -->
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="pNo">
+    INSERT INTO product (category, b_name, product_name, initial_price)
+    VALUES (#{category}, #{bName}, #{productName}, #{initialPrice})
+    </insert>
 
-    // 상품 목록 - 하의
-    public List<Product> pants() throws Exception;
+    <!-- 상의 목록 -->
+    <select id="top" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE category = 'top'
+        ORDER BY created_at DESC
+    </select>
 
-    // 상품 목록 - 신발
-    public List<Product> shoes() throws Exception;
+    <!-- 하의 목록 -->
+    <select id="pants" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE category = 'pants'
+        ORDER BY created_at DESC
+    </select>
 
-    // 상품 목록 - 악세서리
-    public List<Product> accessory() throws Exception;
+    <!-- 신발 목록 -->
+    <select id="shoes" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE category = 'shoes'
+        ORDER BY created_at DESC
+    </select>
 
-    // 상품 조회
-    public Product select(int pNo) throws Exception;
+    <!-- 악세사리 목록 -->
+    <select id="accessory" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE category = 'accessory'
+        ORDER BY created_at DESC
+    </select>
 
-    // 상품 등록
-    public int insert(Product product) throws Exception;
+    <!-- 제품 조회 -->
+    <select id="getProductBypNo" resultType="Product">
+        SELECT *
+        FROM product
+        WHERE p_no = #{pNo}
+    </select>
 
-    // 상품 수정
-    public int update(Product product) throws Exception;
+    <!-- 제품과 최신 가격 변동 정보 조회 -->
+    <select id="UsedInPay" resultType="Product">
+        SELECT 
+            p.*, ph.size, ph.fluctuated_price
+        FROM 
+            Product p
+        INNER JOIN 
+            Pricehistory ph ON p.p_no = ph.p_no
+        WHERE 
+            p.p_no = #{pNo} 
+            AND ph.updated_at = (
+                SELECT 
+                    MAX(updated_at) 
+                FROM 
+                    Pricehistory 
+                WHERE 
+                    p_no = p.p_no
+                    AND size = ph.size
+            );
+    </select>
 
-    // 조회수 증가
-    public int views(int no) throws Exception;
+    <select id="findSameBrandProducts" resultType="Product">
+        SELECT *
+          FROM product
+         WHERE b_name = #{brand}
+           AND category = #{category}
+           AND p_no != #{pNo}
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
 
-    // 상품 상세 조회
-    public Product getProductBypNo(int pNo) throws Exception;
+    <update id="updateProduct">
+        UPDATE product
+        SET b_name = #{bName}, category = #{category}, product_name = #{productName}, initial_price = #{initialPrice}
+        WHERE p_no = #{pNo}
+    </update>
 
-    // 상품의 옵션 목록 조회
-    public List<ProductOption> getProductOptionsByProductId(int pNo) throws Exception;
+    <update id="updateOptionsByProductId" parameterType="ProductOption">
+        UPDATE product_option
+        SET option_price = #{optionPrice}, 
+            stock_quantity = stock_quantity + #{stockQuantity}, 
+            status = #{status}
+        WHERE option_id = #{optionId} 
+        AND p_no = #{pNo}
+    </update>
 
-    // 상품 옵션 추가
-    public int insertProductOption(ProductOption productOption) throws Exception;
-
-
-    // 제품과 최신 가격 변동 정보 조회
-    public List<Product> UsedInPay(int pNo) throws Exception;
-    
-    // 상세 페이지 내에서 같은 브랜드 상품 조회
-    public List<Product> findSameBrandProducts(@Param("brand") String brand, 
-                                               @Param("category") String category, 
-                                               @Param("pNo") int pNo,
-                                               @Param("offset") int offset,
-                                               @Param("limit") int limit) throws Exception;
-
-    // 등록된 상품 정보 업데이트 하는데 사용
-    public void updateProduct(Product product) throws Exception;
-    public void updateOptionsByProductId(ProductOption option) throws Exception;
-
-    
-}
+    <select id="findUserWishList" resultType="Product">
+        SELECT * 
+          FROM product
+         WHERE p_no = #{pNo}
+    </select>
+</mapper>

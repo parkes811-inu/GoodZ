@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
@@ -21,9 +23,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springproject.goodz.post.dto.Like;
+import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
+import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.dto.Wish;
+import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
@@ -42,6 +49,9 @@ public class ProductController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private WishListService wishListService;
 
     // DecimalFormat 인스턴스 한 번 생성
     DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
@@ -97,7 +107,14 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{pNo}")
-    public String productDetailPage(@PathVariable("pNo") Integer pNo, Model model) throws Exception {
+    public String productDetailPage(@PathVariable("pNo") Integer pNo
+                                  , Model model
+                                  , HttpSession session) throws Exception {
+
+        // 세션 정보 세팅
+        Users loginUser = (Users)session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);                   
+        
         Product product = productService.getProductBypNo(pNo);
         List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
         product.setOptions(options);
@@ -148,6 +165,20 @@ public class ProductController {
 
         String sizeJson = objectMapper.writeValueAsString(sizeMap);
         model.addAttribute("sizeJson", sizeJson);
+
+        // 사용자 관심 목록 확인
+        boolean isWishlisted = false;
+        if (loginUser != null) {
+            // isWishlisted = wishListService.isWishlisted(loginUser.getUserId(), "product", pNo);
+            Wish wish = new Wish();
+            wish.setUserId(loginUser.getUserId());
+            wish.setParentTable("product");
+            wish.setParentNo(product.getPNo());
+            isWishlisted = wishListService.listById(wish);
+        }
+
+        model.addAttribute("isWishlisted", isWishlisted);
+
 
         return "/product/detail";
     }
@@ -339,8 +370,9 @@ public class ProductController {
                                                           @RequestParam("brand") String brand,
                                                           @RequestParam("category") String category,
                                                           @RequestParam("pNo") int pNo) throws Exception {
-        int offset = Math.max(0, (page - 1) * size);
-        
+        //int offset = Math.max(0, (page - 1) * size);
+        int offset = page * size;
+
         // 쿼리 실행 후 결과 로그 출력
         List<Product> products = productService.findSameBrandProducts(brand, category, pNo, offset, size);
 
