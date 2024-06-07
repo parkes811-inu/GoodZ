@@ -84,7 +84,6 @@ public class CommentController {
     @PostMapping("")
     public ResponseEntity<String> insert(@RequestBody Comment cmmt) throws Exception {
         log.info("::::::::댓글등록요청::::::::");
-        log.info("댓글: " + cmmt);
 
         // 댓글 등록 요청
         int result = cmmtservice.insert(cmmt);

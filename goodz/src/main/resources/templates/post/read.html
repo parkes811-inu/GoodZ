@@ -126,15 +126,37 @@
                     </a>
                 </div>
                 <div>
-                    <!-- 로그인한 유저이고 작성자와 로그인한 유저가 같은 사람인 경우 -->
-                    <th:block th:if="${loginUser != null and loginUser.userId == writer.userId}">
-                        <a type="button" th:href="|/styles/update/${post.postNo}|" class="followBtn btn btn-light btn-sm" id="update"> 수정 </a>
-                        <button type="button" onclick="deletePost()" class="followBtn btn btn-light btn-sm" id="delete"> 삭제 </button>
+                    <!-- 로그인 유저일 때 -->
+            <div th:if="${loginUser != null}">
+                <th:block th:if="${loginUser.userId == writer.userId}">
+                    <!-- 게시글 등록버튼 -->
+                    <a href="/styles/insert" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </a>
+                </th:block>
+                <th:block th:if="${loginUser.userId != writer.userId}">
+                    <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
+                    <th:block th:if="${loginUserFollowingList.isEmpty()}">
+                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
                     </th:block>
-                    <!-- 비로그인하거나 작성자와 로그인한 유저가 다른 경우 -->
-                    <th:block th:if="${loginUser == null or loginUser.userId != writer.userId}">
-                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick=""> 팔로우 </button>
+                    <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
+                    <th:block th:unless="${loginUserFollowingList.isEmpty()}">
+                        <th:block th:if="${#lists.contains(loginUserFollowingList, writer)}">
+                            <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로잉</button>
+                        </th:block>
+                        <th:block th:unless="${#lists.contains(loginUserFollowingList, writer)}">
+                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로우</button>
+                        </th:block>
                     </th:block>
+                </th:block>
+            </div>
+            
+            <!-- 비로그인하거나 프로필계정과 로그인한 유저가 다른 경우 -->
+            <th:block th:if="${loginUser == null}">
+                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}"> 팔로우 </button>
+            </th:block>
                 </div>
             </div>
             
@@ -337,6 +359,7 @@
             }
         }
 
+        
         /* 댓글 등록 */
         function insertCmmt() {
             let $writer = document.getElementById('cmmt_writer');
@@ -368,7 +391,6 @@
                 if(request.readyState == request.DONE && request.status == 201 ) {
                     console.log('댓글 등록 성공');
 
-                    alert(request.responseText);
                     let response = request.responseText;
 
                     if (response == 'SUCCESS') {
@@ -381,6 +403,14 @@
                 }
             }
         }
+
+        // 댓글 등록
+        document.getElementById('cmmt_content').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                insertCmmt();
+            }
+        });
 
         /* 댓글 삭제*/
         function deleteCmmt(cNo) {
@@ -464,6 +494,99 @@
             }
         }
     }
+
+    function updateFollow(element) {
+            
+            // 로그인 여부 체크; 비로그인 시, 로그인 페이지로 튕김
+            if (!isLoggedIn) {
+                alert('로그인 후 이용 가능합니다.');
+                let moveToLogin = confirm('로그인 페이지로 이동하시겠습니까?');
+                
+                if (moveToLogin) {
+                    window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                    return;
+                }
+                return;
+            }
+
+            let requestId = element.getAttribute('data-profileId');
+            let $csrfToken = document.getElementById('csrfToken');
+            let csrfToken = $csrfToken.value;
+
+            let data = {
+                'userId' : requestId,
+                'followerId' : userId
+            };
+            
+            let $button = element.getAttribute('class');
+
+            //팔로우 요청
+            if ($button === 'followBtn btn btn-dark btn-sm') {
+
+                console.log("팔로우 요청" + userId + " -> " + requestId);
+                console.dir(data);
+
+                let request = new XMLHttpRequest();
+    
+                request.open('POST', '/follow');
+                request.setRequestHeader('content-Type', 'application/json');
+                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                request.send(JSON.stringify(data));
+
+                // 요청상태 체킹
+                request.onreadystatechange = function () {
+                    if (request.readyState == request.DONE && request.status == 200) {
+                        
+                        let response = request.responseText;
+                        
+                        if (response == 'SUCCESS') {
+                            console.log('팔로우 등록 성공');
+
+                            // 버튼 변경: 팔로우 -> 팔로잉
+                            element.setAttribute('class', 'followBtn btn btn-outline-secondary btn-sm');
+                            element.innerText = '팔로잉';
+
+                            followerList();
+                            followingList();
+                            countFollow()
+                        }
+                    }
+                }
+                
+
+            // 언팔 요청
+            } else if($button === 'followBtn btn btn-outline-secondary btn-sm') {
+
+                console.log("언팔 요청" + userId + " -/-> " + requestId);
+                console.dir(data);
+
+                let request = new XMLHttpRequest();
+
+                request.open('DELETE', '/follow');
+                request.setRequestHeader('content-Type', 'application/json');
+                request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
+                request.send(JSON.stringify(data));
+
+                // 요청상태 체킹
+                request.onreadystatechange = function () {
+                    if (request.readyState == request.DONE && request.status == 200) {
+                        console.log('언팔처리 성공');
+
+                        let response = request.responseText;
+
+                        if (response == 'SUCCESS') {
+                            element.setAttribute('class', 'followBtn btn btn-dark btn-sm');
+                            element.innerText = '팔로우';
+
+                            followerList();
+                            followingList();
+                            countFollow()
+                        }
+                    }
+                }
+            }
+            
+        }
     </script>
 </body>
 

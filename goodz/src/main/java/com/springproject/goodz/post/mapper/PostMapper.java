@@ -30,5 +30,8 @@ public interface PostMapper {
 
     // 게시글 삭제
     public int delete(int postNo) throws Exception;
+
+    // 인기게시글 4개 - 메인화면 조회용
+    public List<Post> popularPosts() throws Exception;
     
 }

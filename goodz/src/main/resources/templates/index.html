@@ -123,74 +123,26 @@
             <div class="PopularStyles mb-5">
                 <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
                 <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="stylesList">
-    
-                    <!-- [DB] 반복문으로 최대 4개 까지 -->
-                    <div class="col">
-                        <!--[DB] 프로필 & 아이디 -->
-                        <div class="card-text py-2">
-                            <div class="d-flex justify-content-start column-gap-1">
-                                <div class="profile_img">
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
-                                </div>
-                                <p class="userId fw-bold m-0">박은서</p>
-                            </div>
-                        </div>
-                        <!--[DB] 이미지 -->
-                        <a href="/styles/read">
-                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
-                        </a>
-                    </div>
+                    <th:block th:if="${popularPosts.isEmpty()}">
+                        <h2 class="text-body-tertiary text-center">조회된 게시글이 없습니다.</h2>
+                    </th:block>
                     
-                    <div class="col">
-                        <!--[DB] 프로필 & 아이디 -->
-                        <div class="card-text py-2">
-                            <div class="d-flex justify-content-start column-gap-1">
-                                <div class="profile_img">
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
-                                </div>
-                                <p class="userId fw-bold m-0">박은서</p>
+                    <th:block th:each="post : ${popularPosts}">
+                        <!-- [DB] 반복문으로 최대 4개 까지 -->
+                        <div class="col">
+                            <!--[DB] 프로필 & 아이디 -->
+                            <div class="card-text py-2">
+                                <a th:href="|/styles/user/@${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
+                                    <img th:src="${post.profileImg}" alt="프로필이미지" class="profile_img rounded-circle">
+                                    <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
+                                </a>
                             </div>
+                            <!--[DB] 이미지 -->
+                            <a th:href="|/styles/${post.postNo}|">
+                                <img th:src="|/files/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
+                            </a>
                         </div>
-                        <!--[DB] 이미지 -->
-                        <a href="/styles/read">
-                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
-                        </a>
-                    </div>
-                    
-                    <div class="col">
-                        <!--[DB] 프로필 & 아이디 -->
-                        <div class="card-text py-2">
-                            <div class="d-flex justify-content-start column-gap-1">
-                                <div class="profile_img">
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
-                                </div>
-                                <p class="userId fw-bold m-0">박은서</p>
-                            </div>
-                        </div>
-                        <!--[DB] 이미지 -->
-                        <a href="/styles/read">
-                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
-                        </a>
-                    </div>
-                    
-                    <div class="col">
-                        <!--[DB] 프로필 & 아이디 -->
-                        <div class="card-text py-2">
-                            <div class="d-flex justify-content-start column-gap-1">
-                                <div class="profile_img">
-                                    <img src="/img/temp/profileImg.jpg" alt="프로필이미지" class="rounded-circle">
-                                </div>
-                                <p class="userId fw-bold m-0">박은서</p>
-                            </div>
-                        </div>
-                        <!--[DB] 이미지 -->
-                        <a href="/styles/read">
-                            <img src="/img/temp/postImg.jpg" alt="게시글" class="rounded-4" style="width: 100%;">
-                        </a>
-                    </div>
-
-
-
+                    </th:block>
                     
                 </div>
             </div>
