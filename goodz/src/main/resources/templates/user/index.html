@@ -107,7 +107,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <a href="/user/wishlist/products" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
                     </div>
-                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-1" id="brandProducts">
                         <th:block th:if="${wishlistProducts.size() > 0}">
                             <th:block th:each="product : ${wishlistProducts}">
                                 <div class="col">
@@ -130,7 +130,7 @@
                         </th:block>
                     </div>
                     <th:block th:if="${wishlistProducts.size() == 0}">
-                        <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
+                        <h5 class="text-body-tertiary text-center">관심 목록에 추가된 상품이 없습니다.</h5>
                     </th:block>
                 </div>      
             </div>

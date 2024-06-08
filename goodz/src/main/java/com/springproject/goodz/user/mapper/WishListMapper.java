@@ -27,5 +27,8 @@ public interface WishListMapper {
     
     // 관심에 담긴 상품 번호 리스트 반환
     public List<Integer> listNumByUserId (String userId) throws Exception;
+
+    // 유저 관심리스트 조회 - parentTable, userId 기준 조회
+    public List<Wish> listByParent (Wish wish) throws Exception;
     
 }

@@ -1,19 +1,15 @@
 package com.springproject.goodz.user.controller;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,20 +31,21 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mysql.cj.log.Log;
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.service.PayService;
+import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.user.service.UserService;
 import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,6 +73,9 @@ public class UserController {
     @Autowired
     private PayService payService;
 
+    @Autowired
+    private PostService postService;
+
     // DecimalFormat 인스턴스 한 번 생성
     DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
 
@@ -94,6 +94,7 @@ public class UserController {
 
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
+            return "/user/login";
         } else {
             log.info("User found: " + user);
             model.addAttribute("user", user);
@@ -155,13 +156,12 @@ public class UserController {
                 Product product = new Product();
                 product = productService.findUserWishList(pNo);
 
-                // 상품 이미지 설정
+                if (product != null) {  // product가 null인지 확인
                 Files file = new Files();
                 file.setParentNo(product.getPNo());
                 file.setParentTable(product.getCategory());
                 List<Files> productImages = fileService.listByParent(file);
 
-                // 첫 번째 이미지 URL 설정
                 if (!productImages.isEmpty()) {
                     product.setImageUrl(productImages.get(0).getFilePath());
                 } else {
@@ -169,6 +169,24 @@ public class UserController {
                 }
 
                 wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+            } else {
+                log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
+            }
+
+                // // 상품 이미지 설정
+                // Files file = new Files();
+                // file.setParentNo(product.getPNo());
+                // file.setParentTable(product.getCategory());
+                // List<Files> productImages = fileService.listByParent(file);
+
+                // // 첫 번째 이미지 URL 설정
+                // if (!productImages.isEmpty()) {
+                //     product.setImageUrl(productImages.get(0).getFilePath());
+                // } else {
+                //     product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                // }
+
+                // wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
@@ -536,49 +554,85 @@ public class UserController {
             for (Integer pNo : wishListNum) {
                 Product product = new Product();
                 product = productService.findUserWishList(pNo);
-                // 상품 옵션 설정
-                List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
-                product.setOptions(options);
 
-                // 상품 이미지 설정
-                Files file = new Files();
-                file.setParentNo(product.getPNo());
-                file.setParentTable(product.getCategory());
-                List<Files> productImages = fileService.listByParent(file);
-
-                // 최저 가격 계산
-                if (!options.isEmpty()) {
-                    int minPrice = options.stream()
-                                        .mapToInt(ProductOption::getOptionPrice)
-                                        .min()
-                                        .orElse(0);
-                    // 원화 형식으로 변환
-                    String formattedMinPrice = decimalFormat.format(minPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                if (product != null) { // Null 체크 추가
+                    // 상품 옵션 설정
+                    List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                    product.setOptions(options);
+    
+                    // 상품 이미지 설정
+                    Files file = new Files();
+                    file.setParentNo(product.getPNo());
+                    file.setParentTable(product.getCategory());
+                    List<Files> productImages = fileService.listByParent(file);
+    
+                    // 최저 가격 계산
+                    if (!options.isEmpty()) {
+                        int minPrice = options.stream()
+                                            .mapToInt(ProductOption::getOptionPrice)
+                                            .min()
+                                            .orElse(0);
+                        // 원화 형식으로 변환
+                        String formattedMinPrice = decimalFormat.format(minPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    } else {
+                        // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                        int initialPrice = product.getInitialPrice();
+                        String formattedMinPrice = decimalFormat.format(initialPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    }
+    
+                    // 첫 번째 이미지 URL 설정
+                    if (!productImages.isEmpty()) {
+                        product.setImageUrl(productImages.get(0).getFilePath());
+                    } else {
+                        product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    }
+    
+                    wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
                 } else {
-                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
-                    int initialPrice = product.getInitialPrice();
-                    String formattedMinPrice = decimalFormat.format(initialPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                    log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
                 }
-
-                // 첫 번째 이미지 URL 설정
-                if (!productImages.isEmpty()) {
-                    product.setImageUrl(productImages.get(0).getFilePath());
-                } else {
-                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-                }
-
-                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
         return "/user/wishlist_products";
     }
 
-    @GetMapping("/wishlist/styles")
-    public String wishlist_styles() {
-        return "/user/wishlist_styles";
+    @GetMapping("/wishlist/posts")
+    public String wishlist_styles(Model model) throws Exception {
+
+        // 👤 로그인한 유저의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        log.info("========================================================");
+        log.info(currentUserName);
+        Users user = userService.findUserByUsername(currentUserName);
+        log.info("========================================================");
+
+        String parentTable = "post"; // 관심리스트 - 게시글
+        // 유저의 관심 게시글 리스트 불러오기;
+        Wish wish = new Wish();
+        wish.setParentTable(parentTable);
+        wish.setUserId(user.getUserId());
+        List<Wish> wishList_post = wishListService.listByParent(wish);  // 유저의 관심 게시글 리스트 (Wish 타입)
+
+        // 유저의 관심 게시글 세팅
+        List<Post> allPost = postService.list();        // 전체게시글
+        List<Post> postList_wished = new ArrayList<>(); // 유저의 관심 게시글 리스트 (Post 타입)
+        for (Wish wishedPost : wishList_post) {
+            for (Post post : allPost) {
+                // 전체 게시글 중 관심체크한 게시글 번호와 일치하는 게시글 찾기
+                if (wishedPost.getParentNo() != post.getPostNo()) {
+                    continue;
+                }
+                postList_wished.add(post);
+            }
+        }
+
+        model.addAttribute("postList_wished", postList_wished);
+
+        return "/user/wishlist_posts";
     }
 
     @GetMapping("/manage_info")
