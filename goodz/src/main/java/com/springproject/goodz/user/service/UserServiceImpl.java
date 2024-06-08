@@ -102,6 +102,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public int updateUser(Users user) throws Exception {
 
+        // ✅ 유저 정보 업데이트
+
         // int result = userMapper.update(user);
         String dir = "user";
         int parentNo = user.getNo();

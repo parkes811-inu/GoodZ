@@ -131,13 +131,13 @@
         UPDATE user
         <set>
             nickname = #{nickname},
-            updated_at = now()
             <if test="phoneNumber != null and phoneNumber != ''">
                 ,phone_number = #{phoneNumber}
             </if>
-            <if test="profilePictureUrl != null and profilePictureUrl != ''">
-                ,profile_picture_url = #{profilePictureUrl}
+            <if test="phoneNumber != null and phoneNumber != ''">
+                ,phone_number = #{phoneNumber}
             </if>
+            updated_at = now()
         </set>
         WHERE user_id = #{userId}
     </update>
