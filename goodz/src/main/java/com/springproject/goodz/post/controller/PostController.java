@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -79,6 +80,20 @@ public class PostController {
 
         // 게시글 세팅
         List<Post> postList = postService.list();
+        for (Post post : postList) {
+            log.info("Post UserId: " + post.getUserId());
+
+            Users user = userService.select(post.getUserId());
+            if (user == null) {
+                log.error("User not found for UserId: " + post.getUserId());
+                // null인 경우에 대한 처리
+                continue; // 또는 적절한 처리를 진행하세요
+            }
+            log.info("User found: " + user.getUserId());
+
+            // 게시글별 유저 프로필 사진 세팅
+            post.setProfileImgNo(user.getProfileImgNo());
+        }
         
         // 세션 정보 세팅
         Users loginUser = (Users)session.getAttribute("user");
@@ -121,6 +136,8 @@ public class PostController {
                 } else {
                     post.setIsWishlisted("solid");
                 }
+
+                
             }
             model.addAttribute("postList", postList);
         }

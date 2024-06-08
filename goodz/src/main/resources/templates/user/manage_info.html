@@ -86,7 +86,13 @@
                             <div class="card-title-section">
                                 <div class="profile-details">
                                     <div class="profile_img">
-                                        <img th:src="${user != null and user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
+                                        <th:block th:if="${user == null or user.profileImgNo == null}">
+                                            <img src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
+                                        </th:block>
+                                        <th:block th:if="${user != null or user.profileImgNo != null}">
+                                                <img th:src="|/files/${user.profileImgNo}|" alt="프로필이미지" class="rounded-circle">
+                                        </th:block>
+
                                     </div>
                                     <div class="profile-info">
                                         <p class="nickname  fw-bold m-0" th:text="${user != null ? user.nickname : 'Error'}"></p>
@@ -106,13 +112,13 @@
                         <input type="hidden" name="no" th:value="${user.no}">
                         <input type="hidden" name="userId" id="userId" th:value="${user.userId}">
                         <input type="hidden" name="originalNickname" id="originalNickname" th:value="${user.nickname}">
-                        <input type="hidden" name="originalFileNo" th:value="${user.profileImgNo}">
+                        <input type="hidden" name="originalFileNo" th:value="${profileImgNo}">
                         <input type="hidden" name="originalPassword" th:value="${user.password}">
 
                         <div class="form-group">
                             <label for="formFile" class="form-label">프로필 사진 수정*</label>
                             <div class="input-group" style="max-width: 640px;">
-                                <input type="file" class="form-control rounded-1" name="profileImgfile" id="file" placeholder="첨부파일을 등록해주세요.">
+                                <input type="file" class="form-control rounded-1" name="profileImgFile" id="file" placeholder="첨부파일을 등록해주세요.">
                             </div>
                         </div>
                         
@@ -156,8 +162,6 @@
     </div>
     
     <script>
-
-
         // 기존 정보 가져오기
         let originalNickname = document.getElementById('originalNickname').value;
         var csrfToken = document.getElementById('csrfToken').value;
@@ -185,20 +189,36 @@
                 input.type = 'text';
                 togglePassword.classList.remove('fa-eye-slash');
                 togglePassword.classList.add('fa-eye');
-                } else {
-                    input.type = 'password';
-                    togglePassword.classList.remove('fa-eye');
-                    togglePassword.classList.add('fa-eye-slash');
-                    }
-                    }
+            } else {
+                input.type = 'password';
+                togglePassword.classList.remove('fa-eye');
+                togglePassword.classList.add('fa-eye-slash');
+            }
+        }
+
+        // 입력된 휴대폰번호 "010-1234-1234" 형식으로 변경
+        function formatPhoneNumber(phone) {
+            // 숫자만 추출
+            var cleaned = ('' + phone).replace(/\D/g, '');
+            // 정규식으로 전화번호 형식 맞추기
+            var match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/); 
+            // match = ["01012345678", "010", "1234", "5678"] 형태로 반환
+
+            if (match) {
+                // 형식화된 전화번호 반환
+                return match[1] + '-' + match[2] + '-' + match[3];
+            }
+            // 형식에 맞지 않으면 null 반환
+            return null;
+        }
                     
-            function check() {
-                
-                let inputNickname = document.getElementById('nickname').value;
-                let password = document.getElementById('password').value; 
-                let checkPassword = document.getElementById('checkPassword').value;
-                let phoneNumber = document.getElementById('phoneNumber').value;
-                var fileInput = document.getElementById('file');
+        function check() {
+            
+            let inputNickname = document.getElementById('nickname').value;
+            let password = document.getElementById('password').value; 
+            let checkPassword = document.getElementById('checkPassword').value;
+            let phoneNumber = document.getElementById('phoneNumber').value;
+            var fileInput = document.getElementById('file');
 
             // 변동사항이 있는지 체크
             if (fileInput.files.length === 0 && inputNickname === originalNickname && password == "" && checkPassword == "" && phoneNumber == "") {
@@ -213,8 +233,13 @@
                     return;
                 }
             }
-                    
+                
             /* ✅ 2. 비밀번호 정규화 체크 및 비밀번호 확인 일치여부 체크 */
+            // 변경X 시, 폼제출 제외!!
+            if (password === "" && checkPassword === "") {
+                document.getElementById('password').removeAttribute("name");
+                document.getElementById('checkPassword').removeAttribute("name");
+            }
             
             // 비밀번호 유효성 검사 정규 표현식
             var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,16}$/;
@@ -231,21 +256,22 @@
             }
 
             // ✅ 3. 휴대폰 번호 유효성 검사
-            const phoneNumberRegex = /^(01[016789]{1})[1-9]{1}[0-9]{3,4}[0-9]{4}$/;
-
+            
             if (phoneNumber != "") {
-                if (!phoneNumberRegex.test(phoneNumber)) {
-                    alert('휴대폰 번호를 올바르게 입력해주세요.')
+                let formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+                if (formattedPhoneNumber == null) {
+                    alert('휴대폰 번호를 올바르게 입력해주세요.');
                     return;
                 }
-
+                // 형식화된 폰번호로 수정 
+                phoneNumber = formattedPhoneNumber;
+                document.getElementById('phoneNumber').value = formattedPhoneNumber; // 폼 데이터 업데이트
             }
             
             // ✔️ 폼 전송
             form.submit();
 
-        }
-
+        }   
 
         function checkNickname() {
 

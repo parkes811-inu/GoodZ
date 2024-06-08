@@ -247,45 +247,6 @@ public class UserController {
         }
     }
 
-    // // 회원 정보 업데이트 - manage_info
-    // @PostMapping("/update")
-    // public String updateUserInfo(
-    //         @RequestParam Map<String, String> request,
-    //         @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
-        
-    //     // Users user = new Users();
-    //     // String userId = request.get("userId");
-    //     // String nickname = request.get("nickname");
-    //     // String phoneNumber = request.get("phoneNumber");
-
-    //     // user.setUserId(userId);
-    //     // user.setNickname(nickname);
-    //     // if(phoneNumber != null && !phoneNumber.isEmpty()) {
-    //     //     user.setPhoneNumber(phoneNumber);
-    //     // }
-
-    //     // if (file != null && !file.isEmpty()) {
-    //     //     String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    //     //     String filePath = uploadPath + "/user/" + File.separator + fileName;
-    //     //     try {
-    //     //         file.transferTo(new File(filePath));
-    //     //         // user.setProfilePictureUrl(filePath);
-    //     //         user.setProfilePictureUrl("/upload/user/" + fileName); // URL 형식으로 저장
-    //     //     } catch (IOException e) {
-    //     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
-    //     //     }
-    //     // }
-
-    //     // // 디버그 로그 추가
-    //     // System.out.println("User data: " + user);
-        
-    //     // int result = userService.update(user);
-    //     // if (result > 0) {
-    //     //     return ResponseEntity.ok("수정 되었습니다.");
-    //     // } else {
-    //     //     return ResponseEntity.status(HttpStatus.CONFLICT).body("수정에 실패하였습니다.");
-    //     // }
-    // }
 
     @PostMapping("/update")
     public String updateUser(Users user) {
@@ -621,29 +582,27 @@ public class UserController {
     }
 
     @GetMapping("/manage_info")
-    public String manage_info(Model model, HttpSession session) throws Exception {
-        // Users user = (Users)session.getAttribute("user");
-        // user = userService.select(user.getUserId());
-        // log.info(user.toString());
-
+    public String manage_info(Model model) throws Exception {
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
-        Users user = userService.findUserByUsername(currentUserName);
-
+        Users user = userService.select(currentUserName);
+        
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
             return "redirect:/user/login";
-
+            
         } else {
             model.addAttribute("user", user);
         }
-
+        
         log.info(currentUserName);
         log.info(user.toString());
-
-
+        
         model.addAttribute("user", user);
+
+        
+
         return "/user/manage_info";
     }
 

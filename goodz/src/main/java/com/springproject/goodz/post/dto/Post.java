@@ -13,7 +13,7 @@ public class Post {
     private int postNo;                 // 게시글 번호
     private String userId;              // 작성자 아이디
     private String nickname;            // 작성자 닉네임 - dto 조회용
-    private String profileImg;          // 작성자 프로필이미지 - dto 조회용
+    private int profileImgNo;          // 작성자 프로필이미지번호 - dto 조회용
     private String content;             // 작성내용
 
     private int likeCount;              // 좋아요 갯수
