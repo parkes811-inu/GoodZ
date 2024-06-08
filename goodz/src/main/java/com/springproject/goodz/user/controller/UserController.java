@@ -294,10 +294,10 @@ public class UserController {
         log.info(user.toString());
 
         try {
-            //int result = userService.updateUser(user);
+            int result = userService.updateUser(user);
 
         } catch (Exception e) {
-            log.error("프로필 이미지 업로드에 실패했습니다.", e);
+            log.error("유저 정보 업데이트에 실패했습니다..", e);
             e.printStackTrace();
             
             return "forword:/user/manage_info";
