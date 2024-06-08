@@ -18,7 +18,7 @@
             width: 100px;
         }
 
-        .product_date_price{
+        .product_date_price {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -64,12 +64,12 @@
             <div class="purchase_list my-3">
                 <!-- 필터 -->
                 <div class="sort-order" onclick="filter()">
-                    <span id="sort-text">내림차순</span> <span id="sort-icon">▼</span>
+                    <span id="sort-text">주문일자기준</span><span id="sort-icon"></span>
                 </div>        
                 
                 <!-- [DB] 구매 상품 리스트 반복문으로 출력-->
-                <div class="product_list mb-5 d-flex flex-column" th:each="purchase : ${allPurchases}" id="product_list">
-                    <div class="product_item" th:data-ordered-at="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}">
+                <div class="product_list mb-5 d-flex flex-column" id="product_list">
+                    <div class="product_item" th:each="purchase : ${allPurchases}" th:data-ordered-at="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}">
                         <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
                         <div class="d-flex">
                             <!-- 상품 이미지 -->
@@ -78,12 +78,13 @@
                             </a>
                             <!-- 브랜드/상품명 -->
                             <div class="product_details d-flex flex-column my-auto ms-3">
-                                <p class=" fw-bold" th:text="${purchase.bName}"></p>
+                                <p class="fw-bold" th:text="${purchase.bName}"></p>
                                 <p th:text="${purchase.productName}"></p>
                             </div>
                         </div>
                         <div class="product_date_price">
                             <!-- 구매 상태 -->
+                            <p th:if="${purchase.purchaseState} == 'pending'" th:text="'보류'"></p>
                             <p th:if="${purchase.purchaseState} == 'paid'" th:text="'결제완료'"></p>
                             <p th:if="${purchase.purchaseState} == 'shipping'" th:text="'배송중'"></p>
                             <p th:if="${purchase.purchaseState} == 'delivered'" th:text="'배송완료'"></p>
@@ -92,11 +93,15 @@
                             <div>
                                 <!-- 구매일자/가격 -->
                                 <p th:text="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}"></p>
-                                <p th:text="${purchase.purchasePrice} + '원'"></p>
+                                <p th:text="${purchase.formattedPurchasePrice}"></p>
                             </div>
                         </div>
                     </div>
                 </div>
+                <th:block th:if="${allPurchases.size() == 0}">
+                    <br><br><br><br><br><br>
+                    <h2 class="text-body-tertiary text-center">구매한 상품이 없습니다.</h2>
+                </th:block>
             </div>
         </div>
     </div>
@@ -120,17 +125,17 @@
             });
 
             // 정렬된 항목들을 다시 DOM에 추가
+            var fragment = document.createDocumentFragment();
             itemsArray.forEach(function(item) {
-                productList.appendChild(item);
+                fragment.appendChild(item);
             });
+            productList.innerHTML = '';
+            productList.appendChild(fragment);
 
             // 정렬 상태 토글
             sortIcon.innerHTML = isDescending ? '▲' : '▼';
             sortText.innerHTML = isDescending ? '오름차순' : '내림차순';
         }
-
     </script>
-    
-    
 </body>
 </html>

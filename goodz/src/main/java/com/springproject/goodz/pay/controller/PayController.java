@@ -224,7 +224,6 @@ public class PayController {
 
         String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
         purchase.setAddress(decodedAddress);
-        log.info("시발1----------------------------------------------\n" + decodedAddress);
         log.info("Purchase 객체 생성됨: {}", purchase);
 
         int result = payService.updatePurchase(purchase);
@@ -343,7 +342,7 @@ public class PayController {
 
         // 저장 결과 처리
         if (result > 0) {
-            return "redirect:/pay/complete?type=sell"; // 성공 시 완료 페이지로 리다이렉트
+            return "redirect:/pay/complete/sell"; // 성공 시 완료 페이지로 리다이렉트
         } else {
             model.addAttribute("errorMessage", "판매 정보를 저장하는 데 실패했습니다.");
             return "/pay/sell"; // 실패 시 판매 페이지로 리다이렉트
@@ -358,17 +357,18 @@ public class PayController {
      * @throws Exception 
      */
     @GetMapping("/complete")
-    public String complete(@RequestParam("purchaseNo") int purchaseNo,
-                           @RequestParam("paymentKey") String paymentKey,
-                           @RequestParam("orderId") String orderId,
-                           @RequestParam("amount") int amount,
-                           @RequestParam("address") String address,
-                           @RequestParam("type") String type, Model model) throws Exception {
+    public String complete (@RequestParam(value = "purchaseNo", required = false) Integer purchaseNo,
+                            @RequestParam(value = "paymentKey", required = false) String paymentKey,
+                            @RequestParam(value = "orderId", required = false) String orderId,
+                            @RequestParam(value = "amount", required = false) Integer amount,
+                            @RequestParam(value = "address", required = false) String address,
+                            @RequestParam(value = "type", required = false) String type, 
+                            Model model) throws Exception {
         
         String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
 
         log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
-
+                            
         Purchase purchase = new Purchase();
         purchase.setPurchaseNo(purchaseNo);
         purchase.setOrderId(orderId);
@@ -393,7 +393,7 @@ public class PayController {
                 productService.minusQuantityByProductId(optionId.getOptionId());
             }
 
-            return "redirect:/pay/buy/complete/" + purchaseNo + "?type="+type;
+            return "redirect:/pay/complete/buy";
         }
         log.info("구매 업데이트 실패");
         type = "fail";
@@ -408,10 +408,8 @@ public class PayController {
      * @param model
      * @return
      */
-    @GetMapping("/buy/complete/{purchaseNo}")
-    public String getMethodName(@PathVariable("purchaseNo") String purchaseNo
-                               ,@RequestParam("type") String type
-                               ,Model model) {
+    @GetMapping("/complete/{type}")
+    public String getResult(@PathVariable("type") String type, Model model) {
         model.addAttribute("type", type);
         return "/pay/complete";
     }

@@ -15,7 +15,7 @@
                 <div th:each="product : ${topList}" class="col">
                     <div class="card border-0">
                         <div class="card-body">
-                            <a th:href="@{/product/detail/{id}(id=${product.pNo})}">
+                            <a th:href="@{/product/{id}(id=${product.pNo})}">
                                 <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                             </a>
                             <div class="card-text py-2">

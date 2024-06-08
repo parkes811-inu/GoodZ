@@ -25,7 +25,7 @@ ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
 
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
-    `no` INT NOT NULL,              -- 번호
+    `no` INT NOT NULL AUTO_INCREMENT,              -- 번호
     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
     `username` VARCHAR(50) NOT NULL, -- 유저 이름
     `nickname` VARCHAR(100) NOT NULL, -- 유저 닉네임
@@ -90,7 +90,7 @@ CREATE TABLE `Follow` (
 	`no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
 	`follower_id`	VARCHAR(100),
-    PRIMARY KEY (follower_no),
+    PRIMARY KEY (no),
     FOREIGN KEY fk_follower_user(user_id) REFERENCES User(user_id) ON DELETE CASCADE
 ) COMMENT='팔로워';
 

@@ -42,4 +42,9 @@ public class PayServiceImpl implements PayService {
         return payMapper.findPurchasesByUserId(userId);
     }
     
+    // 유저별 판매 내역 조회
+    @Override
+    public List<Sales> findSalesByUserId(@Param("userId") String userId) throws Exception {
+        return payMapper.findSalesByUserId(userId);
+    }
 }

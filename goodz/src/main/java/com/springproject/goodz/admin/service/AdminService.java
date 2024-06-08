@@ -1,10 +1,15 @@
 package com.springproject.goodz.admin.service;
 
+import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 public interface AdminService {
+
+    // 유저가 판매한 상품 전체 조회
+    List<Map<String, Object>> userSaleList() throws Exception;
+
+    // 상태별 판매 현황 카운트
+    List<Map<String, Object>> countUserSalesByState() throws Exception;
 
     // 유저가 판매한 상품 단일 조회
     Map<String, Object> userSale(int saleNo) throws Exception;

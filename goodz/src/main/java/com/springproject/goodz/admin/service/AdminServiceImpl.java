@@ -1,5 +1,6 @@
 package com.springproject.goodz.admin.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
@@ -13,7 +14,19 @@ public class AdminServiceImpl implements AdminService{
 
     @Autowired
     private AdminMapper adminMapper;
+
+    // 유저가 판매한 상품 전체 조회
+    @Override
+    public List<Map<String, Object>> userSaleList() throws Exception {
+        return adminMapper.userSaleList();
+    }
     
+    // 상태별 판매 현황 카운트 
+    @Override
+    public List<Map<String, Object>> countUserSalesByState() throws Exception{
+        return adminMapper.countUserSalesByState();
+    }
+
     // 유저가 판매한 상품 단일 조회
     @Override
     public Map<String, Object> userSale(int sNo) throws Exception {
@@ -46,5 +59,7 @@ public class AdminServiceImpl implements AdminService{
     public void decrementStockQuantity(int pNo, String size) throws Exception {
         adminMapper.decrementStockQuantity(pNo, size);
     }
+
+    
     
 }

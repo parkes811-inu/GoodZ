@@ -24,6 +24,6 @@ public class Purchase {
     private String productName; 
     private String imageUrl;
     private List<ProductOption> options; // 연관된 옵션 목록
-    private String formattedMinPrice; // 최저가 상품을 원화 형식으로 표현하기 위한 변수
+    private String formattedPurchasePrice; // 구매 가격을 원화 형식으로 표현하기 위한 변수
     private String bName;
 }

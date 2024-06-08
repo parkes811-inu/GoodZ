@@ -6,8 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +102,42 @@ public class ProductController {
 
         model.addAttribute("productList", productList);
         return "/product/index";
+    }
+
+    @GetMapping("/{pNo}")
+    public String viewProduct(@PathVariable int pNo, HttpServletRequest request, 
+                            HttpServletResponse response, Model model) throws Exception {
+
+        String cookieName = "viewedProduct_" + pNo;
+        boolean alreadyViewed = false;
+
+        // 쿠키 확인
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    alreadyViewed = true;
+                    break;
+                }
+            }
+        }
+
+        if (!alreadyViewed) {
+            // 조회수 증가 로직
+            productService.updateViews(pNo);
+
+            // 쿠키 설정 (공백 제거, 유효한 문자열 사용)
+            Cookie viewCookie = new Cookie(cookieName, "true");
+            viewCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(1)); // 쿠키 유효기간 1일
+            viewCookie.setHttpOnly(true);
+            response.addCookie(viewCookie);
+        }
+
+        // 제품 정보 모델에 추가
+        Product product = productService.getProductBypNo(pNo);
+        model.addAttribute("product", product);
+
+        return "redirect:/product/detail/" + pNo; // 상품 상세 페이지로 리다이렉트
     }
 
 

@@ -3,6 +3,7 @@ package com.springproject.goodz.admin.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -172,7 +173,6 @@ public class AdminController {
             }
 
         } else {
-            // error 페이지 만드러야 댐.....
             return "/common/error";
         }
         return "redirect:/admin/products";
@@ -180,7 +180,18 @@ public class AdminController {
 
 
     @GetMapping("/purchase_state")
-    public String purchase_state() {
+    public String userSaleList(Model model) throws Exception {
+        List<Map<String, Object>> saleList = adminService.userSaleList();
+        model.addAttribute("saleList", saleList);
+
+        List<Map<String, Object>> saleStateCounts = adminService.countUserSalesByState();
+        Map<String, Integer> saleStateMap = saleStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("sale_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        model.addAttribute("saleStateCounts", saleStateMap);
+
         return "/admin/purchase_state";
     }
 
@@ -208,16 +219,23 @@ public class AdminController {
     @PostMapping("/purchase/update")
     public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
         adminService.updateUserSaleState(sNo, saleState);
-        return "redirect:/admin/purchase/detail/" + sNo;
+        return "redirect:/admin/purchase_state";
     }
 
-    // 유저가 구매한 내역
+
+    /**
+     * 유저가 구매한 내역
+     * @return
+     */
     @GetMapping("/pay_history")
     public String pay_history() {
         return "/admin/pay_history";
     }
 
-    // 유저가 구매한 내역 단일 조회
+    /**
+     * 유저가 구매한 내역 단일 조회
+     * @return
+     */
     @GetMapping("/pay_history/detail")
     public String pay_history_detail() {
         return "/admin/pay_history_detail";

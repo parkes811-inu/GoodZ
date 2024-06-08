@@ -295,6 +295,11 @@
                     WHERE provider = #{provider} 
                       AND social_id = #{socialId}
                 )
-</select>
+    </select>
 
+    <select id="findUserByUsername" resultType="Users">
+        SELECT * 
+          FROM user 
+         WHERE user_id = #{userId}
+    </select>
 </mapper>
