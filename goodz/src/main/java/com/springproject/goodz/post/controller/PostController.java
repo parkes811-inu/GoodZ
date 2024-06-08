@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -79,6 +80,11 @@ public class PostController {
 
         // 게시글 세팅
         List<Post> postList = postService.list();
+        for (Post post : postList) {
+            // 게시글별 유저 프로필 사진 세팅
+            Users user = userService.select(post.getUserId());
+            post.setProfileImgNo(user.getProfileImgNo());
+        }
         
         // 세션 정보 세팅
         Users loginUser = (Users)session.getAttribute("user");
@@ -121,6 +127,8 @@ public class PostController {
                 } else {
                     post.setIsWishlisted("solid");
                 }
+
+                
             }
             model.addAttribute("postList", postList);
         }
@@ -138,6 +146,9 @@ public class PostController {
 
         /* 게시글 조회 */
         Post post = postService.select(postNo);
+
+        Users user = userService.select(post.getUserId());
+        post.setProfileImgNo(user.getProfileImgNo());
         
         /* 첨부파일 조회 */
         Files file = new Files();
@@ -152,6 +163,7 @@ public class PostController {
         
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
+        loginUser = userService.select(loginUser.getUserId());
         model.addAttribute("loginUser", loginUser);
         
         /* 좋아요 & 저장 세팅 */

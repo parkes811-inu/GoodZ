@@ -70,7 +70,12 @@
                                 <!--[DB] 프로필 & 아이디 -->
                                 <div class="card-text py-2">
                                     <a th:href="|/styles/user/@${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
-                                        <img th:src="${post.profileImg}" alt="프로필이미지" class="profile_img rounded-circle">
+                                        <th:block th:if="${post.profileImgNo == null}">
+                                            <img src="/img/user/basic_social.png" alt="프로필이미지" class="profile_img rounded-circle">
+                                        </th:block>
+                                        <th:block>
+                                            <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile_img rounded-circle">
+                                        </th:block>
                                         <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                     </a>
                                 </div>
