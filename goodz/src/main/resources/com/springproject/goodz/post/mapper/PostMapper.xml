@@ -34,6 +34,8 @@
         WHERE post_no = #{postNo};
     </select>
 
+    <!-- 게시글 조회 - 게 대표이미지 -->
+
     <!-- 프로필 유저의 게시글 조회 - /styles/user/@유저닉네임  -->
     <select id="selectById" resultType="post">
         SELECT  p.post_no as post_no

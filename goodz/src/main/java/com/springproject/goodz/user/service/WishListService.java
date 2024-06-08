@@ -23,5 +23,8 @@ public interface WishListService {
 
     // 종속된 저장들 모두 삭제
     public int deleteAll(Wish wish) throws Exception;
+
+    // 유저 관심리스트 조회 - parentTable, userId 기준 조회
+    public List<Wish> listByParent (Wish wish) throws Exception;
     
 }
