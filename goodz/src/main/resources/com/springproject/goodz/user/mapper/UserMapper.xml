@@ -107,14 +107,17 @@
               ,u.password
               ,u.birth
               ,u.profile_picture_url
+              ,f.no as file_no
               ,u.account
               ,u.created_at
               ,u.updated_at
               ,1 enabled
               ,auth
-              ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
-	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
-        FROM user u LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+              ,IFNULL((SELECT COUNT(*) FROM follow WHERE user_id = u.user_id),0)AS count_follower
+	          ,IFNULL((SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id),0)AS count_following
+        FROM user u
+        LEFT OUTER JOIN user_auth auth ON u.user_id = auth.user_id
+        LEFT OUTER JOIN file f on u.no = parent_no and f.parent_table='user'
         WHERE u.nickname = #{nickname}
     </select>
 

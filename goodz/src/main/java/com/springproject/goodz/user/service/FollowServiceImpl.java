@@ -58,6 +58,8 @@ public class FollowServiceImpl implements FollowService{
         for (Follow follow : followers) {
             Users follower = userService.select(follow.getFollowerId());
             followerList.add(follower);
+
+            
         }
         Map<String, Object> result = new HashMap<>();
         result.put("followerList", followerList);
@@ -85,6 +87,7 @@ public class FollowServiceImpl implements FollowService{
         for (Follow follow : followings) {
             Users following = userService.select(follow.getUserId());
             followingList.add(following);
+            
         }
         Map<String, Object> result = new HashMap<>();
         result.put("followingList", followingList);

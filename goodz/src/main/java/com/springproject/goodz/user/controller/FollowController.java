@@ -56,6 +56,7 @@ public class FollowController {
              
             // ⭐ 프로필 계정 세팅
             Users profileUser = userService.select(profileId);
+
             
             // 팔로워 목록과 수 조회
             Map<String, Object> followerDetails = followService.getFollowerDetails(profileId);

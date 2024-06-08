@@ -81,17 +81,8 @@ public class PostController {
         // 게시글 세팅
         List<Post> postList = postService.list();
         for (Post post : postList) {
-            log.info("Post UserId: " + post.getUserId());
-
-            Users user = userService.select(post.getUserId());
-            if (user == null) {
-                log.error("User not found for UserId: " + post.getUserId());
-                // null인 경우에 대한 처리
-                continue; // 또는 적절한 처리를 진행하세요
-            }
-            log.info("User found: " + user.getUserId());
-
             // 게시글별 유저 프로필 사진 세팅
+            Users user = userService.select(post.getUserId());
             post.setProfileImgNo(user.getProfileImgNo());
         }
         
@@ -155,6 +146,9 @@ public class PostController {
 
         /* 게시글 조회 */
         Post post = postService.select(postNo);
+
+        Users user = userService.select(post.getUserId());
+        post.setProfileImgNo(user.getProfileImgNo());
         
         /* 첨부파일 조회 */
         Files file = new Files();
@@ -169,6 +163,7 @@ public class PostController {
         
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
+        loginUser = userService.select(loginUser.getUserId());
         model.addAttribute("loginUser", loginUser);
         
         /* 좋아요 & 저장 세팅 */

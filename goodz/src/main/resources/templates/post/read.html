@@ -90,7 +90,12 @@
 
                 <!-- 댓글입력칸 -->
                 <div class="comment_input d-flex align-items-center" th:data-logged-in="${loginUser != null}">
-                    <img th:src="${loginUser != null && loginUser.profilePictureUrl != null ? loginUser.profilePictureUrl : '/img/temp/profile_img_default.png'}" alt="프로필 이미지" class="profile_img">
+                    <th:block th:if="${loginUser == null}">
+                        <img src='/img/temp/profile_img_default.png' alt="프로필 이미지" class="profile_img">
+                    </th:block>
+                    <th:block th:if="${loginUser != null}">
+                        <img th:src="|/files/${loginUser.profileImgNo}|" alt="프로필 이미지" class="profile_img">
+                    </th:block>
                     <form method="post" class="d-flex align-items-center">
                         <div class="wrap_input ms-3">
                             <input type="hidden" id="csrf_token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -121,7 +126,7 @@
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
                     <a th:href="|/styles/user/@${writer.nickname}|" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img th:src="${writer.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
+                        <img th:src="|/files/${writer.profileImgNo}|" alt="프로필이미지" class="profile_img">
                         <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
