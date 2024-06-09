@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -42,7 +41,7 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-                                                  .getUserInfoEndpoint().getUserNameAttributeName();
+                                                .getUserInfoEndpoint().getUserNameAttributeName();
 
         log.info("★★★★★ 주요 정보 ★★★★★");
         log.info("****** registrationId : " + registrationId);
@@ -62,9 +61,9 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         UserSocial userSocial = new UserSocial();
         userSocial.setProvider(provider);
         userSocial.setSocialId(socialId);
-        userSocial.setUsername(oAuthAttributes.getUsername()); // 수정: oAuthAttributes에서 값 가져오기
-        userSocial.setNickname(oAuthAttributes.getNickname()); // 수정: oAuthAttributes에서 값 가져오기
-        userSocial.setPicture(oAuthAttributes.getPicture()); // 수정: oAuthAttributes에서 값 가져오기
+        userSocial.setUsername(oAuthAttributes.getUsername());
+        userSocial.setNickname(oAuthAttributes.getNickname());
+        userSocial.setPicture(oAuthAttributes.getPicture());
 
         log.info("======================================================");
         log.info("시발 진짜 좀 되라 제발 : " + userSocial);
@@ -111,13 +110,14 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
 
         log.info("***** 가입된 소셜 사용자 정보 *****");
         log.info(joinedUser.toString());
-        // 사용자 정보를 인증 컨텍스트에 저장
-        //SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(joinedUser.getUsername(), null, ((Authentication) joinedUser).getAuthorities()));
-        // CustomUser 객체를 생성하여 사용자 정보를 인증 컨텍스트에 저장
         CustomUser customUser = new CustomUser(joinedUser);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities()));
-        
-        return new SocialUser(joinedUser, oAuthAttributes);
+
+        // response 속성 추가
+        Map<String, Object> attributesWithResponse = new java.util.HashMap<>(oAuthAttributes.getAttributes());
+        attributesWithResponse.put("response", attributes);
+
+        return new SocialUser(joinedUser, attributesWithResponse);
     }
 
     @Override
@@ -125,15 +125,21 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         Users joinedUser = userMapper.selectBySocial(userSocial);
         int result = 0;
         if (joinedUser == null) {
-            String userId = userSocial.getProvider() + "_" + userSocial.getSocialId();
+            String userId = userSocial.getProvider() + "_";
             
+            if(userSocial.getSocialId().length() > 20) {
+                userId = userId + userSocial.getSocialId().substring(4, 20);
+            } else {
+                userId = userId + userSocial.getSocialId();
+            }
+
             Users user = new Users();
             user.setUserId(userId);
             user.setUsername(userSocial.getUsername());
             user.setNickname(userSocial.getNickname());
             user.setProfilePictureUrl(userSocial.getPicture());
             user.setPassword(UUID.randomUUID().toString());
-            
+
             log.info("======================================================");
             log.info("User for joining: " + user);
             log.info("======================================================");
@@ -144,7 +150,7 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
             userAuth.setAuth("ROLE_USER");
             userAuth.setUserId(userId);
             userMapper.insertAuth(userAuth);
-            
+
             UserSocial newUserSocial = new UserSocial();
             newUserSocial.setProvider(userSocial.getProvider());
             newUserSocial.setSocialId(userSocial.getSocialId());
@@ -157,7 +163,6 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         }
         return result;
     }
-
 
     @Override
     public int update(UserSocial userSocial, OAuthAttributes oAuthAttributes) throws Exception {

@@ -2,6 +2,7 @@ package com.springproject.goodz.user.dto;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -16,8 +17,8 @@ public class SocialUser extends DefaultOAuth2User implements UserDetails {
 
     private Users user;
 
-    public SocialUser(Users user, OAuthAttributes oAuthAttributes) {
-        super(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), oAuthAttributes.getAttributes(), oAuthAttributes.getNameAttributeKey());
+    public SocialUser(Users user, Map<String, Object> attributes) {
+        super(Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")), attributes, "response");
         this.user = user;
     }
 

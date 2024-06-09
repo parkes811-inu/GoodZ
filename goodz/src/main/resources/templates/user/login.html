@@ -3,7 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/main_layout}">
 <head>
-    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js"charset="utf-8"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"charset="utf-8"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
     <style>
         /* 회원가입/아이디찾기/비밀번호찾기 */
         .userLinks a, span, label {
@@ -122,7 +123,10 @@
                 <div class="text-center mb-4">
                     <p>or continue with</p>
                     <a href="/oauth2/authorization/kakao" class="btn btn-kakao btn-block">카카오 로그인</a>
-                    <button class="btn btn-naver btn-block">네이버 로그인</button>
+                    <!-- <div class="naver_id_login" id="naver_id_login">
+                        <button class="btn btn-naver btn-block">네이버 로그인</button>
+                    </div> -->
+                    <a href="/oauth2/authorization/naver" class="btn btn-naver btn-block">네이버 로그인</a>
                 </div>
 
                 <hr>
@@ -134,6 +138,17 @@
         </div>
         
     <script>
+
+        // naver Login 
+        // var naver_id_login = new naver_id_login("e_e63bLcJ1HAO0nC06uM", "http://localhost:8080/login/oauth2/code/naver");
+        // var state = naver_id_login.getUniqState();
+        // naver_id_login.setButton("green", 2, 40);
+        // naver_id_login.setDomain("http://localhost:8080");
+        // naver_id_login.setState(state);
+        // naver_id_login.setPopup();
+        // naver_id_login.init_naver_id_login();
+        // naver Login 
+
         function togglePasswordVisibility() {
             var password = document.getElementById('password');
             var togglePassword = document.querySelector('.toggle_password i');
