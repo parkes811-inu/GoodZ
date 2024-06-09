@@ -54,7 +54,6 @@ public class SecurityConfig {
         .loginProcessingUrl("/login")
         .usernameParameter("userId")   // 기본값:username
         .passwordParameter("password") // 기본값:password
-        // .successHandler( loginSuccessHandler )
         .successHandler( authenticationSuccessHandler() )
         );
        
@@ -65,6 +64,7 @@ public class SecurityConfig {
         // .successHandler(authSuccessHandler)
         // .userInfoEndpoint()
         // .userService(customOAuth2UserService)
+        .successHandler( authenticationSuccessHandler() )
         )	
         ;
 

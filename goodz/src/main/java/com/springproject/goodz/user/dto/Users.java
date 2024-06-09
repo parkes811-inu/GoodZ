@@ -24,7 +24,6 @@ public class Users {
     private Date updatedAt;
     private int enabled;
     private List<UserAuth> authList;
-
     private List<Users> followList;     // 팔로워/팔로잉 목록
 
     private int countFollower;          // 팔로워 수

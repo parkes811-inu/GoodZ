@@ -28,10 +28,10 @@ CREATE TABLE `user` (
     `no` INT NOT NULL AUTO_INCREMENT,              -- 번호
     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
     `username` VARCHAR(50) NOT NULL, -- 유저 이름
-    `nickname` VARCHAR(100) NOT NULL, -- 유저 닉네임
+    `nickname` VARCHAR(100), -- 유저 닉네임
     `password` VARCHAR(100) NOT NULL,
-    `birth` VARCHAR(50) NOT NULL, -- 2024/01/01 형식으로 안넣으면 뒤진다.
-    `phone_number` VARCHAR(20) NOT NULL, -- 010-1234-1234
+    `birth` VARCHAR(50), -- 2024/01/01 형식으로 안넣으면 뒤진다.
+    `phone_number` VARCHAR(20), -- 010-1234-1234
     `profile_picture_url` VARCHAR(255),
     `account` VARCHAR(255),
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
