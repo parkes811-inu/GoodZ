@@ -23,7 +23,7 @@ public class Post {
     private String isLiked;             // 좋아요 체크 여부 -> 'fill' / 'none'
     private String isWishlisted;        // 저장 체크 여부   -> 'fill' / 'none'
 
-    private List<Product> taggedProducts;   // 게시글에 종속된 상품태그
+    private List<Product> tagList;   // 게시글에 종속된 상품태그
     
     private Date createdAt;             // 작성일자
     private Date updatedAt;             // 수정일자

@@ -1,7 +1,6 @@
 package com.springproject.goodz.post.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.dto.Tag;
 import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
+import com.springproject.goodz.product.dto.Product;
+import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.user.service.FollowService;
@@ -72,6 +73,9 @@ public class PostController {
 
     @Autowired
     private FollowService followService;
+
+    @Autowired
+    private ProductService productService;
     
     /**
      * 전체 게시글 목록
@@ -151,6 +155,38 @@ public class PostController {
         log.info("::::::" + postNo + "번 게시글 조회요청::::::");
         /* 게시글 조회 */
         Post post = postService.select(postNo);
+
+        /* 상품태그리스트 조회 */
+        List<Product> tempList = post.getTagList();
+        List<Product> taggedProducts = new ArrayList<>();
+
+        int count = 0;  // 태그된 상품 갯수
+
+        log.info("::::태그된 상품 정보::::");
+        if (!tempList.isEmpty()) {
+            for (Product product : tempList) {
+                int productno = product.getPNo();
+                Product taggedProduct = productService.getProductBypNo(productno);
+
+                // 상품 대표이미지 가져오기
+                Files file = new Files();
+                file.setParentTable(taggedProduct.getCategory());
+                file.setParentNo(taggedProduct.getPNo());
+                Files mainImg = fileService.selectMainImg(file);
+                // 대표 이미지 번호 저장
+                taggedProduct.setMainImgNo(mainImg.getNo());
+                log.info("대표이미지번호: "+taggedProduct.getMainImgNo());
+                
+                // 태그 리스트에 저장
+                taggedProducts.add(taggedProduct);
+
+                log.info(taggedProduct.toString());
+                count += 1;
+            }
+        }
+
+        model.addAttribute("taggedProducts", taggedProducts);
+        model.addAttribute("tagCount", count);
 
         /* 첨부파일 조회 */
         Files file = new Files();

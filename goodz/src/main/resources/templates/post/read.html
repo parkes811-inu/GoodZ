@@ -211,78 +211,32 @@
             <!-- 상품태그 영역 -->
             <div class="productTags">
                 <div class="product_title text-start mt-5">
-                    <span>상품 태그 <strong>1</strong>개</span>
+                    <span>상품 태그 <span th:text="${tagCount}"></span>개</span>
                 </div>
                 <!-- 상품목록 -->
                 <div class="product_list_area mb-5">
+
+                    <th:block th:if="${taggedProducts.isEmpty()}">
+                        <h5 class="text-body-tertiary text-center">태그된 상품이 없습니다.</h5>
+                    </th:block>
+
                     <ul class="product_list row row-cols-1 row-cols-sm-2 row-cols-md-4 p-0 m-0" style="list-style: none;">
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
+                        <!-- [DB] 게시글에 포함된 상품태그 불러옴 -->
+                        <th:block th:each="product : ${taggedProducts}">
+                            <li class="product_item text-start p-0">
+                                <!-- 상품 이미지 -->
+                                <a th:href="|/product/detail/${product.pNo}|" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                    <img th:src="|/files/${product.mainImgNo}|"class="product_img"  alt="상품이미지">
+                                    <!-- 상품정보 -->
+                                    <div class="product_desc text-black mb-2">
+                                        <p class="product_brand m-0  fw-semibold" style="font-size: medium;" th:text="${product.bName}"></p>
+                                        <p class="product_name m-0" style="font-size: small;" th:text="${product.productName}"></p>
+                                    </div>
+                                </a>
+                            </li>
+                        </th:block>
                     </ul>
+
                 </div>
             </div>
         </div>

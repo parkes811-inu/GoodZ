@@ -12,9 +12,16 @@
         WHERE post_no = #{postNo}
     </select>
 
-    <insert id="insert" resultType="Tag">
-        INSERT INTO tag (p_no, post_no)
-        VALUES ()
+    <!-- 상품태그 추가 - 게시글 등록 시 -->
+    <insert id="insert">
+        INSERT INTO tag (post_no, p_no)
+        VALUES (#{postNo}, #{pNo})
     </insert>
+
+    <!-- 상품태그 삭제 - 상품번호 기준 -->
+    <delete id="delete">
+        DELETE FROM tag
+        WHERE p_no = #{pNo}
+    </delete>
 
 </mapper>
