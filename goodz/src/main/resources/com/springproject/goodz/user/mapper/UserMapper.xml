@@ -246,11 +246,10 @@
     </update>
 
     <!-- 소셜 회원 가입 -->
-    <insert id="insertSocial">
-        INSERT INTO user_social ( user_id, username, provider, social_id,  picture )
-        VALUES ( #{userId}, #{username}, #{provider}, #{socialId},  #{picture} )
+    <insert id="insertSocial" parameterType="UserSocial">
+        INSERT INTO user_social (user_id, username, nickname, provider, social_id, picture)
+        VALUES (#{userId}, #{username}, #{nickname}, #{provider}, #{socialId}, #{picture})
     </insert>
-
 
     <!-- 소셜 회원 조회 -->
     <select id="selectSocial" resultType="UserSocial">

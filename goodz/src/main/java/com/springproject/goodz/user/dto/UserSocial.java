@@ -8,6 +8,7 @@ import lombok.Data;
 public class UserSocial {
     private String userId;
     private String username;
+    private String nickname;
     private String provider;
     private String socialId;
     private String picture;
