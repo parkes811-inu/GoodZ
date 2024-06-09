@@ -1,0 +1,17 @@
+<!-- 검색된 상품X -->
+<th:block th:if="${searchedItems.isEmpty()}">
+    <br><br><br>
+    <h5 class="text-body-tertiary text-center">검색된 상품이 없습니다.</h5>
+</th:block>
+
+<!-- 검색된 상품O -->
+<th:block th:each="product : ${searchedItems}">
+    <hr>
+    <div class="product my-2 d-flex" th:data-product-no="${product.pNo}">
+        <img class="productImg rounded-2" th:src="|/files/${product.mainImgNo}|" alt="상품이미지" style="width: 90px;">
+        <div class="d-flex flex-column ms-3 justify-content-center">
+            <p class="card-title mb-2 fw-bold" th:text="${product.bName}"></p>
+            <p class="card-text p-0" style="font-size: small;" th:text="${product.productName}"></p>
+        </div>
+    </div>
+</th:block>

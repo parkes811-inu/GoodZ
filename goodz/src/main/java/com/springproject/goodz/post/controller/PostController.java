@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.dto.Tag;
 import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
+import com.springproject.goodz.post.service.TagService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Users;
@@ -76,6 +78,9 @@ public class PostController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private TagService tagService;
     
     /**
      * 전체 게시글 목록
@@ -253,13 +258,13 @@ public class PostController {
     /**
      * 게시글 등록 페이지
      * @return
+     * @throws Exception 
      */
     @GetMapping("/insert")
-    public String moveToInsert(Model model,HttpSession session) {
+    public String moveToInsert(Model model,HttpSession session) throws Exception {
 
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");
-
         model.addAttribute("loginUser", loginUser);
         log.info("작성화면 이동...");
 
@@ -273,7 +278,7 @@ public class PostController {
      * @throws Exception 
      */
     @PostMapping("/insert")
-    public String insert(Post post, Model model, HttpSession session) throws Exception {
+    public String insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts , Model model, HttpSession session) throws Exception {
 
         log.info(post.toString());
 
@@ -285,6 +290,20 @@ public class PostController {
 
             return "/post/insert";
         }
+
+        /* ⬇️ 상품태그 등록 처리 ⬇️ */
+        if (taggedProducts != null || taggedProducts.size() > 0) {
+            int postNo = postService.maxNo();
+            for (Integer productNo : taggedProducts) {
+                Tag tag = new Tag();
+                tag.setPostNo(postNo);
+                tag.setPNo(productNo);
+    
+                log.info("게시글번호: {}, 상품번호: {}", postNo, productNo);
+                tagService.insert(tag);
+            }
+        }
+        
 
         /* ⬇️프로필로 리다이렉트 처리⬇️ */
 
@@ -402,8 +421,6 @@ public class PostController {
         // 프로필 유저
         Users requested = userService.selectByNickname(nickname);
 
-        // 프로필 유저의 팔로워/팔로잉 수 불러오기
-        
         
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");    

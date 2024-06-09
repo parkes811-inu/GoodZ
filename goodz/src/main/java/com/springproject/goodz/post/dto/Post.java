@@ -15,7 +15,7 @@ public class Post {
     private int postNo;                 // 게시글 번호
     private String userId;              // 작성자 아이디
     private String nickname;            // 작성자 닉네임 - dto 조회용
-    private int profileImgNo;          // 작성자 프로필이미지번호 - dto 조회용
+    private int profileImgNo;           // 작성자 프로필이미지번호 - dto 조회용
     private String content;             // 작성내용
 
     private int likeCount;              // 좋아요 갯수
@@ -23,7 +23,7 @@ public class Post {
     private String isLiked;             // 좋아요 체크 여부 -> 'fill' / 'none'
     private String isWishlisted;        // 저장 체크 여부   -> 'fill' / 'none'
 
-    private List<Product> tagList;   // 게시글에 종속된 상품태그
+    private List<Product> tagList;      // 게시글에 종속된 상품태그
     
     private Date createdAt;             // 작성일자
     private Date updatedAt;             // 수정일자
