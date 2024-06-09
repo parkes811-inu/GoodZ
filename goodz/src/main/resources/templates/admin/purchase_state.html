@@ -91,10 +91,20 @@
             margin: 0 5px;
         }
 
-        .pagination li a {
+        .pagination li a, .pagination li span.page-link {
             color: #000;
             text-decoration: none;
-            border: none; 
+            border: none;
+            background: none; /* 배경 없애기 */
+        }
+
+        .pagination li.active span.page-link {
+            font-weight: bold;
+            color: black;
+        }
+
+        .pagination li a:hover, .pagination li a:focus {
+            text-decoration: underline; /* 호버 시 밑줄 표시 */
         }
     </style>
 </head>
@@ -110,22 +120,22 @@
                 <div class="stats">
                     <div class="col">
                         <div>판매요청</div>
-                        <div th:text="${saleStateCounts['pending'] ?: 0}">0</div>
+                        <div th:text="${saleStateCounts['pending'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
                         <div>수취완료</div>
-                        <div th:text="${saleStateCounts['reception'] ?: 0}">0</div>
+                        <div th:text="${saleStateCounts['reception'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
                         <div>검수중</div>
-                        <div th:text="${saleStateCounts['checking'] ?: 0}">0</div>
+                        <div th:text="${saleStateCounts['checking'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
                         <div>정산완료</div>
-                        <div th:text="${saleStateCounts['completed'] ?: 0}">0</div>
+                        <div th:text="${saleStateCounts['completed'] ?: 0}"></div>
                     </div>
                 </div>
             </div>
@@ -169,11 +179,11 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item">
-                    <a class="page-link" th:href="|/admin/products?page=${page.first}|">&laquo;</a>
+                    <a class="page-link" th:href="|/admin/purchase_state?page=${page.first}|">&laquo;</a>
                 </li>
                 <th:block th:if="${page.page != page.start}">
                     <li class="page-item">
-                        <a class="page-link" th:href="|/admin/products?page=${page.prev}|">&lt;</a>
+                        <a class="page-link" th:href="|/admin/purchase_state?page=${page.prev}|">&lt;</a>
                     </li>
                 </th:block>
                 <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
@@ -184,17 +194,17 @@
                     </th:block>
                     <th:block th:if="${page.page != no}">
                         <li class="page-item">
-                            <a class="page-link" th:href="|/admin/products?page=${no}|" th:text="${no}"></a>
+                            <a class="page-link" th:href="|/admin/purchase_state?page=${no}|" th:text="${no}"></a>
                         </li>
                     </th:block>
                 </th:block>
                 <th:block th:if="${page.page != page.last}">
                     <li class="page-item">
-                        <a class="page-link" th:href="|/admin/products?page=${page.next}|">&gt;</a>
+                        <a class="page-link" th:href="|/admin/purchase_state?page=${page.next}|">&gt;</a>
                     </li>
                 </th:block>
                 <li class="page-item">
-                    <a class="page-link" th:href="|/admin/products?page=${page.last}|">&raquo;</a>
+                    <a class="page-link" th:href="|/admin/purchase_state?page=${page.last}|">&raquo;</a>
                 </li>
             </ul>
         </nav>

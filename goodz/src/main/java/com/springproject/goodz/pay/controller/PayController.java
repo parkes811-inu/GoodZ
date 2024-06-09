@@ -301,7 +301,7 @@ public class PayController {
     /**
      * 판매 등록 처리
      * @param productNo 상품 번호
-     * @param courier 택배사
+     * @param courierKorean 한글 택배사
      * @param trackingNumber 운송장 번호
      * @param size 상품 사이즈
      * @param address 배송 주소
@@ -313,12 +313,12 @@ public class PayController {
      */
     @PostMapping("/sell")
     public String insertSale(@RequestParam("productNo") int productNo,
-                             @RequestParam("courier") String courier,
-                             @RequestParam("trackingNumber") String trackingNumber,
-                             @RequestParam("size") String size,
-                             @RequestParam("address") String address,
-                             @RequestParam("salePrice") int salePrice,
-                             HttpSession session, Model model) throws Exception {
+                            @RequestParam("courierKorean") String courierKorean,
+                            @RequestParam("trackingNumber") String trackingNumber,
+                            @RequestParam("size") String size,
+                            @RequestParam("address") String address,
+                            @RequestParam("salePrice") int salePrice,
+                            HttpSession session, Model model) throws Exception {
 
         // 사용자 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("user");
@@ -331,8 +331,8 @@ public class PayController {
         sales.setUserId(user.getUserId()); // 사용자 ID 설정
         sales.setPNo(productNo); // 상품 번호 설정
         sales.setSize(size); // 사이즈 설정
-        // 택배사와 운송장 번호를 결합하여 하나의 컬럼에 저장
-        sales.setSaleTrackingNo(courier + " - " + trackingNumber);
+        // 한글 택배사와 운송장 번호를 결합하여 하나의 컬럼에 저장
+        sales.setSaleTrackingNo(courierKorean + " - " + trackingNumber);
         sales.setAddress(address); // 주소 설정
         sales.setSalePrice(salePrice); // 판매 가격 설정
         sales.setSaleState("pending"); // 판매 상태 설정
@@ -348,6 +348,7 @@ public class PayController {
             return "/pay/sell"; // 실패 시 판매 페이지로 리다이렉트
         }
     }
+
 
     /**
      * 결제 또는 판매 완료 페이지

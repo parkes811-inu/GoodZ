@@ -92,10 +92,20 @@
             margin: 0 5px;
         }
 
-        .pagination li a {
+        .pagination li a, .pagination li span.page-link {
             color: #000;
             text-decoration: none;
-            border: none; 
+            border: none;
+            background: none; /* 배경 없애기 */
+        }
+
+        .pagination li.active span.page-link {
+            font-weight: bold;
+            color: black;
+        }
+
+        .pagination li a:hover, .pagination li a:focus {
+            text-decoration: underline; /* 호버 시 밑줄 표시 */
         }
     </style>
 <body layout:fragment="content">
@@ -103,81 +113,104 @@
         <div class="header">
             <h2>판매내역</h2>
         </div>
-        <!-- 최근 유저가 판매한 상품 가져옴 -->
-            <!-- 판매 번호 누르면 상세정보로 이동 -->
-            <div class="divider">
-                <table class="table">
-                    <thead>
-                      <tr>
-                            <th scope="col">판매번호</th>
-                            <th scope="col">상품번호</th>
-                            <th scope="col">유저ID</th>
-                            <th scope="col">운송장번호</th>
-                            <th scope="col">결제일자</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                      <tr>
-                            <th scope="row">25</th>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>2024-0625-2312</td>
-                            <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                            <th scope="row">24</th>
-                            <td>394325</td>
-                            <td>joeun123</td>
-                            <td>2024-3465-2369</td>
-                            <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                            <th scope="row">23</th>
-                            <td>345612</td>
-                            <td>joeun123</td>
-                            <td>2024-0235-2324</td>
-                            <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                            <th scope="row">22</th>
-                            <td>323532</td>
-                            <td>joeun123</td>
-                            <td>2024-8555-2312</td>
-                            <td>2024-05-23</td>
-                      </tr>
-                      <tr>
-                            <th scope="row">21</th>
-                            <td>780022</td>
-                            <td>joeun123</td>
-                            <td>2024-2356-2387</td>
-                            <td>2024-05-23</td>
-                      </tr>
-                    </tbody>
-                  </table>
-            </div>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
 
-        
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="stats">
+                    <div class="col">
+                        <div>결제대기</div>
+                        <div th:text="${purchaseStateCounts['pending'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>결제완료</div>
+                        <div th:text="${purchaseStateCounts['paid'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>배송중</div>
+                        <div th:text="${purchaseStateCounts['shipping'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>배송완료</div>
+                        <div th:text="${purchaseStateCounts['delivered'] ?: 0}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 최근 유저가 판매한 상품 가져옴 -->
+        <!-- 판매 번호 누르면 상세정보로 이동 -->
+        <div class="divider">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">구매번호</th>
+                        <th scope="col">상품번호</th>
+                        <th scope="col">유저ID</th>
+                        <th scope="col">상태</th>
+                        <th scope="col">결제일자</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr th:each="purchase : ${purchaseList}">
+                        <th scope="row">
+                            <a th:href="@{/admin/pay_history/detail/{purchaseNo}(purchaseNo=${purchase.purchase_no})}" 
+                               id="purchase_no" 
+                               th:text="${purchase.purchase_no}"
+                               class="text-dark text-decoration-none"></a>
+                        </th> 
+                        <td th:text="${purchase.p_no}"></td>
+                        <td th:text="${purchase.user_id}"></td>
+                        <td th:text="${#strings.equalsIgnoreCase(purchase.purchase_state, 'pending') ? '결제대기' : 
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'paid') ? '결제완료' : 
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'ready_to_ship') ? '배송대기' : 
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'shipping') ? '배송중' : 
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'delivered') ? '배송완료' : '취소됨'}"></td>
+                        <td th:text="${#dates.format(purchase.ordered_at, 'yyyy-MM-dd')}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p th:if="${#lists.isEmpty(purchaseList)}">판매된 상품이 없습니다.</p>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" th:href="|/admin/pay_history?page=${page.first}|">&laquo;</a>
+                </li>
+                <th:block th:if="${page.page != page.start}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/pay_history?page=${page.prev}|">&lt;</a>
+                    </li>
+                </th:block>
+                <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
+                    <th:block th:if="${page.page == no}">
+                        <li class="page-item active">
+                            <span class="page-link" th:text="${no}"></span>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${page.page != no}">
+                        <li class="page-item">
+                            <a class="page-link" th:href="|/admin/pay_history?page=${no}|" th:text="${no}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${page.page != page.last}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/admin/pay_history?page=${page.next}|">&gt;</a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:href="|/admin/pay_history?page=${page.last}|">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </body>
+
+
 
 </html>

@@ -5,58 +5,64 @@
 
 <mapper namespace="com.springproject.goodz.admin.mapper.AdminMapper">
 
-	<!-- 유저가 판매한 상품 전체 조회 -->
-    <select id="userSaleList" resultType="map">
+    <!-- 유저가 판매한 상품 전체 조회 -->
+    <select id="userSaleList" resultType="map" parameterType="com.springproject.goodz.product.dto.Page">
         SELECT *
         FROM Sales
         ORDER BY s_no DESC
+        LIMIT #{index}, #{rows}
     </select>
 
-	<!-- 유저가 판매한 상품 단일 조회 -->
-	<select id="userSale" resultType="map">
-		SELECT
-			s.sale_date AS 'saleDate',
-			s.user_id AS 'userId',
-			s.s_no AS 'saleNo',
-			s.p_no AS 'productNo',
-			p.product_name AS 'productName',
-			s.size AS 'size',
-			s.sale_tracking_no AS 'saleTrackingNo',
-			s.sale_state AS 'saleState',
-			s.address AS 'address',
-			u.account AS 'account'
-		FROM
-			Sales s
-		JOIN
-			Product p ON s.p_no = p.p_no
-		JOIN
-			user u ON s.user_id = u.user_id
-		WHERE
-			s.s_no = #{saleNo}
-	</select>
+    <!-- 전체 데이터 개수 가져오기 -->
+    <select id="getTotalCount" resultType="int">
+        SELECT COUNT(*) FROM Sales
+    </select>
 
-	<!-- 유저가 판매한 상품 상태 업데이트 -->
-	<update id="updateUserSaleState">
-		UPDATE Sales
-		SET sale_state = #{saleState}
-		WHERE s_no = #{sNo}
-	</update>
-	
-	<!-- 판매 완료 시 상품 옵션의 재고 수량 증가 -->
-	<update id="incrementStockQuantity">
-		UPDATE Product_option
-		SET stock_quantity = stock_quantity + 1
-		WHERE p_no = #{pNo} AND size = #{size}
-	</update>
+    <!-- 유저가 판매한 상품 단일 조회 -->
+    <select id="userSale" resultType="map">
+        SELECT
+            s.sale_date AS 'saleDate',
+            s.user_id AS 'userId',
+            s.s_no AS 'saleNo',
+            s.p_no AS 'productNo',
+            p.product_name AS 'productName',
+            s.size AS 'size',
+            s.sale_tracking_no AS 'saleTrackingNo',
+            s.sale_state AS 'saleState',
+            s.address AS 'address',
+            u.account AS 'account'
+        FROM
+            Sales s
+        JOIN
+            Product p ON s.p_no = p.p_no
+        JOIN
+            user u ON s.user_id = u.user_id
+        WHERE
+            s.s_no = #{saleNo}
+    </select>
 
-	<!-- 정산 완료에서 다른 상태로 변경 시 상품 옵션의 재고 수량 감소 -->
+    <!-- 유저가 판매한 상품 상태 업데이트 -->
+    <update id="updateUserSaleState">
+        UPDATE Sales
+        SET sale_state = #{saleState}
+        WHERE s_no = #{sNo}
+    </update>
+
+    <!-- 판매 완료 시 상품 옵션의 재고 수량 증가 -->
+    <update id="incrementStockQuantity">
+        UPDATE Product_option
+        SET stock_quantity = stock_quantity + 1
+        WHERE p_no = #{pNo} AND size = #{size}
+    </update>
+
+    <!-- 정산 완료에서 다른 상태로 변경 시 상품 옵션의 재고 수량 감소 -->
     <update id="decrementStockQuantity">
         UPDATE Product_option
         SET stock_quantity = stock_quantity - 1
         WHERE p_no = #{pNo} AND size = #{size}
     </update>
 
-	<!-- 상태별 판매 현황 카운트 -->
+    <!-- 상태별 판매 현황 카운트 -->
     <select id="countUserSalesByState" resultType="map">
         SELECT
             sale_state,
@@ -66,4 +72,106 @@
         GROUP BY
             sale_state
     </select>
+
+    <!-- 사이즈 존재 여부 확인 -->
+    <select id="checkProductOptionExists" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM Product_option
+        WHERE p_no = #{pNo} AND size = #{size}
+    </select>
+
+    <!-- 새로운 사이즈 추가 -->
+    <insert id="insertProductOption">
+        INSERT INTO Product_option (p_no, size, option_price, stock_quantity, status)
+        VALUES (#{pNo}, #{size}, #{optionPrice}, 1, 'on')
+    </insert>
+
+    <!-- initial_price 가져오기 -->
+    <select id="getInitialPrice" resultType="int">
+        SELECT initial_price
+        FROM Product
+        WHERE p_no = #{pNo}
+    </select>
+
+    <!-- ///////////////////////////////////////////////////////////////////////// --> 
+
+    <!-- 유저가 구매한 내역 전체 불러오기 -->
+    <!-- 유저가 구매한 내역 전체 불러오기 -->
+    <select id="userPurchaseList" resultType="map" parameterType="com.springproject.goodz.product.dto.Page">
+        SELECT *
+        FROM Purchase
+        ORDER BY purchase_no DESC
+        LIMIT #{index}, #{rows}
+    </select>
+
+    <!-- 전체 데이터 개수 가져오기 -->
+    <select id="TotalCount" resultType="int">
+        SELECT COUNT(*) FROM Purchase
+    </select>
+
+    <!-- 유저가 구매한 상품 상태 변경 -->
+    <update id="updatePurchaseState" parameterType="map">
+        UPDATE Purchase
+        SET purchase_state = #{purchaseState}
+        WHERE purchase_no = #{purchaseNo}
+    </update>
+
+    <!-- 운송장 번호 업데이트 -->
+    <update id="updateTrackingInfo" parameterType="map">
+        UPDATE Purchase
+        SET tracking_no = #{trackingNo}
+        WHERE purchase_no = #{purchaseNo}
+    </update>
+
+    <!-- 상태별 구매 현황 카운트 -->
+    <select id="countUserPurchaseByState" resultType="map">
+        SELECT
+            purchase_state,
+            COUNT(*) AS count
+        FROM
+            Purchase
+        GROUP BY
+            purchase_state
+    </select>
+
+    <!-- 유저가 구매한 상품 단일조회 -->
+    <select id="userPurchase" resultType="com.springproject.goodz.pay.dto.Purchase" parameterType="int">
+        SELECT 
+            p.purchase_no AS purchaseNo,
+            p.user_id AS userId,
+            p.p_no AS pNo,
+            po.size AS size,
+            po.stock_quantity AS stockQuantity,
+            pr.product_name AS productName,
+            p.order_id AS orderId,
+            p.purchase_price AS purchasePrice,
+            p.payment_method AS paymentMethod,
+            p.address AS address,
+            p.tracking_no AS trackingNo,
+            p.purchase_state AS purchaseState,
+            p.ordered_at AS orderedAt,
+            p.updated_at AS updatedAt
+        FROM 
+            Purchase p
+        JOIN 
+            Product_option po ON p.option_id = po.option_id
+        JOIN 
+            Product pr ON p.p_no = pr.p_no
+        WHERE 
+            p.purchase_no = #{purchaseNo}
+    </select>
+
+    <!-- 재고 수량 감소 메서드 -->
+    <update id="decreaseProductStock" parameterType="map">
+        UPDATE Product_option
+        SET stock_quantity = stock_quantity - 1
+        WHERE p_no = #{pNo} AND size = #{size}
+    </update>
+
+    <!-- 재고 수량 증가 메서드 -->
+    <update id="increaseProductStock" parameterType="map">
+        UPDATE Product_option
+        SET stock_quantity = stock_quantity + 1
+        WHERE p_no = #{pNo} AND size = #{size}
+    </update>
 </mapper>
