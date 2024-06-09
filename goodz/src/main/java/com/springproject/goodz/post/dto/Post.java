@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.springproject.goodz.product.dto.Product;
+
 import lombok.Data;
 
 @Data
@@ -20,6 +22,8 @@ public class Post {
     private int wishCount;              // 저장 갯수
     private String isLiked;             // 좋아요 체크 여부 -> 'fill' / 'none'
     private String isWishlisted;        // 저장 체크 여부   -> 'fill' / 'none'
+
+    private List<Product> taggedProducts;   // 게시글에 종속된 상품태그
     
     private Date createdAt;             // 작성일자
     private Date updatedAt;             // 수정일자

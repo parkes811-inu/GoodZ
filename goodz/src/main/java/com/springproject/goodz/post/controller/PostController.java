@@ -1,5 +1,7 @@
 package com.springproject.goodz.post.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +138,8 @@ public class PostController {
         return "/post/list";
     }
 
+    // 
+    
     /**
      * 게시글 상세
      * @return
@@ -144,12 +148,10 @@ public class PostController {
     @GetMapping("/{postNo}")
     public String read(@PathVariable("postNo")int postNo, Model model, HttpSession session) throws Exception {
 
+        log.info("::::::" + postNo + "번 게시글 조회요청::::::");
         /* 게시글 조회 */
         Post post = postService.select(postNo);
 
-        Users user = userService.select(post.getUserId());
-        post.setProfileImgNo(user.getProfileImgNo());
-        
         /* 첨부파일 조회 */
         Files file = new Files();
         file.setParentTable("post");
@@ -160,12 +162,11 @@ public class PostController {
         /* 게시글 작성자 정보 세팅 */
         Users writer = userService.select(post.getUserId());
         model.addAttribute("writer", writer);
-        
+
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
-        loginUser = userService.select(loginUser.getUserId());
-        model.addAttribute("loginUser", loginUser);
         
+
         /* 좋아요 & 저장 세팅 */
         if (loginUser == null) {
             // 비 로그인 시, 좋아요 표시 전체 해제
@@ -175,13 +176,14 @@ public class PostController {
             post.setIsWishlisted("none");
             
         } else {
+            loginUser = userService.select(loginUser.getUserId());
+            log.info("로그인유저의 프사번호: " + loginUser.getProfileImgNo());
             // 로그인 시, 유저가 체크한 좋아요&저장 표시
             // 세션아이디와 게시글 번호 기준으로 좋아요 여부 확인
             Like like = new Like();
             like.setUserId(loginUser.getUserId());
             like.setPostNo(post.getPostNo());
             boolean isChecked_like = likeService.listById(like);
-
             if (!isChecked_like) {
                 post.setIsLiked("none");
             } else {
@@ -194,13 +196,11 @@ public class PostController {
             wish.setParentTable("post");
             wish.setParentNo(post.getPostNo());
             boolean isChecked_wishlist = wishListService.listById(wish);
-
             if (!isChecked_wishlist) {
                 post.setIsWishlisted("none");
             } else {
                 post.setIsWishlisted("solid");
             }
-
             // 세션아이디의 팔로우 목록 가져오기
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
@@ -208,11 +208,11 @@ public class PostController {
             model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         }
         
+        model.addAttribute("loginUser", loginUser);
         model.addAttribute("post", post);
-
         return "/post/read";
     }
-
+            
     /**
      * 게시글 등록 페이지
      * @return
