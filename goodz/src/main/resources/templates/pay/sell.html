@@ -279,56 +279,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 주소 선택 함수
-            function selectAddress(recipientName, phoneNumber, address) {
-                document.getElementById('recipientName').textContent = recipientName;
-                document.getElementById('phoneNumber').textContent = phoneNumber;
-                document.getElementById('address').textContent = address;
-                document.getElementById('hiddenAddress').value = address; // hidden input field update
+        // 주소 선택 함수
+        function selectAddress(recipientName, phoneNumber, address) {
+            document.getElementById('recipientName').textContent = recipientName;
+            document.getElementById('phoneNumber').textContent = phoneNumber;
+            document.getElementById('address').textContent = address;
+            document.getElementById('hiddenAddress').value = address; 
+        }
+
+        // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
+        document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
+            const target = event.target.closest('li.list-group-item');
+            if (target) {
+                const recipientName = target.getAttribute('data-recipient-name');
+                const phoneNumber = target.getAttribute('data-phone-number');
+                const address = target.getAttribute('data-address');
+                selectAddress(recipientName, phoneNumber, address);
+                // 모달 닫기
+                var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+                addressModal.hide();
             }
-
-            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
-            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
-                const target = event.target.closest('li.list-group-item');
-                if (target) {
-                    const recipientName = target.getAttribute('data-recipient-name');
-                    const phoneNumber = target.getAttribute('data-phone-number');
-                    const address = target.getAttribute('data-address');
-                    selectAddress(recipientName, phoneNumber, address);
-                    // 모달 닫기
-                    var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
-                    addressModal.hide();
-                }
-            });
-
-            const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
-            const trackingNumberInput = document.getElementById('tracking-number'); // 운송장 번호 입력 요소
-            const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
-            const sellForm = document.getElementById('sellForm'); // 판매 폼
-
-            // 폼의 유효성을 검사하는 함수
-            function validateForm() {
-                if (courierSelect.value && trackingNumberInput.value.trim()) {
-                    paymentButton.removeAttribute('disabled');
-                } else {
-                    paymentButton.setAttribute('disabled', 'disabled');
-                }
-            }
-
-            // 택배사 선택이 변경될 때마다 validateForm 함수를 호출합니다.
-            courierSelect.addEventListener('change', validateForm);
-
-            // 운송장 번호 입력이 변경될 때마다 validateForm 함수를 호출합니다.
-            trackingNumberInput.addEventListener('input', validateForm);
-
-            // 폼이 제출될 때 실행되는 이벤트 리스너를 추가합니다.
-            sellForm.addEventListener('submit', function(event) {
-                if (!courierSelect.value || !trackingNumberInput.value.trim()) {
-                    event.preventDefault();
-                    alert('모든 필드를 입력해주세요.');
-                }
-            });
         });
+
+        const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
+        const trackingNumberInput = document.getElementById('tracking-number'); // 운송장 번호 입력 요소
+        const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
+        const sellForm = document.getElementById('sellForm'); // 판매 폼
+
+        // 택배사 매핑
+        const courierMapping = {
+            cj: "CJ대한통운",
+            lotte: "롯데택배",
+            hanjin: "한진택배",
+            logen: "로젠택배",
+            postoffice: "우체국택배"
+        };
+
+        // 폼의 유효성을 검사하는 함수
+        function validateForm() {
+            if (courierSelect.value && trackingNumberInput.value.trim()) {
+                paymentButton.removeAttribute('disabled');
+            } else {
+                paymentButton.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        // 택배사 선택이 변경될 때마다 validateForm 함수를 호출합니다.
+        courierSelect.addEventListener('change', validateForm);
+
+        // 운송장 번호 입력이 변경될 때마다 validateForm 함수를 호출합니다.
+        trackingNumberInput.addEventListener('input', validateForm);
+
+        // 폼이 제출될 때 실행되는 이벤트 리스너를 추가합니다.
+        sellForm.addEventListener('submit', function(event) {
+            // 택배사 이름을 한글로 변환하여 hidden input에 설정합니다.
+            const courierKorean = courierMapping[courierSelect.value];
+            const courierHiddenInput = document.createElement('input');
+            courierHiddenInput.type = 'hidden';
+            courierHiddenInput.name = 'courierKorean';
+            courierHiddenInput.value = courierKorean;
+            sellForm.appendChild(courierHiddenInput);
+        });
+    });
     </script>
 </body>
 </html>

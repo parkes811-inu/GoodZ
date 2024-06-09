@@ -67,39 +67,84 @@
         }
     </style>
 </head>
-
 <body layout:fragment="content">
     <div class="content mt-5">
         <div class="header">
             <h2>판매내역</h2>
         </div>
         
-
-            <!-- 판매 번호 기준으로 불러와야함-->
+        <form id="purchase-form" method="post" th:action="@{/admin/pay_history/update}">
+            <input type="hidden" name="purchaseNo" th:value="${purchase.purchaseNo}" />
+            <input type="hidden" name="size" th:value="${purchase.size}" />
+            <input type="hidden" name="pNo" th:value="${purchase.pNo}" />
+            <input type="hidden" name="currentPurchaseState" th:value="${purchase.purchaseState}" />
+        
             <div class="form-group">
-                <label for="sales-number">판매 번호</label>
-                <input type="text" id="sales-number" value="25" readonly>
+                <label for="purchase-date">구매 일자</label>
+                <input type="text" id="purchase-date" th:value="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="user-id">유저 ID</label>
+                <input type="text" id="user-id" th:value="${purchase.userId}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="user-address">유저 주소</label>
+                <input type="text" id="user-address" th:value="${purchase.address}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="purchase-number">구매 번호</label>
+                <input type="text" id="purchase-number" th:value="${purchase.purchaseNo}" readonly>
             </div>
             <div class="form-group">
                 <label for="product-number">상품 번호</label>
-                <input type="text" id="product-number" value="283451" readonly>
+                <input type="text" id="product-number" th:value="${purchase.pNo}" readonly>
             </div>
             <div class="form-group">
-                <label for="user-ID">유저 ID</label>
-                <input type="text" id="user-ID" value="asdf1234" readonly>
+                <label for="product-name">상품명</label>
+                <input type="text" id="product-name" th:value="${purchase.productName}" readonly>
             </div>
             <div class="form-group">
-                <label for="tracking-no">운송장 번호</label>
-                <input type="text" id="tracking-no" value="2024-8555-2312" readonly>
+                <label for="size">사이즈</label>
+                <input type="text" id="size" th:value="${purchase.size}" readonly>
             </div>
+        
+            <!-- 운송장 번호 입력 -->
+            <div class="section_unit mb-4">
+                <div class="section_content p-3 border rounded mb-4">
+                    <div class="section_header">운송장 번호</div>
+                    <div class="form-group mb-3">
+                        <label for="courier" class="form-label">택배사</label>
+                        <select id="courier" name="courier" class="form-select">
+                            <option selected disabled>택배사를 선택해주세요</option>
+                            <option value="CJ대한통운" th:selected="${purchase.trackingNo != null && purchase.trackingNo.contains('CJ대한통운')}">CJ대한통운</option>
+                            <option value="롯데택배" th:selected="${purchase.trackingNo != null && purchase.trackingNo.contains('롯데택배')}">롯데택배</option>
+                            <option value="한진택배" th:selected="${purchase.trackingNo != null && purchase.trackingNo.contains('한진택배')}">한진택배</option>
+                            <option value="로젠택배" th:selected="${purchase.trackingNo != null && purchase.trackingNo.contains('로젠택배')}">로젠택배</option>
+                            <option value="우체국택배" th:selected="${purchase.trackingNo != null && purchase.trackingNo.contains('우체국택배')}">우체국택배</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tracking-number" class="form-label">운송장 번호</label>
+                        <input type="text" id="tracking-number" name="trackingNumber" class="form-control" th:value="${purchase.trackingNo != null ? purchase.trackingNo.split(':')[1] : ''}" placeholder="운송장 번호를 입력해주세요">
+                    </div>
+                </div>
+            </div>
+        
             <div class="form-group">
-                <label for="sale-date">유저 구매 일자</label>
-                <input type="text" id="sale-date" value="2024-05-23" readonly>
+                <label for="purchase-state">상태</label>
+                <select id="purchase-state" class="form-control" name="purchaseState" th:value="${purchase.purchaseState}">
+                    <option value="pending" th:selected="${purchase.purchaseState == 'pending'}">미결제</option>
+                    <option value="paid" th:selected="${purchase.purchaseState == 'paid'}">결제완료</option>
+                    <option value="ready_to_ship" th:selected="${purchase.purchaseState == 'ready_to_ship'}">배송대기</option>
+                    <option value="shipping" th:selected="${purchase.purchaseState == 'shipping'}">배송중</option>
+                    <option value="delivered" th:selected="${purchase.purchaseState == 'delivered'}">배송완료</option>
+                    <option value="cancelled" th:selected="${purchase.purchaseState == 'cancelled'}">취소됨</option>
+                </select>
             </div>
-            
-            <button type="submit" class="submit-btn" onclick="location.href='/admin/pay_history'">목록</button>
-
+            <button type="submit" class="submit-btn">등록 완료</button>
+        </form>
+        
     </div>
-
 </body>
+
 </html>
