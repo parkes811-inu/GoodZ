@@ -62,7 +62,7 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         userSocial.setProvider(provider);
         userSocial.setSocialId(socialId);
         userSocial.setUsername(oAuthAttributes.getUsername());
-        userSocial.setNickname(oAuthAttributes.getNickname());
+        // userSocial.setNickname(oAuthAttributes.getNickname());
         userSocial.setPicture(oAuthAttributes.getPicture());
 
         log.info("======================================================");
@@ -127,8 +127,8 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         if (joinedUser == null) {
             String userId = userSocial.getProvider() + "_";
             
-            if(userSocial.getSocialId().length() > 20) {
-                userId = userId + userSocial.getSocialId().substring(4, 20);
+            if(userSocial.getSocialId().length() > 10) {
+                userId = userId + userSocial.getSocialId().substring(4, 10);
             } else {
                 userId = userId + userSocial.getSocialId();
             }
@@ -136,7 +136,7 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
             Users user = new Users();
             user.setUserId(userId);
             user.setUsername(userSocial.getUsername());
-            user.setNickname(userSocial.getNickname());
+            user.setNickname(userId);
             user.setProfilePictureUrl(userSocial.getPicture());
             user.setPassword(UUID.randomUUID().toString());
 
@@ -156,7 +156,7 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
             newUserSocial.setSocialId(userSocial.getSocialId());
             newUserSocial.setUserId(userId);
             newUserSocial.setUsername(userSocial.getUsername());
-            newUserSocial.setNickname(userSocial.getNickname());
+            newUserSocial.setNickname(userId);
             newUserSocial.setPicture(userSocial.getPicture());
 
             result += userMapper.insertSocial(newUserSocial);
