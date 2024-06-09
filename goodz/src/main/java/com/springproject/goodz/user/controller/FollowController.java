@@ -71,18 +71,20 @@ public class FollowController {
 
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Users loginUser = (Users)session.getAttribute("user");
+
             // 비로그인 상태면 리턴.
             if (loginUser == null) {
                 return "/post/user/follow";
             }
+
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
-            List<Users> LoginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
 
             model.addAttribute("loginUser", loginUser);
-            model.addAttribute("LoginUserFollowingList", LoginUserFollowingList);
-            
+            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
+
         } catch (Exception e) {
-            log.info("팔로워 조회 시 예외 발생");
+            log.info("팔로잉 조회 시 예외 발생");
             e.printStackTrace();
         }
 

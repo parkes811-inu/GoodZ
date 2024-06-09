@@ -201,6 +201,7 @@ public class PostController {
 
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
+        List<Users> loginUserFollowingList = new ArrayList();
         
 
         /* 좋아요 & 저장 세팅 */
@@ -240,10 +241,10 @@ public class PostController {
             // 세션아이디의 팔로우 목록 가져오기
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
-            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
-            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
+            loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
         }
-        
+            
+        model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("post", post);
         return "/post/read";
