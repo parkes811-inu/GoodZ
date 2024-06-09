@@ -90,14 +90,15 @@ public class UserController {
         log.info(currentUserName);
         Users user = userService.findUserByUsername(currentUserName);
         log.info("========================================================");
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
             return "/user/login";
         } else {
-            log.info("User found: " + user);
-            model.addAttribute("user", user);
+        user = userService.select(user.getUserId());
+        log.info("User found: " + user);
+        model.addAttribute("user", user);
         }
 
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {

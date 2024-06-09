@@ -28,6 +28,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY file_code DESC
     </select>
 
+    <select id="selectMainImg" resultType="Files">
+        SELECT *
+        FROM file
+        WHERE parent_table = #{parentTable}
+          AND parent_no = #{parentNo}
+          AND file_code = 1
+    </select>
+
     <!-- 파일 조회 -->
     <select id="select" resultType="Files">
         SELECT *

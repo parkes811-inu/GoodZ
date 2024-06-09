@@ -37,6 +37,13 @@ public class FileServiceImpl implements FileService {
 
         return file;
     }
+    
+    // 대표이미지 조회 - 부모기준
+    @Override
+    public Files selectMainImg(Files file) throws Exception {
+
+        return fileMapper.selectMainImg(file);
+    }
 
     @Override
     public int insert(Files file) throws Exception {

@@ -5,6 +5,22 @@
 
 <mapper namespace="com.springproject.goodz.post.mapper.PostMapper">
 
+    <resultMap type="Post" id="postMap">
+        <id property="postNo" column="post_no" javaType="int" />
+        <result property="userId" column="user_id" />
+        <result property="nickname" column="nickname" />
+        <result property="profileImgNo" column="profileImgNo" />
+        <result property="content" column="content" />
+        <result property="likeCount" column="likeCount" />
+        <result property="wishCount" column="wishCount" />
+        <collection property="tagList" resultMap="productMap" />
+    </resultMap>
+
+    <resultMap type="Product" id="productMap">
+        <result property="pNo" column="product_no" />
+    </resultMap>
+
+
     <!-- 전체 게시글 조회 - /styles  -->
     <select id="list" resultType="post">
         SELECT  p.post_no as post_no
@@ -24,7 +40,18 @@
     </select>
 
     <!-- 게시글 상세 조회 - /styles/게시글번호  -->
-    <select id="select" resultType="post">
+    <select id="select" resultMap="postMap">
+        SELECT p.post_no
+             , user_id
+             , content
+             , IFNULL((SELECT count(*) from `like` l where l.post_no = p.post_no),0) as likeCount
+             , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
+             , ifNull(t.p_no, null) as product_no
+        FROM post p
+        LEFT OUTER JOIN tag t ON p.post_no = t.post_no
+        WHERE p.post_no = #{postNo};
+    </select>
+    <!-- <select id="select" resultType="post">
         SELECT post_no
              , user_id
              , content
@@ -32,9 +59,7 @@
              , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
         FROM post p
         WHERE post_no = #{postNo};
-    </select>
-
-    <!-- 게시글 조회 - 게 대표이미지 -->
+    </select> -->
 
     <!-- 프로필 유저의 게시글 조회 - /styles/user/@유저닉네임  -->
     <select id="selectById" resultType="post">
@@ -70,6 +95,7 @@
         WHERE post_no = #{postNo}
     </update>
 
+    <!-- 게시글 삭제 -->
     <delete id="delete">
         DELETE FROM post
         WHERE post_no = #{postNo}
@@ -83,21 +109,22 @@
         GROUP BY post_no
         ORDER BY like_count DESC
         LIMIT 4; -->
-        SELECT  p.post_no AS post_no,
-                p.user_id AS user_id,
-                u.nickname AS nickname,
-                u.profile_picture_url AS profileImg,
-                p.created_at,
-                f.no AS file_no,
-                f.file_name AS file_name,
-                f.file_path AS file_path,
-                f.file_code AS file_code,
-                IFNULL((SELECT COUNT(*) FROM `like` l WHERE l.post_no = p.post_no), 0) AS likeCount
-            FROM post p
-            INNER JOIN file f ON p.post_no = f.parent_no AND f.parent_table = 'post' AND f.file_code = 1
-            INNER JOIN user u ON p.user_id = u.user_id
-            ORDER BY likeCount DESC, p.created_at DESC
-            LIMIT 4;
+        SELECT  p.post_no as post_no
+              , p.user_id as user_id
+              , u.nickname as nickname
+              , ifNull((select no from file f where u.no = f.parent_no and parent_table = "user"),0) as profileImgNo
+              , p.content as contetnt
+              , f.no as file_no
+              , f.file_name as file_name
+              , f.file_path as file_path
+              , f.file_code as file_code
+              , IFNULL((SELECT count(*) from `like` l where l.post_no = p.post_no),0) as likeCount
+              , IFNULL((SELECT count(*) from wishlist w where w.parent_no = p.post_no and w.parent_table = 'post'),0) as wishCount
+        FROM post p
+        INNER JOIN file f on post_no = parent_no and f.parent_table='post' and file_code = 1
+        INNER JOIN user u on p.user_id = u.user_id
+        ORDER BY likeCount DESC
+        LIMIT 4;
     </select>
 
 </mapper>
