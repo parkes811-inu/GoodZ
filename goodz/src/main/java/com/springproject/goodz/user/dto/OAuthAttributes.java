@@ -31,8 +31,9 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("kakao".equals(registrationId)) {
             return ofKakao(userNameAttributeName, attributes);
+        } else if ("naver".equals(registrationId)) {
+            return ofNaver(userNameAttributeName, attributes);
         }
-
         // 다른 OAuth 제공자들에 대한 설정 추가 가능
         return null;
     }
@@ -56,4 +57,21 @@ public class OAuthAttributes {
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
+
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        if (response == null) {
+            throw new IllegalArgumentException("Missing attribute 'response' in attributes");
+        }
+        return OAuthAttributes.builder()
+                .userId((String) response.get("id"))
+                .username((String) response.get("nickname"))
+                .nickname((String) response.get("nickname"))
+                .picture((String) response.get("profile_image"))
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+    
+    
 }
