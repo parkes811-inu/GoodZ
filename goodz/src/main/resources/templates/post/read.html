@@ -67,6 +67,15 @@
             outline:none !important;
             box-shadow:none !important;
         }
+        .udpateDelete a {
+            color: black;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
     </style>
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
@@ -111,49 +120,48 @@
     <div class="container">
         <div class="mainContainer" style="width: 640px;">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
+
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
                     <a th:href="|/styles/user/@${writer.nickname}|" class="profile_img_box" style="text-decoration: none; color: black; text-decoration-line: none;">
-                        <img th:src="${writer.profilePictureUrl}" alt="프로필 이미지" class="profile_img">
+                        <img th:src="|/files/${writer.profileImgNo}|" alt="프로필 이미지" class="profile_img">
                         <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
                 </div>
-                <div>
-                    <!-- 로그인 유저일 때 -->
-            <div th:if="${loginUser != null}">
-                <th:block th:if="${loginUser.userId == writer.userId}">
-                    <!-- 게시글 등록버튼 -->
-                    <a href="/styles/insert" class="p-0" style="color: black; display: inline-flex; align-items: center; justify-content: center; border: 1px solid black; padding: 5px; border-radius: 4px; text-decoration: none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" width="24px" height="24px">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                    </a>
+                <!-- 로그인 유저일 때 -->
+                <th:block th:if="${loginUser != null}">
+                    <th:block th:if="${loginUser.userId == writer.userId}">
+                        <!-- 게시글 수정&삭제버튼 -->
+                         <div class="udpateDelete" style="align-self: flex-end;">
+                             <a th:href="|/styles/update/${post.postNo}|">수정</a>
+                             <span>|</span>
+                             <a type="button" onclick="deletePost() ">삭제</a>
+                         </div>
+                    </th:block>
+                    <th:block th:if="${loginUser.userId != writer.userId}">
+                        <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
+                        <th:block th:if="${loginUserFollowingList.isEmpty()}">
+                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+                        </th:block>
+                        <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
+                        <th:block th:unless="${loginUserFollowingList.isEmpty()}">
+                            <th:block th:if="${#lists.contains(loginUserFollowingList, writer)}">
+                                <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로잉</button>
+                            </th:block>
+                            <th:block th:unless="${#lists.contains(loginUserFollowingList, writer)}">
+                                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로우</button>
+                            </th:block>
+                        </th:block>
+                    </th:block>
                 </th:block>
-                <th:block th:if="${loginUser.userId != writer.userId}">
-                    <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
-                    <th:block th:if="${loginUserFollowingList.isEmpty()}">
-                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
-                    </th:block>
-                    <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
-                    <th:block th:unless="${loginUserFollowingList.isEmpty()}">
-                        <th:block th:if="${#lists.contains(loginUserFollowingList, writer)}">
-                            <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로잉</button>
-                        </th:block>
-                        <th:block th:unless="${#lists.contains(loginUserFollowingList, writer)}">
-                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로우</button>
-                        </th:block>
-                    </th:block>
+        
+                <!-- 비로그인하거나 프로필계정과 로그인한 유저가 다른 경우 -->
+                <th:block th:if="${loginUser == null}">
+                    <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}"> 팔로우 </button>
                 </th:block>
             </div>
-            
-            <!-- 비로그인하거나 프로필계정과 로그인한 유저가 다른 경우 -->
-            <th:block th:if="${loginUser == null}">
-                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}"> 팔로우 </button>
-            </th:block>
-                </div>
-            </div>
-            
+                    
             <!-- 게시글 이미지 -->
             <div id="carouselExample" class="carousel slide mt-2" style="width: 640px; height: 850px; position: relative;">
                 <div class="carousel-inner w-100 h-100">
