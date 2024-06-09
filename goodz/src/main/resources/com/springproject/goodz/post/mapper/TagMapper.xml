@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.springproject.goodz.post.mapper.TagMapper">
+
+    <!-- 상품태그 리스트 조회 - 종속된 게시글 기준 -->
+    <select id="taggedList" resultType="Tag" >
+        SELECT *
+        FROM tag
+        WHERE post_no = #{postNo}
+    </select>
+
+    <!-- 상품태그 추가 - 게시글 등록 시 -->
+    <insert id="insert">
+        INSERT INTO tag (post_no, p_no)
+        VALUES (#{postNo}, #{pNo})
+    </insert>
+
+    <!-- 상품태그 삭제 - 상품번호 기준 -->
+    <delete id="delete">
+        DELETE FROM tag
+        WHERE p_no = #{pNo}
+    </delete>
+
+</mapper>

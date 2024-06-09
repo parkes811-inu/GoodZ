@@ -156,8 +156,6 @@ public class FilesController {
         // ResponseEntity<> (데이터, 헤더, 상태코드)
         return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
     }
-
-    
     
     
 }

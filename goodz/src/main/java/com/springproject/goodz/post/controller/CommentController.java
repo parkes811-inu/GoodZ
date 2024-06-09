@@ -69,6 +69,9 @@ public class CommentController {
         // model.addAttribute("loginUser", loginUser);
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
+        if (loginUser != null) {
+            loginUser = userService.select(loginUser.getUserId());
+        }
         model.addAttribute("loginUser", loginUser);
         
         model.addAttribute("cmmtList", cmmtList);

@@ -69,6 +69,12 @@ public class WishListServiceImpl implements WishListService {
         return result;
     }
 
+    // 유저 관심리스트 조회 - parentTable, userId 기준 조회
+    @Override
+    public List<Wish> listByParent (Wish wish) throws Exception {
+        return wishListMapper.listByParent(wish);
+    }
+
 
     
 }

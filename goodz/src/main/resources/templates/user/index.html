@@ -40,7 +40,12 @@
                 <div class="d-flex">
                     <div class="profile_img">
                         <!-- 유저가 설정한 이미지 가져와야함. 없으면 기본 이미지로 설정-->
-                        <img th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/img/user/basic_social.png'}" alt="프로필이미지" class="rounded-circle">
+                        <th:block th:if="${user == null or user.profileImgNo == null}">
+                            <img src="/img/user/basic_social.png" alt="프로필이미지" class="rounded-circle">
+                        </th:block>
+                        <th:block th:if="${user != null or user.profileImgNo != null}">
+                                <img th:src="|/files/${user.profileImgNo}|" alt="프로필이미지" class="rounded-circle">
+                        </th:block>
                     </div>
                     <div class="profile_info d-flex flex-column my-auto">
                         <!-- 유저의 아이디와 닉네임 -->
@@ -107,7 +112,7 @@
                     <div class="col-12 d-flex justify-content-end">
                         <a href="/user/wishlist/products" class="text-body-tertiary" style="text-decoration: none;">+ 더보기</a>
                     </div>
-                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="brandProducts">
+                    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-1" id="brandProducts">
                         <th:block th:if="${wishlistProducts.size() > 0}">
                             <th:block th:each="product : ${wishlistProducts}">
                                 <div class="col">
@@ -130,7 +135,7 @@
                         </th:block>
                     </div>
                     <th:block th:if="${wishlistProducts.size() == 0}">
-                        <p><br><br><strong>관심 목록에 추가된 상품이 없습니다.</strong><br><br></p>
+                        <h5 class="text-body-tertiary text-center">관심 목록에 추가된 상품이 없습니다.</h5>
                     </th:block>
                 </div>      
             </div>

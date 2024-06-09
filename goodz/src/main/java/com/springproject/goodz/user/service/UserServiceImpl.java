@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private FileService fileService;
 
 
+
     @Override
     public boolean login(Users user) throws Exception {
         // // 💍 토큰 생성
@@ -101,32 +102,85 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateUser(Users user) throws Exception {
+        log.info("유저 " + user.getUserId() + " 정보 업데이트 처리 진행중...");
 
-        // ✅ 유저 정보 업데이트
+        /* ⬇️ 유저 정보 변경 처리 ⬇️ */
+        String requestPw = user.getPassword();
 
-        // int result = userMapper.update(user);
+        if (requestPw != null && requestPw != "") {
+            String newPw = passwordEncoder.encode(requestPw);
+            log.info("변경요청 : " + newPw);
+            // 암호화된 비밀번호로 세팅
+            user.setPassword(newPw);
+        }
+
+        // 🔄️ 유저 정보 업데이트
+        int result = userMapper.update(user);
+        log.info("처리 결과: " + result + " (0: 실패 / 1: 성공)");
+
+
+
+        /* ⬇️ 프로필 사진 업데이트 처리 ⬇️ */
+        MultipartFile newImg = user.getProfileImgFile();
+
+        // 첨부 X
+        if (newImg.isEmpty() || newImg == null ) {
+            log.info("프사 변경X");
+            return result;
+        }
+
+        // 첨부 O(기존 이미지 삭제 및 데이터 삭제 후 새 이미지 등록 및 데이터 추가)
+        // 프로필사진 정보 가져와야해서 select 호출
+        user = select(user.getUserId());
+
+        log.info("기존 프사 삭제 처리...");
+        int fileNo = user.getProfileImgNo();
+        result = fileService.delete(fileNo);
+        log.info("처리 결과: " + result + " (0: 실패 / 1: 성공)");
+        
+        log.info("새 프사 등록 처리...");
         String dir = "user";
         int parentNo = user.getNo();
         
-        MultipartFile profileImgFile = user.getProfileImgfile();
-
-        if (profileImgFile.isEmpty()) {
-            log.info("빈 파일인데?");
-        }
-
-        // fileService 에 매개변수로 넘길 file 객체 세팅
         Files uploadFile = new Files();
-        uploadFile.setParentNo(parentNo);           // 유저번호
-        uploadFile.setFile(profileImgFile);           // 첨부했던 파일을 dto에 담음
+        uploadFile.setParentNo(parentNo);  // 유저 번호
+        uploadFile.setFile(newImg);        // 새로운 이미지
 
         boolean uploadcheck = fileService.upload(uploadFile, dir);
-        
-        int result = 0;
 
         if (uploadcheck) {
-            log.info("프사 등록 성공");
-            result = 1;
+            log.info( "새로운 프사 업로드 성공...");
         }
+
+
+
+
+        // Users updateUser = new Users();
+
+
+
+        // String dir = "user";
+        // int parentNo = user.getNo();
+        
+        // MultipartFile profileImgFile = user.getProfileImgfile();
+
+        // if (profileImgFile.isEmpty()) {
+        //     log.info("빈 파일인데?");
+        // }
+
+        // // fileService 에 매개변수로 넘길 file 객체 세팅
+        // Files uploadFile = new Files();
+        // uploadFile.setParentNo(parentNo);           // 유저번호
+        // uploadFile.setFile(profileImgFile);           // 첨부했던 파일을 dto에 담음
+
+        // boolean uploadcheck = fileService.upload(uploadFile, dir);
+        
+        // int result = 0;
+
+        // if (uploadcheck) {
+        //     log.info("프사 등록 성공");
+        //     result = 1;
+        // }
 
         return result;
     }

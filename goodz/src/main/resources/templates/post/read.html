@@ -13,7 +13,6 @@
             border-radius: 50%; /* 둥근 모서리 */
             overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
         }
-
         .profile_img img {
             width: 100%;
             height: 100%;
@@ -32,7 +31,6 @@
             display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
             width: 100px;
         }
-
         .carousel-inner {
             width: 640px;
             height: 850px;
@@ -42,7 +40,6 @@
             width: 100%;
             height: 100%;
         }
-
         .followBtn{
             margin: auto 0;
             height: 30px;
@@ -55,13 +52,11 @@
         .comment_container {
             margin: 10px 15px 0 15px;
         }
-
         /* 댓글 프로필이미지 */
         .profile_img {
             width: 40px;
             height: 40px;
         }
-
         /* .addBtn:active, .addBtn:focus {
             border: none;
             outline:none !important;
@@ -72,12 +67,10 @@
             outline:none !important;
             box-shadow:none !important;
         }
-
     </style>
 </head>
 <!-- ⭐ layout:fragment="레이아웃 프레그먼트 이름" -->
 <body layout:fragment="content">
-
     <!-- 댓글 모달창 -->
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel" style="width: 500px;">
         <div class="offcanvas-header">
@@ -90,7 +83,12 @@
 
                 <!-- 댓글입력칸 -->
                 <div class="comment_input d-flex align-items-center" th:data-logged-in="${loginUser != null}">
-                    <img th:src="${loginUser != null && loginUser.profilePictureUrl != null ? loginUser.profilePictureUrl : '/img/temp/profile_img_default.png'}" alt="프로필 이미지" class="profile_img">
+                    <th:block th:if="${loginUser == null}">
+                        <img src='/img/temp/profile_img_default.png' alt="프로필 이미지" class="profile_img">
+                    </th:block>
+                    <th:block th:if="${loginUser != null}">
+                        <img th:src="|/files/${loginUser.profileImgNo}|" alt="프로필 이미지" class="profile_img">
+                    </th:block>
                     <form method="post" class="d-flex align-items-center">
                         <div class="wrap_input ms-3">
                             <input type="hidden" id="csrf_token" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -101,7 +99,6 @@
                         <button type="button" class="addBtn btn rounded-0 p-0" id="addBtn" onclick="insertCmmt()" style="font-size: small;width: 40px;height: 33px; margin-left: 10px;">등록</button>
                     </form>
                 </div>
-
                 <!-- [DB] 댓글 목록 -->
                 <div class="cmmt_list" id="cmmt_list">
                     
@@ -109,14 +106,11 @@
                 </div>
                 <!-- 댓글 반복문 끝 -->
             </div>
-
         </div>
     </div>
-
     <div class="container">
         <div class="mainContainer" style="width: 640px;">
             <h3 class="text-center fw-bold my-4">STYLE</h3>
-
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
@@ -206,8 +200,6 @@
                           </svg>
                           <span class="count" id="countCmmt"></span>
                     </a>
-
-
                 </div>
     
                 <!-- 게시글 내용 -->
@@ -219,78 +211,32 @@
             <!-- 상품태그 영역 -->
             <div class="productTags">
                 <div class="product_title text-start mt-5">
-                    <span>상품 태그 <strong>1</strong>개</span>
+                    <span>상품 태그 <span th:text="${tagCount}"></span>개</span>
                 </div>
                 <!-- 상품목록 -->
                 <div class="product_list_area mb-5">
+
+                    <th:block th:if="${taggedProducts.isEmpty()}">
+                        <h5 class="text-body-tertiary text-center">태그된 상품이 없습니다.</h5>
+                    </th:block>
+
                     <ul class="product_list row row-cols-1 row-cols-sm-2 row-cols-md-4 p-0 m-0" style="list-style: none;">
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="product_item text-start p-0">
-                            <!-- 상품 이미지 -->
-                            <a href="#" class="product_link" style="text-decoration: none; text-decoration-line: none;">
-                                <img alt="상품이미지" src="/img/temp/sampleProduct.jpg"class="product_img">
-                                <!-- 상품정보 -->
-                                <div class="product_desc text-black mb-2">
-                                    <p class="product_brand m-0  fw-semibold" style="font-size: medium;">Nike</p>
-                                    <p class="product_name m-0" style="font-size: small;">Air Force 1 '07</p>
-                                </div>
-                            </a>
-                        </li>
+                        <!-- [DB] 게시글에 포함된 상품태그 불러옴 -->
+                        <th:block th:each="product : ${taggedProducts}">
+                            <li class="product_item text-start p-0">
+                                <!-- 상품 이미지 -->
+                                <a th:href="|/product/detail/${product.pNo}|" class="product_link" style="text-decoration: none; text-decoration-line: none;">
+                                    <img th:src="|/files/${product.mainImgNo}|"class="product_img"  alt="상품이미지">
+                                    <!-- 상품정보 -->
+                                    <div class="product_desc text-black mb-2">
+                                        <p class="product_brand m-0  fw-semibold" style="font-size: medium;" th:text="${product.bName}"></p>
+                                        <p class="product_name m-0" style="font-size: small;" th:text="${product.productName}"></p>
+                                    </div>
+                                </a>
+                            </li>
+                        </th:block>
                     </ul>
+
                 </div>
             </div>
         </div>
@@ -301,32 +247,23 @@
         <input type="hidden" id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
     </th:block>
-
     <!-- 댓글 -->
     <script>
         let postNo = "[[${post.postNo}]]";
-
         // 댓글 목록 요청
         cmmtList()
         countCmmt()
-
         /* 종송된 댓글 개수 조회 */
         function countCmmt() {
-
             // let $countCmmt = document.getElementById('countCmmt');
             // let countCmmt = $countCmmt.value;
-
             let request = new XMLHttpRequest();
-
             request.open('GET', '/cmmt/count/' + postNo, true);
             request.send();
-
             request.onreadystatechange = function () {
-
                 if (request.readyState == request.DONE && request.status == 200) {
                     let response = JSON.parse(request.responseText);;
                     let cmmtQty = response.cmmtQty;
-
                     console.log('댓글 개수: ' + cmmtQty);
                     document.getElementById('countCmmt').innerText = cmmtQty;
                 }
@@ -337,62 +274,49 @@
         function cmmtList() {
             // Ajax 비동기 요청
             let request = new XMLHttpRequest();
-
             // 요청 세팅
             // request.open(요청 메솓, URL)
             request.open('GET', '/cmmt/' + postNo);
             request.send();
-
             request.onreadystatechange = function () {
                 
                 // 요청 성공 시,
                 if (request.readyState == request.DONE && request.status == 200) {
                     // 댓글 목록 출력
                     let response = request.responseText;
-
                     // 서버에서 렌더링한 HTML로 갱신(SSR)
                     let data = response;
-
                     let cmmtList = document.getElementById('cmmt_list');
                     cmmtList.innerHTML = data;
                 }
             }
         }
-
         
         /* 댓글 등록 */
         function insertCmmt() {
             let $writer = document.getElementById('cmmt_writer');
             let $comment = document.getElementById('cmmt_content');
             let $csrfToken = document.getElementById('csrf_token');
-
             let writer = $writer.value;
             let comment = $comment.value;
             let csrfToken = $csrfToken.value;
-
             let data = {
                 'postNo' : postNo,
                 'userId' : writer,
                 'comment' : comment
             }
-
             let request = new XMLHttpRequest();
-
             request.open('POST', '/cmmt');
             request.setRequestHeader('content-Type', 'application/json');
             request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
             // 자바스크립트의 Object 형태를 java는 읽을 수가 없어서, 문자열 형태로 변환해주어야함.
             request.send(JSON.stringify(data))
-
             // 요청상태 체킹
             request.onreadystatechange = function () {
-
                 //요청 성공 시,
                 if(request.readyState == request.DONE && request.status == 201 ) {
                     console.log('댓글 등록 성공');
-
                     let response = request.responseText;
-
                     if (response == 'SUCCESS') {
                         cmmtList();     // 댓글 목록 갱신
                         countCmmt();    // 댓글 갯수 갱신
@@ -403,7 +327,6 @@
                 }
             }
         }
-
         // 댓글 등록
         document.getElementById('cmmt_content').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
@@ -411,40 +334,33 @@
                 insertCmmt();
             }
         });
-
         /* 댓글 삭제*/
         function deleteCmmt(cNo) {
             let $csrfToken = document.getElementById('csrfToken');
             let csrfToken = $csrfToken.value;
-
             const doubleCheck = confirm('정말로 삭제하시겠습니까?');
             if (!doubleCheck) {
                 return;
             }
-
             // 삭제요청
             // Ajax 비동기 요청
             let request = new XMLHttpRequest();
             request.open('DELETE', '/cmmt/' + cNo);
             request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
             request.send()
-
             // 요청 상태 체킹
             request.onreadystatechange = function () {
                 
                 if (request.readyState == request.DONE && request.status == 200) {
                     console.log('댓글 삭제 성공');
-
                     let response = request.responseText;
                     if (response == 'SUCCESS') {
                         cmmtList();     // 댓글 목록 갱신
                         countCmmt();    // 댓글 갯수 갱신
                     }
-
                 }
             }
         }
-
         /* 댓글 이용 - 로그인 체크 */
         $('#cmmt_content').on('focus', function() {
             var loggedIn = $('.comment_input').data('logged-in');
@@ -461,25 +377,19 @@
                 }
             }
         });
-
     // 게시글 삭제
     function deletePost() {
-
         let $csrfToken = document.getElementById('csrfToken');
         let csrfToken = $csrfToken.value;
-
         console.log('CSRF Token:', csrfToken);
         console.log(postNo)
-
         if (!confirm("정말 삭제하시겠습니까?")) {
             return;
         }
         let request = new XMLHttpRequest();
-
         request.open('DELETE', '/styles/' + postNo);
         request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
         request.send()
-
         // 요청 상태 체킹
         request.onreadystatechange = function () {
             
@@ -494,7 +404,6 @@
             }
         }
     }
-
     function updateFollow(element) {
             
             // 로그인 여부 체크; 비로그인 시, 로그인 페이지로 튕김
@@ -508,31 +417,25 @@
                 }
                 return;
             }
-
             let requestId = element.getAttribute('data-profileId');
             let $csrfToken = document.getElementById('csrfToken');
             let csrfToken = $csrfToken.value;
-
             let data = {
                 'userId' : requestId,
                 'followerId' : userId
             };
             
             let $button = element.getAttribute('class');
-
             //팔로우 요청
             if ($button === 'followBtn btn btn-dark btn-sm') {
-
                 console.log("팔로우 요청" + userId + " -> " + requestId);
                 console.dir(data);
-
                 let request = new XMLHttpRequest();
     
                 request.open('POST', '/follow');
                 request.setRequestHeader('content-Type', 'application/json');
                 request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 request.send(JSON.stringify(data));
-
                 // 요청상태 체킹
                 request.onreadystatechange = function () {
                     if (request.readyState == request.DONE && request.status == 200) {
@@ -541,11 +444,9 @@
                         
                         if (response == 'SUCCESS') {
                             console.log('팔로우 등록 성공');
-
                             // 버튼 변경: 팔로우 -> 팔로잉
                             element.setAttribute('class', 'followBtn btn btn-outline-secondary btn-sm');
                             element.innerText = '팔로잉';
-
                             followerList();
                             followingList();
                             countFollow()
@@ -553,31 +454,23 @@
                     }
                 }
                 
-
             // 언팔 요청
             } else if($button === 'followBtn btn btn-outline-secondary btn-sm') {
-
                 console.log("언팔 요청" + userId + " -/-> " + requestId);
                 console.dir(data);
-
                 let request = new XMLHttpRequest();
-
                 request.open('DELETE', '/follow');
                 request.setRequestHeader('content-Type', 'application/json');
                 request.setRequestHeader('X-CSRF-TOKEN', csrfToken); // CSRF 토큰 설정
                 request.send(JSON.stringify(data));
-
                 // 요청상태 체킹
                 request.onreadystatechange = function () {
                     if (request.readyState == request.DONE && request.status == 200) {
                         console.log('언팔처리 성공');
-
                         let response = request.responseText;
-
                         if (response == 'SUCCESS') {
                             element.setAttribute('class', 'followBtn btn btn-dark btn-sm');
                             element.innerText = '팔로우';
-
                             followerList();
                             followingList();
                             countFollow()
@@ -589,4 +482,3 @@
         }
     </script>
 </body>
-
