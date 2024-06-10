@@ -12,7 +12,14 @@
     <update id="updateProduct">
         UPDATE product
         SET initial_price = #{initialPrice}, views = #{views}
-        WHERE id = #{id}
+        WHERE p_no = #{pNo} 
     </update>
 
+    <update id="updateProductPrices">
+        UPDATE product_option
+        SET option_price = option_price * 1.1 
+        WHERE views > 1000 
+        OR interest_count > 500 
+        OR purchase_count > 100
+    </update>
 </mapper>

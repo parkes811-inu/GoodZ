@@ -17,7 +17,7 @@ public class ProductItemWriter implements ItemWriter<Product> {
     @Override
     public void write(List<? extends Product> products) throws Exception {
         for (Product product : products) {
-            batchProductMapper.updateProduct(product);
+            //batchProductMapper.updateProduct(product);
         }
     }
 }

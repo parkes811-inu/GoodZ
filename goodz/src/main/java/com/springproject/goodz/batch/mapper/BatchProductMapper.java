@@ -14,4 +14,7 @@ public interface BatchProductMapper {
 
     // 제품 업데이트
     void updateProduct(Product product);
+
+    // 제품 업데이트
+    void updateProductPrices();
 }

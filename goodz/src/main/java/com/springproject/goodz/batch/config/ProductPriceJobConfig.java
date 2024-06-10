@@ -14,24 +14,29 @@ import com.springproject.goodz.batch.reader.ProductItemReader;
 import com.springproject.goodz.batch.writer.ProductItemWriter;
 import com.springproject.goodz.product.dto.Product;
 
+// 배치 작업 설정 클래스 어노테이션
 @Configuration
 @EnableBatchProcessing
 public class ProductPriceJobConfig {
 
-    @Autowired
-    private JobBuilderFactory jobBuilderFactory;
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
 
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
+    private final ProductItemReader productItemReader;
+    private final ProductItemProcessor productItemProcessor;
+    private final ProductItemWriter productItemWriter;
 
-    @Autowired
-    private ProductItemReader productItemReader;
-
-    @Autowired
-    private ProductItemProcessor productItemProcessor;
-
-    @Autowired
-    private ProductItemWriter productItemWriter;
+    public ProductPriceJobConfig(JobBuilderFactory jobBuilderFactory, 
+                                 StepBuilderFactory stepBuilderFactory,
+                                 ProductItemReader productItemReader,
+                                 ProductItemProcessor productItemProcessor,
+                                 ProductItemWriter productItemWriter) {
+        this.jobBuilderFactory = jobBuilderFactory;
+        this.stepBuilderFactory = stepBuilderFactory;
+        this.productItemReader = productItemReader;
+        this.productItemProcessor = productItemProcessor;
+        this.productItemWriter = productItemWriter;
+    }
 
     @Bean
     public Job updateProductPricesJob() {
