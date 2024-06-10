@@ -415,52 +415,55 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
-
+    
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
             return "redirect:/user/login";
         } else {
             model.addAttribute("user", user);
         }
-
+    
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             
             List<Purchase> purchases = payService.findPurchasesByUserId(currentUserName);
-
+    
             List<Purchase> pendingPurchases = new ArrayList<>();
             List<Purchase> paidPurchases = new ArrayList<>();
+            List<Purchase> readyPurchases = new ArrayList<>();
             List<Purchase> shippingPurchases = new ArrayList<>();
             List<Purchase> deliveredPurchases = new ArrayList<>();
             List<Purchase> cancelledPurchases = new ArrayList<>();
-
+    
             for (Purchase purchase : purchases) {
                 // 상품 정보 설정
                 Product product = productService.getProductBypNo(purchase.getPNo());
                 purchase.setProductName(product.getProductName());
                 purchase.setBName(product.getBName());
-
+    
                 // 상품 이미지 설정
                 Files file = new Files();
                 file.setParentNo(purchase.getPNo());
                 file.setParentTable(product.getCategory());
                 List<Files> productImages = fileService.listByParent(file);
-
+    
                 // 첫 번째 이미지 URL 설정
                 if (!productImages.isEmpty()) {
                     purchase.setImageUrl(productImages.get(0).getFilePath());
                 } else {
                     purchase.setImageUrl("/files/img?imgUrl=no-image.png");
                 }
-
+    
                 // 원화 형식으로 변환
                 String formattedPurchasePrice = decimalFormat.format(purchase.getPurchasePrice());
                 purchase.setFormattedPurchasePrice(formattedPurchasePrice);
-
+    
                 // 상태별로 구매 내역 필터링
                 if ("pending".equals(purchase.getPurchaseState())) {
                     pendingPurchases.add(purchase);
                 } else if ("paid".equals(purchase.getPurchaseState())) {
                     paidPurchases.add(purchase);
+                } else if ("ready_to_ship".equals(purchase.getPurchaseState())) {
+                    readyPurchases.add(purchase); 
                 } else if ("shipping".equals(purchase.getPurchaseState())) {
                     shippingPurchases.add(purchase);
                 } else if ("delivered".equals(purchase.getPurchaseState())) {
@@ -468,17 +471,23 @@ public class UserController {
                 } else if ("cancelled".equals(purchase.getPurchaseState())) {
                     cancelledPurchases.add(purchase);
                 }
+    
+                // 운송장 번호 로그 추가
+                System.out.println("Purchase No: " + purchase.getPurchaseNo() + ", Tracking No: " + purchase.getTrackingNo());
             }
+    
             model.addAttribute("pendingPurchases", pendingPurchases);
             model.addAttribute("paidPurchases", paidPurchases);
+            model.addAttribute("readyPurchases", readyPurchases);
             model.addAttribute("shippingPurchases", shippingPurchases);
             model.addAttribute("deliveredPurchases", deliveredPurchases);
             model.addAttribute("cancelledPurchases", cancelledPurchases);
             model.addAttribute("allPurchases", purchases); // 통합된 구매 내역 추가
         }
-
+    
         return "/user/purchase";
     }
+
 
 
     @PostMapping("/purchase/cancel/{purchaseNo}")
