@@ -41,10 +41,21 @@ public class PayServiceImpl implements PayService {
     public List<Purchase> findPurchasesByUserId(@Param("userId") String userId) throws Exception {
         return payMapper.findPurchasesByUserId(userId);
     }
+
+    // 유저가 미결제시 취소하면 상태 취소로 변경 
+    @Override
+    public void cancelPurchase(int purchaseNo) throws Exception {
+        payMapper.cancelPurchase(purchaseNo);
+    }
     
     // 유저별 판매 내역 조회
     @Override
     public List<Sales> findSalesByUserId(@Param("userId") String userId) throws Exception {
         return payMapper.findSalesByUserId(userId);
+    }
+
+    @Override
+    public List<Purchase> findPurchasesByUserIdWithPage(String userId, int start, int rows) throws Exception {
+        return payMapper.findPurchasesByUserIdWithPage(userId, start, rows);
     }
 }

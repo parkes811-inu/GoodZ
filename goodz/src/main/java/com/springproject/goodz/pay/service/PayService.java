@@ -24,7 +24,13 @@ public interface PayService {
     // 유저별 구매 내역 조회
     public List<Purchase> findPurchasesByUserId(@Param("userId") String userId) throws Exception;
 
+    // 유저가 미결제시 취소하면 상태 취소로 변경 
+    public void cancelPurchase(int purchaseNo) throws Exception;
+    
     // 유저별 판매 내역 조회
     public List<Sales> findSalesByUserId(@Param("userId") String userId) throws Exception;
+
+    // 유저별 구매 내역 조회 (페이징)
+    List<Purchase> findPurchasesByUserIdWithPage(@Param("userId") String userId, @Param("start") int start, @Param("rows") int rows) throws Exception;
     
 }

@@ -75,17 +75,25 @@
                 </div>
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                    <div class="col">
+                    <div class="col border-end my-3 hover-effect">
+                        <p>미결제</p>
+                        <p th:text="${pendingPurchases.size()}"></p>
+                    </div>
+                    <div class="col border-end my-3 hover-effect">
                         <p>결제 완료</p>
                         <p th:text="${paidPurchases.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>배송중</p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>배송 중</p>
                         <p th:text="${shippingPurchases.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>배송완료</p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>배송 완료</p>
                         <p th:text="${deliveredPurchases.size()}"></p>
+                    </div>
+                    <div class="col my-3 hover-effect">
+                        <p>취소</p>
+                        <p th:text="${cancelledPurchases.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -98,17 +106,25 @@
                 </div>
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                    <div class="col">
-                        <p>판매접수</p>
-                        <p th:text="${paidSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>판매 요청</p>
+                        <p th:text="${pendingSales.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>진행중</p>
-                        <p th:text="${shippingSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>수취 완료</p>
+                        <p th:text="${receptionSales.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>정산완료</p>
-                        <p th:text="${deliveredSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>검수 중</p>
+                        <p th:text="${checkingSales.size()}"></p>
+                    </div>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>정산 완료</p>
+                        <p th:text="${completedSales.size()}"></p>
+                    </div>
+                    <div class="col my-3 hover-effect">
+                        <p>취소</p>
+                        <p th:text="${cancelledSales.size()}"></p>
                     </div>
                 </div>
             </div>
