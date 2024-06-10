@@ -158,7 +158,7 @@ public class UserController {
             temp.setParentTable(parentTable);
             temp.setUserId(userId);
             
-            List<Wish> wishList = wishListService.listByParent(temp);
+            List<Wish> wishList = wishListService.fourByParent(temp);
             List<Product> wishlistProducts = new ArrayList<Product>();
             for (Wish wish : wishList) {
                 Product product = new Product();
@@ -166,6 +166,11 @@ public class UserController {
                 product = productService.getProductBypNo(pNo);
 
                 if (product != null) {  // product가 null인지 확인
+                    // 상품 옵션 설정
+                    List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                    product.setOptions(options);
+
+                    // 상품 이미지 설정
                     Files file = new Files();
                     file.setParentNo(product.getPNo());
                     file.setParentTable(product.getCategory());

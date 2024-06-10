@@ -44,4 +44,13 @@
         WHERE parent_table = #{parentTable} and parent_no = #{parentNo}
     </delete>
 
+    <!-- 최근 관심상품 4개 조회 - 유저 마이페이지 메인화면 조회용 -->
+    <select id="fourByParent" resultType="Wish">
+        SELECT *
+        FROM wishList
+        WHERE parent_table = #{parentTable} and user_id = #{userId}
+        ORDER BY created_at DESC
+        LIMIT 4;
+    </select>
+
 </mapper>

@@ -69,6 +69,12 @@ public class WishListServiceImpl implements WishListService {
         return wishListMapper.listByParent(wish);
     }
 
+    // 최근 관심상품 4개 조회 - parentTable, userId 기준 조회 - 유저 마이페이지 메인화면 조회용
+    @Override
+    public List<Wish> fourByParent (Wish wish) throws Exception{
+        return wishListMapper.fourByParent(wish);
+    }
+
 
     
 }
