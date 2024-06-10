@@ -152,43 +152,35 @@ public class UserController {
             model.addAttribute("deliveredSales", deliveredSales);
 
             // 사용자 ID를 사용하여 관심 목록 제품 조회
-            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            Wish temp = new Wish();
+            String parentTable= "product";
+            String userId = user.getUserId();
+            temp.setParentTable(parentTable);
+            temp.setUserId(userId);
+            
+            List<Wish> wishList = wishListService.listByParent(temp);
             List<Product> wishlistProducts = new ArrayList<Product>();
-            for (Integer pNo : wishListNum) {
+            for (Wish wish : wishList) {
                 Product product = new Product();
-                product = productService.findUserWishList(pNo);
+                int pNo = wish.getParentNo();
+                product = productService.getProductBypNo(pNo);
 
                 if (product != null) {  // product가 null인지 확인
-                Files file = new Files();
-                file.setParentNo(product.getPNo());
-                file.setParentTable(product.getCategory());
-                List<Files> productImages = fileService.listByParent(file);
+                    Files file = new Files();
+                    file.setParentNo(product.getPNo());
+                    file.setParentTable(product.getCategory());
+                    List<Files> productImages = fileService.listByParent(file);
 
-                if (!productImages.isEmpty()) {
-                    product.setImageUrl(productImages.get(0).getFilePath());
+                    if (!productImages.isEmpty()) {
+                        product.setImageUrl(productImages.get(0).getFilePath());
+                    } else {
+                        product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    }
+
+                    wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
                 } else {
-                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
                 }
-
-                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
-            } else {
-                log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
-            }
-
-                // // 상품 이미지 설정
-                // Files file = new Files();
-                // file.setParentNo(product.getPNo());
-                // file.setParentTable(product.getCategory());
-                // List<Files> productImages = fileService.listByParent(file);
-
-                // // 첫 번째 이미지 URL 설정
-                // if (!productImages.isEmpty()) {
-                //     product.setImageUrl(productImages.get(0).getFilePath());
-                // } else {
-                //     product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-                // }
-
-                // wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
@@ -551,11 +543,18 @@ public class UserController {
 
 
             // 사용자 ID를 사용하여 관심 목록 제품 조회
-            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            Wish temp = new Wish();
+            String parentTable= "product";
+            String userId = user.getUserId();
+            temp.setParentTable(parentTable);
+            temp.setUserId(userId);
+
+            List<Wish> wishList = wishListService.listByParent(temp);
             List<Product> wishlistProducts = new ArrayList<Product>();
-            for (Integer pNo : wishListNum) {
+            for (Wish wish : wishList) {
                 Product product = new Product();
-                product = productService.findUserWishList(pNo);
+                int pNo = wish.getParentNo();
+                product = productService.getProductBypNo(pNo);
 
                 if (product != null) { // Null 체크 추가
                     // 상품 옵션 설정

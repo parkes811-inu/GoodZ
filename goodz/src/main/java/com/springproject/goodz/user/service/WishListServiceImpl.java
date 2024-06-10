@@ -55,12 +55,6 @@ public class WishListServiceImpl implements WishListService {
 
         return result;
     }
-
-    // 관심에 담긴 상품 번호 리스트 반환
-    public List<Integer> listNumByUserId (String userId) throws Exception {
-        return wishListMapper.listNumByUserId(userId);
-    }
-
     // 종속된 저장들 모두 삭제
     @Override
     public int deleteAll(Wish wish) throws Exception {

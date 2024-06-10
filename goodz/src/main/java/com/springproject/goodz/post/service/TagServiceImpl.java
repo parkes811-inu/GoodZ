@@ -19,5 +19,12 @@ public class TagServiceImpl implements TagService{
         return tagMapper.insert(tag);
 
     }
+
+    // 게시글에 종속된 상품태그 삭제 - 게시글 수정 시
+    @Override
+    public int delete(int postNo) throws Exception {
+        return tagMapper.delete(postNo);
+    }
+
     
 }
