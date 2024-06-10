@@ -1,19 +1,15 @@
 package com.springproject.goodz.user.controller;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,10 +31,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.mysql.cj.log.Log;
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.service.PayService;
+import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
@@ -49,7 +46,6 @@ import com.springproject.goodz.user.service.UserService;
 import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,6 +63,9 @@ public class UserController {
 
     @Autowired
     private WishListService wishListService;
+
+    @Autowired
+    private PostService postService;
 
     @Autowired
     private ProductService productService;
@@ -605,9 +604,36 @@ public class UserController {
         return "/user/wishlist_products";
     }
 
-    @GetMapping("/wishlist/styles")
-    public String wishlist_styles() {
-        return "/user/wishlist_styles";
+    @GetMapping("/wishlist/posts")
+    public String wishlist_posts(Model model) throws Exception {
+
+        // 👤 로그인한 유저의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        log.info("========================================================");
+        log.info(currentUserName);
+        Users user = userService.findUserByUsername(currentUserName);
+        log.info("========================================================");
+        String parentTable = "post"; // 관심리스트 - 게시글
+        // 유저의 관심 게시글 리스트 불러오기;
+        Wish wish = new Wish();
+        wish.setParentTable(parentTable);
+        wish.setUserId(user.getUserId());
+        List<Wish> wishList_post = wishListService.listByParent(wish);  // 유저의 관심 게시글 리스트 (Wish 타입)
+        // 유저의 관심 게시글 세팅
+        List<Post> allPost = postService.list();        // 전체게시글
+        List<Post> postList_wished = new ArrayList<>(); // 유저의 관심 게시글 리스트 (Post 타입)
+        for (Wish wishedPost : wishList_post) {
+            for (Post post : allPost) {
+                // 전체 게시글 중 관심체크한 게시글 번호와 일치하는 게시글 찾기
+                if (wishedPost.getParentNo() != post.getPostNo()) {
+                    continue;
+                }
+                postList_wished.add(post);
+            }
+        }
+        model.addAttribute("postList_wished", postList_wished);
+        return "/user/wishlist_posts";
     }
 
     @GetMapping("/manage_info")
