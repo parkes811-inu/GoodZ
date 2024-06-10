@@ -26,6 +26,14 @@
         .product_img img {
             width: 100%;
         }
+
+        .product_brand, .product_name {
+            white-space: nowrap;       /* 줄바꿈을 하지 않도록 설정 */
+            overflow: hidden;          /* 넘치는 부분을 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 부분을 ...으로 표시 */
+            display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
+            width: 100%;
+        }
     </style>
 
     <title>마이 페이지</title>
@@ -122,12 +130,8 @@
                                                 <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                             </a>
                                             <div class="card-text py-2">
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
-                                                </div>
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
-                                                </div>
+                                                <p class="product_brand m-0  fw-semibold" style="font-size: medium;" th:text="${product.bName}"></p>
+                                                <p class="product_name m-0" style="font-size: small;" th:text="${product.productName}"></p>
                                             </div>
                                         </div>
                                     </div>

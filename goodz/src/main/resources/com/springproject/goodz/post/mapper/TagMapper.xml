@@ -21,7 +21,7 @@
     <!-- 상품태그 삭제 - 상품번호 기준 -->
     <delete id="delete">
         DELETE FROM tag
-        WHERE p_no = #{pNo}
+        WHERE post_no = #{postNo}
     </delete>
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.springproject.goodz.post.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -180,7 +181,6 @@ public class PostController {
                 Files mainImg = fileService.selectMainImg(file);
                 // 대표 이미지 번호 저장
                 taggedProduct.setMainImgNo(mainImg.getNo());
-                log.info("대표이미지번호: "+taggedProduct.getMainImgNo());
                 
                 // 태그 리스트에 저장
                 taggedProducts.add(taggedProduct);
@@ -280,7 +280,7 @@ public class PostController {
      * @throws Exception 
      */
     @PostMapping("/insert")
-    public ResponseEntity<String> insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts , Model model, HttpSession session) throws Exception {
+    public ResponseEntity<String> insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts, Model model, HttpSession session) throws Exception {
         String response = "FAIL";
 
         log.info(post.toString());
@@ -355,6 +355,45 @@ public class PostController {
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
 
+        /* 상품태그리스트 조회 */
+        List<Product> tempList = post.getTagList();
+        List<Product> taggedProducts = new ArrayList<>();
+
+        log.info("::::태그된 상품 정보::::");
+        if (!tempList.isEmpty()) {
+            for (Product product : tempList) {
+                int productno = product.getPNo();
+                Product taggedProduct = productService.getProductBypNo(productno);
+
+                // 상품 대표이미지 가져오기
+                Files tagItemImg = new Files();
+                tagItemImg.setParentTable(taggedProduct.getCategory());
+                tagItemImg.setParentNo(taggedProduct.getPNo());
+                Files mainImg = fileService.selectMainImg(tagItemImg);
+                // 대표 이미지 번호 저장
+                taggedProduct.setMainImgNo(mainImg.getNo());
+                log.info("대표이미지번호: "+taggedProduct.getMainImgNo());
+                
+                // 태그 리스트에 저장
+                taggedProducts.add(taggedProduct);
+                log.info(taggedProduct.toString());
+            }
+        }
+        model.addAttribute("taggedProducts", taggedProducts);
+
+        // 태그 리스트에서 상품번호만 추출
+        int[] productNumList = new int[taggedProducts.size()];
+
+        if (productNumList.length != 0) {
+            for (int i = 0; i < productNumList.length; i++) {
+                productNumList[i] = taggedProducts.get(i).getPNo();
+            }
+        }
+
+        String productNumListStr = Arrays.toString(productNumList);
+
+        model.addAttribute("productNumListStr",productNumListStr);
+
         return "/post/update";
     }
 
@@ -363,25 +402,59 @@ public class PostController {
      * @param post
      * @param model
      * @return
+     * @throws Exception 
      */
     @PostMapping("/update")
-    public String update(Post post, Model model) {
+    public ResponseEntity<String> update(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts, Model model) throws Exception {
 
         /* ⬇️ 게시글 수정 처리 ⬇️ */
         int result;
+        String response;
 
         try {
             result = postService.update(post);
         } catch (Exception e) {
             System.err.println("게시글 수정 처리 시, 예외발생");
             e.printStackTrace();
-            return "forward:/styles/update/" + post.getPostNo();
+
+            //데이터 처리 실패
+            log.info("게시글 등록 처리 시, 예외발생");
+            return new ResponseEntity<>("FAIL", HttpStatus.OK); // CREATED = 201
         }
 
-        /* ⬇️ 게시글 조회 페이지로 리다이렉트 처리 ⬇️ */
-        log.info(post.getPostNo() + "번 게시글 수정 성공");
+        if (result > 0 ) {
+            /* ⬇️ 상품태그 등록 처리 ⬇️ */
+            // 기존 상품태그 삭제
+            try {
+                tagService.delete(post.getPostNo());
+                log.info(post.getPostNo()+"번의 기존 상품태그 삭제처리");
+            } catch (Exception e) {
+                log.info("기존 상품태그 삭제처리중 예외발생");
+                e.printStackTrace();
+            }
+
+            // 새롭게 리스트업된 상품태그 등록
+            if (taggedProducts != null || taggedProducts.size() > 0) {
+                for (Integer productNo : taggedProducts) {
+                    Tag tag = new Tag();
+                    tag.setPostNo(post.getPostNo());
+                    tag.setPNo(productNo);
         
-        return "redirect:/styles/"+post.getPostNo();
+                    log.info("게시글번호: {}, 상품번호: {}", post.getPostNo(), productNo);
+                    tagService.insert(tag);
+
+                    response = "SUCCESS";
+                }
+            }
+            if(result>0 && (taggedProducts.size() == 0 || taggedProducts != null) ) {
+                /* ⬇️ 게시글 조회 페이지로 리다이렉트 처리 ⬇️ */
+                log.info(post.getPostNo() + "번 게시글 수정 성공");
+                response = "SUCCESS";
+            }
+        }
+        
+        //데이터 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
     }
     
     /**

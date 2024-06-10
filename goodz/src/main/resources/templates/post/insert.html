@@ -163,7 +163,7 @@
                 }
 
                 // productTag-area에 상품 정보 추가
-                var productHtml = '<div class="col">';
+                var productHtml = '<div class="col" data-product-no="'+productNo+'"">';
                 productHtml += '<div class="card" style="border: none;">';
                 productHtml += '<div class="card" style="border: none;">';
                 productHtml += '<img class="productImg rounded-2" src="' + productImgSrc + '" alt="상품이미지">';
@@ -182,7 +182,7 @@
         /* 상품태그리스트 - 삭제*/
         $(document).ready(function(){
             // productTag-area 내부의 상품 요소에 대한 클릭 이벤트 핸들러 등록
-            $('.productTag-area').on('click', '.card', function() {
+            $('.productTag-area').on('click', '.col', function() {
                 // 클릭된 상품의 상품번호 가져오기
                 var productNo = $(this).data('product-no');
 
@@ -197,10 +197,20 @@
             });
         });
 
+        
         $(document).ready(function(){
             $('#form').submit(function(e) {
                 // 폼 제출 기본 동작을 막음
                 e.preventDefault();
+                 // 대표 이미지 값 가져오기
+                var representativeImage = document.getElementById('representativeImage').value;
+
+                // 대표 이미지가 선택되었는지 확인
+                if(representativeImage === '') {
+                    // 대표 이미지가 선택되지 않은 경우 알림 표시
+                    alert('대표 이미지를 선택해주세요.');
+                    return; // 폼 제출 중단
+                }
 
                 // 폼 데이터를 FormData 객체로 생성
                 var formData = new FormData(this);

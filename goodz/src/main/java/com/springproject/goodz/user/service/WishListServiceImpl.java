@@ -55,12 +55,6 @@ public class WishListServiceImpl implements WishListService {
 
         return result;
     }
-
-    // 관심에 담긴 상품 번호 리스트 반환
-    public List<Integer> listNumByUserId (String userId) throws Exception {
-        return wishListMapper.listNumByUserId(userId);
-    }
-
     // 종속된 저장들 모두 삭제
     @Override
     public int deleteAll(Wish wish) throws Exception {
@@ -73,6 +67,12 @@ public class WishListServiceImpl implements WishListService {
     @Override
     public List<Wish> listByParent (Wish wish) throws Exception {
         return wishListMapper.listByParent(wish);
+    }
+
+    // 최근 관심상품 4개 조회 - parentTable, userId 기준 조회 - 유저 마이페이지 메인화면 조회용
+    @Override
+    public List<Wish> fourByParent (Wish wish) throws Exception{
+        return wishListMapper.fourByParent(wish);
     }
 
 
