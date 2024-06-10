@@ -32,6 +32,10 @@
             font-size: 14px;
             cursor: pointer;
         }
+        .hover-effect:hover {
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
     </style>
 
     <meta charset="UTF-8">
@@ -43,32 +47,43 @@
         <div class="userMainContainer">
 
             <!-- [DB] 구매내역 요약창 / 유저의 구매내역 Stauts에 맞게 count값을 가져옴 -->
+            
             <div class="box d-flex flex-column border rounded-3 p-3 w-100">
                 <p class="fs-4 fw-bold">판매 내역</p>
                 <div class="d-flex text-center">
-                    <div class="col border-end my-3">
-                        <p class="fw-bold">판매접수</p>
-                        <p th:text="${paidSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect" onclick="filterByState('pending')">
+                        <p class="fw-bold">판매 요청</p>
+                        <p th:text="${pendingSales.size()}"></p>
                     </div>
-                    <div class="col border-end my-3">
-                        <p class="fw-bold">진행중</p>
-                        <p th:text="${shippingSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect" onclick="filterByState('reception')">
+                        <p class="fw-bold">수취 완료</p>
+                        <p th:text="${receptionSales.size()}"></p>
                     </div>
-                    <div class="col my-3">
-                        <p class="fw-bold">정산완료</p>
-                        <p th:text="${deliveredSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect" onclick="filterByState('checking')">
+                        <p class="fw-bold">검수 중</p>
+                        <p th:text="${checkingSales.size()}"></p>
+                    </div>
+                    <div class="col border-end my-3 hover-effect" onclick="filterByState('delivcompletedered')">
+                        <p class="fw-bold">검수 완료</p>
+                        <p th:text="${completedSales.size()}"></p>
+                    </div>
+                    <div class="col my-3 hover-effect" onclick="filterByState('cancelled')">
+                        <p class="fw-bold">취소</p>
+                        <p th:text="${cancelledSales.size()}"></p>
                     </div>
                 </div>
             </div>
 
             <div class="purchase_list my-3">
                 <!-- 필터 -->
-                <div class="sort-order" onclick="filter()">
-                    <span id="sort-text">주문일자기준</span><span id="sort-icon"></span>
+                <div class="sort-order" onclick="sortByDate()">
+                    <span id="sort-text">주문일자기준</span><span id="sort-icon">▼</span>
                 </div>        
                 <!-- [DB] 구매 상품 리스트 반복문으로 출력-->
                 <div class="product_list mb-5 d-flex flex-column" id="product_list">
-                        <div class="product_item" th:each="sales : ${salesList}" th:data-ordered-at="${#dates.format(sales.saleDate, 'yyyy-MM-dd')}">
+                        <div class="product_item" th:each="sales : ${salesList}"
+                         th:data-ordered-at="${#dates.format(sales.saleDate, 'yyyy-MM-dd')}"
+                         th:data-sales-state="${sales.saleState}">
                             <!-- [DB] 구매한 상품 이미지, 상품명, 구매시 가격, 구매 날짜를 가져옴 -->
                                 <div class="d-flex">
                                     <!-- 상품 이미지 -->
@@ -83,11 +98,11 @@
                                 </div>
                                 <div class="product_date_price">
                                     <!-- 구매 상태 -->
-                                    <p th:if="${sales.saleState} == 'pending'" th:text="'보류'"></p>
-                                    <p th:if="${sales.saleState} == 'reception'" th:text="'접수중'"></p>
-                                    <p th:if="${sales.saleState} == 'checking'" th:text="'검수중'"></p>
-                                    <p th:if="${sales.saleState} == 'completed'" th:text="'검수완료'"></p>
-                                    <p th:if="${sales.saleState} == 'cancelled'" th:text="'구매취소'"></p>
+                                    <p th:if="${sales.saleState} == 'pending'" th:text="'판매 요청'"></p>
+                                    <p th:if="${sales.saleState} == 'reception'" th:text="'수취 완료'"></p>
+                                    <p th:if="${sales.saleState} == 'checking'" th:text="'검수 중'"></p>
+                                    <p th:if="${sales.saleState} == 'completed'" th:text="'정산 완료'"></p>
+                                    <p th:if="${sales.saleState} == 'cancelled'" th:text="'취소'"></p>
 
                                     <div>
                                         <!-- 구매일자/가격 -->
@@ -105,10 +120,59 @@
                 </div>
             </div>
         </div>
+        <!-- 페이지네이션 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" th:href="|/user/sales?page=${page.first}|">&laquo;</a>
+                </li>
+                <th:block th:if="${page.page != page.start}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/user/sales?page=${page.prev}|">&lt;</a>
+                    </li>
+                </th:block>
+                <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
+                    <th:block th:if="${page.page == no}">
+                        <li class="page-item active">
+                            <span class="page-link" th:text="${no}"></span>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${page.page != no}">
+                        <li class="page-item">
+                            <a class="page-link" th:href="|/user/sales?page=${no}|" th:text="${no}"></a>
+                        </li>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${page.page != page.last}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="|/user/sales?page=${page.next}|">&gt;</a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:href="|/adusermin/sales?page=${page.last}|">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <script>
-        function filter() {
+        function filterByState(state) {
+            var productList = document.getElementById('product_list');
+            var items = productList.getElementsByClassName('product_item');
+
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var itemState = item.getAttribute('data-sales-state');
+                
+                if (itemState === state) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        }
+
+        function sortByDate() {
             var productList = document.getElementById('product_list');
             var items = productList.getElementsByClassName('product_item');
             var itemsArray = Array.from(items);
