@@ -167,7 +167,7 @@
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'paid') ? '결제완료' : 
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'ready_to_ship') ? '배송대기' : 
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'shipping') ? '배송중' : 
-                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'delivered') ? '배송완료' : '취소됨'}"></td>
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'delivered') ? '배송완료' : '취소'}"></td>
                         <td th:text="${#dates.format(purchase.ordered_at, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </tbody>

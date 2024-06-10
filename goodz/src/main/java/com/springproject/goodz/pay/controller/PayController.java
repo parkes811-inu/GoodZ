@@ -126,9 +126,9 @@ public class PayController {
      * @throws Exception 
      */
     @GetMapping("/buy/{purchaseNo}")
-    public String getMethodName(@PathVariable("purchaseNo") int purchaseNo
-                               ,Model model
-                               ,HttpSession session) throws Exception {
+    public String getMethodName(@PathVariable("purchaseNo") int purchaseNo,
+                                Model model,
+                                HttpSession session) throws Exception {
         // TODO: purchaseNo 확인
         log.info("purchaseNo : " + purchaseNo);
         
@@ -149,12 +149,10 @@ public class PayController {
             }
         }
         
-
         // purchaseNo 조회
         // - p_no,  option_id 꺼내옴
         Purchase purchase = payService.selectPurchase(purchaseNo);
 
-        
         // Product 조회
         int pNo = purchase.getPNo();
         log.info("::::::::::::::::::::::::::::::::::::::::::");
@@ -180,7 +178,6 @@ public class PayController {
             product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
         }
 
-
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
         model.addAttribute("size", productOption.getSize());
         model.addAttribute("image", productImages);
@@ -195,6 +192,7 @@ public class PayController {
 
         return "/pay/buy";
     }
+
     
 
 
