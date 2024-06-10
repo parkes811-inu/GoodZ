@@ -96,83 +96,58 @@
             <div class="card-body">
                 <div class="stats">
                     <div class="col">
-                        <div>0</div>
                         <div>판매요청</div>
+                        <div th:text="${saleStateCounts['pending'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
-                        <div>0</div>
                         <div>수취완료</div>
+                        <div th:text="${saleStateCounts['reception'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
-                        <div>0</div>
                         <div>검수중</div>
+                        <div th:text="${saleStateCounts['checking'] ?: 0}"></div>
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
-                        <div>0</div>
                         <div>정산완료</div>
+                        <div th:text="${saleStateCounts['completed'] ?: 0}"></div>
                     </div>
                 </div>
             </div>
         </div>
 
+        
+
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>판매 현황</span>
+                <span>판매 내역</span>
                 <a href="/admin/pay_history">더보기 &gt;</a>
             </div>
-            <!-- 판매한 상품들의 현황을 최근 일자순으로 불러옴-->
-            <div class="card-body table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>판매번호</th>
-                            <th>상품번호</th>
-                            <th>유저ID</th>
-                            <th>운송장번호</th>
-                            <th>결제일자</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>224</td>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>Nike Air Force 1 '07</td>
-                            <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>223</td>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>Nike Air Force 1 '07</td>
-                            <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>222</td>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>Nike Air Force 1 '07</td>
-                            <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>221</td>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>Nike Air Force 1 '07</td>
-                            <td>2024-05-23</td>
-                        </tr>
-                        <tr>
-                            <td>220</td>
-                            <td>283451</td>
-                            <td>joeun123</td>
-                            <td>Nike Air Force 1 '07</td>
-                            <td>2024-05-23</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- 각각의 총 수를 불러와야함-->
+            <div class="card-body">
+                <div class="stats">
+                    <div class="col">
+                        <div>결제대기</div>
+                        <div th:text="${purchaseStateCounts['pending'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>결제완료</div>
+                        <div th:text="${purchaseStateCounts['paid'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>배송중</div>
+                        <div th:text="${purchaseStateCounts['shipping'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
+                        <div>배송완료</div>
+                        <div th:text="${purchaseStateCounts['delivered'] ?: 0}"></div>
+                    </div>
+                </div>
             </div>
         </div>
 

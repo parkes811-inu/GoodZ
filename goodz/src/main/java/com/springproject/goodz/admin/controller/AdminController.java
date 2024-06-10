@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.springproject.goodz.admin.service.AdminService;
+import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.product.dto.Brand;
 import com.springproject.goodz.product.dto.Page;
 import com.springproject.goodz.product.dto.Product;
@@ -49,7 +50,25 @@ public class AdminController {
     private AdminService adminService;
     
     @GetMapping("")
-    public String index() {
+    public String index(Model model) throws Exception {
+
+        List<Map<String, Object>> saleStateCounts = adminService.countUserSalesByState();
+        Map<String, Integer> saleStateMap = saleStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("sale_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        
+        model.addAttribute("saleStateCounts", saleStateMap);
+
+        List<Map<String, Object>> purchaseStateCounts = adminService.countUserPurchaseByState();
+        Map<String, Integer> purchaseStateMap = purchaseStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("purchase_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        model.addAttribute("purchaseStateCounts", purchaseStateMap);
+
         return "/admin/index";
     }
 
@@ -179,9 +198,23 @@ public class AdminController {
     }
 
 
+    /**
+     * 매입 내역 화면 ( 유저가 판매 )
+     * @param model
+     * @param page
+     * @param pageNumber
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/purchase_state")
-    public String userSaleList(Model model) throws Exception {
-        List<Map<String, Object>> saleList = adminService.userSaleList();
+    public String userSaleList(Model model, Page page,
+                                @RequestParam(value = "page", defaultValue = "1") int pageNumber) throws Exception {
+                                    
+        page.setPage(pageNumber);
+        int total = adminService.getTotalCount();
+        page.setTotal(total);
+        
+        List<Map<String, Object>> saleList = adminService.userSaleList(page);
         model.addAttribute("saleList", saleList);
 
         List<Map<String, Object>> saleStateCounts = adminService.countUserSalesByState();
@@ -191,7 +224,7 @@ public class AdminController {
                 count -> ((Long) count.get("count")).intValue()
             ));
         model.addAttribute("saleStateCounts", saleStateMap);
-
+        model.addAttribute("page", page);
         return "/admin/purchase_state";
     }
 
@@ -218,28 +251,108 @@ public class AdminController {
      */
     @PostMapping("/purchase/update")
     public String updateSaleState(@RequestParam("sNo") int sNo, @RequestParam("saleState") String saleState) throws Exception {
+        // 현재 판매 내역 가져오기
+        Map<String, Object> saleDetail = adminService.userSale(sNo);
+        String currentSaleState = (String) saleDetail.get("saleState");
+
+        // 디버깅: 현재 판매 상태와 변경할 판매 상태를 출력
+        System.out.println("Current sale state: " + currentSaleState);
+        System.out.println("New sale state: " + saleState);
+
+        if (!"completed".equals(currentSaleState) && "completed".equals(saleState)) {
+            int pNo = (int) saleDetail.get("productNo");
+            int initialPrice = adminService.getInitialPrice(pNo);
+
+            // 디버깅: productNo와 initialPrice를 출력
+            System.out.println("Product No: " + pNo);
+            System.out.println("Initial Price: " + initialPrice);
+
+            adminService.handleProductOption(pNo, (String) saleDetail.get("size"), initialPrice);
+        }
+
         adminService.updateUserSaleState(sNo, saleState);
         return "redirect:/admin/purchase_state";
     }
 
-
     /**
-     * 유저가 구매한 내역
+     * 거래 내역 
+     * @param model
+     * @param page
+     * @param pageNumber
      * @return
+     * @throws Exception
      */
     @GetMapping("/pay_history")
-    public String pay_history() {
+    public String pay_history(Model model, Page page,
+                            @RequestParam(value = "page", defaultValue = "1") int pageNumber) throws Exception {
+        page.setPage(pageNumber);
+        int total = adminService.TotalCount();
+        page.setTotal(total);
+
+        List<Map<String, Object>> purchaseList = adminService.userPurchaseList(page);
+        model.addAttribute("purchaseList", purchaseList);
+
+        List<Map<String, Object>> purchaseStateCounts = adminService.countUserPurchaseByState();
+        Map<String, Integer> purchaseStateMap = purchaseStateCounts.stream()
+            .collect(Collectors.toMap(
+                count -> (String) count.get("purchase_state"), 
+                count -> ((Long) count.get("count")).intValue()
+            ));
+        model.addAttribute("purchaseStateCounts", purchaseStateMap);
+
+        model.addAttribute("page", page);
         return "/admin/pay_history";
     }
 
     /**
-     * 유저가 구매한 내역 단일 조회
+     * 유저가 구매한 상품 단일 조회
+     * @param purchaseNo
+     * @param model
      * @return
+     * @throws Exception
      */
-    @GetMapping("/pay_history/detail")
-    public String pay_history_detail() {
+    @GetMapping("/pay_history/detail/{purchaseNo}")
+    public String payhistorydetail(@PathVariable("purchaseNo") int purchaseNo, Model model) throws Exception {
+        Purchase purchase = adminService.userPurchase(purchaseNo);
+        model.addAttribute("purchase", purchase);
         return "/admin/pay_history_detail";
     }
+
+    /**
+     * 유저가 구매한 상품 상태 변경
+     * @param purchaseNo
+     * @param trackingNo
+     * @param courier
+     * @param purchaseState
+     * @param pNo
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/pay_history/update")
+    public String updatePurchase(@RequestParam("purchaseNo") int purchaseNo,
+                                 @RequestParam(value = "trackingNumber", required = false) String trackingNumber,
+                                 @RequestParam(value = "courier", required = false) String courier,
+                                 @RequestParam("purchaseState") String purchaseState,
+                                 @RequestParam("pNo") int pNo,
+                                 @RequestParam("size") String size) throws Exception {
+        // 현재 상태 조회
+        Purchase currentPurchase = adminService.userPurchase(purchaseNo);
+        String currentState = currentPurchase.getPurchaseState();
+
+        // 운송장 번호가 제공된 경우 업데이트
+        if (trackingNumber != null && !trackingNumber.isEmpty() && courier != null && !courier.isEmpty()) {
+            String trackingNo = courier + ":" + trackingNumber;
+            adminService.updateTrackingInfo(purchaseNo, trackingNo);
+        }
+
+        // 구매 상태 업데이트 및 재고 조정
+        adminService.updatePurchaseState(purchaseNo, purchaseState, currentState, pNo, size);
+
+        return "redirect:/admin/pay_history";
+    }
+    
+
 
     @GetMapping("/product/detail/{pNo}")
     public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {

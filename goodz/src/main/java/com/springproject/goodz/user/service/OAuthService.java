@@ -6,7 +6,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.springproject.goodz.user.dto.OAuthAttributes;
 import com.springproject.goodz.user.dto.UserSocial;
-
 /**
  * 📄 OAuth2UserService
  * - OAuth 2.0 인증 흐름에서 사용자 정보를 처리를 위한 인터페이스
