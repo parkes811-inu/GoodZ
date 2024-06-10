@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.springproject.goodz.product.dto.Product;
 
-@Component
+@Component("ProductItem")
 public class ProductItemProcessor implements ItemProcessor<Product, Product> {
     @Override
     public Product process(Product product) throws Exception {
