@@ -137,6 +137,10 @@
                         <div>정산완료</div>
                         <div th:text="${saleStateCounts['completed'] ?: 0}"></div>
                     </div>
+                    <div class="col">
+                        <div>취소</div>
+                        <div th:text="${saleStateCounts['cancelled'] ?: 0}"></div>
+                    </div>
                 </div>
             </div>
         </div>
