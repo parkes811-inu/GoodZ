@@ -1,9 +1,14 @@
 
--- Active: 1717144908698@@127.0.0.1@3306@goodz
+-- Active: 1714007442487@@127.0.0.1@3306@goodz
+
+-- DROP DATABASE goodz;
+-- CREATE DATABASE goodz
+--     DEFAULT CHARACTER SET = 'utf8mb4';
 
 -- Drop existing tables if they exist
-DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `ing`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
+-- DROP TABLE IF EXISTS `user`, `user_auth`, `persistent_logins`, `Social_Login`, `ing`, `Follower`, `Post`, `Comment`, `Like`, `Tag`, `Product`, `Product_image`, `Product_option`, `Brand`, `Pricehistory`, `Wishlist`, `Sales`, `Inspection`, `Purchase`, `Shipment`, `Shippingaddress`, `file`;
 
+DROP TABLE IF EXISTS `Brand`;
 -- Brand 테이블 / 📁 product
 CREATE TABLE `Brand`(
     `b_no` INT NOT NULL AUTO_INCREMENT,
@@ -12,17 +17,8 @@ CREATE TABLE `Brand`(
     UNIQUE KEY `unique_b_name` (`b_name`)
 ) COMMENT='브랜드';
 
-DROP TABLE IF EXISTS `user`
 
-ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
-ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
-
-ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
-
-ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
-
--- 카카오 로그인 할때 터미널에 에러 뜨면 user에 쟤네들을 NULL 줘야합니다 / 정용
-
+DROP TABLE IF EXISTS `user`;
 -- User 테이블  / 📁 user
 CREATE TABLE `user` (
     `no` INT NOT NULL AUTO_INCREMENT,              -- 번호
@@ -42,16 +38,16 @@ CREATE TABLE `user` (
 
 
 
+-- ALTER ~~~ nickname phone_number birth NULL 줘야 카카오 로그인 가능
+-- ALTER TABLE user MODIFY COLUMN nickname VARCHAR(100) NULL;
+
+-- ALTER TABLE user MODIFY COLUMN phone_number VARCHAR(20) NULL;
+
+-- ALTER TABLE user MODIFY COLUMN birth VARCHAR(20) NULL;
+
+-- 카카오 로그인 할때 터미널에 에러 뜨면 user에 쟤네들을 NULL 줘야합니다 / 정용
 
 
-DROP TABLE IF EXISTS persistent_logins;
--- Persistent_Login 테이블 / 📁 user
-create table persistent_logins (
-	username varchar(64) not null
-	, series varchar(64) primary key
-	, token varchar(64) not null
-	, last_used timestamp not null
-);
 -- CREATE TABLE `Persistent_Login` (
 -- 	`persistent_no`		INT				NOT NULL AUTO_INCREMENT,
 -- 	`user_id`			VARCHAR(100)	NOT NULL,
@@ -65,6 +61,7 @@ create table persistent_logins (
 
 
 -- Social_Login 테이블 / 📁 user
+DROP TABLE IF EXISTS `Social_Login`;
 CREATE TABLE `Social_Login` (
 	`social_login_id`	VARCHAR(100)	NOT NULL,
 	`user_id`			VARCHAR(100)	NOT NULL,
@@ -86,6 +83,7 @@ CREATE TABLE `Social_Login` (
 
 
 -- Follow 테이블 / 📁 user
+DROP TABLE IF EXISTS `Follow`;
 CREATE TABLE `Follow` (
 	`no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`		VARCHAR(100)	NOT NULL,
@@ -95,8 +93,8 @@ CREATE TABLE `Follow` (
 ) COMMENT='팔로워';
 
 
-
 -- Post 테이블 / 📁 post
+DROP TABLE IF EXISTS `Post`;
 CREATE TABLE `Post` (
 	`post_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`	VARCHAR(100)	NOT NULL,
@@ -111,6 +109,7 @@ CREATE TABLE `Post` (
 
 
 -- Comment 테이블 / 📁 post
+DROP TABLE IF EXISTS `Comment`;
 CREATE TABLE `Comment` (
 	`c_no`			INT				NOT NULL AUTO_INCREMENT,
 	`post_no`		INT				NOT NULL,
@@ -125,6 +124,7 @@ CREATE TABLE `Comment` (
 
 
 -- Like 테이블 / 📁 post
+DROP TABLE IF EXISTS `Like`;
 CREATE TABLE `Like` (
 	`like_no`	INT				NOT NULL AUTO_INCREMENT,
 	`user_id`	VARCHAR(100)	NOT NULL,
@@ -138,15 +138,6 @@ CREATE TABLE `Like` (
 );
 
 
--- Tag 테이블 / 📁 post
-CREATE TABLE `Tag` (
-	`t_no`		INT	NOT NULL AUTO_INCREMENT,
-	`p_no`		INT	NOT NULL,
-	`post_no`	INT	NOT NULL,
-    PRIMARY KEY (t_no),
-    FOREIGN KEY (p_no) REFERENCES Product(p_no),
-    FOREIGN KEY (post_no) REFERENCES Post(post_no)
-) COMMENT='상품 태그';
 
 
 
@@ -170,7 +161,7 @@ CREATE TABLE `Tag` (
 -- ) COMMENT='상품';
 
 
-DROP TABLE IF EXISTS `user_social`
+DROP TABLE IF EXISTS `user_social`;
 -- 해당 테이블은 카카오 소셜 로그인 할때 쓰는 테이블입니다 /정용
 CREATE TABLE `user_social` (
     `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
@@ -186,6 +177,7 @@ CREATE TABLE `user_social` (
 
 
 -- Product 테이블 / 📁 product
+DROP TABLE IF EXISTS `Product`;
 CREATE TABLE `Product` (
     `p_no` INT NOT NULL AUTO_INCREMENT,
     `product_name` VARCHAR(100) NOT NULL,
@@ -211,6 +203,7 @@ CREATE TABLE `Product` (
 
 
 -- Product 옵션 테이블 / 📁 product
+DROP TABLE IF EXISTS `Product_option`;
 CREATE TABLE `Product_option` (
     `option_id` INT NOT NULL AUTO_INCREMENT,
     `p_no` INT NOT NULL,
@@ -222,7 +215,19 @@ CREATE TABLE `Product_option` (
     FOREIGN KEY (`p_no`) REFERENCES `Product`(`p_no`) ON DELETE CASCADE
 ) COMMENT='상품 옵션';
 
+-- Tag 테이블 / 📁 post
+DROP TABLE IF EXISTS `Tag`;
+CREATE TABLE `Tag` (
+	`t_no`		INT	NOT NULL AUTO_INCREMENT,
+	`p_no`		INT	NOT NULL,
+	`post_no`	INT	NOT NULL,
+    PRIMARY KEY (t_no),
+    FOREIGN KEY (p_no) REFERENCES Product(p_no),
+    FOREIGN KEY (post_no) REFERENCES Post(post_no)
+) COMMENT='상품 태그';
+
 -- PriceHistory 테이블 / 📁 product
+DROP TABLE IF EXISTS `Pricehistory`;
 CREATE TABLE `Pricehistory` (
     `price_history_no` INT NOT NULL AUTO_INCREMENT,
     `p_no` INT NOT NULL,
@@ -235,6 +240,7 @@ CREATE TABLE `Pricehistory` (
 ) COMMENT='가격변동';
 
 -- Wishlist 테이블 / 📁 user
+DROP TABLE IF EXISTS `Wishlist`;
 CREATE TABLE `Wishlist` (
     `w_no` INT NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL,
@@ -243,10 +249,11 @@ CREATE TABLE `Wishlist` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     -- `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 6/4 필요 없어서 주석처리함 -도희-
     PRIMARY KEY (`w_no`),
-    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
 ) COMMENT='관심 목록';
 
 -- Sales 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Sales`;
 CREATE TABLE `Sales` (
     `s_no` INT NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL,
@@ -263,6 +270,7 @@ CREATE TABLE `Sales` (
 ) COMMENT='판매';
 
 -- Inspection 테이블 / 📁 pay
+DROP TABLE IF EXISTS `Inspection`;
 CREATE TABLE `Inspection` (
     `i_no` INT NOT NULL AUTO_INCREMENT,
     `s_no` INT NOT NULL,
@@ -294,8 +302,6 @@ CREATE TABLE `Purchase` (
     FOREIGN KEY (option_id) REFERENCES Product_option(option_id)
 ) COMMENT='구매';
 
--- purchase_date 컬럼 삭제
-ALTER TABLE Purchase DROP COLUMN purchase_date;
 
 -- ordered_at, updated_at 컬럼 추가
 ALTER TABLE Purchase
@@ -324,6 +330,7 @@ CREATE TABLE `Shipment` (
 
 
 -- Shippingaddress 테이블 / 📁 user
+DROP TABLE IF EXISTS `Shippingaddress`;
 CREATE TABLE `Shippingaddress` (
     `address_no` INT NOT NULL AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL,
@@ -339,6 +346,7 @@ CREATE TABLE `Shippingaddress` (
 ) COMMENT='배송주소';
 
 -- file 테이블 / 📁 utils
+DROP TABLE IF EXISTS `file`;
 CREATE TABLE `file` (
   `no` INT NOT NULL AUTO_INCREMENT,
   `parent_table` VARCHAR(45) NOT NULL,
@@ -353,8 +361,8 @@ CREATE TABLE `file` (
   PRIMARY KEY (`no`)
 ) COMMENT='파일';
 
-DROP TABLE IF EXISTS user_auth;
 -- user_auth 테이블 / 📁 user
+DROP TABLE IF EXISTS user_auth;
 CREATE TABLE `user_auth` (
     `auth_no` INT PRIMARY KEY AUTO_INCREMENT,
     `user_id` VARCHAR(100) NOT NULL, -- 회원 아이디
