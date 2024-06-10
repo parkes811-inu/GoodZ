@@ -44,6 +44,7 @@ import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.user.service.UserService;
 import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
@@ -261,46 +262,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
         }
     }
-
-    // // 회원 정보 업데이트 - manage_info
-    // @PostMapping("/update")
-    // public String updateUserInfo(
-    //         @RequestParam Map<String, String> request,
-    //         @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
-        
-    //     // Users user = new Users();
-    //     // String userId = request.get("userId");
-    //     // String nickname = request.get("nickname");
-    //     // String phoneNumber = request.get("phoneNumber");
-
-    //     // user.setUserId(userId);
-    //     // user.setNickname(nickname);
-    //     // if(phoneNumber != null && !phoneNumber.isEmpty()) {
-    //     //     user.setPhoneNumber(phoneNumber);
-    //     // }
-
-    //     // if (file != null && !file.isEmpty()) {
-    //     //     String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    //     //     String filePath = uploadPath + "/user/" + File.separator + fileName;
-    //     //     try {
-    //     //         file.transferTo(new File(filePath));
-    //     //         // user.setProfilePictureUrl(filePath);
-    //     //         user.setProfilePictureUrl("/upload/user/" + fileName); // URL 형식으로 저장
-    //     //     } catch (IOException e) {
-    //     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
-    //     //     }
-    //     // }
-
-    //     // // 디버그 로그 추가
-    //     // System.out.println("User data: " + user);
-        
-    //     // int result = userService.update(user);
-    //     // if (result > 0) {
-    //     //     return ResponseEntity.ok("수정 되었습니다.");
-    //     // } else {
-    //     //     return ResponseEntity.status(HttpStatus.CONFLICT).body("수정에 실패하였습니다.");
-    //     // }
-    // }
 
     @PostMapping("/update")
     public String updateUser(Users user) {
@@ -598,37 +559,46 @@ public class UserController {
                 int pNo = wish.getParentNo();
                 product = productService.getProductBypNo(pNo);
 
+                if (product != null) {  // product가 null인지 확인
+                    // 상품 옵션 설정
+                    List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                    product.setOptions(options);
 
-                // 상품 이미지 설정
-                Files file = new Files();
-                file.setParentNo(product.getPNo());
-                file.setParentTable(product.getCategory());
-                List<Files> productImages = fileService.listByParent(file);
+                    // 상품 이미지 설정
+                    Files file = new Files();
+                    file.setParentNo(product.getPNo());
+                    file.setParentTable(product.getCategory());
+                    List<Files> productImages = fileService.listByParent(file);
 
-                // 최저 가격 계산
-                if (!options.isEmpty()) {
-                    int minPrice = options.stream()
-                                        .mapToInt(ProductOption::getOptionPrice)
-                                        .min()
-                                        .orElse(0);
-                    // 원화 형식으로 변환
-                    String formattedMinPrice = decimalFormat.format(minPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                
+                    // 최저 가격 계산
+                    if (!options.isEmpty()) {
+                        int minPrice = options.stream()
+                                            .mapToInt(ProductOption::getOptionPrice)
+                                            .min()
+                                            .orElse(0);
+                        // 원화 형식으로 변환
+                        String formattedMinPrice = decimalFormat.format(minPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    } else {
+                        // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                        int initialPrice = product.getInitialPrice();
+                        String formattedMinPrice = decimalFormat.format(initialPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    }
+
+                     // 첫 번째 이미지 URL 설정
+                     if (!productImages.isEmpty()) {
+                        product.setImageUrl(productImages.get(0).getFilePath());
+                    } else {
+                        product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    }
+
+                    wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+
                 } else {
-                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
-                    int initialPrice = product.getInitialPrice();
-                    String formattedMinPrice = decimalFormat.format(initialPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                    log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
                 }
-
-                // 첫 번째 이미지 URL 설정
-                if (!productImages.isEmpty()) {
-                    product.setImageUrl(productImages.get(0).getFilePath());
-                } else {
-                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-                }
-
-                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
