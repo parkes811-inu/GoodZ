@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 
-@Configuration
+@Configuration("BatchConfiguration")
 @EnableBatchProcessing
 public class BatchConfig {
 
@@ -22,7 +22,7 @@ public class BatchConfig {
         return sessionFactory.getObject();
     }
 
-    @Bean
+    @Bean("BatchTransactionManager")
     public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }

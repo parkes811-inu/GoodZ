@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("CustomProductItemWriter")
 public class ProductItemWriter implements ItemWriter<Product> {
     @Override
     public void write(List<? extends Product> products) {

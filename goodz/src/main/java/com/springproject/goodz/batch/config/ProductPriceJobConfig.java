@@ -47,7 +47,7 @@ public class ProductPriceJobConfig {
                 .build();
     }
 
-    @Bean
+    @Bean("CustomProductItemReader")
     public ItemReader<Product> productItemReader() {
         return () -> {
             List<Product> productList = productMapper.list();
