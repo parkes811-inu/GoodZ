@@ -142,7 +142,7 @@
                     <th:block th:if="${loginUser.userId != writer.userId}">
                         <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
                         <th:block th:if="${loginUserFollowingList.isEmpty()}">
-                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
+                            <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${writer.userId}">팔로우</button>
                         </th:block>
                         <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
                         <th:block th:unless="${loginUserFollowingList.isEmpty()}">

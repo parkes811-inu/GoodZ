@@ -833,17 +833,20 @@ public class UserController {
 
         String account = user.getAccount();
         model.addAttribute("account", account);
-
+        String[] accountParts;
+        String bankName = "";
+        String accountNumber = "";
+        String accountHolder = "";
         if (account != null) {
-            String[] accountParts = account.split(" / ");
-            String bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
-            String accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
-            String accountHolder = accountParts[1];
-            model.addAttribute("bankName", bankName);
-            model.addAttribute("accountNumber", accountNumber);
-            model.addAttribute("accountHolder", accountHolder);
-        }
-
+            accountParts = account.split(" / ");
+            bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
+            accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
+            accountHolder = accountParts[1];
+            }
+            
+        model.addAttribute("bankName", bankName);
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("accountHolder", accountHolder);
         return "/user/account"; // account.html 템플릿을 렌더링
     }
 
