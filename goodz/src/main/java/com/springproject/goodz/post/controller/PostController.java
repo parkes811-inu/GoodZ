@@ -265,7 +265,9 @@ public class PostController {
 
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");
+        loginUser = userService.select(loginUser.getUserId());
         model.addAttribute("loginUser", loginUser);
+        log.info(loginUser.getNickname());
         log.info("작성화면 이동...");
 
         return "/post/insert";
@@ -278,7 +280,8 @@ public class PostController {
      * @throws Exception 
      */
     @PostMapping("/insert")
-    public String insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts , Model model, HttpSession session) throws Exception {
+    public ResponseEntity<String> insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts , Model model, HttpSession session) throws Exception {
+        String response = "FAIL";
 
         log.info(post.toString());
 
@@ -288,7 +291,8 @@ public class PostController {
         if (result == 0) {
             log.info("게시글 등록 처리 시, 예외발생");
 
-            return "/post/insert";
+            //데이터 처리 성공
+            return new ResponseEntity<>("FAIL", HttpStatus.CREATED); // CREATED = 201
         }
 
         /* ⬇️ 상품태그 등록 처리 ⬇️ */
@@ -301,9 +305,14 @@ public class PostController {
     
                 log.info("게시글번호: {}, 상품번호: {}", postNo, productNo);
                 tagService.insert(tag);
+
+                response = "SUCCESS";
             }
         }
-        
+        if(result>0 && (taggedProducts.size() == 0 || taggedProducts != null) ) {
+            response = "SUCCESS";
+
+         }
 
         /* ⬇️프로필로 리다이렉트 처리⬇️ */
 
@@ -320,7 +329,8 @@ public class PostController {
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
 
-        return "redirect:/styles/user/@"+requested.getNickname();
+        //데이터 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED); // CREATED = 201
     }    
     
    

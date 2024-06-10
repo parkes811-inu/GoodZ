@@ -26,7 +26,7 @@
         SELECT  p.post_no as post_no
               , p.user_id as user_id
               , u.nickname as nickname
-              , u.profile_picture_url as profileImg
+              <!-- , u.profile_picture_url as profileImg -->
               , p.content as contetnt
               , f.no as file_no
               , f.file_name as file_name

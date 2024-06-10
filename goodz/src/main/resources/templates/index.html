@@ -97,6 +97,9 @@
             <!-- New Arrivals -->
             <div class="NewArrivals">
                 <h5 class="text-md-start fw-bold mt-5">New Arrivals</h5>
+                <th:block th:if="${newArrivalsList.isEmpty()}">
+                    <br><br><h5 class="text-body-tertiary text-center">최근 입고된 상품이 없습니다.</h5><br><br>
+                </th:block>
                 <div class="row row-cols-1 row-cols-md-4 g-4" id="taggedStyles">
                     <!-- [DB] 반복문으로 최대 4개 까지 -->
                     <div th:each="product : ${newArrivalsList}" class="col">
@@ -124,7 +127,7 @@
                 <h5 class="text-md-start fw-bold mt-5">Popular Styles</h5>
 
                 <th:block th:if="${popularPosts.isEmpty()}">
-                    <h2 class="text-body-tertiary text-center">조회된 게시글이 없습니다.</h2>
+                    <br><br><h5 class="text-body-tertiary text-center">조회된 게시글이 없습니다.</h5><br><br>
                 </th:block>
 
                 <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="stylesList">

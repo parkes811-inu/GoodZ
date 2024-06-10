@@ -50,7 +50,7 @@
               ,u.username
               ,u.password
               ,u.birth
-              ,u.profile_picture_url
+              <!-- ,u.profile_picture_url -->
               ,u.account
               ,u.created_at
               ,u.updated_at
@@ -83,7 +83,7 @@
               ,u.nickname
               ,u.password
               ,u.birth
-              ,u.profile_picture_url
+              <!-- ,u.profile_picture_url -->
               ,f.no as file_no
               ,u.account
               ,u.created_at
@@ -106,7 +106,7 @@
               ,u.nickname
               ,u.password
               ,u.birth
-              ,u.profile_picture_url
+              <!-- ,u.profile_picture_url -->
               ,f.no as file_no
               ,u.account
               ,u.created_at
@@ -125,8 +125,8 @@
 
     <!-- 회원 가입 -->
     <insert id="join">
-        INSERT INTO user (user_id, username, nickname, password, birth, phone_number, profile_picture_url)
-        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber}, #{profilePictureUrl})
+        INSERT INTO user (user_id, username, nickname, password, birth, phone_number)
+        VALUES (#{userId}, #{username}, #{nickname}, #{password}, #{birth}, #{phoneNumber})
     </insert>
 
     <!-- 회원 정보 수정 -->
@@ -283,7 +283,7 @@
           ,u.nickname
           ,u.birth
           ,u.phone_number
-          ,u.profile_picture_url
+          <!-- ,u.profile_picture_url -->
           ,u.password
           ,u.username
           ,u.created_at

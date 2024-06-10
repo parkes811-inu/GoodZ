@@ -96,6 +96,13 @@
             <!-- 타이틀: 등록된 계좌가 있으면 '정산 계좌 변경', 없으면 '정산 계좌 등록' -->
             <p class="fs-4 fw-bold mb-3" th:text="${account == null} ? '정산 계좌 등록' : '정산 계좌 변경'"></p>
 
+            <!-- 계좌 정보가 없을 때 표시 -->
+            <div class="account_info_container" th:if="${account == null}">
+                <div class="account-info-content">
+                    계좌를 등록해주세요
+                </div>
+            </div>
+
             <!-- 등록된 계좌 정보 표시 영역 -->
             <div class="account_info_container" th:if="${account != null}">
                 <div class="account-info-title">
@@ -107,13 +114,6 @@
                     <span th:text="${account.split(' ')[2]}"></span>
                     <span th:text="${account.split(' ')[3]}"></span>
                     
-                </div>
-            </div>
-
-            <!-- 계좌 정보가 없을 때 표시 -->
-            <div class="account_info_container" th:if="${account == null}">
-                <div class="account-info-content">
-                    계좌를 등록해주세요
                 </div>
             </div>
 
