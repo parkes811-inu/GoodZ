@@ -164,5 +164,11 @@ public class PostServiceImpl implements PostService{
 
         return popularPosts;
     }
+
+    // 게시글 조회 (대표이미지파일 번호 포함) - 게시글 번호 기준
+    @Override
+    public List<Post> taggedPost(int postNo) throws Exception {
+        return postMapper.taggedPost(postNo);
+    }
     
 }

@@ -113,12 +113,6 @@ public class MainController {
 
         // 📄인기게시글 4개
         List<Post> popularPosts = postService.popularPosts();
-        
-        log.info("::::::인기게시글 정보:::::");
-        for (Post post : popularPosts) {
-            log.info(post.toString());
-        }
-
         model.addAttribute("popularPosts", popularPosts);
 
         return "/index";

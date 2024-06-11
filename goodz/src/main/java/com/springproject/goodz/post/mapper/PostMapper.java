@@ -14,7 +14,7 @@ public interface PostMapper {
     public List<Post> list() throws Exception;
 
     // 게시글 조회
-    public Post select(int no) throws Exception;
+    public Post select(int postNo) throws Exception;
 
     // 게시글 조회 - id 기준
     public List<Post> selectById(String userId) throws Exception;
@@ -33,5 +33,8 @@ public interface PostMapper {
 
     // 인기게시글 4개 - 메인화면 조회용
     public List<Post> popularPosts() throws Exception;
+
+    // 게시글 조회 (대표이미지파일 번호 포함) - 게시글 번호 기준
+    public List<Post> taggedPost(int productNo) throws Exception;
     
 }

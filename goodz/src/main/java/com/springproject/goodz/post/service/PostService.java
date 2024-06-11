@@ -29,4 +29,7 @@ public interface PostService {
 
     // 인기게시글 4개 - 메인화면 조회용
     public List<Post> popularPosts() throws Exception;
+
+    // 게시글 조회 (대표이미지파일 번호 포함) - 게시글 번호 기준
+    public List<Post> taggedPost(int postNo) throws Exception;
 }

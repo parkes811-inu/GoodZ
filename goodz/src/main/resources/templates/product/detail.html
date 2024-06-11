@@ -137,6 +137,20 @@
             object-position: top; /* 이미지의 위쪽 부분을 보여줍니다 */
         }
     </style>
+    <style>
+        .profile_img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%; /* 둥근 모서리 */
+                overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
+            }
+
+        .profile_img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+        }
+    </style>
 </head>
 <body layout:fragment="content">
     
@@ -333,26 +347,24 @@
                 <h5 class="text-md-start fw-bold mt-5" style="padding-right: 100px;">태그된 스타일</h5>
                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="taggedStyles">
                     <!-- 반복문으로 최대 4개 까지 -->
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <div class="profile-img">
-                                            <img src="/img/product/profile.png" alt="프로필이미지" class="rounded-circle">
-                                        </div>
-                                        <!-- 게시글 주인의 피드 -->
-                                        <a href="" style="text-decoration-line: none; color: black;" >
-                                            <p class="userId fw-bold m-0">박은서</p>
-                                        </a>
-                                    </div>
-                                </div>
-                                <a href="#">
-                                    <img src="/img/product/style_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                    <th:block th:if="${taggedPosts == null || taggedPosts.isEmpty()}">
+                        <br><br><h5 class="text-body-tertiary text-center">아직 태그된 상품이 없습니다.</h5><br><br>
+                    </th:block>
+                    <th:block th:each="post : ${taggedPosts}">
+                        <div class="col">
+                            <!--[DB] 프로필 & 아이디 -->
+                            <div class="card-text py-2">
+                                <a th:href="|/styles/user/${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
+                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile_img rounded-circle">
+                                    <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                 </a>
                             </div>
+                            <!--[DB] 이미지 -->
+                            <a th:href="|/styles/${post.postNo}|">
+                                <img th:src="|/files/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
+                            </a>
                         </div>
-                    </div>
+                    </th:block>
                 </div>
                 
                 <div class="container mt-4">
