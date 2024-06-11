@@ -101,7 +101,8 @@
 
     <!-- 회원 조회 - nickname -->
     <select id="selectByNickname" resultMap="userMap">
-        SELECT u.user_id
+        SELECT u.no
+              ,u.user_id
               ,u.username
               ,u.nickname
               ,u.password
