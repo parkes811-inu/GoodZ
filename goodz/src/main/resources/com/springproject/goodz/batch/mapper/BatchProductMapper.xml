@@ -5,21 +5,58 @@
 
 <mapper namespace="com.springproject.goodz.batch.mapper.BatchProductMapper">
 
-    <select id="findAllProducts" resultType="Product">
+    <select id="findProductOptionsByProductId" resultType="com.springproject.goodz.product.dto.ProductOption">
+        SELECT * 
+          FROM product_option 
+         WHERE p_no = #{pNo}
+    </select>
+
+    <select id="findAllProducts" resultType="com.springproject.goodz.product.dto.Product">
         SELECT * FROM product
     </select>
 
     <update id="updateProduct">
         UPDATE product
-        SET initial_price = #{initialPrice}, views = #{views}
-        WHERE p_no = #{pNo} 
+        SET views = #{views}
+        WHERE p_no = #{pNo}
+    </update>
+    
+    <update id="updateProductViews">
+        UPDATE product
+        SET views = 0
+        WHERE p_no = #{pNo}
     </update>
 
-    <update id="updateProductPrices">
+    <select id="countPurchasesByProductIdSince" resultType="int">
+        SELECT COUNT(*) 
+          FROM Purchase 
+         WHERE p_no = #{pNo} 
+           AND ordered_at >= #{since}
+    </select>
+
+    <select id="countWishListByProductId" resultType="int">
+        SELECT COUNT(*) 
+          FROM Wishlist 
+         WHERE parent_no = #{pNo} 
+           AND parent_table = 'product'
+    </select>
+
+    <select id="countSalesByProductIdSince" resultType="int">
+        SELECT COUNT(*) 
+          FROM Sales 
+         WHERE p_no = #{pNo} 
+           AND sale_date >= #{since}
+    </select>
+
+    <insert id="insertPriceHistory">
+        INSERT INTO PriceHistory (p_no, size, fluctuated_price)
+        VALUES (#{pNo}, #{size}, #{previousPrice})
+    </insert>
+
+    <update id="updateProductOption">
         UPDATE product_option
-        SET option_price = option_price * 1.1 
-        WHERE views > 1000 
-        OR interest_count > 500 
-        OR purchase_count > 100
+        SET option_price = #{optionPrice}
+        WHERE option_id = #{optionId}
     </update>
+
 </mapper>

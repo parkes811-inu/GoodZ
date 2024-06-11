@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UpdateProductPricesTasklet implements Tasklet {
-
+    // 이건 지금 안쓰고 있음~~~~~~~~~~~~~~~~
     @Autowired
     private BatchProductMapper batchProductMapper;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         // 상품 가격을 업데이트하는 로직을 추가합니다.
-        batchProductMapper.updateProductPrices();
+        // batchProductMapper.updateProductPrices();
         return RepeatStatus.FINISHED;
     }
 }

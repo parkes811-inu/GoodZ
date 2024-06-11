@@ -23,7 +23,8 @@ public class BatchScheduler {
         this.updateProductPricesJob = updateProductPricesJob;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    // @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    @Scheduled(initialDelay = 60000) // 애플리케이션 시작 후 1분 후에 한 번만 실행
     public void runBatchJob() throws JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, JobParametersInvalidException {
         jobLauncher.run(updateProductPricesJob, new JobParameters());
     }

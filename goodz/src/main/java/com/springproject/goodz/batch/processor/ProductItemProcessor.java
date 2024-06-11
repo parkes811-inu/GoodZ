@@ -1,23 +1,46 @@
 package com.springproject.goodz.batch.processor;
 
+import com.springproject.goodz.batch.mapper.BatchProductMapper;
 import com.springproject.goodz.product.dto.Product;
-
-import lombok.NonNull;
-
+import com.springproject.goodz.product.dto.ProductOption;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class ProductItemProcessor implements ItemProcessor<Product, Product> {
 
+    @Autowired
+    private BatchProductMapper batchProductMapper;
+
     @Override
-    public Product process(@NonNull Product product) throws Exception {
-        // 조회수, 관심 수, 구매 건수에 따른 가격 변동 로직 구현
-        if (product.getViews() == 0) {
-            product.setInitialPrice(0);
-        } else {
-            product.setInitialPrice(product.getInitialPrice() - 1000);
+    public Product process(Product product) throws Exception {
+        List<ProductOption> options = batchProductMapper.findProductOptionsByProductId(product.getPNo());
+        Date oneWeekAgo = new Date(System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000));
+
+        for (ProductOption option : options) {
+            int purchaseCount = batchProductMapper.countPurchasesByProductIdSince(product.getPNo(), oneWeekAgo);
+            int wishListCount = batchProductMapper.countWishListByProductId(product.getPNo());
+            int salesCount = batchProductMapper.countSalesByProductIdSince(product.getPNo(), oneWeekAgo);
+
+            int score = purchaseCount + wishListCount - salesCount;
+            int newPrice = option.getOptionPrice() + (score * 1000);
+
+            if (newPrice < product.getInitialPrice()) {
+                newPrice = product.getInitialPrice();
+            }
+
+            // PriceHistory에 이전 가격 저장
+            batchProductMapper.insertPriceHistory(product.getPNo(), option.getSize(), option.getOptionPrice());
+
+            // 새 가격으로 업데이트
+            option.setOptionPrice(newPrice);
+            batchProductMapper.updateProductOption(option);
         }
+
         return product;
     }
 }

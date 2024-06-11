@@ -5,7 +5,6 @@ import com.springproject.goodz.product.dto.Product;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
@@ -17,7 +16,8 @@ public class ProductItemWriter implements ItemWriter<Product> {
     @Override
     public void write(List<? extends Product> products) throws Exception {
         for (Product product : products) {
-            //batchProductMapper.updateProduct(product);
+            // 조회수를 0으로 초기화
+            batchProductMapper.updateProductViews(product.getPNo());
         }
     }
 }

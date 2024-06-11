@@ -65,10 +65,6 @@ public class OAuthServiceImpl extends DefaultOAuth2UserService implements OAuthS
         // userSocial.setNickname(oAuthAttributes.getNickname());
         userSocial.setPicture(oAuthAttributes.getPicture());
 
-        log.info("======================================================");
-        log.info("시발 진짜 좀 되라 제발 : " + userSocial);
-        log.info("======================================================");
-
         Users joinedUser = null;
         try {
             joinedUser = userMapper.selectBySocial(userSocial);
