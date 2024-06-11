@@ -354,6 +354,13 @@ public class AdminController {
     
 
 
+    /**
+     * 어드민 상품 상세 조회
+     * @param pNo
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/product/detail/{pNo}")
     public String getProductDetail(@PathVariable("pNo") int pNo, Model model) throws Exception {
         Product product = productService.getProductBypNo(pNo);
@@ -362,7 +369,6 @@ public class AdminController {
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
-
         List<Brand> brandList = brandService.list();
         model.addAttribute("brandList", brandList);
 
@@ -373,8 +379,15 @@ public class AdminController {
         return "/admin/product_detail";
     }
 
+    /**
+     * 어드민 상품 수정 처리
+     * @param updateProductRequest
+     * @param params
+     * @return
+     * @throws Exception
+     */
     @PostMapping("/updateProduct")
-    public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest, @RequestParam Map<String, String> params) throws Exception {
+    public String updateProduct(@ModelAttribute UpdateProductRequest updateProductRequest, @RequestParam Map<String, String> params, @RequestParam("productFiles") List<MultipartFile> productFiles) throws Exception {
         log.info("Received Update Request: {}", updateProductRequest);
 
         Product product = new Product();
@@ -410,6 +423,53 @@ public class AdminController {
 
         productService.updateProduct(product);
 
+
+        /* 상품 이미지 변경 */
+        Files file = new Files();
+        int pNo = product.getPNo();
+        String parentTable = product.getCategory();
+        file.setParentTable(parentTable);
+        file.setParentNo(pNo);
+
+        List<Files> productImgs = fileService.listByParent(file);
+        // 기존 상품 이미지 삭제처리
+        for (Files files : productImgs) {
+            fileService.deleteByParent(file);
+        }
+
+        // 신규 이미지 등록처리
+        // updateProductRequest에서 파일 및 다른 필드를 처리
+        int mainImgIndex = updateProductRequest.getMainImgIndex();
+
+        // 깡통인지 체크
+        if (!productFiles.isEmpty()) {
+            for (int i = 0; i < productFiles.size(); i++) {
+                log.info(i+"번 인덱스 파일 처리중...");
+
+                MultipartFile attachedFile = productFiles.get(i);
+
+                // 빈 파일인지 체크
+                if (attachedFile.isEmpty()) {
+                    continue;
+                }
+
+                // fileService에 매개변수로 넘길 file 객체 세팅
+                Files uploadFile = new Files();
+                uploadFile.setParentNo(pNo);           // 게시글 번호
+                uploadFile.setFile(attachedFile);      // 첨부했던 파일을 dto에 담음
+
+                // 대표이미지 파일코드: 1
+                if (i == mainImgIndex) {
+                    uploadFile.setFileCode(1);
+                }
+
+                boolean uploadcheck = fileService.upload(uploadFile, parentTable);
+
+                if (uploadcheck) {
+                    log.info((i+1) + "번째 파일 업로드 성공...");
+                }
+            }
+        }
         return "redirect:/admin/product/detail/" + updateProductRequest.getPNo();
     }
     
