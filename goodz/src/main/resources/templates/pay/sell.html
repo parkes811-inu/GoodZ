@@ -104,7 +104,9 @@
             <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="salePrice" name="salePrice" th:value="${price - 5000}" />
-            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
+            <th:block th:if="${defaultAddress != null}">
+                <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
+            </th:block>
 
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>

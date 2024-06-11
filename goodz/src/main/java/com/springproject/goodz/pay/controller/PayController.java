@@ -260,10 +260,12 @@ public class PayController {
         // 기본 배송지를 찾기 위한 로직
         Shippingaddress defaultAddress = null;
         List<Shippingaddress> addresses = userService.selectByUserId(user.getUserId());
-        for (Shippingaddress address : addresses) {
-            if (userService.isDefaultAddress(address.getAddressNo())) {
-                defaultAddress = address;
-                break;
+        if (addresses != null) {
+            for (Shippingaddress address : addresses) {
+                if (userService.isDefaultAddress(address.getAddressNo())) {
+                    defaultAddress = address;
+                    break;
+                }
             }
         }
 
