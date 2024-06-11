@@ -247,6 +247,7 @@ public class PostController {
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
             loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+
         }
             
         model.addAttribute("loginUserFollowingList", loginUserFollowingList);
@@ -506,7 +507,8 @@ public class PostController {
 
         
         // 로그인된 user의 정보를 가져옴
-        Users loginUser= (Users)session.getAttribute("user");    
+        Users loginUser= (Users)session.getAttribute("user");  
+        List<Users> loginUserFollowingList = new ArrayList();  
 
         /* 게시글 조회 */
         List<Post> postList = postService.selectById(requested.getUserId());
@@ -549,13 +551,16 @@ public class PostController {
                     post.setIsWishlisted("solid");
                 }
             }
+
             // 세션아이디의 팔로우 목록 가져오기
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
-            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
-            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
+            loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+            log.info(loginUserFollowingList.toString());
+            log.info(requested.toString());
         }
-            
+        
+        model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("postList", postList);

@@ -145,20 +145,21 @@
                     </a>
                 </th:block>
                 <th:block th:if="${loginUser.userId != requested.userId}">
-                    <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
-                    <th:block th:if="${loginUserFollowingList.isEmpty()}">
-                        <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${follow.userId}">팔로우</button>
-                    </th:block>
-                    <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
-                    <th:block th:unless="${loginUserFollowingList.isEmpty()}">
-                        <th:block th:if="${#lists.contains(loginUserFollowingList, requested)}">
-                            <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로잉</button>
-                        </th:block>
-                        <th:block th:unless="${#lists.contains(loginUserFollowingList, requested)}">
+                        <!-- 로그인 유저 팔로잉 목록이 비어 있을 때 -->
+                        <th:block th:if="${loginUserFollowingList.isEmpty()}">
                             <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로우</button>
                         </th:block>
+                        <!-- 로그인 유저 팔로잉 목록이 존재할 때 -->
+                        <th:block th:unless="${loginUserFollowingList.isEmpty()}">
+                            <th:block th:if="${#lists.contains(loginUserFollowingList, requested)}">
+                                <button type="button" class="followBtn btn btn-outline-secondary btn-sm" id="following" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로잉</button>
+                            </th:block>
+                            <th:block th:unless="${#lists.contains(loginUserFollowingList, requested)}">
+                                <button type="button" class="followBtn btn btn-dark btn-sm" id="follow" onclick="updateFollow(this)" th:data-profileId="${requested.userId}">팔로우</button>
+                                <p>싀앙</p>
+                            </th:block>
+                        </th:block>
                     </th:block>
-                </th:block>
             </div>
             
             <!-- 비로그인하거나 프로필계정과 로그인한 유저가 다른 경우 -->
