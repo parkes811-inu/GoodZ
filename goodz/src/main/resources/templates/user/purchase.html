@@ -59,6 +59,10 @@
                         <p class="fw-bold">결제 완료</p>
                         <p th:text="${paidPurchases.size()}"></p>
                     </div>
+                    <div class="col border-end my-3 hover-effect" onclick="filterByState('ready_to_ship')">
+                        <p class="fw-bold">배송대기</p>
+                        <p th:text="${readyPurchases.size()}"></p>
+                    </div>
                     <div class="col border-end my-3 hover-effect" onclick="filterByState('shipping')">
                         <p class="fw-bold">배송 중</p>
                         <p th:text="${shippingPurchases.size()}"></p>
@@ -105,11 +109,15 @@
                             <p th:if="${purchase.purchaseState} == 'shipping'" th:text="'배송중'"></p>
                             <p th:if="${purchase.purchaseState} == 'delivered'" th:text="'배송완료'"></p>
                             <p th:if="${purchase.purchaseState} == 'cancelled'" th:text="'구매취소'"></p>
-
+                
                             <div>
                                 <!-- 구매일자/가격 -->
                                 <p th:text="${#dates.format(purchase.orderedAt, 'yyyy-MM-dd')}"></p>
                                 <p th:text="${purchase.formattedPurchasePrice}"></p>
+                            </div>
+                            <!-- 운송장 번호 표시 -->
+                            <div th:if="${purchase.purchaseState == 'ready_to_ship' or purchase.purchaseState == 'shipping' or purchase.purchaseState == 'delivered'}" class="trackingNumber">
+                                <p>운송장 정보 - <span th:text="${purchase.trackingNo}"></span></p>
                             </div>
                             <!-- 미결제 상태일 때 결제하기 버튼 추가 -->
                             <div th:if="${purchase.purchaseState} == 'pending'" class="payCancel" style="align-self: flex-end;">
@@ -130,39 +138,6 @@
             </div>
         </div>
 
-        <!-- 페이지네이션 -->
-        <!-- <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" th:href="|/user/purchase?page=${page.first}|">&laquo;</a>
-                </li>
-                <th:block th:if="${page.page != page.start}">
-                    <li class="page-item">
-                        <a class="page-link" th:href="|/user/purchase?page=${page.prev}|">&lt;</a>
-                    </li>
-                </th:block>
-                <th:block th:each="no : ${#numbers.sequence(page.start, page.end)}">
-                    <th:block th:if="${page.page == no}">
-                        <li class="page-item active">
-                            <span class="page-link" th:text="${no}"></span>
-                        </li>
-                    </th:block>
-                    <th:block th:if="${page.page != no}">
-                        <li class="page-item">
-                            <a class="page-link" th:href="|/user/purchase?page=${no}|" th:text="${no}"></a>
-                        </li>
-                    </th:block>
-                </th:block>
-                <th:block th:if="${page.page != page.last}">
-                    <li class="page-item">
-                        <a class="page-link" th:href="|/user/purchase?page=${page.next}|">&gt;</a>
-                    </li>
-                </th:block>
-                <li class="page-item">
-                    <a class="page-link" th:href="|/user/purchase?page=${page.last}|">&raquo;</a>
-                </li>
-            </ul>
-        </nav> -->
     </div>
 
     <script>
