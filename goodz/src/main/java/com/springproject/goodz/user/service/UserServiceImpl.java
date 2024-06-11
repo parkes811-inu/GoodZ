@@ -145,6 +145,7 @@ public class UserServiceImpl implements UserService {
         Files uploadFile = new Files();
         uploadFile.setParentNo(parentNo);  // 유저 번호
         uploadFile.setFile(newImg);        // 새로운 이미지
+        uploadFile.setFileCode(1);
 
         boolean uploadcheck = fileService.upload(uploadFile, dir);
 

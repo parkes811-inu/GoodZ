@@ -2,6 +2,7 @@ package com.springproject.goodz.product.controller;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,11 +30,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
+import com.springproject.goodz.post.service.TagService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Users;
 import com.springproject.goodz.user.dto.Wish;
+import com.springproject.goodz.user.service.UserService;
 import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
@@ -56,6 +60,15 @@ public class ProductController {
 
     @Autowired
     private WishListService wishListService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private UserService userService;
 
     // DecimalFormat 인스턴스 한 번 생성
     DecimalFormat decimalFormat = new DecimalFormat("#,### 원");
@@ -219,7 +232,10 @@ public class ProductController {
 
         model.addAttribute("isWishlisted", isWishlisted);
 
-
+        // 태그된 게시글 목록 좋아요 순 4개 조회
+        List<Post> taggedPosts = postService.taggedPost(pNo);
+        model.addAttribute("taggedPosts", taggedPosts);
+        
         return "/product/detail";
     }
 
