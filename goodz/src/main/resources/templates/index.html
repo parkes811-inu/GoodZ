@@ -100,7 +100,7 @@
                 <th:block th:if="${newArrivalsList.isEmpty()}">
                     <br><br><h5 class="text-body-tertiary text-center">최근 입고된 상품이 없습니다.</h5><br><br>
                 </th:block>
-                <div class="row row-cols-1 row-cols-md-4 g-4" id="taggedStyles">
+                <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 g-4" id="taggedStyles">
                     <!-- [DB] 반복문으로 최대 4개 까지 -->
                     <div th:each="product : ${newArrivalsList}" class="col">
                         <div class="card border-0">
@@ -132,20 +132,23 @@
 
                 <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4 row-cols-lg-4 g-3" id="stylesList">
                     <th:block th:each="post : ${popularPosts}">
+
                         <!-- [DB] 반복문으로 최대 4개 까지 -->
                         <div class="col">
                             <!--[DB] 프로필 & 아이디 -->
                             <div class="card-text py-2">
-                                <a th:href="|/styles/user/${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
-                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile_img rounded-circle">
+                                <a th:href="|/styles/user/@${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
+                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile-img">
                                     <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                 </a>
                             </div>
+
                             <!--[DB] 이미지 -->
                             <a th:href="|/styles/${post.postNo}|">
                                 <img th:src="|/files/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
                             </a>
                         </div>
+
                     </th:block>
                 </div>
             </div>
