@@ -7,12 +7,12 @@
 <th:block th:each="follow : ${profileUser.followList}">
     <div class="follow d-flex justify-content-between mb-3">
         <a th:href="|/styles/user/@${follow.nickname}|" class="d-flex" style="text-decoration: none; color: black;">
-            <div class="follow_img me-2">
+            <div class="me-2">
                 <th:block th:if="${follow.profileImgNo == null}">
-                    <img src="/img/user/basic_social.png" alt="프로필이미지" class="follow_img">
+                    <img src="/img/user/basic_social.png" alt="프로필이미지" class="profile-img">
                 </th:block>
                 <th:block>
-                    <img th:src="|/files/${follow.profileImgNo}|" alt="프로필이미지" class="follow_img">
+                    <img th:src="|/files/${follow.profileImgNo}|" alt="프로필이미지" class="profile-img">
                 </th:block>
             </div>
             <span class="fw-bold my-auto" th:text="${follow.nickname}">유저닉네임</span>

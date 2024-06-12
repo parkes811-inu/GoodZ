@@ -124,31 +124,11 @@
             width: 100px;
             margin: 5px;
         }
-
-        .shipping_info img {
-            width: 50px;
-            height: 20%;
-            margin-right: 25px;
-        }
+        
         .carousel-item img {
-            width: 100%;
-            height: 500px; /* 원하는 높이 값으로 변경 */
-            object-fit: contain; /* 이미지가 컨테이너에 맞게 조절됩니다 */
-            object-position: top; /* 이미지의 위쪽 부분을 보여줍니다 */
-        }
-    </style>
-    <style>
-        .profile_img {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%; /* 둥근 모서리 */
-                overflow: hidden; /* 이미지가 컨테이너를 벗어나지 않도록 설정 */
-            }
-
-        .profile_img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춤 */
+            max-width: 100%;
+            height: 500px; /* 원하는 높이로 조절 */
+            object-fit: cover; /* 이미지가 자르지 않고 부모 요소에 맞게 조절되도록 설정 */
         }
     </style>
 </head>
@@ -274,10 +254,10 @@
                     </div> <!-- 상품 상세 정보 (끝) -->
                     
                     <!-- 배송 방법 -->
-                    <div class="section_unit mb-2">
+                    <div class="section_unit my-3">
                         <div class="section_content p-2">
                             <div class="shipping_info d-flex">
-                                <img src="/img/pay/box.png" alt="배송박스" class="img-fluid" style="width: 50px; height: auto;"> <!-- 이미지 크기 조정 -->
+                                <img src="/img/pay/box.png" alt="배송박스" class="img-fluid me-3" style="width: 50px; height: 50px;"> <!-- 이미지 크기 조정 -->
                                 <div class="shipping_detail d-flex flex-column ms-2"> <!-- 간격 조정 -->
                                     <div class="shipping_method small">일반배송 3,000원</div> <!-- 폰트 크기 조정 -->
                                     <div class="shipping_cost text-secondary small">
@@ -355,7 +335,7 @@
                             <!--[DB] 프로필 & 아이디 -->
                             <div class="card-text py-2">
                                 <a th:href="|/styles/user/${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
-                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile_img rounded-circle">
+                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile-img">
                                     <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                 </a>
                             </div>
@@ -373,10 +353,12 @@
                         <!-- 반복문으로 최대 4개 까지 -->
                         
                     </div>
+
+                    <br><br><br> 
                     <p id="noProductsMessage" style="display: none;"> 
-                        <br><br> <strong>조회된 상품이 없습니다.</strong>
-                        <br><br>
+                        <strong>조회된 상품이 없습니다.</strong>
                     </p>
+                    <br><br><br>
 
                 </div>
             </div>
