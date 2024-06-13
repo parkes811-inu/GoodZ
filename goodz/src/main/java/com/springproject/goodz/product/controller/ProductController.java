@@ -2,6 +2,7 @@ package com.springproject.goodz.product.controller;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -219,6 +220,12 @@ public class ProductController {
 
         model.addAttribute("isWishlisted", isWishlisted);
 
+
+        // 상품에 대한 가격 히스토리 정보
+        Date oneWeekAgo = new Date(System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000));
+        Map<String, Integer> priceHistory = productService.selectHistoryByPNo(pNo, oneWeekAgo);
+        
+        model.addAttribute("pricesJson", pricesJson);
 
         return "/product/detail";
     }

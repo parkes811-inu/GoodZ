@@ -10,5 +10,13 @@
         INSERT INTO pricehistory (p_no, size, fluctuated_price)
         VALUES (#{pNo}, #{size}, #{initialPrice})
     </insert>
-
+    
+    <!-- 상품 별 가격 히스토리 조회 -->
+    <select id="selectHistoryByPNo">
+      SELECT fluctuated_price
+        FROM pricehistory
+       WHERE p_no = #{pNo}
+         AND size = #{size}
+         AND created_at >= #{since}
+    </select>
 </mapper>

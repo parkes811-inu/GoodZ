@@ -22,11 +22,12 @@ public class ProductItemProcessor implements ItemProcessor<Product, Product> {
         Date oneWeekAgo = new Date(System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000));
 
         for (ProductOption option : options) {
-            int purchaseCount = batchProductMapper.countPurchasesByProductIdSince(product.getPNo(), oneWeekAgo);
+            int purchaseCount = batchProductMapper.countPurchasesByProductIdSince(product.getPNo(), option.getOptionId() ,oneWeekAgo);
             int wishListCount = batchProductMapper.countWishListByProductId(product.getPNo());
-            int salesCount = batchProductMapper.countSalesByProductIdSince(product.getPNo(), oneWeekAgo);
+            int salesCount = batchProductMapper.countSalesByProductIdSince(product.getPNo(), product.getSize(), oneWeekAgo);
+            int viewsCount = (int) (product.getViews() * 0.1);
 
-            int score = purchaseCount + wishListCount - salesCount;
+            int score = viewsCount + purchaseCount + wishListCount - salesCount;
             int newPrice = option.getOptionPrice() + (score * 1000);
 
             if (newPrice < product.getInitialPrice()) {

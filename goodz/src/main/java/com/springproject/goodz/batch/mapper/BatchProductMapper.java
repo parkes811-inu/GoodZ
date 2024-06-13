@@ -22,13 +22,13 @@ public interface BatchProductMapper {
     void updateProductViews(int pNo);
 
     // 특정 제품의 특정 날짜 이후의 구매 횟수 조회
-    int countPurchasesByProductIdSince(@Param("pNo") int pNo, @Param("since") Date since);
+    int countPurchasesByProductIdSince(@Param("pNo") int pNo, @Param("optionId") int optionId, @Param("since") Date since);
 
     // 특정 제품의 관심 목록 등록 횟수 조회
     int countWishListByProductId(int pNo);
 
     // 특정 제품의 특정 날짜 이후의 판매 횟수를 조회
-    int countSalesByProductIdSince(@Param("pNo") int pNo, @Param("since") Date since);
+    int countSalesByProductIdSince(@Param("pNo") int pNo, @Param("size") String size ,@Param("since") Date since);
 
     // 가격 변동 내역 삽입
     void insertPriceHistory(@Param("pNo") int pNo, @Param("size") String size, @Param("previousPrice") int previousPrice);
