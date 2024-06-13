@@ -12,11 +12,36 @@
     </insert>
     
     <!-- 상품 별 가격 히스토리 조회 -->
-    <select id="selectHistoryByPNo">
-      SELECT fluctuated_price
-        FROM pricehistory
-       WHERE p_no = #{pNo}
-         AND size = #{size}
-         AND created_at >= #{since}
+    <select id="findPriceHistoryLastWeek" resultType="PriceHistory">
+        SELECT * 
+          FROM pricehistory 
+         WHERE p_no = #{pNo} 
+           AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+         ORDER BY updated_at
     </select>
+
+    <select id="findPriceHistoryLastMonth" resultType="PriceHistory">
+        SELECT * 
+          FROM pricehistory
+         WHERE p_no = #{pNo} 
+           AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+         ORDER BY updated_at
+    </select>
+
+    <select id="findPriceHistoryLast3Months" resultType="PriceHistory">
+        SELECT * 
+          FROM pricehistory 
+         WHERE p_no = #{pNo} 
+           AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)
+         ORDER BY updated_at
+    </select>
+
+    <select id="findPriceHistoryAllTime" resultType="PriceHistory">
+        SELECT * 
+          FROM pricehistory 
+         WHERE p_no = #{pNo}
+         ORDER BY updated_at
+    </select>
+
+
 </mapper>

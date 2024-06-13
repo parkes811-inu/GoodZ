@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.product.dto.Pricehistory;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
@@ -220,17 +221,8 @@ public class ProductController {
 
         model.addAttribute("isWishlisted", isWishlisted);
 
-
-        // 상품에 대한 가격 히스토리 정보
-        Date oneWeekAgo = new Date(System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000));
-        Map<String, Integer> priceHistory = productService.selectHistoryByPNo(pNo, oneWeekAgo);
-        
-        model.addAttribute("pricesJson", pricesJson);
-
         return "/product/detail";
     }
-
-
 
     // 상의 카테고리
     @GetMapping("/top")
