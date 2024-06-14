@@ -26,6 +26,14 @@
         .product_img img {
             width: 100%;
         }
+
+        .product_brand, .product_name {
+            white-space: nowrap;       /* 줄바꿈을 하지 않도록 설정 */
+            overflow: hidden;          /* 넘치는 부분을 숨김 */
+            text-overflow: ellipsis;   /* 넘치는 부분을 ...으로 표시 */
+            display: block;            /* display 속성을 block으로 설정하여 width를 적용 */
+            width: 100%;
+        }
     </style>
 
     <title>마이 페이지</title>
@@ -67,17 +75,25 @@
                 </div>
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                    <div class="col">
+                    <div class="col border-end my-3 hover-effect">
+                        <p>미결제</p>
+                        <p th:text="${pendingPurchases.size()}"></p>
+                    </div>
+                    <div class="col border-end my-3 hover-effect">
                         <p>결제 완료</p>
                         <p th:text="${paidPurchases.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>배송중</p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>배송 중</p>
                         <p th:text="${shippingPurchases.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>배송완료</p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>배송 완료</p>
                         <p th:text="${deliveredPurchases.size()}"></p>
+                    </div>
+                    <div class="col my-3 hover-effect">
+                        <p>취소</p>
+                        <p th:text="${cancelledPurchases.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -90,17 +106,25 @@
                 </div>
                 <div class="row text-center">
                     <!-- 유저의 현황에 맞는 수를 가져옴 -->
-                    <div class="col">
-                        <p>판매접수</p>
-                        <p th:text="${paidSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>판매 요청</p>
+                        <p th:text="${pendingSales.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>진행중</p>
-                        <p th:text="${shippingSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>수취 완료</p>
+                        <p th:text="${receptionSales.size()}"></p>
                     </div>
-                    <div class="col">
-                        <p>정산완료</p>
-                        <p th:text="${deliveredSales.size()}"></p>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>검수 중</p>
+                        <p th:text="${checkingSales.size()}"></p>
+                    </div>
+                    <div class="col border-end my-3 hover-effect">
+                        <p>정산 완료</p>
+                        <p th:text="${completedSales.size()}"></p>
+                    </div>
+                    <div class="col my-3 hover-effect">
+                        <p>취소</p>
+                        <p th:text="${cancelledSales.size()}"></p>
                     </div>
                 </div>
             </div>
@@ -122,12 +146,8 @@
                                                 <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="rounded-4 w-100">
                                             </a>
                                             <div class="card-text py-2">
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p class="user-id fw-bold m-0" th:text="${product.productName}"></p>
-                                                </div>
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p class="m-0 ms-2" th:text="${product.formattedMinPrice}"></p>
-                                                </div>
+                                                <p class="product_brand m-0  fw-semibold" style="font-size: medium;" th:text="${product.bName}"></p>
+                                                <p class="product_name m-0" style="font-size: small;" th:text="${product.productName}"></p>
                                             </div>
                                         </div>
                                     </div>

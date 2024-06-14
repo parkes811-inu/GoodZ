@@ -1,19 +1,15 @@
 package com.springproject.goodz.user.controller;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.NumberFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,16 +34,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.service.PayService;
+import com.springproject.goodz.post.dto.Post;
+import com.springproject.goodz.post.service.PostService;
+import com.springproject.goodz.product.dto.Page;
+
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Shippingaddress;
 import com.springproject.goodz.user.dto.Users;
+import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.user.service.UserService;
 import com.springproject.goodz.user.service.WishListService;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
-
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,6 +65,9 @@ public class UserController {
 
     @Autowired
     private WishListService wishListService;
+
+    @Autowired
+    private PostService postService;
 
     @Autowired
     private ProductService productService;
@@ -102,72 +105,98 @@ public class UserController {
             // 사용자 ID를 사용하여 구매 내역 조회
             List<Purchase> purchases = payService.findPurchasesByUserId(user.getUserId());
             
+            List<Purchase> pendingPurchases = new ArrayList<>();
             List<Purchase> paidPurchases = new ArrayList<>();
             List<Purchase> shippingPurchases = new ArrayList<>();
             List<Purchase> deliveredPurchases = new ArrayList<>();
+            List<Purchase> cancelledPurchases = new ArrayList<>();
 
             for (Purchase purchase : purchases) {
                 // 상태별로 구매 내역 필터링
-                if ("paid".equals(purchase.getPurchaseState())) {
-                    paidPurchases.add(purchase);
-                } else if ("pending".equals(purchase.getPurchaseState())) {
+                if("pending".equals(purchase.getPurchaseState())){
+                    pendingPurchases.add(purchase);
+                }else if ("paid".equals(purchase.getPurchaseState())) {
                     paidPurchases.add(purchase);
                 } else if ("shipping".equals(purchase.getPurchaseState())) {
                     shippingPurchases.add(purchase);
                 } else if ("delivered".equals(purchase.getPurchaseState())) {
                     deliveredPurchases.add(purchase);
+                } else if ("cancelled".equals(purchase.getPurchaseState())) {
+                    cancelledPurchases.add(purchase);
                 }
             }
             // 구매 내역
+            model.addAttribute("pendingPurchases", pendingPurchases);
             model.addAttribute("paidPurchases", paidPurchases);
             model.addAttribute("shippingPurchases", shippingPurchases);
             model.addAttribute("deliveredPurchases", deliveredPurchases);
+            model.addAttribute("cancelledPurchases", cancelledPurchases);
 
             // 사용자 ID를 사용하여 판매 내역 조회
             List<Sales> sales = payService.findSalesByUserId(user.getUserId());
             
-            List<Sales> paidSales = new ArrayList<>();
-            List<Sales> shippingSales = new ArrayList<>();
-            List<Sales> deliveredSales = new ArrayList<>();
+            List<Sales> pendingSales = new ArrayList<>();
+            List<Sales> receptionSales = new ArrayList<>();
+            List<Sales> checkingSales = new ArrayList<>();
+            List<Sales> completedSales = new ArrayList<>();
+            List<Sales> cancelledSales = new ArrayList<>();
             
             for (Sales sale : sales) {
                 if ("pending".equals(sale.getSaleState())) {
-                    paidSales.add(sale);
+                    pendingSales.add(sale);
                 } else if ("reception".equals(sale.getSaleState())) {
-                    shippingSales.add(sale);
+                    receptionSales.add(sale);
                 } else if("checking".equals(sale.getSaleState())) {
-                    shippingSales.add(sale);
-                }
-                else if ("completed".equals(sale.getSaleState())) {
-                    deliveredSales.add(sale);
+                    checkingSales.add(sale);
+                } else if ("completed".equals(sale.getSaleState())) {
+                    completedSales.add(sale);
+                } else if ("cancelled".equals(sale.getSaleState())) {
+                    cancelledSales.add(sale);
                 }
             }
             // 판매내역 
-            model.addAttribute("paidSales", paidSales);
-            model.addAttribute("shippingSales", shippingSales);
-            model.addAttribute("deliveredSales", deliveredSales);
+            model.addAttribute("pendingSales", pendingSales);
+            model.addAttribute("receptionSales", receptionSales);
+            model.addAttribute("checkingSales", checkingSales);
+            model.addAttribute("completedSales", completedSales);
+            model.addAttribute("cancelledSales", cancelledSales);
 
             // 사용자 ID를 사용하여 관심 목록 제품 조회
-            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            Wish temp = new Wish();
+            String parentTable= "product";
+            String userId = user.getUserId();
+            temp.setParentTable(parentTable);
+            temp.setUserId(userId);
+            
+            List<Wish> wishList = wishListService.fourByParent(temp);
             List<Product> wishlistProducts = new ArrayList<Product>();
-            for (Integer pNo : wishListNum) {
+            for (Wish wish : wishList) {
                 Product product = new Product();
-                product = productService.findUserWishList(pNo);
+                int pNo = wish.getParentNo();
+                product = productService.getProductBypNo(pNo);
 
-                // 상품 이미지 설정
-                Files file = new Files();
-                file.setParentNo(product.getPNo());
-                file.setParentTable(product.getCategory());
-                List<Files> productImages = fileService.listByParent(file);
+                if (product != null) {  // product가 null인지 확인
+                    // 상품 옵션 설정
+                    List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                    product.setOptions(options);
 
-                // 첫 번째 이미지 URL 설정
-                if (!productImages.isEmpty()) {
-                    product.setImageUrl(productImages.get(0).getFilePath());
+                    // 상품 이미지 설정
+                    Files file = new Files();
+                    file.setParentNo(product.getPNo());
+                    file.setParentTable(product.getCategory());
+                    List<Files> productImages = fileService.listByParent(file);
+
+                    if (!productImages.isEmpty()) {
+                        product.setImageUrl(productImages.get(0).getFilePath());
+                    } else {
+                        product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    }
+
+                    wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+
                 } else {
-                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
                 }
-
-                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
@@ -245,46 +274,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
         }
     }
-
-    // // 회원 정보 업데이트 - manage_info
-    // @PostMapping("/update")
-    // public String updateUserInfo(
-    //         @RequestParam Map<String, String> request,
-    //         @RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
-        
-    //     // Users user = new Users();
-    //     // String userId = request.get("userId");
-    //     // String nickname = request.get("nickname");
-    //     // String phoneNumber = request.get("phoneNumber");
-
-    //     // user.setUserId(userId);
-    //     // user.setNickname(nickname);
-    //     // if(phoneNumber != null && !phoneNumber.isEmpty()) {
-    //     //     user.setPhoneNumber(phoneNumber);
-    //     // }
-
-    //     // if (file != null && !file.isEmpty()) {
-    //     //     String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    //     //     String filePath = uploadPath + "/user/" + File.separator + fileName;
-    //     //     try {
-    //     //         file.transferTo(new File(filePath));
-    //     //         // user.setProfilePictureUrl(filePath);
-    //     //         user.setProfilePictureUrl("/upload/user/" + fileName); // URL 형식으로 저장
-    //     //     } catch (IOException e) {
-    //     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장에 실패하였습니다.");
-    //     //     }
-    //     // }
-
-    //     // // 디버그 로그 추가
-    //     // System.out.println("User data: " + user);
-        
-    //     // int result = userService.update(user);
-    //     // if (result > 0) {
-    //     //     return ResponseEntity.ok("수정 되었습니다.");
-    //     // } else {
-    //     //     return ResponseEntity.status(HttpStatus.CONFLICT).body("수정에 실패하였습니다.");
-    //     // }
-    // }
 
     @PostMapping("/update")
     public String updateUser(Users user) {
@@ -426,68 +415,91 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
-
+    
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
             return "redirect:/user/login";
-
         } else {
             model.addAttribute("user", user);
         }
-
+    
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            // 사용자 ID를 사용하여 구매 내역 조회
-            List<Purchase> purchases = payService.findPurchasesByUserId(user.getUserId());
             
+            List<Purchase> purchases = payService.findPurchasesByUserId(currentUserName);
+    
+            List<Purchase> pendingPurchases = new ArrayList<>();
             List<Purchase> paidPurchases = new ArrayList<>();
+            List<Purchase> readyPurchases = new ArrayList<>();
             List<Purchase> shippingPurchases = new ArrayList<>();
             List<Purchase> deliveredPurchases = new ArrayList<>();
-
+            List<Purchase> cancelledPurchases = new ArrayList<>();
+    
             for (Purchase purchase : purchases) {
                 // 상품 정보 설정
                 Product product = productService.getProductBypNo(purchase.getPNo());
                 purchase.setProductName(product.getProductName());
-                purchase.setBName(product.getBName());  // 브랜드 이름 설정
-
+                purchase.setBName(product.getBName());
+    
                 // 상품 이미지 설정
                 Files file = new Files();
                 file.setParentNo(purchase.getPNo());
                 file.setParentTable(product.getCategory());
                 List<Files> productImages = fileService.listByParent(file);
-
+    
                 // 첫 번째 이미지 URL 설정
                 if (!productImages.isEmpty()) {
                     purchase.setImageUrl(productImages.get(0).getFilePath());
                 } else {
-                    purchase.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    purchase.setImageUrl("/files/img?imgUrl=no-image.png");
                 }
-
+    
                 // 원화 형식으로 변환
                 String formattedPurchasePrice = decimalFormat.format(purchase.getPurchasePrice());
                 purchase.setFormattedPurchasePrice(formattedPurchasePrice);
-
+    
                 // 상태별로 구매 내역 필터링
-                if ("paid".equals(purchase.getPurchaseState())) {
+                if ("pending".equals(purchase.getPurchaseState())) {
+                    pendingPurchases.add(purchase);
+                } else if ("paid".equals(purchase.getPurchaseState())) {
                     paidPurchases.add(purchase);
-                } else if ("pending".equals(purchase.getPurchaseState())) {
-                    paidPurchases.add(purchase);
+                } else if ("ready_to_ship".equals(purchase.getPurchaseState())) {
+                    readyPurchases.add(purchase); 
                 } else if ("shipping".equals(purchase.getPurchaseState())) {
                     shippingPurchases.add(purchase);
                 } else if ("delivered".equals(purchase.getPurchaseState())) {
                     deliveredPurchases.add(purchase);
+                } else if ("cancelled".equals(purchase.getPurchaseState())) {
+                    cancelledPurchases.add(purchase);
                 }
+    
+                // 운송장 번호 로그 추가
+                System.out.println("Purchase No: " + purchase.getPurchaseNo() + ", Tracking No: " + purchase.getTrackingNo());
             }
-
+    
+            model.addAttribute("pendingPurchases", pendingPurchases);
             model.addAttribute("paidPurchases", paidPurchases);
+            model.addAttribute("readyPurchases", readyPurchases);
             model.addAttribute("shippingPurchases", shippingPurchases);
             model.addAttribute("deliveredPurchases", deliveredPurchases);
+            model.addAttribute("cancelledPurchases", cancelledPurchases);
             model.addAttribute("allPurchases", purchases); // 통합된 구매 내역 추가
         }
-
+    
         return "/user/purchase";
     }
 
 
+
+    @PostMapping("/purchase/cancel/{purchaseNo}")
+    public String cancelPurchase(@PathVariable int purchaseNo) {
+        try {
+            payService.cancelPurchase(purchaseNo);
+        } catch (Exception e) {
+            // 예외 처리 로직 추가
+            e.printStackTrace();
+        }
+        return "redirect:/user/purchase"; // 구매 내역 페이지로 리다이렉트
+    }
 
 
 
@@ -512,9 +524,11 @@ public class UserController {
             // 사용자 ID를 사용하여 판매 내역 조회
             List<Sales> salesList = payService.findSalesByUserId(user.getUserId());
             
-            List<Sales> paidSales = new ArrayList<>();
-            List<Sales> shippingSales = new ArrayList<>();
-            List<Sales> deliveredSales = new ArrayList<>();
+            List<Sales> pendingSales = new ArrayList<>();
+            List<Sales> receptionSales = new ArrayList<>();
+            List<Sales> checkingSales = new ArrayList<>();
+            List<Sales> completedSales = new ArrayList<>();
+            List<Sales> cancelledSales = new ArrayList<>();
             
             for (Sales sale : salesList) {
                 // 상품 정보 설정
@@ -540,20 +554,23 @@ public class UserController {
                 sale.setFormattedSalePrice(formattedSalePrice);
 
                 if ("pending".equals(sale.getSaleState())) {
-                    paidSales.add(sale);
+                    pendingSales.add(sale);
                 } else if ("reception".equals(sale.getSaleState())) {
-                    shippingSales.add(sale);
+                    receptionSales.add(sale);
                 } else if("checking".equals(sale.getSaleState())) {
-                    shippingSales.add(sale);
-                }
-                else if ("completed".equals(sale.getSaleState())) {
-                    deliveredSales.add(sale);
+                    checkingSales.add(sale);
+                } else if ("completed".equals(sale.getSaleState())) {
+                    completedSales.add(sale);
+                } else if ("cancelled".equals(sale.getSaleState())) {
+                    cancelledSales.add(sale);
                 }
             }
             // 판매내역
-            model.addAttribute("paidSales", paidSales);
-            model.addAttribute("shippingSales", shippingSales);
-            model.addAttribute("deliveredSales", deliveredSales);
+            model.addAttribute("pendingSales", pendingSales);
+            model.addAttribute("receptionSales", receptionSales);
+            model.addAttribute("checkingSales", checkingSales);
+            model.addAttribute("completedSales", completedSales);
+            model.addAttribute("cancelledSales", cancelledSales);
             model.addAttribute("salesList", salesList); // 통합된 구매 내역 추가
         }
         return "/user/sales";
@@ -569,54 +586,95 @@ public class UserController {
 
 
             // 사용자 ID를 사용하여 관심 목록 제품 조회
-            List<Integer> wishListNum = wishListService.listNumByUserId(user.getUserId());
+            Wish temp = new Wish();
+            String parentTable= "product";
+            String userId = user.getUserId();
+            temp.setParentTable(parentTable);
+            temp.setUserId(userId);
+
+            List<Wish> wishList = wishListService.listByParent(temp);
             List<Product> wishlistProducts = new ArrayList<Product>();
-            for (Integer pNo : wishListNum) {
+            for (Wish wish : wishList) {
                 Product product = new Product();
-                product = productService.findUserWishList(pNo);
-                // 상품 옵션 설정
-                List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
-                product.setOptions(options);
+                int pNo = wish.getParentNo();
+                product = productService.getProductBypNo(pNo);
 
-                // 상품 이미지 설정
-                Files file = new Files();
-                file.setParentNo(product.getPNo());
-                file.setParentTable(product.getCategory());
-                List<Files> productImages = fileService.listByParent(file);
+                if (product != null) {  // product가 null인지 확인
+                    // 상품 옵션 설정
+                    List<ProductOption> options = productService.getProductOptionsByProductId(product.getPNo());
+                    product.setOptions(options);
 
-                // 최저 가격 계산
-                if (!options.isEmpty()) {
-                    int minPrice = options.stream()
-                                        .mapToInt(ProductOption::getOptionPrice)
-                                        .min()
-                                        .orElse(0);
-                    // 원화 형식으로 변환
-                    String formattedMinPrice = decimalFormat.format(minPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                    // 상품 이미지 설정
+                    Files file = new Files();
+                    file.setParentNo(product.getPNo());
+                    file.setParentTable(product.getCategory());
+                    List<Files> productImages = fileService.listByParent(file);
+
+                
+                    // 최저 가격 계산
+                    if (!options.isEmpty()) {
+                        int minPrice = options.stream()
+                                            .mapToInt(ProductOption::getOptionPrice)
+                                            .min()
+                                            .orElse(0);
+                        // 원화 형식으로 변환
+                        String formattedMinPrice = decimalFormat.format(minPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    } else {
+                        // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
+                        int initialPrice = product.getInitialPrice();
+                        String formattedMinPrice = decimalFormat.format(initialPrice);
+                        product.setFormattedMinPrice(formattedMinPrice);
+                    }
+
+                     // 첫 번째 이미지 URL 설정
+                     if (!productImages.isEmpty()) {
+                        product.setImageUrl(productImages.get(0).getFilePath());
+                    } else {
+                        product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
+                    }
+
+                    wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
+
                 } else {
-                    // 옵션이 없는 경우 기본 가격 설정 및 형식 변환
-                    int initialPrice = product.getInitialPrice();
-                    String formattedMinPrice = decimalFormat.format(initialPrice);
-                    product.setFormattedMinPrice(formattedMinPrice);
+                    log.warn("Product not found for pNo: " + pNo); // product가 null일 경우 경고 로그 출력
                 }
-
-                // 첫 번째 이미지 URL 설정
-                if (!productImages.isEmpty()) {
-                    product.setImageUrl(productImages.get(0).getFilePath());
-                } else {
-                    product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
-                }
-
-                wishlistProducts.add(product); // 수정된 제품을 관심 목록에 추가
             }
             model.addAttribute("wishlistProducts", wishlistProducts);
         }
         return "/user/wishlist_products";
     }
 
-    @GetMapping("/wishlist/styles")
-    public String wishlist_styles() {
-        return "/user/wishlist_styles";
+    @GetMapping("/wishlist/posts")
+    public String wishlist_posts(Model model) throws Exception {
+
+        // 👤 로그인한 유저의 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+        log.info("========================================================");
+        log.info(currentUserName);
+        Users user = userService.findUserByUsername(currentUserName);
+        log.info("========================================================");
+        String parentTable = "post"; // 관심리스트 - 게시글
+        // 유저의 관심 게시글 리스트 불러오기;
+        Wish wish = new Wish();
+        wish.setParentTable(parentTable);
+        wish.setUserId(user.getUserId());
+        List<Wish> wishList_post = wishListService.listByParent(wish);  // 유저의 관심 게시글 리스트 (Wish 타입)
+        // 유저의 관심 게시글 세팅
+        List<Post> allPost = postService.list();        // 전체게시글
+        List<Post> postList_wished = new ArrayList<>(); // 유저의 관심 게시글 리스트 (Post 타입)
+        for (Wish wishedPost : wishList_post) {
+            for (Post post : allPost) {
+                // 전체 게시글 중 관심체크한 게시글 번호와 일치하는 게시글 찾기
+                if (wishedPost.getParentNo() != post.getPostNo()) {
+                    continue;
+                }
+                postList_wished.add(post);
+            }
+        }
+        model.addAttribute("postList_wished", postList_wished);
+        return "/user/wishlist_posts";
     }
 
     @GetMapping("/manage_info")
@@ -832,17 +890,20 @@ public class UserController {
 
         String account = user.getAccount();
         model.addAttribute("account", account);
-
+        String[] accountParts;
+        String bankName = "";
+        String accountNumber = "";
+        String accountHolder = "";
         if (account != null) {
-            String[] accountParts = account.split(" / ");
-            String bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
-            String accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
-            String accountHolder = accountParts[1];
-            model.addAttribute("bankName", bankName);
-            model.addAttribute("accountNumber", accountNumber);
-            model.addAttribute("accountHolder", accountHolder);
-        }
-
+            accountParts = account.split(" / ");
+            bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
+            accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
+            accountHolder = accountParts[1];
+            }
+            
+        model.addAttribute("bankName", bankName);
+        model.addAttribute("accountNumber", accountNumber);
+        model.addAttribute("accountHolder", accountHolder);
         return "/user/account"; // account.html 템플릿을 렌더링
     }
 

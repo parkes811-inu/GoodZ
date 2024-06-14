@@ -124,11 +124,11 @@
             width: 100px;
             margin: 5px;
         }
-
-        .shipping_info img {
-            width: 50px;
-            height: 20%;
-            margin-right: 25px;
+        
+        .carousel-item img {
+            max-width: 100%;
+            height: 500px; /* 원하는 높이로 조절 */
+            object-fit: cover; /* 이미지가 자르지 않고 부모 요소에 맞게 조절되도록 설정 */
         }
     </style>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -255,10 +255,10 @@
                     </div> <!-- 상품 상세 정보 (끝) -->
                     
                     <!-- 배송 방법 -->
-                    <div class="section_unit mb-2">
+                    <div class="section_unit my-3">
                         <div class="section_content p-2">
                             <div class="shipping_info d-flex">
-                                <img src="/img/pay/box.png" alt="배송박스" class="img-fluid" style="width: 50px; height: auto;"> <!-- 이미지 크기 조정 -->
+                                <img src="/img/pay/box.png" alt="배송박스" class="img-fluid me-3" style="width: 50px; height: 50px;"> <!-- 이미지 크기 조정 -->
                                 <div class="shipping_detail d-flex flex-column ms-2"> <!-- 간격 조정 -->
                                     <div class="shipping_method small">일반배송 3,000원</div> <!-- 폰트 크기 조정 -->
                                     <div class="shipping_cost text-secondary small">
@@ -328,26 +328,24 @@
                 <h5 class="text-md-start fw-bold mt-5" style="padding-right: 100px;">태그된 스타일</h5>
                 <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 g-3" id="taggedStyles">
                     <!-- 반복문으로 최대 4개 까지 -->
-                    <div class="col">
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <div class="card-text py-2">
-                                    <div class="d-flex justify-content-start column-gap-1">
-                                        <div class="profile-img">
-                                            <img src="/img/product/profile.png" alt="프로필이미지" class="rounded-circle">
-                                        </div>
-                                        <!-- 게시글 주인의 피드 -->
-                                        <a href="" style="text-decoration-line: none; color: black;" >
-                                            <p class="userId fw-bold m-0">박은서</p>
-                                        </a>
-                                    </div>
-                                </div>
-                                <a href="#">
-                                    <img src="/img/product/style_card.png" alt="게시글" class="rounded-4" style="width: 100%;">
+                    <th:block th:if="${taggedPosts == null || taggedPosts.isEmpty()}">
+                        <br><br><h5 class="text-body-tertiary text-center">아직 태그된 상품이 없습니다.</h5><br><br>
+                    </th:block>
+                    <th:block th:each="post : ${taggedPosts}">
+                        <div class="col">
+                            <!--[DB] 프로필 & 아이디 -->
+                            <div class="card-text py-2">
+                                <a th:href="|/styles/user/${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
+                                    <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile-img">
+                                    <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                 </a>
                             </div>
+                            <!--[DB] 이미지 -->
+                            <a th:href="|/styles/${post.postNo}|">
+                                <img th:src="|/files/${post.fileNo}|" alt="게시글" class="rounded-4" style="width: 100%;">
+                            </a>
                         </div>
-                    </div>
+                    </th:block>
                 </div>
                 
                 <div class="container mt-4">
@@ -356,10 +354,12 @@
                         <!-- 반복문으로 최대 4개 까지 -->
                         
                     </div>
+
+                    <br><br><br> 
                     <p id="noProductsMessage" style="display: none;"> 
-                        <br><br> <strong>조회된 상품이 없습니다.</strong>
-                        <br><br>
+                        <strong>조회된 상품이 없습니다.</strong>
                     </p>
+                    <br><br><br>
 
                 </div>
             </div>

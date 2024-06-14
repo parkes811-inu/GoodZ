@@ -137,6 +137,10 @@
                         <div>정산완료</div>
                         <div th:text="${saleStateCounts['completed'] ?: 0}"></div>
                     </div>
+                    <div class="col">
+                        <div>취소</div>
+                        <div th:text="${saleStateCounts['cancelled'] ?: 0}"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -167,7 +171,7 @@
                         <td th:text="${#strings.equalsIgnoreCase(sale.sale_state, 'pending') ? '판매요청' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'reception') ? '수취완료' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'checking') ? '검수중' : 
-                                      #strings.equalsIgnoreCase(sale.sale_state, 'completed') ? '정산완료' : '취소됨'}"></td>
+                                      #strings.equalsIgnoreCase(sale.sale_state, 'completed') ? '정산완료' : '취소'}"></td>
                         <td th:text="${#dates.format(sale.sale_date, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </tbody>

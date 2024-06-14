@@ -128,6 +128,11 @@
                     </div>
                     <div class="divider">&gt;</div>
                     <div class="col">
+                        <div>배송대기</div>
+                        <div th:text="${purchaseStateCounts['ready_to_ship'] ?: 0}"></div>
+                    </div>
+                    <div class="divider">&gt;</div>
+                    <div class="col">
                         <div>배송중</div>
                         <div th:text="${purchaseStateCounts['shipping'] ?: 0}"></div>
                     </div>
@@ -135,6 +140,10 @@
                     <div class="col">
                         <div>배송완료</div>
                         <div th:text="${purchaseStateCounts['delivered'] ?: 0}"></div>
+                    </div>
+                    <div class="col">
+                        <div>취소</div>
+                        <div th:text="${purchaseStateCounts['cancelled'] ?: 0}"></div>
                     </div>
                 </div>
             </div>
@@ -167,7 +176,7 @@
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'paid') ? '결제완료' : 
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'ready_to_ship') ? '배송대기' : 
                                       #strings.equalsIgnoreCase(purchase.purchase_state, 'shipping') ? '배송중' : 
-                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'delivered') ? '배송완료' : '취소됨'}"></td>
+                                      #strings.equalsIgnoreCase(purchase.purchase_state, 'delivered') ? '배송완료' : '취소'}"></td>
                         <td th:text="${#dates.format(purchase.ordered_at, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </tbody>

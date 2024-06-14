@@ -49,6 +49,12 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.productList(page, keyword);
     }
 
+    // 상품 목록 검색 - 상품태그
+    @Override
+    public List<Product> search(@Param("keyword") String keyword) throws Exception {
+        return productMapper.search(keyword);
+    }
+
     @Override
     public int getTotalCount(String keyword) throws Exception {
         return productMapper.getTotalCount(keyword);

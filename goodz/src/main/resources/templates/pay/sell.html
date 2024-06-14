@@ -104,7 +104,7 @@
             <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="salePrice" name="salePrice" th:value="${price - 5000}" />
-            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress.address}" />
+            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
 
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>
@@ -143,11 +143,11 @@
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">연락처</div>
-                                    <div class="desc">010-1234-5678</div>
+                                    <div class="desc">02-1234-5678</div>
                                 </div>
                                 <div class="info_box d-flex align-items-center">
                                     <div class="title">배송 주소</div>
-                                    <div class="desc">뭐로 할까 애도람?? 희희</div>
+                                    <div class="desc">서울 송파구 올림픽로 300</div>
                                 </div>
                             </div>
                         </div>

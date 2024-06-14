@@ -1,6 +1,7 @@
 package com.springproject.goodz.post.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springproject.goodz.post.dto.Like;
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.dto.Tag;
 import com.springproject.goodz.post.service.LikeService;
 import com.springproject.goodz.post.service.PostService;
+import com.springproject.goodz.post.service.TagService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.service.ProductService;
 import com.springproject.goodz.user.dto.Users;
@@ -76,6 +79,9 @@ public class PostController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private TagService tagService;
     
     /**
      * 전체 게시글 목록
@@ -175,7 +181,6 @@ public class PostController {
                 Files mainImg = fileService.selectMainImg(file);
                 // 대표 이미지 번호 저장
                 taggedProduct.setMainImgNo(mainImg.getNo());
-                log.info("대표이미지번호: "+taggedProduct.getMainImgNo());
                 
                 // 태그 리스트에 저장
                 taggedProducts.add(taggedProduct);
@@ -201,6 +206,7 @@ public class PostController {
 
         /* 세션정보 세팅 */
         Users loginUser = (Users)session.getAttribute("user");
+        List<Users> loginUserFollowingList = new ArrayList();
         
 
         /* 좋아요 & 저장 세팅 */
@@ -240,10 +246,11 @@ public class PostController {
             // 세션아이디의 팔로우 목록 가져오기
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
-            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
-            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
+            loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+
         }
-        
+            
+        model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("post", post);
         return "/post/read";
@@ -252,14 +259,16 @@ public class PostController {
     /**
      * 게시글 등록 페이지
      * @return
+     * @throws Exception 
      */
     @GetMapping("/insert")
-    public String moveToInsert(Model model,HttpSession session) {
+    public String moveToInsert(Model model,HttpSession session) throws Exception {
 
         // 로그인된 user의 정보를 가져옴
         Users loginUser= (Users)session.getAttribute("user");
-
+        loginUser = userService.select(loginUser.getUserId());
         model.addAttribute("loginUser", loginUser);
+        log.info(loginUser.getNickname());
         log.info("작성화면 이동...");
 
         return "/post/insert";
@@ -272,7 +281,8 @@ public class PostController {
      * @throws Exception 
      */
     @PostMapping("/insert")
-    public String insert(Post post, Model model, HttpSession session) throws Exception {
+    public ResponseEntity<String> insert(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts, Model model, HttpSession session) throws Exception {
+        String response = "FAIL";
 
         log.info(post.toString());
 
@@ -282,8 +292,28 @@ public class PostController {
         if (result == 0) {
             log.info("게시글 등록 처리 시, 예외발생");
 
-            return "/post/insert";
+            //데이터 처리 성공
+            return new ResponseEntity<>("FAIL", HttpStatus.CREATED); // CREATED = 201
         }
+
+        /* ⬇️ 상품태그 등록 처리 ⬇️ */
+        if (taggedProducts != null || taggedProducts.size() > 0) {
+            int postNo = postService.maxNo();
+            for (Integer productNo : taggedProducts) {
+                Tag tag = new Tag();
+                tag.setPostNo(postNo);
+                tag.setPNo(productNo);
+    
+                log.info("게시글번호: {}, 상품번호: {}", postNo, productNo);
+                tagService.insert(tag);
+
+                response = "SUCCESS";
+            }
+        }
+        if(result>0 && (taggedProducts.size() == 0 || taggedProducts != null) ) {
+            response = "SUCCESS";
+
+         }
 
         /* ⬇️프로필로 리다이렉트 처리⬇️ */
 
@@ -300,7 +330,8 @@ public class PostController {
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
 
-        return "redirect:/styles/user/@"+requested.getNickname();
+        //데이터 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED); // CREATED = 201
     }    
     
    
@@ -325,6 +356,45 @@ public class PostController {
         List<Files> fileList = fileService.listByParent(file);
         model.addAttribute("fileList", fileList);
 
+        /* 상품태그리스트 조회 */
+        List<Product> tempList = post.getTagList();
+        List<Product> taggedProducts = new ArrayList<>();
+
+        log.info("::::태그된 상품 정보::::");
+        if (!tempList.isEmpty()) {
+            for (Product product : tempList) {
+                int productno = product.getPNo();
+                Product taggedProduct = productService.getProductBypNo(productno);
+
+                // 상품 대표이미지 가져오기
+                Files tagItemImg = new Files();
+                tagItemImg.setParentTable(taggedProduct.getCategory());
+                tagItemImg.setParentNo(taggedProduct.getPNo());
+                Files mainImg = fileService.selectMainImg(tagItemImg);
+                // 대표 이미지 번호 저장
+                taggedProduct.setMainImgNo(mainImg.getNo());
+                log.info("대표이미지번호: "+taggedProduct.getMainImgNo());
+                
+                // 태그 리스트에 저장
+                taggedProducts.add(taggedProduct);
+                log.info(taggedProduct.toString());
+            }
+        }
+        model.addAttribute("taggedProducts", taggedProducts);
+
+        // 태그 리스트에서 상품번호만 추출
+        int[] productNumList = new int[taggedProducts.size()];
+
+        if (productNumList.length != 0) {
+            for (int i = 0; i < productNumList.length; i++) {
+                productNumList[i] = taggedProducts.get(i).getPNo();
+            }
+        }
+
+        String productNumListStr = Arrays.toString(productNumList);
+
+        model.addAttribute("productNumListStr",productNumListStr);
+
         return "/post/update";
     }
 
@@ -333,25 +403,59 @@ public class PostController {
      * @param post
      * @param model
      * @return
+     * @throws Exception 
      */
     @PostMapping("/update")
-    public String update(Post post, Model model) {
+    public ResponseEntity<String> update(Post post, @RequestParam("taggedProducts")List<Integer>taggedProducts, Model model) throws Exception {
 
         /* ⬇️ 게시글 수정 처리 ⬇️ */
         int result;
+        String response;
 
         try {
             result = postService.update(post);
         } catch (Exception e) {
             System.err.println("게시글 수정 처리 시, 예외발생");
             e.printStackTrace();
-            return "forward:/styles/update/" + post.getPostNo();
+
+            //데이터 처리 실패
+            log.info("게시글 등록 처리 시, 예외발생");
+            return new ResponseEntity<>("FAIL", HttpStatus.OK); // CREATED = 201
         }
 
-        /* ⬇️ 게시글 조회 페이지로 리다이렉트 처리 ⬇️ */
-        log.info(post.getPostNo() + "번 게시글 수정 성공");
+        if (result > 0 ) {
+            /* ⬇️ 상품태그 등록 처리 ⬇️ */
+            // 기존 상품태그 삭제
+            try {
+                tagService.delete(post.getPostNo());
+                log.info(post.getPostNo()+"번의 기존 상품태그 삭제처리");
+            } catch (Exception e) {
+                log.info("기존 상품태그 삭제처리중 예외발생");
+                e.printStackTrace();
+            }
+
+            // 새롭게 리스트업된 상품태그 등록
+            if (taggedProducts != null || taggedProducts.size() > 0) {
+                for (Integer productNo : taggedProducts) {
+                    Tag tag = new Tag();
+                    tag.setPostNo(post.getPostNo());
+                    tag.setPNo(productNo);
         
-        return "redirect:/styles/"+post.getPostNo();
+                    log.info("게시글번호: {}, 상품번호: {}", post.getPostNo(), productNo);
+                    tagService.insert(tag);
+
+                    response = "SUCCESS";
+                }
+            }
+            if(result>0 && (taggedProducts.size() == 0 || taggedProducts != null) ) {
+                /* ⬇️ 게시글 조회 페이지로 리다이렉트 처리 ⬇️ */
+                log.info(post.getPostNo() + "번 게시글 수정 성공");
+                response = "SUCCESS";
+            }
+        }
+        
+        //데이터 처리 성공
+        return new ResponseEntity<>("SUCCESS", HttpStatus.CREATED);
     }
     
     /**
@@ -401,11 +505,10 @@ public class PostController {
         // 프로필 유저
         Users requested = userService.selectByNickname(nickname);
 
-        // 프로필 유저의 팔로워/팔로잉 수 불러오기
-        
         
         // 로그인된 user의 정보를 가져옴
-        Users loginUser= (Users)session.getAttribute("user");    
+        Users loginUser= (Users)session.getAttribute("user");  
+        List<Users> loginUserFollowingList = new ArrayList();  
 
         /* 게시글 조회 */
         List<Post> postList = postService.selectById(requested.getUserId());
@@ -448,13 +551,16 @@ public class PostController {
                     post.setIsWishlisted("solid");
                 }
             }
+
             // 세션아이디의 팔로우 목록 가져오기
             // 👤 세션계정 세팅 및 팔로잉 목록 가져오기
             Map<String, Object> followingDetails = followService.getFollowingDetails(loginUser.getUserId());
-            List<Users> loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
-            model.addAttribute("loginUserFollowingList", loginUserFollowingList);
+            loginUserFollowingList = (List<Users>) followingDetails.get("followingList");
+            log.info(loginUserFollowingList.toString());
+            log.info(requested.toString());
         }
-            
+        
+        model.addAttribute("loginUserFollowingList", loginUserFollowingList);
         model.addAttribute("requested", requested);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("postList", postList);

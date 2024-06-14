@@ -17,12 +17,15 @@ public interface ProductService {
 
     // 상품 목록 - 관리자 페이징 + 검색
     List<Product> productList(Page page, String keyword) throws Exception;
+
+    // 상품 목록 검색 - 상품태그
+    List<Product> search(@Param("keyword") String keyword) throws Exception;
     
     // 전체 데이터 개수 가져오기
     int getTotalCount(String keyword) throws Exception;
 
     // 상품 목록 - 메인화면에 최근입고 4개
-    List<Product> newArrivals() throws Exception;
+    public List<Product> newArrivals() throws Exception;
 
     // 상품 등록
     int insert(Product product, int mainImgIndex) throws Exception;

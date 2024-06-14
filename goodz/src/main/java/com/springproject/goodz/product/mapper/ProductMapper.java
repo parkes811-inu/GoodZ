@@ -23,6 +23,9 @@ public interface ProductMapper {
 
     // 상품 목록 - 관리자 페이징 + 검색
     List<Product> productList(@Param("page") Page page, @Param("keyword") String keyword) throws Exception;
+
+    // 상품 목록 검색 - 상품태그
+    List<Product> search(@Param("keyword") String keyword) throws Exception;
     
     // 전체 데이터 개수 가져오기
     public int getTotalCount(@Param("keyword") String keyword) throws Exception;

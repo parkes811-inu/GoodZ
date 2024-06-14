@@ -17,9 +17,10 @@
     <div class="container">
         <div class="userMainContainer">
             <p class="fs-4 fw-bold p-0 mb-5">상품 수정</p>
-            <form action="/admin/updateProduct" method="post" class="mb-5">
+            <form id="form" action="/admin/updateProduct" method="post" class="mb-5" enctype="multipart/form-data">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <input type="hidden" name="pNo" th:value="${product.pNo}" />
+
                 <div class="d-flex flex-column justify-content-center">
                     <!-- 상품 이미지 -->
                     <div id="carouselExampleIndicators" class="carousel slide">
@@ -140,11 +141,45 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;">수정 완료</button>
+                    <button type="submit" class="btn btn-dark btn-block my-4 w-100" style="background-color: #393E46;" onclick="return validateForm()">수정 완료</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        /* 첨부이미지 */
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const representativeImageInput = document.getElementById('representativeImage');
+    
+        imageInput.addEventListener('change', function() {
+            imagePreview.innerHTML = '';
+            Array.from(imageInput.files).forEach((file, index) => {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.width = 100;
+                img.height = 100;
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => {
+                    representativeImageInput.value = index;
+                    document.querySelectorAll('#imagePreview img').forEach(img => img.style.border = 'none');
+                    img.style.border = '2px solid red';
+                });
+                imagePreview.appendChild(img);
+            });
+        });
+
+        function validateForm() {
+            const imageInput = document.getElementById('imageInput');
+            const representativeImage = document.getElementById('representativeImage').value;
+            if (imageInput.files.length > 0 && representativeImage === "") {
+                alert('대표 이미지를 선택해주세요.');
+                return false; // 폼 제출 방지
+            }
+            return true; // 폼 제출 허용
+        }
+
+    </script>
 </body>
 </html>

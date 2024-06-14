@@ -29,18 +29,24 @@
             font-weight: bold;
             width: 100%;
             margin: 0 auto;
-            display: block;
             margin-bottom: 10px;
         }
 
         /* 소셜-네이버 */
         .btn-naver {
             background-color: #2db400;
-            color: black;
+            color: white;
             font-weight: bold;
             width: 100%;
             margin: 0 auto;
-            display: block;
+        }
+
+        .loginBtn {
+            background-color: #393E46;
+            color: white;
+        }
+        .socialLogin p {
+            color: gray;
         }
         
     </style>
@@ -82,29 +88,17 @@
                         </th:block>
                     </div>
                     <div class="py-2">
-                        <button type="submit" class="btn btn-dark btn-block w-100" >로그인</button>
+                        <button type="submit" class="loginBtn btn btn-block w-100" >로그인</button>
                     </div>
 
-                    <!-- 자동로그인 / 아이디 저장
-                    <div class="d-flex">
-                        <div class="p-1 me-3">
-                            <input type="checkbox" name="rememberMe" id="rememberMe">
-                            <label for="rememberMe">자동로그인</label>
-                        </div>
-                        <div class="p-1">
-                            <input type="checkbox" name="rememberId" id="rememberId">
-                            <label for="rememberId">아이디 저장</label>
-                        </div>
-                    </div> --> <!-- 냅두기 아래에서 테스트중임 -->
-
                     <!-- 자동로그인 / 아이디 저장 -->
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-center">
                         <div class="p-1 me-3">
                             <input type="checkbox" name="remember-me" id="remember-me">
                             <label for="remember-me">자동로그인</label>
                         </div>
                         <div class="p-1">
-                            <input class="form-check-input" type="checkbox" name="remember-id" id="remember-id" th:checked="${rememberId}">
+                            <input class="checkbox" type="checkbox" name="remember-id" id="remember-id" th:checked="${rememberId}">
                             <label for="remember-id">아이디 저장</label>
                         </div>
                     </div>
@@ -113,14 +107,14 @@
 
     
                 <!-- 회원가입/아이디찾기/비밀번호찾기 -->
-                <div class="userLinks text-center mt-3">
+                <div class="userLinks text-center my-3">
                     <a href="/user/signup">회원가입</a> <span>|</span> <a href="/user/findID">아이디 찾기</a> <span>|</span> <a href="/user/findPW">비밀번호 찾기</a>
                 </div>
     
-                <hr>
+                <hr class="mt-4">
     
                 <!-- 소셜로그인 -->
-                <div class="text-center mb-4">
+                <div class="socialLogin text-center mb-4">
                     <p>or continue with</p>
                     <a href="/oauth2/authorization/kakao" class="btn btn-kakao btn-block">카카오 로그인</a>
                     <!-- <div class="naver_id_login" id="naver_id_login">
@@ -128,8 +122,7 @@
                     </div> -->
                     <a href="/oauth2/authorization/naver" class="btn btn-naver btn-block">네이버 로그인</a>
                 </div>
-
-                <hr>
+                <!-- <hr> -->
                 <th:block sec:authorize="isAuthenticated()">
                     <span sec:authentication="principal"></span>
                 </th:block>

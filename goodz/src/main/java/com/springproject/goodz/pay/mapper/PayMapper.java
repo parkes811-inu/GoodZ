@@ -28,4 +28,10 @@ public interface PayMapper {
 
     // 유저별 판매 내역 조회
     public List<Sales> findSalesByUserId(@Param("userId") String userId) throws Exception;
+
+    // 유저별 구매 내역 조회 (페이징)
+    List<Purchase> findPurchasesByUserIdWithPage(@Param("userId") String userId, @Param("start") int start, @Param("rows") int rows) throws Exception;
+
+    // 미결제시 취소
+    public void cancelPurchase(int purchaseNo) throws Exception;
 }

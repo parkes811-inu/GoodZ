@@ -94,8 +94,7 @@
     </select>
 
     <!-- ///////////////////////////////////////////////////////////////////////// --> 
-
-    <!-- 유저가 구매한 내역 전체 불러오기 -->
+    
     <!-- 유저가 구매한 내역 전체 불러오기 -->
     <select id="userPurchaseList" resultType="map" parameterType="com.springproject.goodz.product.dto.Page">
         SELECT *

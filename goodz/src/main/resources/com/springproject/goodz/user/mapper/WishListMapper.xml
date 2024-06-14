@@ -30,13 +30,6 @@
         DELETE FROM wishList
         WHERE user_id = #{userId} and parent_table = #{parentTable} and parent_no = #{parentNo}
     </delete>
-    
-    <!-- 유저 관심에 담긴 상품 리스트 조회 -->
-    <select id="listNumByUserId" resultType="int">
-        SELECT parent_no
-          FROM wishList
-         WHERE user_id = #{userId}
-    </select>
 
     <!--유저 관심 리스트 조회 - parentTable, userId 기준 조회 -->
     <select id="listByParent" resultType="Wish">
@@ -50,5 +43,14 @@
         DELETE FROM wishList
         WHERE parent_table = #{parentTable} and parent_no = #{parentNo}
     </delete>
+
+    <!-- 최근 관심상품 4개 조회 - 유저 마이페이지 메인화면 조회용 -->
+    <select id="fourByParent" resultType="Wish">
+        SELECT *
+        FROM wishList
+        WHERE parent_table = #{parentTable} and user_id = #{userId}
+        ORDER BY created_at DESC
+        LIMIT 4;
+    </select>
 
 </mapper>

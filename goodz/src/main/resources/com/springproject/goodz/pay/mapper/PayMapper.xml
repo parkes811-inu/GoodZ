@@ -48,13 +48,40 @@
 			payment_method AS paymentMethod,
 			purchase_state AS purchaseState,
 			ordered_at AS orderedAt,
-			updated_at AS updatedAt
+			updated_at AS updatedAt,
+			tracking_no AS trackingNo  <!-- 추가된 부분 -->
 		FROM 
 			Purchase
 		WHERE 
 			user_id = #{userId}
 	</select>	
 
+	<!-- <select id="findPurchasesByUserIdWithPage" resultType="Purchase" parameterType="map">
+		SELECT 
+			purchase_no AS purchaseNo,
+			user_id AS userId,
+			p_no AS pNo,
+			option_id AS OptionId,
+			order_id AS OrderId,
+			purchase_price AS PurchasePrice,
+			payment_method AS PaymentMethod,
+			purchase_state AS PurchaseState,
+			ordered_at AS OrderedAt,
+			updated_at AS UpdatedAt
+		FROM 
+			Purchase
+		WHERE 
+			user_id = #{userId}
+		ORDER BY
+			purchase_no DESC
+		LIMIT #{start}, #{rows}
+	</select> -->
+
+	<update id="cancelPurchase">
+		UPDATE Purchase
+		SET purchase_state = 'cancelled'
+		WHERE purchase_no = #{purchaseNo}
+	</update>
 
 	<select id="findSalesByUserId">
 		SELECT *

@@ -43,7 +43,7 @@
     <select id="countFollow" resultType="Users">
         SELECT u.user_id
               ,u.nickname
-              ,u.profile_picture_url
+              <!-- ,u.profile_picture_url -->
 	          ,(SELECT COUNT(*) FROM follow WHERE user_id = u.user_id)AS count_follower
 	          ,(SELECT COUNT(*) FROM follow WHERE follower_id = u.user_id)AS count_following
         FROM user u

@@ -12,6 +12,13 @@
         WHERE post_no = #{postNo}
     </select>
 
+    <!-- 상품태그 리스트 조회 - 상품번호 기준 -->
+    <select id="taggedProduct" resultType="Tag" >
+        SELECT *
+        FROM tag
+        WHERE p_no = #{pNo}
+    </select>
+
     <!-- 상품태그 추가 - 게시글 등록 시 -->
     <insert id="insert">
         INSERT INTO tag (post_no, p_no)
@@ -21,7 +28,7 @@
     <!-- 상품태그 삭제 - 상품번호 기준 -->
     <delete id="delete">
         DELETE FROM tag
-        WHERE p_no = #{pNo}
+        WHERE post_no = #{postNo}
     </delete>
 
 </mapper>
