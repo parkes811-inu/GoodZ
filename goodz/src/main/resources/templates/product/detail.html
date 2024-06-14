@@ -131,6 +131,7 @@
             object-fit: cover; /* 이미지가 자르지 않고 부모 요소에 맞게 조절되도록 설정 */
         }
     </style>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
 <body layout:fragment="content">
     
@@ -268,46 +269,46 @@
                         </div>
                     </div>
 
-                        <div class="chart">
-                            <div class="chart-container">
-                                <h5 class="text-md-start fw-bold" style="padding-right: 100px;">시세</h5>
-                                <ul class="nav nav-tabs" id="priceTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="all-time-tab" data-bs-toggle="tab" href="#all-time" role="tab" aria-controls="all-time" aria-selected="true">전체</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="one-month-tab" data-bs-toggle="tab" href="#one-month" role="tab" aria-controls="one-month" aria-selected="false">1개월</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="three-months-tab" data-bs-toggle="tab" href="#three-months" role="tab" aria-controls="three-months" aria-selected="false">3개월</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="six-months-tab" data-bs-toggle="tab" href="#six-months" role="tab" aria-controls="six-months" aria-selected="false">6개월</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="one-year-tab" data-bs-toggle="tab" href="#one-year" role="tab" aria-controls="one-year" aria-selected="false">1년</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div class="tab-pane fade show active" id="all-time" role="tabpanel" aria-labelledby="all-time-tab">
-                                        <canvas id="priceChartAllTime"></canvas>
-                                    </div>
-                                    <div class="tab-pane fade" id="one-month" role="tabpanel" aria-labelledby="one-month-tab">
-                                        <canvas id="priceChart1Month"></canvas>
-                                    </div>
-                                    <div class="tab-pane fade" id="three-months" role="tabpanel" aria-labelledby="three-months-tab">
-                                        <canvas id="priceChart3Months"></canvas>
-                                    </div>
-                                    <div class="tab-pane fade" id="six-months" role="tabpanel" aria-labelledby="six-months-tab">
-                                        <canvas id="priceChart6Months"></canvas>
-                                    </div>
-                                    <div class="tab-pane fade" id="one-year" role="tabpanel" aria-labelledby="one-year-tab">
-                                        <canvas id="priceChart1Year"></canvas>
-                                    </div>
+                    <div class="chart">
+                        <div class="chart-container">
+                            <h5 class="text-md-start fw-bold" style="padding-right: 100px;">시세</h5>
+                            <ul class="nav nav-tabs" id="priceTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="all-time-tab" data-bs-toggle="tab" href="#all-time" role="tab" aria-controls="all-time" aria-selected="true">전체</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="one-week-tab" data-bs-toggle="tab" href="#one-week" role="tab" aria-controls="one-week" aria-selected="false">1주일</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="one-month-tab" data-bs-toggle="tab" href="#one-month" role="tab" aria-controls="one-month" aria-selected="false">1개월</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="three-months-tab" data-bs-toggle="tab" href="#three-months" role="tab" aria-controls="three-months" aria-selected="false">3개월</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="six-months-tab" data-bs-toggle="tab" href="#six-months" role="tab" aria-controls="six-months" aria-selected="false">6개월</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="all-time" role="tabpanel" aria-labelledby="all-time-tab">
+                                    <canvas id="priceChartAllTime"></canvas>
                                 </div>
-                                
+                                <div class="tab-pane fade" id="one-week" role="tabpanel" aria-labelledby="one-week-tab">
+                                    <canvas id="priceChart1Week"></canvas>
+                                </div>
+                                <div class="tab-pane fade" id="one-month" role="tabpanel" aria-labelledby="one-month-tab">
+                                    <canvas id="priceChart1Month"></canvas>
+                                </div>
+                                <div class="tab-pane fade" id="three-months" role="tabpanel" aria-labelledby="three-months-tab">
+                                    <canvas id="priceChart3Months"></canvas>
+                                </div>
+                                <div class="tab-pane fade" id="six-months" role="tabpanel" aria-labelledby="six-months-tab">
+                                    <canvas id="priceChart6Months"></canvas>
+                                </div>
                             </div>
                         </div>
+                    </div>    
+
                     </div>
                 </div> <!-- 상품 상세 정보 (끝) -->
             </div>
@@ -366,30 +367,32 @@
     </div>
     
     <script>
-        const sellButton = document.querySelector('.btn-sell');
-        if (sellButton) {
-            const initialPrice = parseFloat(document.getElementById('initialPrice').value);
-            if (!isNaN(initialPrice)) {
-                const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
-                document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
-            } else {
-                console.error('Initial price is not a valid number');
-            }
-        } else {
-            console.error('Sell button not found');
-        }
-
-        function showCm() {
-            document.querySelector('.cm-table').style.display = 'table';
-            document.querySelector('.inches-table').style.display = 'none';
-        }
-
-        function showInches() {
-            document.querySelector('.cm-table').style.display = 'none';
-            document.querySelector('.inches-table').style.display = 'table';
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded event fired');
+
+            const sellButton = document.querySelector('.btn-sell');
+            if (sellButton) {
+                const initialPrice = parseFloat(document.getElementById('initialPrice').value);
+                if (!isNaN(initialPrice)) {
+                    const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
+                    document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
+                } else {
+                    console.error('Initial price is not a valid number');
+                }
+            } else {
+                console.error('Sell button not found');
+            }
+
+            function showCm() {
+                document.querySelector('.cm-table').style.display = 'table';
+                document.querySelector('.inches-table').style.display = 'none';
+            }
+
+            function showInches() {
+                document.querySelector('.cm-table').style.display = 'none';
+                document.querySelector('.inches-table').style.display = 'table';
+            }
+
             let selectedSize = '';
             let selectedPrice = '';
             let transactionType = '';
@@ -540,58 +543,117 @@
             });
 
             // 차트 데이터 설정
-            const chartData = [200000, 220000, 210000, 230000, 250000];
-            const labels = ['1개월', '3개월', '6개월', '1년', '전체'];
-            const chartOptions = {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '가격 변동',
-                        data: chartData,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            beginAtZero: true
-                        },
-                        y: {
-                            beginAtZero: true
-                        }
+            let charts = {}; // 전역 변수로 charts 객체 선언
+
+            async function fetchPriceHistory(period) {
+                try {
+                    const productNo = document.getElementById('productNo').value;
+                    const response = await fetch(`/api/getPriceHistory?period=${period}&pNo=${productNo}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
+                    const data = await response.json();
+                    console.log(`Fetched data for period ${period}:`, data); // 데이터 구조 확인을 위한 로그 추가
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching price history:', error);
+                    return [];
                 }
-            };
-
-            // 차트 초기화
-            const ctxAllTime = document.getElementById('priceChartAllTime').getContext('2d');
-            const ctx1Month = document.getElementById('priceChart1Month').getContext('2d');
-            const ctx3Months = document.getElementById('priceChart3Months').getContext('2d');
-            const ctx6Months = document.getElementById('priceChart6Months').getContext('2d');
-            const ctx1Year = document.getElementById('priceChart1Year').getContext('2d');
-            
-            new Chart(ctxAllTime, chartOptions);
-            new Chart(ctx1Month, chartOptions);
-            new Chart(ctx3Months, chartOptions);
-            new Chart(ctx6Months, chartOptions);
-            new Chart(ctx1Year, chartOptions);
-
-            // 상품 종류에 따라 사이즈 테이블 로드
-            const productType = 'clothing'; // 이 값을 동적으로 설정 가능
-            if (productType === 'clothing') {
-                fetch('/product/detail/product/size_table')
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('sizeTableContainer').innerHTML = data;
-                    });
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', function() {
+            function formatDate(dateString) {
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                return new Date(dateString).toLocaleDateString(undefined, options);
+            }
+
+            async function updateChart(period) {
+                try {
+                    const priceHistory = await fetchPriceHistory(period);
+                    if (!Array.isArray(priceHistory)) {
+                        throw new Error('Invalid data format: expected an array');
+                    }
+
+                    const labels = priceHistory.map(price => formatDate(price.updatedAt));
+                    const data = priceHistory.map(price => price.fluctuatedPrice);
+                    
+                    const chartData = {
+                        labels: labels,
+                        datasets: [{
+                            label: '가격 변동',
+                            data: data,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    };
+
+                    const ctx = document.getElementById(`priceChart${period}`).getContext('2d');
+                    if (!ctx) {
+                        throw new Error(`Canvas element for period ${period} not found`);
+                    }
+                    // 기존 차트가 있으면 파괴
+                    if (charts[period]) {
+                        charts[period].destroy();
+                    }
+
+                    // 새로운 차트를 생성하고 저장
+                    charts[period] = new Chart(ctx, {
+                        type: 'line',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: { beginAtZero: false },
+                                y: { beginAtZero: true }
+                            },
+                            plugins: {
+                                datalabels: {
+                                    display: function(context) {
+                                        const isEmpty = context.dataset.data.length === 0;
+                                        console.log('Data length:', context.dataset.data.length, 'Display:', isEmpty);
+                                        return isEmpty;
+                                    },
+                                    anchor: 'center',
+                                    align: 'center',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 16
+                                    },
+                                    color: 'red',
+                                    formatter: function() {
+                                        return '조회한 내역이 없습니다';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+
+                    console.log(`Chart for period ${period} updated successfully`);
+                } catch (error) {
+                    console.error('Error updating chart:', error);
+                }
+            }
+
+            // 페이지가 로드될 때 전체 기간 차트 업데이트
+            updateChart('AllTime');
+
+            // 탭 클릭 이벤트 핸들러
+            document.getElementById('priceTab').addEventListener('click', (e) => {
+                const periodMap = {
+                    'all-time-tab': 'AllTime',
+                    'one-week-tab': '1Week',
+                    'one-month-tab': '1Month',
+                    'three-months-tab': '3Months',
+                    'six-months-tab': '6Months'
+                };
+                const period = periodMap[e.target.id];
+                if (period) {
+                    updateChart(period);
+                }
+            });
+
+            // 무한 스크롤
             let page = 0;
             const size = 4;
             const maxPages = 10;
