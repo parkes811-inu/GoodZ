@@ -94,6 +94,8 @@ public class UserController {
         log.info("========================================================");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        user = userService.select(user.getUserId()); // 유저 프사 가지고올때 select 쿼리에 파일번호 담겨있음.
+
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
         } else {
@@ -687,6 +689,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         Users user = userService.findUserByUsername(currentUserName);
+        user = userService.select(user.getUserId());
 
         if (user == null) {
             log.error("User not found for username: " + currentUserName);
