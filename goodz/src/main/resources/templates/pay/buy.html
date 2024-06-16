@@ -81,9 +81,9 @@
             font-size: 1.5rem;
             margin-top: 30px;
         }
-        .btn-primary {
-            background-color: #000;
-            border-color: #000;
+        .btn {
+            color: white;
+            background-color: #393E46;
         }
         .btn-primary:hover {
             background-color: #333;
@@ -97,7 +97,9 @@
         .mb-4 {
             margin-bottom: 1.5rem !important; 
         }
-        .buy-box {
+        #buyForm {
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -243,11 +245,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="btn-wrapper w-100 mb-5">
+                    <button id="payment-button" class="btn w-100" disabled>결제하기</button>
+                </div>
             </form>
             
-            <div class="btn-wrapper w-100 mb-5">
-                <button id="payment-button" class="btn btn-primary w-100" disabled>결제하기</button>
-            </div>
         </div>
     </div>
 
