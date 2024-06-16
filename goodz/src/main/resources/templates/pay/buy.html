@@ -97,153 +97,157 @@
         .mb-4 {
             margin-bottom: 1.5rem !important; 
         }
+        .buy-box {
+        }
     </style>
 </head>
 <body layout:fragment="content">
     <div class="container">
-        <form action="/pay/buy" id="buyForm" method="post">
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-            <input type="hidden" id="initialPrice" th:value="${initialPrice}" />
-            <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
-            <input type="hidden" id="size" name="size" th:value="${size}" />
-            <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
-            <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
-            <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
-            <input type="hidden" id="productName" name="productName" th:value="${product.productName}" />
-
-            <div class="section_unit mb-4 text-center">
-                <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
-            </div>
-            <div class="section_unit mb-4">
-                <div class="section_content p-3 border rounded">
-                    <div class="product_info_area mb-4 d-flex align-items-center">
-                        <!-- 상품 이미지 -->
-                        <div class="product_img">
-                            <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="img-fluid">
-                        </div>
-                        <!-- 상품 정보 -->
-                        <div class="product_detail">
-                            <div class="product_info">
-                                <strong>상품명</strong><br><span th:text="${product.productName}"></span>
-                            </div>
-                            <div class="product_info">
-                                <strong>사이즈</strong><br>
-                                <span th:text="${size}">사이즈</span>
-                            </div>
-                        </div>
-                    </div>
+        <div class="buy-box">
+            <form action="/pay/buy" id="buyForm" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                <input type="hidden" id="initialPrice" th:value="${initialPrice}" />
+                <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
+                <input type="hidden" id="size" name="size" th:value="${size}" />
+                <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
+                <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
+                <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
+                <input type="hidden" id="productName" name="productName" th:value="${product.productName}" />
+    
+                <div class="section_unit mb-4 text-center">
+                    <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">구매하기</h1>
                 </div>
-            </div>
-
-            <!-- 배송 주소 -->
-            <section>
                 <div class="section_unit mb-4">
-                    <div class="section_content p-3 border rounded mb-4">
-                        <div class="section_header">배송 주소</div>
-                        <div th:if="${hasAddress}" class="delivery_info d-flex align-items-center">
-                            <!-- 기본 배송지 정보가 있는 경우 -->
-                            <div class="info_list">
-                                <div class="info_box d-flex align-items-center">
-                                    <div class="title">받는 분</div>
-                                    <div class="desc" id="recipientName" th:text="${defaultAddress.recipientName}"></div>
-                                </div>
-                                <div class="info_box d-flex align-items-center">
-                                    <div class="title">연락처</div>
-                                    <div class="desc" id="phoneNumber" th:text="${defaultAddress.phoneNumber}"></div>
-                                </div>
-                                <div class="info_box d-flex align-items-center">
-                                    <div class="title">배송 주소</div>
-                                    <div class="desc" id="address" th:text="${defaultAddress.address}"></div>
-                                </div>
+                    <div class="section_content p-3 border rounded">
+                        <div class="product_info_area mb-4 d-flex align-items-center">
+                            <!-- 상품 이미지 -->
+                            <div class="product_img">
+                                <img th:src="@{/files/img(imgUrl=${product.imageUrl})}" alt="상품 이미지" class="img-fluid">
                             </div>
-                            <button class="btn btn-outline-secondary ms-3" type="button" data-bs-toggle="modal" data-bs-target="#addressModal">변경</button>
-                        </div>
-                        <div th:if="${!hasAddress}" class="text-center">
-                            <!-- 기본 배송지 정보가 없는 경우 -->
-                            <p class="text-secondary">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
-                            <a id="add_address_btn" class="btn btn-outline-secondary" href="/user/add_address">새 배송지 주소 추가</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 배송 주소 변경 모달 -->
-                <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addressModalLabel">배송 주소 변경</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <ul class="list-group">
-                                    <li th:each="address : ${addresses}" 
-                                        class="list-group-item list-group-item-action" 
-                                        th:data-recipient-name="${address.recipientName}"
-                                        th:data-phone-number="${address.phoneNumber}"
-                                        th:data-address="${address.address}"
-                                        data-bs-dismiss="modal">
-                                        <div><strong th:text="${address.recipientName}"></strong></div>
-                                        <div th:text="${address.phoneNumber}"></div>
-                                        <div th:text="${address.address}"></div>
-                                    </li>
-                                </ul>
+                            <!-- 상품 정보 -->
+                            <div class="product_detail">
+                                <div class="product_info">
+                                    <strong>상품명</strong><br><span th:text="${product.productName}"></span>
+                                </div>
+                                <div class="product_info">
+                                    <strong>사이즈</strong><br>
+                                    <span th:text="${size}">사이즈</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 배송 방법 -->
+    
+                <!-- 배송 주소 -->
+                <section>
+                    <div class="section_unit mb-4">
+                        <div class="section_content p-3 border rounded mb-4">
+                            <div class="section_header">배송 주소</div>
+                            <div th:if="${hasAddress}" class="delivery_info d-flex align-items-center">
+                                <!-- 기본 배송지 정보가 있는 경우 -->
+                                <div class="info_list">
+                                    <div class="info_box d-flex align-items-center">
+                                        <div class="title">받는 분</div>
+                                        <div class="desc" id="recipientName" th:text="${defaultAddress.recipientName}"></div>
+                                    </div>
+                                    <div class="info_box d-flex align-items-center">
+                                        <div class="title">연락처</div>
+                                        <div class="desc" id="phoneNumber" th:text="${defaultAddress.phoneNumber}"></div>
+                                    </div>
+                                    <div class="info_box d-flex align-items-center">
+                                        <div class="title">배송 주소</div>
+                                        <div class="desc" id="address" th:text="${defaultAddress.address}"></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-secondary ms-3" type="button" data-bs-toggle="modal" data-bs-target="#addressModal">변경</button>
+                            </div>
+                            <div th:if="${!hasAddress}" class="text-center">
+                                <!-- 기본 배송지 정보가 없는 경우 -->
+                                <p class="text-secondary">배송지 정보가 없습니다. 새 배송지를 등록해주세요.</p>
+                                <a id="add_address_btn" class="btn btn-outline-secondary" href="/user/add_address">새 배송지 주소 추가</a>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- 배송 주소 변경 모달 -->
+                    <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addressModalLabel">배송 주소 변경</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group">
+                                        <li th:each="address : ${addresses}" 
+                                            class="list-group-item list-group-item-action" 
+                                            th:data-recipient-name="${address.recipientName}"
+                                            th:data-phone-number="${address.phoneNumber}"
+                                            th:data-address="${address.address}"
+                                            data-bs-dismiss="modal">
+                                            <div><strong th:text="${address.recipientName}"></strong></div>
+                                            <div th:text="${address.phoneNumber}"></div>
+                                            <div th:text="${address.address}"></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- 배송 방법 -->
+                    <div class="section_unit mb-4">
+                        <div class="section_content p-3 border rounded mb-4">
+                            <div class="section_header">배송 방법</div>
+                            <div class="shipping_info d-flex align-items-center">
+                                <img src="/img/pay/box.png" alt="배송박스" class="img-fluid">
+                                <div class="shipping_detail d-flex flex-column">
+                                    <div class="shipping_method" style="font-weight: bold;">일반배송</div>
+                                    <div class="shipping_cost text-muted">3,000원<br>검수 후 배송 | 9-11일 내 도착 예정</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    
+                <!-- 결제 방법 : toss payment api-->
                 <div class="section_unit mb-4">
-                    <div class="section_content p-3 border rounded mb-4">
-                        <div class="section_header">배송 방법</div>
-                        <div class="shipping_info d-flex align-items-center">
-                            <img src="/img/pay/box.png" alt="배송박스" class="img-fluid">
-                            <div class="shipping_detail d-flex flex-column">
-                                <div class="shipping_method" style="font-weight: bold;">일반배송</div>
-                                <div class="shipping_cost text-muted">3,000원<br>검수 후 배송 | 9-11일 내 도착 예정</div>
-                            </div>
+                    <div class="section_content p-3 border rounded">
+                        <!-- 결제 UI -->
+                        <div id="payment-method"></div>
+                        <!-- 이용약관 UI -->
+                        <div id="agreement"></div>
+                    </div>
+                </div>
+    
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded order_summary">
+                        <!-- 최종 주문 정보 -->
+                        <div class="section_header">최종 주문 정보</div>
+                        <div class="summary_item">
+                            <span>상품 가격</span>
+                            <span th:text="${price} + '원'"></span>
+                        </div>
+                        <div class="summary_item">
+                            <span>검수비</span>
+                            <span>무료</span>
+                        </div>
+                        <div class="summary_item">
+                            <span>배송비</span>
+                            <span>3000원</span>
+                        </div>
+                        <div class="summary_item summary_total">
+                            <!-- 총 결제 금액 -->
+                            <span>총 결제금액</span>
+                            <span th:text="${price + 3000} + '원'"></span>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- 결제 방법 : toss payment api-->
-            <div class="section_unit mb-4">
-                <div class="section_content p-3 border rounded">
-                    <!-- 결제 UI -->
-                    <div id="payment-method"></div>
-                    <!-- 이용약관 UI -->
-                    <div id="agreement"></div>
-                </div>
+            </form>
+            
+            <div class="btn-wrapper w-100 mb-5">
+                <button id="payment-button" class="btn btn-primary w-100" disabled>결제하기</button>
             </div>
-
-            <div class="section_unit mb-4">
-                <div class="section_content p-3 border rounded order_summary">
-                    <!-- 최종 주문 정보 -->
-                    <div class="section_header">최종 주문 정보</div>
-                    <div class="summary_item">
-                        <span>상품 가격</span>
-                        <span th:text="${price} + '원'"></span>
-                    </div>
-                    <div class="summary_item">
-                        <span>검수비</span>
-                        <span>무료</span>
-                    </div>
-                    <div class="summary_item">
-                        <span>배송비</span>
-                        <span>3000원</span>
-                    </div>
-                    <div class="summary_item summary_total">
-                        <!-- 총 결제 금액 -->
-                        <span>총 결제금액</span>
-                        <span th:text="${price + 3000} + '원'"></span>
-                    </div>
-                </div>
-            </div>
-        </form>
-        
-        <div class="btn-wrapper w-100 mb-5">
-            <button id="payment-button" class="btn btn-primary w-100" disabled>결제하기</button>
         </div>
     </div>
 

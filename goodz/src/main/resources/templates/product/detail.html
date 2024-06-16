@@ -130,6 +130,11 @@
             height: 500px; /* 원하는 높이로 조절 */
             object-fit: cover; /* 이미지가 자르지 않고 부모 요소에 맞게 조절되도록 설정 */
         }
+
+        .modal-footer button{
+            background-color: #393E46;
+            color: white;
+        }
     </style>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
@@ -142,8 +147,8 @@
         <input type="hidden" name="userId" id="loginUserId" th:value="${loginUser.userId}">
     </th:block>
 
-    <div class="mainContainer">
-        <div class="container mt-5">
+    <div class="container mt-5">
+        <div class="mainContainer">
             <div class="row">
                 <!-- 상품 상세 이미지 -->
                 <div class="col-md-6">
