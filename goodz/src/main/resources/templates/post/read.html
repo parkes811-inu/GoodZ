@@ -95,7 +95,7 @@
             <!--[DB] 프로필 이미지 & 아이디 + 팔로우 버튼 -->
             <div class="socialBox d-flex justify-content-between mt-5">
                 <div class="userInfo">
-                    <a th:href="|/styles/user/@${writer.nickname}|" style="text-decoration: none; color: gray; text-decoration-line: none;">
+                    <a th:href="|/styles/user/@${writer.nickname}|" style="text-decoration: none; color: black; text-decoration-line: none;">
                         <img th:src="|/files/${writer.profileImgNo}|" class="profile-img-m" alt="프로필 이미지">
                         <span class="userId fw-bold m-0" th:text="${writer.nickname}"></span>
                     </a>
