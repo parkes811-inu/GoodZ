@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.springproject.goodz.product.dto.Page;
+import com.springproject.goodz.product.dto.Pricehistory;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.mapper.PriceHistoryMapper;
@@ -245,4 +246,17 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateViews(pNo);
     }
 
+    // 기간 별 상품 가격 정보 조회
+    public List<Pricehistory> getPriceHistory(String period, int pNo) throws Exception {
+        switch (period) {
+            case "1Week":
+                return priceHistoryMapper.findPriceHistoryLastWeek(pNo);
+            case "1Month":
+                return priceHistoryMapper.findPriceHistoryLastMonth(pNo);
+            case "3Months":
+                return priceHistoryMapper.findPriceHistoryLast3Months(pNo);
+            default:
+                return priceHistoryMapper.findPriceHistoryAllTime(pNo);
+        }
+    }
 }

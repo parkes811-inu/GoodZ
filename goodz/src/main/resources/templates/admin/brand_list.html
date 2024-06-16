@@ -123,8 +123,8 @@
 
                     <!-- if) 브랜드 존재 시, 반복출력 -->
                     <tr th:each="brand : ${brandList}">
-                        <th scope="row" th:text="${brand.bNo}"></th>
-                        <td th:text="${brand.bName}"></td>
+                        <th scope="row" th:text="${brand?.bNo}"></th>
+                        <td th:text="${brand?.bName}"></td>
                     </tr>
                 </tbody>
             </table>

@@ -239,8 +239,6 @@ public class ProductController {
         return "/product/detail";
     }
 
-
-
     // 상의 카테고리
     @GetMapping("/top")
     public String top(Model model) throws Exception {

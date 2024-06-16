@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 
 import com.springproject.goodz.product.dto.Page;
+import com.springproject.goodz.product.dto.Pricehistory;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 
@@ -90,4 +91,6 @@ public interface ProductService {
     // 조회 수 기능
     public void updateViews(int pNo) throws Exception;
 
+    // 기간 별 상품 가격 정보 조회
+    public List<Pricehistory> getPriceHistory(String period, int pNo) throws Exception;
 }
