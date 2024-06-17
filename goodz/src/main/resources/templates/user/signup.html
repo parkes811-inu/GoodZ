@@ -32,6 +32,11 @@
             overflow: hidden;
         }
 
+        #signup-form button {
+            background-color: #393E46;
+            color: white;
+        }
+
     </style>
     
     <title>회원가입</title>
@@ -46,13 +51,13 @@
                     <h2 class="text-center fw-bold">회원가입</h2>
                 </div>
 
-                <div class="my-5">
+                <div class="mt-5 mb-1">
                     <form id="signup-form" action="/user/signup" method="post" th:action="@{/user/signup}" th:object="${user}">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <!-- 이름 -->
                         <div class="form-group mb-3">
                             <label for="username">이름 입력*</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="예)김준은" th:field="*{username}">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="예)김조은" th:field="*{username}">
                         </div>
                         <!-- 주민등록 번호 -->
                         <div class="form-group">
@@ -115,7 +120,7 @@
                             </div>
                         </div>
                         
-                        <button type="button" class="btn btn-dark btn-block mt-3 w-100" onclick="check()" style="background-color: #393E46;">다음 회원가입 단계</button>
+                        <button type="button" class="btn btn-block mt-3 w-100" onclick="check()">다음 회원가입 단계</button>
                     </form>
                 </div>
             </div>
