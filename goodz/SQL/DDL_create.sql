@@ -1,4 +1,4 @@
--- Active: 1716800736662@@127.0.0.1@3306@goodz
+-- Active: 1718356850134@@127.0.0.1@3306@goodz
 
 -- User 테이블  / 📁 user
 CREATE TABLE `User` (
