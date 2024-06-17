@@ -1,4 +1,4 @@
--- Active: 1716800736662@@127.0.0.1@3306@goodz
+-- Active: 1718356850134@@127.0.0.1@3306@goodz
 
 -- user 컬럼명 나열
 -- user_id, no, username, password, birth, phone_number, created_at, updated_at
