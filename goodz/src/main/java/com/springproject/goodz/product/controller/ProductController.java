@@ -153,60 +153,71 @@ public class ProductController {
         return "redirect:/product/detail/" + pNo; // 상품 상세 페이지로 리다이렉트
     }
 
-
-    @GetMapping("/detail/product/size_table")
-    public String productSizeInfoPage() {
-        return "fragments/product/size_table";
+    @GetMapping("/size_table")
+    public String productSizeInfoPage(@RequestParam("category") String category) {
+        switch (category) {
+            case "top":
+                return "fragments/product/size_table_top";
+            case "pants":
+                return "fragments/product/size_table_pants";
+            case "shoes":
+                return "fragments/product/size_table_shoes";
+            case "accessory":
+                return "fragments/product/size_table_accessory";
+            default:
+                throw new IllegalArgumentException("Invalid category: " + category);
+        }
     }
 
     @GetMapping("/detail/{pNo}")
-    public String productDetailPage(@PathVariable("pNo") Integer pNo
-                                  , Model model
-                                  , HttpSession session) throws Exception {
-
+    public String productDetailPage(@PathVariable("pNo") Integer pNo,
+                                    Model model,
+                                    HttpSession session) throws Exception {
+    
         // 세션 정보 세팅
-        Users loginUser = (Users)session.getAttribute("user");
-        model.addAttribute("loginUser", loginUser);                   
-        
+        Users loginUser = (Users) session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);
+    
         Product product = productService.getProductBypNo(pNo);
         List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
         product.setOptions(options);
-
+    
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
-
+    
         // 최저 가격 계산
         int minPrice = options.stream()
-                            .mapToInt(ProductOption::getOptionPrice)
-                            .min()
-                            .orElse(0);
+                .mapToInt(ProductOption::getOptionPrice)
+                .min()
+                .orElse(0);
         // 원화 형식으로 변환
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("ko", "KR"));
         DecimalFormat decimalFormat = (DecimalFormat) currencyFormatter;
         decimalFormat.applyPattern("#,### 원");
         String formattedMinPrice = currencyFormatter.format(minPrice);
-        
+    
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("formattedMinPrice", formattedMinPrice);
-
+    
         model.addAttribute("product", product);
         model.addAttribute("options", options);
         model.addAttribute("images", images);
-
+    
         // 사이즈별 가격 정보를 JSON 형태로 변환
         String pricesJson = new ObjectMapper().writeValueAsString(
-            options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
+                options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
         );
         model.addAttribute("pricesJson", pricesJson);
-        
+    
+        // 카테고리 값 전달
         String category = product.getCategory();
-        String brand = product.getBName();
-
+        model.addAttribute("category", category);
+    
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> sizeMap = new HashMap<>();
-
+    
         if (category.equals("shoes")) {
             sizeMap.put("sizes", new int[]{220, 230, 240, 250, 260, 270, 280});
         } else if (category.equals("top") || category.equals("pants")) {
@@ -215,10 +226,10 @@ public class ProductController {
             // accessory인 경우
             sizeMap.put("sizes", "free");
         }
-
+    
         String sizeJson = objectMapper.writeValueAsString(sizeMap);
         model.addAttribute("sizeJson", sizeJson);
-
+    
         // 사용자 관심 목록 확인
         boolean isWishlisted = false;
         if (loginUser != null) {
@@ -229,15 +240,16 @@ public class ProductController {
             wish.setParentNo(product.getPNo());
             isWishlisted = wishListService.listById(wish);
         }
-
+    
         model.addAttribute("isWishlisted", isWishlisted);
-
+    
         // 태그된 게시글 목록 좋아요 순 4개 조회
         List<Post> taggedPosts = postService.taggedPost(pNo);
         model.addAttribute("taggedPosts", taggedPosts);
-        
+    
         return "/product/detail";
     }
+    
 
     // 상의 카테고리
     @GetMapping("/top")
