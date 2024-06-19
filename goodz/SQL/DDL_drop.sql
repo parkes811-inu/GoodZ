@@ -1,3 +1,4 @@
+-- Active: 1716800736662@@127.0.0.1@3306@goodz
 DROP TABLE IF EXISTS `File`;            -- 파일
 DROP TABLE IF EXISTS `Tag`;             -- 상품 태그
 DROP TABLE IF EXISTS `Like`;            -- 좋아요
