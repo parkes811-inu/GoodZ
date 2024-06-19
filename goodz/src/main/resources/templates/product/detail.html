@@ -320,14 +320,9 @@
             </div>
             
             <!-- 사이즈 정보와 테이블을 같은 행에 배치 -->
-            <div class="row mt-5 chart-container">
+            <div class="row mt-5 chart-container" id="sizeInfo">
                 <h5 class="text-md-start fw-bold" style="padding-right: 100px;">Size Info</h5>
-                <div class="col-12 col-md-6 d-flex flex-column align-items-md-end size-info">
-                    <!-- 카테고리가 'shoes'일 때 이미지 표시 -->
-                    <img th:src="${category == 'shoes' ? '/img/product/shoes_info.png' : (category == 'pants' ? '/img/product/pants_info.png' : '/img/product/size_info.png')}" 
-                    alt="Size Chart" class="img-fluid mt-3 mb-3" style="max-width: 100%; height: auto; max-height: 300px; padding-right: 50px;">
-                </div>
-                <div class="col-12 col-md-6" id="sizeTableContainer">
+                <div id="sizeTableContainer" class="d-flex align-items-start p-4">
                     <!-- 사이즈 테이블이 여기에 로드됨 -->
                 </div>
             </div>
@@ -445,7 +440,6 @@
                     toggleButtons.style.display = 'none';
                 }
                 sizeInfo.style.display = 'none';
-                return;
             }
 
             if (category === 'shoes' && toggleButtons) {
@@ -759,14 +753,17 @@
         const loadMoreProducts = () => {
             if (allProductsLoaded || page >= maxPages) return;
 
-            const brand = encodeURIComponent(document.getElementById('brand').value);
+            const brand = document.getElementById('brand').value;
             const category = document.getElementById('category').value;
             const pNo = document.getElementById('productNo').value;
+            console.log("brand : " + brand);
+            console.log("category : " + category);
+            console.log("pNo : " + pNo);
 
             fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
+                        throw new Error('Network response was not ok tq' + response.status);
                     }
                     return response.json();
                 })
@@ -782,18 +779,18 @@
                     }
 
                     if (data.length > 0) {
+                        console.log(data);
                         data.forEach(product => {
 
                         if (product.productName !== undefined && !loadedProducts.has(product.productName)) {
                             loadedProducts.add(product.productName);
-
                             const col = document.createElement('div');
                             col.classList.add('col');
 
                             const card = `
                                 <div class="card border-0">
                                     <div class="card-body">
-                                        <a href="/product/detail/${product.pNo}">
+                                        <a href="/product/detail/${product.pno}">
                                             <img src="/files/img?imgUrl=${encodeURIComponent(product.imageUrl)}" alt="상품 이미지" class="rounded-4 w-100">
                                         </a>
                                         <div class="card-text py-2">
