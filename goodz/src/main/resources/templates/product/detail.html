@@ -320,10 +320,12 @@
             </div>
             
             <!-- 사이즈 정보와 테이블을 같은 행에 배치 -->
-            <div class="row mt-5 chart-container" id="sizeInfo">
+            <div class="row mt-5 chart-container">
                 <h5 class="text-md-start fw-bold" style="padding-right: 100px;">Size Info</h5>
                 <div class="col-12 col-md-6 d-flex flex-column align-items-md-end size-info">
-                    <img src="/img/product/size_info.png" alt="Size Chart" id="sizeChartImg" class="w-60 w-md-60" style="padding-right: 50px;">
+                    <!-- 카테고리가 'shoes'일 때 이미지 표시 -->
+                    <img th:src="${category == 'shoes' ? '/img/product/shoes_info.png' : (category == 'pants' ? '/img/product/pants_info.png' : '/img/product/size_info.png')}" 
+                    alt="Size Chart" class="img-fluid mt-3 mb-3" style="max-width: 100%; height: auto; max-height: 300px; padding-right: 50px;">
                 </div>
                 <div class="col-12 col-md-6" id="sizeTableContainer">
                     <!-- 사이즈 테이블이 여기에 로드됨 -->
