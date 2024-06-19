@@ -1,4 +1,4 @@
--- Active: 1718356850134@@127.0.0.1@3306@goodz
+-- Active: 1716800736662@@127.0.0.1@3306@goodz
 
 -- User 테이블  / 📁 user
 CREATE TABLE `User` (
@@ -25,38 +25,25 @@ CREATE TABLE `user_auth` (
 ) COMMENT='사용자 권한';
 
 
-CREATE TABLE `Persistent_Logins` (
+CREATE TABLE `Persistent_Login` (
 	`series` VARCHAR(64) NOT NULL,
-	-- `user_name` VARCHAR(64) NOT NULL,
-	`username` VARCHAR(64) NOT NULL,
+	`user_name` VARCHAR(64) NOT NULL,
 	`token` VARCHAR(64) NOT NULL,
 	`Field` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`series`),
-    FOREIGN KEY (`username`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`user_name`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) COMMENT='자동 로그인';
 
 
--- CREATE TABLE `Social_Login` (
--- 	`social_login_id` VARCHAR(100) NOT NULL,
--- 	`user_id` VARCHAR(100) NOT NULL,
--- 	`provider` VARCHAR(50) NOT NULL,
--- 	`provider_user_id` VARCHAR(100) NOT NULL,
--- 	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
--- 	PRIMARY KEY (`social_login_id`),
--- 	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
--- ) COMMENT='소셜로그인';
-
-CREATE TABLE `user_social` (
-    `user_id` VARCHAR(100) NOT NULL, -- 유저 아이디
-    `username` VARCHAR(100) NOT NULL,
-    `nickname` VARCHAR(100) NULL, -- 유저 닉네임
-    `PROVIDER` VARCHAR(50) NOT NULL,
-    `SOCIAL_ID` VARCHAR(255) NOT NULL,
-    `PICTURE` TEXT DEFAULT NULL, 
-    `CREATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `UPDATED_AT` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`user_id`)
-);
+CREATE TABLE `Social_Login` (
+	`social_login_id` VARCHAR(100) NOT NULL,
+	`user_id` VARCHAR(100) NOT NULL,
+	`provider` VARCHAR(50) NOT NULL,
+	`provider_user_id` VARCHAR(100) NOT NULL,
+	`created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`social_login_id`),
+	FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+) COMMENT='소셜로그인';
 
 CREATE TABLE `Shippingaddress` (
 	`address_no` INT NOT NULL AUTO_INCREMENT,
