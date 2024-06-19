@@ -327,6 +327,8 @@
                 </div>
                 <div class="col-12 col-md-6" id="sizeTableContainer">
                     <!-- 사이즈 테이블이 여기에 로드됨 -->
+                    <!-- 프래그먼트 포함 -->
+                    <!-- <div th:replace="fragments/product/size_table_shoes :: sizeTableShoes"></div> -->
                 </div>
             </div>
 
@@ -443,7 +445,6 @@
                     toggleButtons.style.display = 'none';
                 }
                 sizeInfo.style.display = 'none';
-                return;
             }
 
             if (category === 'shoes' && toggleButtons) {
@@ -757,14 +758,17 @@
         const loadMoreProducts = () => {
             if (allProductsLoaded || page >= maxPages) return;
 
-            const brand = encodeURIComponent(document.getElementById('brand').value);
+            const brand = document.getElementById('brand').value;
             const category = document.getElementById('category').value;
             const pNo = document.getElementById('productNo').value;
+            console.log("brand : " + brand);
+            console.log("category : " + category);
+            console.log("pNo : " + pNo);
 
             fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
+                        throw new Error('Network response was not ok tq' + response.status);
                     }
                     return response.json();
                 })
@@ -780,18 +784,18 @@
                     }
 
                     if (data.length > 0) {
+                        console.log(data);
                         data.forEach(product => {
 
                         if (product.productName !== undefined && !loadedProducts.has(product.productName)) {
                             loadedProducts.add(product.productName);
-
                             const col = document.createElement('div');
                             col.classList.add('col');
 
                             const card = `
                                 <div class="card border-0">
                                     <div class="card-body">
-                                        <a href="/product/detail/${product.pNo}">
+                                        <a href="/product/detail/${product.pno}">
                                             <img src="/files/img?imgUrl=${encodeURIComponent(product.imageUrl)}" alt="상품 이미지" class="rounded-4 w-100">
                                         </a>
                                         <div class="card-text py-2">
