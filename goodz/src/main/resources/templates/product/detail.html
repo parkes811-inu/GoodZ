@@ -398,6 +398,23 @@
                 document.querySelector('.inches-table').style.display = 'table';
             }
 
+            // 페이지가 로드될 때 사이즈 테이블을 로드하는 함수
+            function loadSizeTable() {
+                const sizeTableContainer = document.getElementById('sizeTableContainer');
+                fetch('/product/detail/product/size_table')
+                    .then(response => response.text())
+                    .then(html => {
+                        sizeTableContainer.innerHTML = html;
+                        // 사이즈 테이블이 로드된 후 인치와 센치미터 버튼에 이벤트 리스너를 추가합니다.
+                        document.getElementById('showCmButton').addEventListener('click', showCm);
+                        document.getElementById('showInchesButton').addEventListener('click', showInches);
+                    })
+                    .catch(error => console.error('Error loading size table:', error));
+            }
+
+            // 화면이 로드될 때 사이즈 테이블을 불러옴
+            loadSizeTable();
+
             let selectedSize = '';
             let selectedPrice = '';
             let transactionType = '';
