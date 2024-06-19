@@ -10,6 +10,10 @@
         th {
             font-size: 14px;
         }
+        img {
+            width: 100px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -23,7 +27,7 @@
 
                 <div class="d-flex flex-column justify-content-center">
                     <!-- 상품 이미지 -->
-                    <div id="carouselExampleIndicators" class="carousel slide">
+                    <div id="carouselExampleIndicators" class="carousel slide" style="margin: 0 auto;">
                         <div class="carousel-indicators">
                             <th:block th:each="image, iterStat : ${images}">
                                 <button type="button" data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${iterStat.index}" 
@@ -31,10 +35,10 @@
                                         th:aria-label="'Slide ' + (${iterStat.index} + 1)"></button>
                             </th:block>
                         </div>
-                        <div class="carousel-inner">
+                        <div class="carousel-inner" style="width:300px; height:300px;">
                             <th:block th:each="image, iterStat : ${images}">
                                 <div th:class="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
-                                    <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}">
+                                    <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}" style="width: 100%;">
                                 </div>
                             </th:block>
                         </div>

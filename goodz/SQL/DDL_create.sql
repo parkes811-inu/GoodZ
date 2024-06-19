@@ -25,13 +25,14 @@ CREATE TABLE `user_auth` (
 ) COMMENT='사용자 권한';
 
 
-CREATE TABLE `Persistent_Login` (
+CREATE TABLE `Persistent_Logins` (
 	`series` VARCHAR(64) NOT NULL,
-	`user_name` VARCHAR(64) NOT NULL,
+	-- `user_name` VARCHAR(64) NOT NULL,
+	`username` VARCHAR(64) NOT NULL,
 	`token` VARCHAR(64) NOT NULL,
 	`Field` TIMESTAMP NOT NULL,
 	PRIMARY KEY (`series`),
-    FOREIGN KEY (`user_name`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`username`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
 ) COMMENT='자동 로그인';
 
 
