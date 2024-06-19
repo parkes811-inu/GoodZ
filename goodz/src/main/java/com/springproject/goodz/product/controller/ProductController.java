@@ -3,6 +3,7 @@ package com.springproject.goodz.product.controller;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -170,54 +171,57 @@ public class ProductController {
     }
 
     @GetMapping("/detail/{pNo}")
-    public String productDetailPage(@PathVariable("pNo") Integer pNo,
-                                    Model model,
-                                    HttpSession session) throws Exception {
-    
+    public String productDetailPage(@PathVariable("pNo") Integer pNo
+                                  , Model model
+                                  , HttpSession session) throws Exception {
+
         // 세션 정보 세팅
-        Users loginUser = (Users) session.getAttribute("user");
-        model.addAttribute("loginUser", loginUser);
-    
+        Users loginUser = (Users)session.getAttribute("user");
+        model.addAttribute("loginUser", loginUser);                   
+        
         Product product = productService.getProductBypNo(pNo);
         List<ProductOption> options = productService.getProductOptionsByProductId(pNo);
         product.setOptions(options);
-    
+
         Files file = new Files();
         file.setParentNo(pNo);
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
-    
-        // 최저 가격 계산
-        int minPrice = options.stream()
-                .mapToInt(ProductOption::getOptionPrice)
-                .min()
-                .orElse(0);
+
+        // 최저 가격과 해당 사이즈 계산
+        ProductOption minPriceOption = options.stream()
+                .min(Comparator.comparingInt(ProductOption::getOptionPrice))
+                .orElse(null);
+        
+        int minPrice = minPriceOption != null ? minPriceOption.getOptionPrice() : 0;
+        String minPriceSize = minPriceOption != null ? minPriceOption.getSize() : "";
+
         // 원화 형식으로 변환
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("ko", "KR"));
         DecimalFormat decimalFormat = (DecimalFormat) currencyFormatter;
         decimalFormat.applyPattern("#,### 원");
         String formattedMinPrice = currencyFormatter.format(minPrice);
-    
+        
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("formattedMinPrice", formattedMinPrice);
-    
+        model.addAttribute("minPriceSize", minPriceSize);
+
         model.addAttribute("product", product);
         model.addAttribute("options", options);
         model.addAttribute("images", images);
-    
+
         // 사이즈별 가격 정보를 JSON 형태로 변환
         String pricesJson = new ObjectMapper().writeValueAsString(
-                options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
+            options.stream().collect(Collectors.toMap(ProductOption::getSize, ProductOption::getOptionPrice))
         );
         model.addAttribute("pricesJson", pricesJson);
-    
-        // 카테고리 값 전달
+        
         String category = product.getCategory();
-        model.addAttribute("category", category);
-    
+        String brand = product.getBName();
+
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> sizeMap = new HashMap<>();
-    
+
         if (category.equals("shoes")) {
             sizeMap.put("sizes", new int[]{220, 230, 240, 250, 260, 270, 280});
         } else if (category.equals("top") || category.equals("pants")) {
@@ -226,10 +230,10 @@ public class ProductController {
             // accessory인 경우
             sizeMap.put("sizes", "free");
         }
-    
+
         String sizeJson = objectMapper.writeValueAsString(sizeMap);
         model.addAttribute("sizeJson", sizeJson);
-    
+
         // 사용자 관심 목록 확인
         boolean isWishlisted = false;
         if (loginUser != null) {
@@ -240,16 +244,15 @@ public class ProductController {
             wish.setParentNo(product.getPNo());
             isWishlisted = wishListService.listById(wish);
         }
-    
+
         model.addAttribute("isWishlisted", isWishlisted);
-    
+
         // 태그된 게시글 목록 좋아요 순 4개 조회
         List<Post> taggedPosts = postService.taggedPost(pNo);
         model.addAttribute("taggedPosts", taggedPosts);
-    
+        
         return "/product/detail";
     }
-    
 
     // 상의 카테고리
     @GetMapping("/top")
