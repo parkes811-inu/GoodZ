@@ -14,12 +14,12 @@ public interface PriceHistoryMapper {
     public void makeHistory(@Param("pNo") int pNo, @Param("size") String size, @Param("initialPrice") int initialPrice);
 
     // 기간 별 상품 가격 정보 조회
-    List<Pricehistory> findPriceHistoryLastWeek(@Param("pNo") int pNo);
+    List<Pricehistory> findPriceHistoryLastWeek(@Param("pNo") int pNo, @Param("size") String size);
 
-    List<Pricehistory> findPriceHistoryLastMonth(@Param("pNo") int pNo);
+    List<Pricehistory> findPriceHistoryLastMonth(@Param("pNo") int pNo, @Param("size") String size);
 
-    List<Pricehistory> findPriceHistoryLast3Months(@Param("pNo") int pNo);
+    List<Pricehistory> findPriceHistoryLast3Months(@Param("pNo") int pNo, @Param("size") String size);
 
-    List<Pricehistory> findPriceHistoryAllTime(@Param("pNo") int pNo);
+    List<Pricehistory> findPriceHistoryAllTime(@Param("pNo") int pNo, @Param("size") String size);
 
 }

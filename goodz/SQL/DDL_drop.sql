@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS `Product`;         -- 상품
 DROP TABLE IF EXISTS `Brand`;           -- 브랜드
 DROP TABLE IF EXISTS `Follow`;          -- 팔로우
 DROP TABLE IF EXISTS `Shippingaddress`; -- 배송주소목록
-DROP TABLE IF EXISTS `Social_Login`;    -- 소셜로그인
-DROP TABLE IF EXISTS `Persistent_Login`;-- 자동로그인
+DROP TABLE IF EXISTS `user_social`;    -- 소셜로그인
+DROP TABLE IF EXISTS `Persistent_Logins`;-- 자동로그인
 DROP TABLE IF EXISTS `user_auth`;       -- 권한목록
 DROP TABLE IF EXISTS `User`;            -- 유저

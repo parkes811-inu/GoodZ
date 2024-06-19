@@ -26,8 +26,8 @@
 
 	<!-- 판매 등록 -->
 	<insert id="insertSale" parameterType="Sales">
-		INSERT INTO Sales (user_id, p_no, size, sale_tracking_no, address, sale_price, sale_state, sale_date)
-		VALUES (#{userId}, #{pNo}, #{size}, #{saleTrackingNo}, #{address}, #{salePrice}, #{saleState}, NOW())
+		INSERT INTO Sales (user_id, p_no, size, sales_tracking_no, address, sale_price, sale_state, sale_date)
+		VALUES (#{userId}, #{pNo}, #{size}, #{salesTrackingNo}, #{address}, #{salePrice}, #{saleState}, NOW())
 	</insert>
 
 	<select id="selectPurchase" resultType="Purchase">
