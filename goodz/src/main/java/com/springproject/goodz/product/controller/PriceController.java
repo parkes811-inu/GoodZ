@@ -20,7 +20,7 @@ public class PriceController {
 
     // 상품 가격 변동 History 조회
     @GetMapping("/getPriceHistory")
-    public List<Pricehistory> getPriceHistory(@RequestParam String period, @RequestParam int pNo) throws Exception {
-        return productService.getPriceHistory(period, pNo);
+    public List<Pricehistory> getPriceHistory(@RequestParam String period, @RequestParam int pNo, @RequestParam String size) throws Exception {
+        return productService.getPriceHistory(period, pNo, size);
     }
 }

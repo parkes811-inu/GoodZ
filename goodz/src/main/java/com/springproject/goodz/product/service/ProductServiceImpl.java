@@ -247,16 +247,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // 기간 별 상품 가격 정보 조회
-    public List<Pricehistory> getPriceHistory(String period, int pNo) throws Exception {
+    public List<Pricehistory> getPriceHistory(String period, int pNo, String size) throws Exception {
         switch (period) {
             case "1Week":
-                return priceHistoryMapper.findPriceHistoryLastWeek(pNo);
+                return priceHistoryMapper.findPriceHistoryLastWeek(pNo, size);
             case "1Month":
-                return priceHistoryMapper.findPriceHistoryLastMonth(pNo);
+                return priceHistoryMapper.findPriceHistoryLastMonth(pNo, size);
             case "3Months":
-                return priceHistoryMapper.findPriceHistoryLast3Months(pNo);
+                return priceHistoryMapper.findPriceHistoryLast3Months(pNo, size);
             default:
-                return priceHistoryMapper.findPriceHistoryAllTime(pNo);
+                return priceHistoryMapper.findPriceHistoryAllTime(pNo, size);
         }
     }
 }

@@ -15,7 +15,8 @@
     <select id="findPriceHistoryLastWeek" resultType="PriceHistory">
         SELECT * 
           FROM pricehistory 
-         WHERE p_no = #{pNo} 
+         WHERE p_no = #{pNo}
+           AND size = #{size}
            AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
          ORDER BY updated_at
     </select>
@@ -23,7 +24,8 @@
     <select id="findPriceHistoryLastMonth" resultType="PriceHistory">
         SELECT * 
           FROM pricehistory
-         WHERE p_no = #{pNo} 
+         WHERE p_no = #{pNo}
+           AND size = #{size}
            AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
          ORDER BY updated_at
     </select>
@@ -32,6 +34,7 @@
         SELECT * 
           FROM pricehistory 
          WHERE p_no = #{pNo} 
+           AND size = #{size}
            AND updated_at >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)
          ORDER BY updated_at
     </select>
@@ -40,6 +43,7 @@
         SELECT * 
           FROM pricehistory 
          WHERE p_no = #{pNo}
+           AND size = #{size}
          ORDER BY updated_at
     </select>
 
