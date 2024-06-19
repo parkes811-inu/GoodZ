@@ -153,10 +153,20 @@ public class ProductController {
         return "redirect:/product/detail/" + pNo; // 상품 상세 페이지로 리다이렉트
     }
 
-
-    @GetMapping("/detail/product/size_table")
-    public String productSizeInfoPage() {
-        return "fragments/product/size_table";
+    @GetMapping("/size_table")
+    public String productSizeInfoPage(@RequestParam("category") String category) {
+        switch (category) {
+            case "top":
+                return "fragments/product/size_table_top";
+            case "pants":
+                return "fragments/product/size_table_pants";
+            case "shoes":
+                return "fragments/product/size_table_shoes";
+            case "accessory":
+                return "fragments/product/size_table_accessory";
+            default:
+                throw new IllegalArgumentException("Invalid category: " + category);
+        }
     }
 
     @GetMapping("/detail/{pNo}")
