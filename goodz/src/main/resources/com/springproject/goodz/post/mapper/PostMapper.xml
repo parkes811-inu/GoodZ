@@ -113,7 +113,7 @@
         SELECT  p.post_no as post_no
               , p.user_id as user_id
               , u.nickname as nickname
-              , ifNull((select no from file f where no = f.parent_no and parent_table = "user"),0) as profileImgNo
+              , ifNull((select no from file f where u.no = f.parent_no and parent_table = "user"),0) as profileImgNo
               , p.content as contetnt
               , f.no as file_no
               , f.file_name as file_name
