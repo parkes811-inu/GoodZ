@@ -95,10 +95,11 @@
                             <a th:href="@{/product/detail/{pNo}(pNo=${purchase.pNo})}">
                                 <img th:src="@{/files/img(imgUrl=${purchase.imageUrl})}" alt="상품 이미지" class="rounded-4 w-30">
                             </a>
-                            <!-- 브랜드/상품명 -->
+                            <!-- 브랜드/상품명/사이즈 -->
                             <div class="product_details d-flex flex-column my-auto ms-3">
                                 <p class="fw-bold" th:text="${purchase.bName}"></p>
                                 <p th:text="${purchase.productName}"></p>
+                                <p th:text="${purchase.size}"></p> <!-- 사이즈 표시 -->
                             </div>
                         </div>
                         <div class="product_date_price">
