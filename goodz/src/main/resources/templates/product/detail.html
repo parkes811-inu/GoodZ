@@ -319,10 +319,10 @@
             </div>
             
             <!-- 사이즈 정보와 테이블을 같은 행에 배치 -->
-            <div class="row mt-5 chart-container">
+            <div class="row mt-5 chart-container" id="sizeInfo">
                 <h5 class="text-md-start fw-bold" style="padding-right: 100px;">Size Info</h5>
                 <div class="col-12 col-md-6 d-flex flex-column align-items-md-end size-info">
-                    <img src="/img/product/size_info.png" alt="Size Chart" class="w-60 w-md-60" style="padding-right: 50px;">
+                    <img src="/img/product/size_info.png" alt="Size Chart" id="sizeChartImg" class="w-60 w-md-60" style="padding-right: 50px;">
                 </div>
                 <div class="col-12 col-md-6" id="sizeTableContainer">
                     <!-- 사이즈 테이블이 여기에 로드됨 -->
@@ -389,25 +389,84 @@
             }
 
             function showCm() {
-                document.querySelector('.cm-table').style.display = 'table';
-                document.querySelector('.inches-table').style.display = 'none';
+                console.log('showCm function called'); // 추가된 로그
+                const cmTable = document.querySelector('.cm-table');
+                const inchesTable = document.querySelector('.inches-table');
+                if (cmTable && inchesTable) {
+                    cmTable.style.display = 'table';
+                    inchesTable.style.display = 'none';
+                } else {
+                    console.error('Size tables not found');
+                }
             }
 
             function showInches() {
-                document.querySelector('.cm-table').style.display = 'none';
-                document.querySelector('.inches-table').style.display = 'table';
+                console.log('showInches function called'); // 추가된 로그
+                const cmTable = document.querySelector('.cm-table');
+                const inchesTable = document.querySelector('.inches-table');
+                if (cmTable && inchesTable) {
+                    cmTable.style.display = 'none';
+                    inchesTable.style.display = 'table';
+                } else {
+                    console.error('Size tables not found');
+                }
+            }
+
+             // 카테고리 값에 따라 사이즈 테이블 URL 결정
+            function getSizeTableUrl(category) {
+                switch(category) {
+                    case 'shoes':
+                        return '/product/detail/product/size_table_shoes';
+                    case 'pants':
+                        return '/product/detail/product/size_table_pants';
+                    case 'top':
+                        return '/product/detail/product/size_table_top';
+                    case 'accessory':
+                        return null; // 액세서리인 경우 사이즈 테이블을 로드하지 않음
+                    default:
+                        console.error('Unknown category:', category);
+                        return null;
+                }
             }
 
             // 페이지가 로드될 때 사이즈 테이블을 로드하는 함수
             function loadSizeTable() {
+                const category = document.getElementById('category').value;
                 const sizeTableContainer = document.getElementById('sizeTableContainer');
-                fetch('/product/detail/product/size_table')
+                const toggleButtons = document.querySelector('.toggle-buttons');
+
+                if (category === 'accessory') {
+                    sizeTableContainer.style.display = 'none';
+                    if (toggleButtons) {
+                        toggleButtons.style.display = 'none';
+                    }
+                    //sizeChartImg.style.display = 'none';
+                    sizeInfo.style.display = 'none';
+                    return;
+                }
+
+                if (category === 'shoes' && toggleButtons) {
+                    toggleButtons.style.display = 'none';
+                }
+
+                fetch(`/product/size_table?category=${category}`)
                     .then(response => response.text())
                     .then(html => {
                         sizeTableContainer.innerHTML = html;
+                        sizeTableContainer.style.display = 'block'; // 사이즈 테이블 표시
+                        if (category !== 'shoes' && toggleButtons) {
+                            toggleButtons.style.display = 'flex'; // 버튼 표시
+                        }
                         // 사이즈 테이블이 로드된 후 인치와 센치미터 버튼에 이벤트 리스너를 추가합니다.
-                        document.getElementById('showCmButton').addEventListener('click', showCm);
-                        document.getElementById('showInchesButton').addEventListener('click', showInches);
+                        const showCmButton = document.querySelector('button[onclick="showCm()"]');
+                        const showInchesButton = document.querySelector('button[onclick="showInches()"]');
+                        if (showCmButton && showInchesButton) {
+                            showCmButton.addEventListener('click', showCm);
+                            showInchesButton.addEventListener('click', showInches);
+                            console.log('Event listeners added to buttons'); // 추가된 로그
+                        } else {
+                            console.error('Show buttons not found');
+                        }
                     })
                     .catch(error => console.error('Error loading size table:', error));
             }
