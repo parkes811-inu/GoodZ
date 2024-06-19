@@ -3,6 +3,7 @@ package com.springproject.goodz.product.controller;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -187,11 +188,14 @@ public class ProductController {
         file.setParentTable(product.getCategory());
         List<Files> images = fileService.listByParent(file);
 
-        // 최저 가격 계산
-        int minPrice = options.stream()
-                            .mapToInt(ProductOption::getOptionPrice)
-                            .min()
-                            .orElse(0);
+        // 최저 가격과 해당 사이즈 계산
+        ProductOption minPriceOption = options.stream()
+                .min(Comparator.comparingInt(ProductOption::getOptionPrice))
+                .orElse(null);
+        
+        int minPrice = minPriceOption != null ? minPriceOption.getOptionPrice() : 0;
+        String minPriceSize = minPriceOption != null ? minPriceOption.getSize() : "";
+
         // 원화 형식으로 변환
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("ko", "KR"));
         DecimalFormat decimalFormat = (DecimalFormat) currencyFormatter;
@@ -200,6 +204,7 @@ public class ProductController {
         
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("formattedMinPrice", formattedMinPrice);
+        model.addAttribute("minPriceSize", minPriceSize);
 
         model.addAttribute("product", product);
         model.addAttribute("options", options);

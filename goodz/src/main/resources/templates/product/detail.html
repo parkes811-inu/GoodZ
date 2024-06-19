@@ -184,7 +184,8 @@
                         <div class="product-price">
                             <p id="productPrice" class="m-0 ms-2" th:if="${formattedMinPrice} != '0 원'" th:text="${formattedMinPrice}"></p>
                         </div>
-                        
+
+                        <input type="hidden" id="minPriceSize" th:value="${minPriceSize}">
                         <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}">
                         <input type="hidden" id="category" name="category" th:value="${product.category}">
                         <input type="hidden" id="brand" name="brand" th:value="${product.bName}">
@@ -200,7 +201,7 @@
                             <div class="buy-buttons mt-3 d-flex justify-content-end">
                                 <button class="btn btn-danger btn-purchase mb-2 me-2 d-flex justify-content-between align-items-center" 
                                         data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="purchase" th:data-prices="${pricesJson}">
-                                   구매 <p class="m-0 ms-2" th:if="${minPrice > 0}" th:text="${formattedMinPrice}"></p>
+                                   구매 <p class="m-0 ms-2" id="price" th:if="${minPrice > 0}" th:text="${formattedMinPrice}"></p>
                                     </button>
                                 <button class="btn btn-success btn-sell mb-2 me-2 d-flex justify-content-between align-items-center" 
                                         data-bs-toggle="modal" data-bs-target="#transactionModal" data-type="sell" 
@@ -373,446 +374,456 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded event fired');
+        console.log('DOMContentLoaded event fired');
 
-            const sellButton = document.querySelector('.btn-sell');
-            if (sellButton) {
-                const initialPrice = parseFloat(document.getElementById('initialPrice').value);
-                if (!isNaN(initialPrice)) {
-                    const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
-                    document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
-                } else {
-                    console.error('Initial price is not a valid number');
-                }
+        const sellButton = document.querySelector('.btn-sell');
+        if (sellButton) {
+            const initialPrice = parseFloat(document.getElementById('initialPrice').value);
+            if (!isNaN(initialPrice)) {
+                const discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
+                document.getElementById('initialPriceText').textContent = discountedPrice.toLocaleString() + ' 원';
             } else {
-                console.error('Sell button not found');
+                console.error('Initial price is not a valid number');
             }
+        } else {
+            console.error('Sell button not found');
+        }
 
-            function showCm() {
-                console.log('showCm function called'); // 추가된 로그
-                const cmTable = document.querySelector('.cm-table');
-                const inchesTable = document.querySelector('.inches-table');
-                if (cmTable && inchesTable) {
-                    cmTable.style.display = 'table';
-                    inchesTable.style.display = 'none';
-                } else {
-                    console.error('Size tables not found');
-                }
+        function showCm() {
+            console.log('showCm function called'); // 추가된 로그
+            const cmTable = document.querySelector('.cm-table');
+            const inchesTable = document.querySelector('.inches-table');
+            if (cmTable && inchesTable) {
+                cmTable.style.display = 'table';
+                inchesTable.style.display = 'none';
+            } else {
+                console.error('Size tables not found');
             }
+        }
 
-            function showInches() {
-                console.log('showInches function called'); // 추가된 로그
-                const cmTable = document.querySelector('.cm-table');
-                const inchesTable = document.querySelector('.inches-table');
-                if (cmTable && inchesTable) {
-                    cmTable.style.display = 'none';
-                    inchesTable.style.display = 'table';
-                } else {
-                    console.error('Size tables not found');
-                }
+        function showInches() {
+            console.log('showInches function called'); // 추가된 로그
+            const cmTable = document.querySelector('.cm-table');
+            const inchesTable = document.querySelector('.inches-table');
+            if (cmTable && inchesTable) {
+                cmTable.style.display = 'none';
+                inchesTable.style.display = 'table';
+            } else {
+                console.error('Size tables not found');
             }
+        }
 
-             // 카테고리 값에 따라 사이즈 테이블 URL 결정
-            function getSizeTableUrl(category) {
-                switch(category) {
-                    case 'shoes':
-                        return '/product/detail/product/size_table_shoes';
-                    case 'pants':
-                        return '/product/detail/product/size_table_pants';
-                    case 'top':
-                        return '/product/detail/product/size_table_top';
-                    case 'accessory':
-                        return null; // 액세서리인 경우 사이즈 테이블을 로드하지 않음
-                    default:
-                        console.error('Unknown category:', category);
-                        return null;
-                }
+        // 카테고리 값에 따라 사이즈 테이블 URL 결정
+        function getSizeTableUrl(category) {
+            switch(category) {
+                case 'shoes':
+                    return '/product/detail/product/size_table_shoes';
+                case 'pants':
+                    return '/product/detail/product/size_table_pants';
+                case 'top':
+                    return '/product/detail/product/size_table_top';
+                case 'accessory':
+                    return null; // 액세서리인 경우 사이즈 테이블을 로드하지 않음
+                default:
+                    console.error('Unknown category:', category);
+                    return null;
             }
+        }
 
-            // 페이지가 로드될 때 사이즈 테이블을 로드하는 함수
-            function loadSizeTable() {
-                const category = document.getElementById('category').value;
-                const sizeTableContainer = document.getElementById('sizeTableContainer');
-                const toggleButtons = document.querySelector('.toggle-buttons');
+        // 페이지가 로드될 때 사이즈 테이블을 로드하는 함수
+        function loadSizeTable() {
+            const category = document.getElementById('category').value;
+            const sizeTableContainer = document.getElementById('sizeTableContainer');
+            const toggleButtons = document.querySelector('.toggle-buttons');
+            const sizeInfo = document.getElementById('sizeInfo');
 
-                if (category === 'accessory') {
-                    sizeTableContainer.style.display = 'none';
-                    if (toggleButtons) {
-                        toggleButtons.style.display = 'none';
-                    }
-                    //sizeChartImg.style.display = 'none';
-                    sizeInfo.style.display = 'none';
-                    return;
-                }
-
-                if (category === 'shoes' && toggleButtons) {
+            if (category === 'accessory') {
+                sizeTableContainer.style.display = 'none';
+                if (toggleButtons) {
                     toggleButtons.style.display = 'none';
                 }
-
-                fetch(`/product/size_table?category=${category}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        sizeTableContainer.innerHTML = html;
-                        sizeTableContainer.style.display = 'block'; // 사이즈 테이블 표시
-                        if (category !== 'shoes' && toggleButtons) {
-                            toggleButtons.style.display = 'flex'; // 버튼 표시
-                        }
-                        // 사이즈 테이블이 로드된 후 인치와 센치미터 버튼에 이벤트 리스너를 추가합니다.
-                        const showCmButton = document.querySelector('button[onclick="showCm()"]');
-                        const showInchesButton = document.querySelector('button[onclick="showInches()"]');
-                        if (showCmButton && showInchesButton) {
-                            showCmButton.addEventListener('click', showCm);
-                            showInchesButton.addEventListener('click', showInches);
-                            console.log('Event listeners added to buttons'); // 추가된 로그
-                        } else {
-                            console.error('Show buttons not found');
-                        }
-                    })
-                    .catch(error => console.error('Error loading size table:', error));
+                sizeInfo.style.display = 'none';
+                return;
             }
 
-            // 화면이 로드될 때 사이즈 테이블을 불러옴
-            loadSizeTable();
+            if (category === 'shoes' && toggleButtons) {
+                toggleButtons.style.display = 'none';
+            }
 
-            let selectedSize = '';
-            let selectedPrice = '';
-            let transactionType = '';
-            let discountedPrice = 0;
+            fetch(`/product/size_table?category=${category}`)
+                .then(response => response.text())
+                .then(html => {
+                    sizeTableContainer.innerHTML = html;
+                    sizeTableContainer.style.display = 'block'; // 사이즈 테이블 표시
+                    if (category !== 'shoes' && toggleButtons) {
+                        toggleButtons.style.display = 'flex'; // 버튼 표시
+                    }
+                    // 사이즈 테이블이 로드된 후 인치와 센치미터 버튼에 이벤트 리스너를 추가합니다.
+                    const showCmButton = document.querySelector('button[onclick="showCm()"]');
+                    const showInchesButton = document.querySelector('button[onclick="showInches()"]');
+                    if (showCmButton && showInchesButton) {
+                        showCmButton.addEventListener('click', showCm);
+                        showInchesButton.addEventListener('click', showInches);
+                        console.log('Event listeners added to buttons'); // 추가된 로그
+                    } else {
+                        console.error('Show buttons not found');
+                    }
+                })
+                .catch(error => console.error('Error loading size table:', error));
+        }
 
-            const sizeButton = document.getElementById('sizeButton');
-            const sizeModal = document.getElementById('sizeModal');
+        // 화면이 로드될 때 사이즈 테이블을 불러옴
+        loadSizeTable();
+
+        let selectedSize = '';
+        let selectedPrice = '';
+        let transactionType = '';
+        let discountedPrice = 0;
+
+        const sizeButton = document.getElementById('sizeButton');
+        const sizeModal = document.getElementById('sizeModal');
+        const confirmSizeButton = document.getElementById('confirmSizeButton');
+        const purchaseButton = document.querySelector('.btn-purchase'); // 구매 버튼 요소
+        const purchasePriceElement = purchaseButton.querySelector('.m-0.ms-2'); // 구매 버튼 가격 텍스트 요소
+        const productPriceElement = document.getElementById('productPrice'); // 상품 가격 텍스트 요소
+
+        // 초기 로드 시 최저가 사이즈로 설정
+        const minPriceSize = document.getElementById('minPriceSize').value;
+        selectedSize = minPriceSize;
+
+        // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
+        sizeModal.addEventListener('click', function(event) {
+            if (event.target.classList.contains('size-option')) {
+                // 모든 버튼의 활성화 상태를 초기화
+                sizeModal.querySelectorAll('.size-option').forEach(btn => btn.classList.remove('active'));
+                // 클릭된 버튼을 활성화
+                event.target.classList.add('active');
+                // 선택된 사이즈 저장
+                selectedSize = event.target.dataset.size;
+                selectedPrice = event.target.dataset.price; // 선택된 사이즈의 가격 저장
+            }
+        });
+
+        // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
+        sizeModal.addEventListener('show.bs.modal', function(event) {
             const sizeOptions = sizeModal.querySelectorAll('.size-option');
-            const confirmSizeButton = document.getElementById('confirmSizeButton');
-            const purchaseButton = document.querySelector('.btn-purchase'); // 구매 버튼 요소
-            const purchasePriceElement = purchaseButton.querySelector('.m-0.ms-2'); // 구매 버튼 가격 텍스트 요소
-            const productPriceElement = document.getElementById('productPrice'); // 상품 가격 텍스트 요소
+            if (sizeOptions.length === 0) {
+                alert('구매 가능한 사이즈가 없습니다.');
+                event.preventDefault(); // 모달 창 열림 방지
+                return;
+            }
+        });
 
-            // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
-            sizeOptions.forEach(button => {
-                button.addEventListener('click', function() {
-                    // 모든 버튼의 활성화 상태를 초기화
-                    sizeOptions.forEach(btn => btn.classList.remove('active'));
-                    // 클릭된 버튼을 활성화
-                    this.classList.add('active');
-                    // 선택된 사이즈 저장
-                    selectedSize = this.dataset.size;
-                    selectedPrice = this.dataset.price; // 선택된 사이즈의 가격 저장
-                });
-            });
+        // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
+        confirmSizeButton.addEventListener('click', function() {
+            if (selectedSize && selectedPrice) {
+                sizeButton.textContent = selectedSize;
+                purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
+                productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
+                var modal = bootstrap.Modal.getInstance(sizeModal);
+                modal.hide();
+                // 선택한 사이즈에 대해 그래프 업데이트
+                updateChart('AllTime');
+            } else {
+                alert('사이즈를 선택해주세요.');
+            }
+        });
 
-            // Size 선택 모달에서 사이즈 버튼 클릭 이벤트
-            sizeModal.addEventListener('show.bs.modal', function(event) {
-                const sizeOptions = sizeModal.querySelectorAll('.size-option');
-                if (sizeOptions.length === 0) {
+        const modal = document.getElementById('transactionModal');
+        // Transaction Modal 이벤트 리스너
+        modal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget; // 모달을 트리거한 버튼
+            transactionType = button.getAttribute('data-type'); // 거래 타입 (구매 또는 판매)
+            let prices = button.getAttribute('data-prices');
+            const modalTitle = transactionType === 'purchase' ? '구매하기' : '판매하기';
+            
+            // 모달 제목 변경
+            modal.querySelector('.modal-title').textContent = modalTitle;
+
+            // 모달 바디 내용 초기화
+            const modalBody = modal.querySelector('.modal-body');
+            modalBody.innerHTML = '';
+
+            if (transactionType === 'purchase') {
+                prices = JSON.parse(prices); // 구매의 경우 JSON 객체
+
+                // 가격 객체가 비어 있으면 알림 메시지 표시하고 모달 창 열지 않음
+                if (Object.keys(prices).length === 0) {
                     alert('구매 가능한 사이즈가 없습니다.');
                     event.preventDefault(); // 모달 창 열림 방지
                     return;
                 }
-            });
 
-            // Size 선택 모달에서 선택 완료 버튼 클릭 이벤트
-            confirmSizeButton.addEventListener('click', function() {
-                if (selectedSize && selectedPrice) {
-                    sizeButton.textContent = selectedSize;
-                    purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
-                    productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
-                    var modal = bootstrap.Modal.getInstance(sizeModal);
-                    modal.hide();
+                // 사이즈와 가격 버튼 생성
+                Object.keys(prices).forEach(size => {
+                    const price = prices[size];
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-outline-secondary purchase-option';
+                    button.dataset.size = size;
+                    button.dataset.price = price;
+                    button.innerHTML = `${size}<br>${parseInt(price).toLocaleString()}원`;
+                    modalBody.appendChild(button);
+                });
+            } else {
+                const category = document.getElementById('category').value;
+                const initialPrice = parseFloat(document.getElementById('initialPrice').value);
+
+                let sizes = [];
+                if (category === 'shoes') {
+                    sizes = [220, 230, 240, 250, 260, 270, 280];
+                } else if (category === 'top' || category === 'pants') {
+                    sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
                 } else {
-                    alert('사이즈를 선택해주세요.');
-                }
-            });
-
-            const modal = document.getElementById('transactionModal');
-            // Transaction Modal 이벤트 리스너
-            modal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget; // 모달을 트리거한 버튼
-                transactionType = button.getAttribute('data-type'); // 거래 타입 (구매 또는 판매)
-                let prices = button.getAttribute('data-prices');
-                const modalTitle = transactionType === 'purchase' ? '구매하기' : '판매하기';
-                
-                // 모달 제목 변경
-                modal.querySelector('.modal-title').textContent = modalTitle;
-
-                // 모달 바디 내용 초기화
-                const modalBody = modal.querySelector('.modal-body');
-                modalBody.innerHTML = '';
-
-                if (transactionType === 'purchase') {
-                    prices = JSON.parse(prices); // 구매의 경우 JSON 객체
-
-                    // 가격 객체가 비어 있으면 알림 메시지 표시하고 모달 창 열지 않음
-                    if (Object.keys(prices).length === 0) {
-                        alert('구매 가능한 사이즈가 없습니다.');
-                        event.preventDefault(); // 모달 창 열림 방지
-                        return;
-                    }
-
-                    // 사이즈와 가격 버튼 생성
-                    Object.keys(prices).forEach(size => {
-                        const price = prices[size];
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-outline-secondary purchase-option';
-                        button.dataset.size = size;
-                        button.dataset.price = price;
-                        button.innerHTML = `${size}<br>${parseInt(price).toLocaleString()}원`;
-                        modalBody.appendChild(button);
-                    });
-                } else {
-                    const category = document.getElementById('category').value;
-                    const initialPrice = parseFloat(document.getElementById('initialPrice').value);
-
-                    let sizes = [];
-                    if (category === 'shoes') {
-                        sizes = [220, 230, 240, 250, 260, 270, 280];
-                    } else if (category === 'top' || category === 'pants') {
-                        sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-                    } else {
-                        sizes = ['free'];
-                    }
-
-                    // 사이즈 버튼 생성 (판매의 경우 가격은 발매가 * 0.9)
-                    sizes.forEach(size => {
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-outline-secondary purchase-option';
-                        button.dataset.size = size;
-
-                        // 판매 가격 계산
-                        discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
-                        button.dataset.price = discountedPrice;
-                        button.innerHTML = `${size}<br>${discountedPrice.toLocaleString()}원`;
-                        modalBody.appendChild(button);
-                    });
+                    sizes = ['free'];
                 }
 
-                // 각 버튼에 클릭 이벤트 리스너 추가
-                modal.querySelectorAll('.purchase-option').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        // 모든 버튼의 활성화 상태를 초기화
-                        modal.querySelectorAll('.purchase-option').forEach(b => b.classList.remove('active'));
-                        // 클릭된 버튼을 활성화
-                        this.classList.add('active');
-                        // 선택된 사이즈와 가격 저장
-                        selectedSize = this.dataset.size;
-                        selectedPrice = this.dataset.price;
-                    });
+                // 사이즈 버튼 생성 (판매의 경우 가격은 발매가 * 0.9)
+                sizes.forEach(size => {
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-outline-secondary purchase-option';
+                    button.dataset.size = size;
+
+                    // 판매 가격 계산
+                    discountedPrice = Math.floor((initialPrice * 0.9) / 10) * 10;
+                    button.dataset.price = discountedPrice;
+                    button.innerHTML = `${size}<br>${discountedPrice.toLocaleString()}원`;
+                    modalBody.appendChild(button);
+                });
+            }
+
+            // 각 버튼에 클릭 이벤트 리스너 추가
+            modal.querySelectorAll('.purchase-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 모든 버튼의 활성화 상태를 초기화
+                    modal.querySelectorAll('.purchase-option').forEach(b => b.classList.remove('active'));
+                    // 클릭된 버튼을 활성화
+                    this.classList.add('active');
+                    // 선택된 사이즈와 가격 저장
+                    selectedSize = this.dataset.size;
+                    selectedPrice = this.dataset.price;
                 });
             });
+        });
 
-            // 거래하기 버튼 클릭 이벤트 리스너 추가
-            document.getElementById('confirmTransactionButton').addEventListener('click', function() {
-                if (selectedSize && selectedPrice) {
-                    // 선택된 사이즈와 가격으로 거래 요청을 보냄
-                    console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
+        // 거래하기 버튼 클릭 이벤트 리스너 추가
+        document.getElementById('confirmTransactionButton').addEventListener('click', function() {
+            if (selectedSize && selectedPrice) {
+                // 선택된 사이즈와 가격으로 거래 요청을 보냄
+                console.log(`거래 요청: 타입 - ${transactionType}, 사이즈 - ${selectedSize}, 가격 - ${selectedPrice}`);
 
-                    const productNo = document.getElementById('productNo').value;
+                const productNo = document.getElementById('productNo').value;
 
-                    // GET 요청을 보내고 페이지를 이동
-                    let url;
-                    if (transactionType === 'purchase') {
-                        url = new URL(`/pay/buy?pNo=${productNo}`, window.location.origin);
-                        url.searchParams.append('price', selectedPrice);                        
-                    } else {
-                        url = new URL(`/pay/sell/${productNo}`, window.location.origin);
-                        url.searchParams.append('price', discountedPrice);
-                    }
-                    url.searchParams.append('size', selectedSize);
-                    window.location.href = url;
+                // GET 요청을 보내고 페이지를 이동
+                let url;
+                if (transactionType === 'purchase') {
+                    url = new URL(`/pay/buy?pNo=${productNo}`, window.location.origin);
+                    url.searchParams.append('price', selectedPrice);                        
                 } else {
-                    alert('사이즈를 선택해주세요.');
+                    url = new URL(`/pay/sell/${productNo}`, window.location.origin);
+                    url.searchParams.append('price', discountedPrice);
                 }
-            });
+                url.searchParams.append('size', selectedSize);
+                window.location.href = url;
+            } else {
+                alert('사이즈를 선택해주세요.');
+            }
+        });
 
-            // 차트 데이터 설정
-            let charts = {}; // 전역 변수로 charts 객체 선언
+        // 차트 데이터 설정
+        let charts = {}; // 전역 변수로 charts 객체 선언
 
-            async function fetchPriceHistory(period) {
-                try {
-                    const productNo = document.getElementById('productNo').value;
-                    const response = await fetch(`/api/getPriceHistory?period=${period}&pNo=${productNo}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    console.log(`Fetched data for period ${period}:`, data); // 데이터 구조 확인을 위한 로그 추가
-                    return data;
-                } catch (error) {
-                    console.error('Error fetching price history:', error);
-                    return [];
+        async function fetchPriceHistory(period) {
+            try {
+                const productNo = document.getElementById('productNo').value;
+
+                if (!selectedSize) {
+                    throw new Error('Size is not selected');
                 }
+
+                const response = await fetch(`/api/getPriceHistory?period=${period}&pNo=${productNo}&size=${selectedSize}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log(`Fetched data for period ${period}:`, data); // 데이터 구조 확인을 위한 로그 추가
+                return data;
+            } catch (error) {
+                console.error('Error fetching price history:', error);
+                return [];
             }
+        }
 
-            function formatDate(dateString) {
-                const options = { year: 'numeric', month: 'short', day: 'numeric' };
-                return new Date(dateString).toLocaleDateString(undefined, options);
-            }
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
 
-            async function updateChart(period) {
-                try {
-                    const priceHistory = await fetchPriceHistory(period);
-                    if (!Array.isArray(priceHistory)) {
-                        throw new Error('Invalid data format: expected an array');
-                    }
+        async function updateChart(period) {
+            try {
+                const priceHistory = await fetchPriceHistory(period);
+                if (!Array.isArray(priceHistory)) {
+                    throw new Error('Invalid data format: expected an array');
+                }
 
-                    const labels = priceHistory.map(price => formatDate(price.updatedAt));
-                    const data = priceHistory.map(price => price.fluctuatedPrice);
-                    
-                    const chartData = {
-                        labels: labels,
-                        datasets: [{
-                            label: '가격 변동',
-                            data: data,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 2,
-                            fill: false
-                        }]
-                    };
+                const labels = priceHistory.map(price => formatDate(price.updatedAt));
+                const data = priceHistory.map(price => price.fluctuatedPrice);
+                
+                const chartData = {
+                    labels: labels,
+                    datasets: [{
+                        label: '가격 변동',
+                        data: data,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                };
 
-                    const ctx = document.getElementById(`priceChart${period}`).getContext('2d');
-                    if (!ctx) {
-                        throw new Error(`Canvas element for period ${period} not found`);
-                    }
-                    // 기존 차트가 있으면 파괴
-                    if (charts[period]) {
-                        charts[period].destroy();
-                    }
+                const ctx = document.getElementById(`priceChart${period}`).getContext('2d');
+                if (!ctx) {
+                    throw new Error(`Canvas element for period ${period} not found`);
+                }
+                // 기존 차트가 있으면 파괴
+                if (charts[period]) {
+                    charts[period].destroy();
+                }
 
-                    // 새로운 차트를 생성하고 저장
-                    charts[period] = new Chart(ctx, {
-                        type: 'line',
-                        data: chartData,
-                        options: {
-                            responsive: true,
-                            scales: {
-                                x: { beginAtZero: false },
-                                y: { beginAtZero: true }
-                            },
-                            plugins: {
-                                datalabels: {
-                                    display: function(context) {
-                                        const isEmpty = context.dataset.data.length === 0;
-                                        console.log('Data length:', context.dataset.data.length, 'Display:', isEmpty);
-                                        return isEmpty;
-                                    },
-                                    anchor: 'center',
-                                    align: 'center',
-                                    font: {
-                                        weight: 'bold',
-                                        size: 16
-                                    },
-                                    color: 'red',
-                                    formatter: function() {
-                                        return '조회한 내역이 없습니다';
-                                    }
+                // 새로운 차트를 생성하고 저장
+                charts[period] = new Chart(ctx, {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: { beginAtZero: false },
+                            y: { beginAtZero: true }
+                        },
+                        plugins: {
+                            datalabels: {
+                                display: function(context) {
+                                    const isEmpty = context.dataset.data.length === 0;
+                                    console.log('Data length:', context.dataset.data.length, 'Display:', isEmpty);
+                                    return isEmpty;
+                                },
+                                anchor: 'center',
+                                align: 'center',
+                                font: {
+                                    weight: 'bold',
+                                    size: 16
+                                },
+                                color: 'red',
+                                formatter: function() {
+                                    return '조회한 내역이 없습니다';
                                 }
                             }
-                        },
-                        plugins: [ChartDataLabels]
-                    });
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
 
-                    console.log(`Chart for period ${period} updated successfully`);
-                } catch (error) {
-                    console.error('Error updating chart:', error);
-                }
+                console.log(`Chart for period ${period} updated successfully`);
+            } catch (error) {
+                console.error('Error updating chart:', error);
             }
+        }
 
-            // 페이지가 로드될 때 전체 기간 차트 업데이트
-            updateChart('AllTime');
+        // 페이지가 로드될 때 전체 기간 차트 업데이트
+        updateChart('AllTime');
 
-            // 탭 클릭 이벤트 핸들러
-            document.getElementById('priceTab').addEventListener('click', (e) => {
-                const periodMap = {
-                    'all-time-tab': 'AllTime',
-                    'one-week-tab': '1Week',
-                    'one-month-tab': '1Month',
-                    'three-months-tab': '3Months',
-                    'six-months-tab': '6Months'
-                };
-                const period = periodMap[e.target.id];
-                if (period) {
-                    updateChart(period);
-                }
-            });
+        // 탭 클릭 이벤트 핸들러
+        document.getElementById('priceTab').addEventListener('click', (e) => {
+            const periodMap = {
+                'all-time-tab': 'AllTime',
+                'one-week-tab': '1Week',
+                'one-month-tab': '1Month',
+                'three-months-tab': '3Months',
+                'six-months-tab': '6Months'
+            };
+            const period = periodMap[e.target.id];
+            if (period) {
+                updateChart(period);
+            }
+        });
 
-            // 무한 스크롤
-            let page = 0;
-            const size = 4;
-            const maxPages = 10;
-            const brandProductsContainer = document.getElementById('brandProducts');
-            const noProductsMessage = document.getElementById('noProductsMessage');
-            let allProductsLoaded = false;
-            const loadedProducts = new Set();
+        // 무한 스크롤
+        let page = 0;
+        const size = 4;
+        const maxPages = 10;
+        const brandProductsContainer = document.getElementById('brandProducts');
+        const noProductsMessage = document.getElementById('noProductsMessage');
+        let allProductsLoaded = false;
+        const loadedProducts = new Set();
 
-            const loadMoreProducts = () => {
-                if (allProductsLoaded || page >= maxPages) return;
+        const loadMoreProducts = () => {
+            if (allProductsLoaded || page >= maxPages) return;
 
-                const brand = encodeURIComponent(document.getElementById('brand').value);
-                const category = document.getElementById('category').value;
-                const pNo = document.getElementById('productNo').value;
+            const brand = encodeURIComponent(document.getElementById('brand').value);
+            const category = document.getElementById('category').value;
+            const pNo = document.getElementById('productNo').value;
 
-                fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.length === 0 && page === 0) {
-                            noProductsMessage.style.display = 'block';
-                        } else {
-                            noProductsMessage.style.display = 'none';
-                        }
+            fetch(`/product/brand/products?page=${page}&size=${size}&brand=${brand}&category=${category}&pNo=${pNo}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0 && page === 0) {
+                        noProductsMessage.style.display = 'block';
+                    } else {
+                        noProductsMessage.style.display = 'none';
+                    }
 
-                        if (data.length < size) {
-                            allProductsLoaded = true;
-                        }
+                    if (data.length < size) {
+                        allProductsLoaded = true;
+                    }
 
-                        if (data.length > 0) {
-                            data.forEach(product => {
+                    if (data.length > 0) {
+                        data.forEach(product => {
 
-                            if (product.productName !== undefined && !loadedProducts.has(product.productName)) {
-                                loadedProducts.add(product.productName);
+                        if (product.productName !== undefined && !loadedProducts.has(product.productName)) {
+                            loadedProducts.add(product.productName);
 
-                                const col = document.createElement('div');
-                                col.classList.add('col');
+                            const col = document.createElement('div');
+                            col.classList.add('col');
 
-                                const card = `
-                                    <div class="card border-0">
-                                        <div class="card-body">
-                                            <a href="/product/detail/${product.pNo}">
-                                                <img src="/files/img?imgUrl=${encodeURIComponent(product.imageUrl)}" alt="상품 이미지" class="rounded-4 w-100">
-                                            </a>
-                                            <div class="card-text py-2">
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p class="user-id fw-bold m-0">${product.productName}</p>
-                                                </div>
-                                                <div class="d-flex justify-content-start column-gap-1">
-                                                    <p id="productPrice" class="m-0 ms-2">${product.formattedMinPrice}</p>
-                                                </div>
+                            const card = `
+                                <div class="card border-0">
+                                    <div class="card-body">
+                                        <a href="/product/detail/${product.pNo}">
+                                            <img src="/files/img?imgUrl=${encodeURIComponent(product.imageUrl)}" alt="상품 이미지" class="rounded-4 w-100">
+                                        </a>
+                                        <div class="card-text py-2">
+                                            <div class="d-flex justify-content-start column-gap-1">
+                                                <p class="user-id fw-bold m-0">${product.productName}</p>
+                                            </div>
+                                            <div class="d-flex justify-content-start column-gap-1">
+                                                <p id="productPrice" class="m-0 ms-2">${product.formattedMinPrice}</p>
                                             </div>
                                         </div>
                                     </div>
-                                `;
-                                col.innerHTML = card;
-                                brandProductsContainer.appendChild(col);
-                            }
-                            });
-                            page++;
+                                </div>
+                            `;
+                            col.innerHTML = card;
+                            brandProductsContainer.appendChild(col);
                         }
-                    })
-                    .catch(error => console.error('Error:', error));
-            };
+                        });
+                        page++;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        };
 
-            const handleScroll = () => {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
-                    loadMoreProducts();
-                }
-            };
+        const handleScroll = () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
+                loadMoreProducts();
+            }
+        };
 
-            window.addEventListener('scroll', handleScroll);
-            loadMoreProducts();
-        });
+        window.addEventListener('scroll', handleScroll);
+        loadMoreProducts();
+    });
 
     </script>
 </body>

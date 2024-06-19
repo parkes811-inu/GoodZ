@@ -92,5 +92,5 @@ public interface ProductService {
     public void updateViews(int pNo) throws Exception;
 
     // 기간 별 상품 가격 정보 조회
-    public List<Pricehistory> getPriceHistory(String period, int pNo) throws Exception;
+    public List<Pricehistory> getPriceHistory(String period, int pNo, String size) throws Exception;
 }
