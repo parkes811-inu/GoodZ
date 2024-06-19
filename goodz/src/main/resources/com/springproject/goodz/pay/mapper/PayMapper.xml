@@ -39,22 +39,25 @@
 
 	<select id="findPurchasesByUserId">
 		SELECT 
-			purchase_no AS purchaseNo,
-			user_id AS userId,
-			p_no AS pNo,
-			option_id AS optionId,
-			order_id AS orderId,
-			purchase_price AS purchasePrice,
-			payment_method AS paymentMethod,
-			purchase_state AS purchaseState,
-			ordered_at AS orderedAt,
-			updated_at AS updatedAt,
-			tracking_no AS trackingNo  <!-- 추가된 부분 -->
+			p.purchase_no AS purchaseNo,
+			p.user_id AS userId,
+			p.p_no AS pNo,
+			p.option_id AS optionId,
+			p.order_id AS orderId,
+			p.purchase_price AS purchasePrice,
+			p.payment_method AS paymentMethod,
+			p.purchase_state AS purchaseState,
+			p.ordered_at AS orderedAt,
+			p.updated_at AS updatedAt,
+			p.tracking_no AS trackingNo,
+			po.size AS size  <!-- size 추가 -->
 		FROM 
-			Purchase
+			Purchase p
+		JOIN 
+			product_option po ON p.option_id = po.option_id
 		WHERE 
-			user_id = #{userId}
-	</select>	
+			p.user_id = #{userId}
+	</select>
 
 	<!-- <select id="findPurchasesByUserIdWithPage" resultType="Purchase" parameterType="map">
 		SELECT 
