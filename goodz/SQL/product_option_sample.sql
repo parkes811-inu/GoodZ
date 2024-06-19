@@ -1,0 +1,64 @@
+/*
+-- Query: SELECT * FROM goodz.product_option
+LIMIT 0, 1000
+
+-- Date: 2024-06-20 04:08
+*/
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (1,1,'S',87000,20,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (2,1,'M',94000,20,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (3,1,'L',109000,20,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (4,2,'S',160000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (5,2,'M',147000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (6,2,'L',124000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (7,2,'XL',171000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (8,3,'FREE',38000,20,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (9,4,'FREE',123000,12,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (10,5,'FREE',145000,12,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (11,6,'FREE',32000,14,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (12,7,'S',98000,12,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (13,7,'XS',98000,12,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (14,8,'220',143000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (15,8,'230',140000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (16,8,'240',134000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (17,8,'250',150000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (18,8,'260',146000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (19,8,'270',134000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (20,9,'220',100000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (21,9,'240',123000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (22,9,'270',98000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (23,9,'260',123000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (24,10,'S',58000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (25,10,'M',58000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (26,10,'L',58000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (27,11,'220',129000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (28,11,'245',129000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (29,11,'265',129000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (30,12,'230',202000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (31,12,'240',211000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (32,12,'250',211000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (33,12,'260',211000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (34,13,'240',127000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (35,13,'265',127000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (36,14,'230',87000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (37,14,'240',87000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (38,14,'220',87000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (39,15,'M',32000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (40,16,'L',32000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (41,16,'XL',32000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (42,17,'XXL',32000,10,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (43,18,'XS',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (44,18,'S',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (45,18,'M',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (46,18,'L',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (47,19,'XS',52000,3,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (48,20,'XS',150000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (49,20,'S',150000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (50,20,'M',150000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (51,20,'XL',150000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (52,21,'S',56000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (53,21,'M',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (54,21,'L',57000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (55,22,'XS',64000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (56,23,'XS',54000,4,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (57,23,'S',54000,5,'on');
+INSERT INTO `` (`option_id`,`p_no`,`size`,`option_price`,`stock_quantity`,`status`) VALUES (58,23,'M',54000,6,'on');
