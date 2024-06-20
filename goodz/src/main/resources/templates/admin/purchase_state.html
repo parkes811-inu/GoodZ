@@ -167,7 +167,7 @@
                         </th>
                         <td th:text="${sale.p_no}"></td>
                         <td th:text="${sale.user_id}"></td>
-                        <td th:text="${sale.sale_tracking_no}"></td>
+                        <td th:text="${sale.sales_tracking_no}"></td>
                         <td th:text="${#strings.equalsIgnoreCase(sale.sale_state, 'pending') ? '판매요청' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'reception') ? '수취완료' : 
                                       #strings.equalsIgnoreCase(sale.sale_state, 'checking') ? '검수중' : 

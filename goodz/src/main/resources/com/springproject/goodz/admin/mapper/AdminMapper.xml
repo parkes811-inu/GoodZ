@@ -27,7 +27,7 @@
             s.p_no AS 'productNo',
             p.product_name AS 'productName',
             s.size AS 'size',
-            s.sale_tracking_no AS 'salesTrackingNo',
+            s.sales_tracking_no AS 'salesTrackingNo',
             s.sale_state AS 'saleState',
             s.address AS 'address',
             u.account AS 'account'
