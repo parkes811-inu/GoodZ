@@ -30,7 +30,7 @@
             s.sales_tracking_no AS 'salesTrackingNo',
             s.sale_state AS 'saleState',
             s.address AS 'address',
-            u.account AS 'account'
+            s.account AS 'account'
         FROM
             Sales s
         JOIN
