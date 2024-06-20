@@ -332,7 +332,7 @@ public class PayController {
         sales.setPNo(productNo); // 상품 번호 설정
         sales.setSize(size); // 사이즈 설정
         // 한글 택배사와 운송장 번호를 결합하여 하나의 컬럼에 저장
-        sales.setSaleTrackingNo(courierKorean + " - " + trackingNumber);
+        sales.setSalesTrackingNo(courierKorean + " - " + trackingNumber);
         sales.setAddress(address); // 주소 설정
         sales.setSalePrice(salePrice); // 판매 가격 설정
         sales.setSaleState("pending"); // 판매 상태 설정
