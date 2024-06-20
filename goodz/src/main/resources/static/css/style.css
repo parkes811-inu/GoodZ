@@ -7,7 +7,8 @@
     font-weight: bolder;
 }
 .logo img {
-    height: 60px; /* 이미지 크기 키움 */
+    /* 이미지 크기 키움 */
+    height: 60px; 
 }
 .nav-item {
     margin-right: 20px;

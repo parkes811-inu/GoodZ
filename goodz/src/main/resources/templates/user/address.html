@@ -127,7 +127,14 @@
                 .then(response => response.json())
                 .then(isDefault => {
                     if (isDefault) {
-                        alert('기본 배송지는 삭제할 수 없습니다. 다른 기본 배송지를 설정 후 삭제해주세요.');
+                        // alert('기본 배송지는 삭제할 수 없습니다. 다른 기본 배송지를 설정 후 삭제해주세요.');
+                        Swal.fire({
+                            html: `  
+                                <img src="/img/header/Goodz_logo3.png" />
+                                <h3 class="mt-4">기본 배송지는 삭제할 수 없습니다. 다른 기본 배송지를 설정 후 삭제해주세요.</h3>
+                            `,
+                            confirmButtonText: "확인",
+                        })
                     } else {
                         deleteAddress(addressNo);
                     }
