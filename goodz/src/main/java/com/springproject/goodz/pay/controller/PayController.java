@@ -248,15 +248,15 @@ public class PayController {
                        @RequestParam("size") String size,
                        @RequestParam("price") int price,
                        Model model, HttpSession session) throws Exception {
-
+    
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
-
+    
         // 단일 상품 조회
         Product product = productService.getProductBypNo(pNo);
-
+    
         // 기본 배송지를 찾기 위한 로직
         Shippingaddress defaultAddress = null;
         List<Shippingaddress> addresses = userService.selectByUserId(user.getUserId());
@@ -268,35 +268,52 @@ public class PayController {
                 }
             }
         }
-
+    
         // 상품 이미지 설정
         Files file = new Files();
         file.setParentNo(product.getPNo());
         file.setParentTable(product.getCategory());
         List<Files> productImages = fileService.listByParent(file);
-
+    
         // 첫 번째 이미지 URL 설정
         if (!productImages.isEmpty()) {
             product.setImageUrl(productImages.get(0).getFilePath());
         } else {
             product.setImageUrl("/files/img?imgUrl=no-image.png"); // 기본 이미지 경로 설정
         }
-
+    
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
         model.addAttribute("size", size);
         model.addAttribute("image", productImages);
-
+    
         // 기본 배송지가 있는지 여부를 모델에 추가
         model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("hasAddress", !addresses.isEmpty());
         model.addAttribute("addresses", addresses);
-
+    
         // 가격 정보 추가
         model.addAttribute("price", price); // 선택된 가격
         model.addAttribute("initialPrice", product.getInitialPrice()); // 초기 가격 추가
-
+    
+        // 정산 계좌 정보 추가
+        String account = user.getAccount();
+        if (account != null && !account.isEmpty()) {
+            String[] accountParts = account.split(" / ");
+            String bankName = accountParts[0].substring(0, accountParts[0].indexOf(" "));
+            String accountNumber = accountParts[0].substring(accountParts[0].indexOf(" ") + 1);
+            String accountHolder = accountParts[1];
+    
+            model.addAttribute("bankName", bankName);
+            model.addAttribute("accountNumber", accountNumber);
+            model.addAttribute("accountHolder", accountHolder);
+            model.addAttribute("hasAccount", true);
+        } else {
+            model.addAttribute("hasAccount", false);
+        }
+    
         return "/pay/sell";
     }
+
 
     /**
      * 판매 등록 처리
@@ -320,35 +337,37 @@ public class PayController {
                             @RequestParam("salePrice") int salePrice,
                             HttpSession session, Model model) throws Exception {
 
-        // 사용자 세션에서 사용자 정보 가져오기
         Users user = (Users) session.getAttribute("user");
         if (user == null) {
             return "redirect:/user/login";
         }
 
+        // 계좌 정보 확인
+        String account = user.getAccount();
+        if (account == null || account.isEmpty()) {
+            return "redirect:/user/account";
+        }
+
         // Sales 객체 생성 및 데이터 설정
         Sales sales = new Sales();
-        sales.setUserId(user.getUserId()); // 사용자 ID 설정
-        sales.setPNo(productNo); // 상품 번호 설정
-        sales.setSize(size); // 사이즈 설정
-        // 한글 택배사와 운송장 번호를 결합하여 하나의 컬럼에 저장
+        sales.setUserId(user.getUserId());
+        sales.setPNo(productNo);
+        sales.setSize(size);
         sales.setSalesTrackingNo(courierKorean + " - " + trackingNumber);
-        sales.setAddress(address); // 주소 설정
-        sales.setSalePrice(salePrice); // 판매 가격 설정
-        sales.setSaleState("pending"); // 판매 상태 설정
+        sales.setAddress(address);
+        sales.setSalePrice(salePrice);
+        sales.setSaleState("pending");
+        sales.setAccount(account); // Sales 객체에 계좌 정보 설정
 
-        // 판매 정보 데이터베이스에 저장
         int result = payService.insertSale(sales);
 
-        // 저장 결과 처리
         if (result > 0) {
-            return "redirect:/pay/complete/sell"; // 성공 시 완료 페이지로 리다이렉트
+            return "redirect:/pay/complete/sell";
         } else {
             model.addAttribute("errorMessage", "판매 정보를 저장하는 데 실패했습니다.");
-            return "/pay/sell"; // 실패 시 판매 페이지로 리다이렉트
+            return "/pay/sell";
         }
     }
-
 
     /**
      * 결제 또는 판매 완료 페이지
