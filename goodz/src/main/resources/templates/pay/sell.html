@@ -104,6 +104,13 @@
         }
     </style>
 </head>
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>판매하기</title>
+    <!-- 필요한 스타일 및 스크립트 로드 -->
+</head>
 <body layout:fragment="content">
     <div class="container">
         <form action="/pay/sell" id="sellForm" method="post">
@@ -113,6 +120,7 @@
             <input type="hidden" id="size" name="size" th:value="${size}" />
             <input type="hidden" id="salePrice" name="salePrice" th:value="${price - 5000}" />
             <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
+            <input type="hidden" id="hiddenAccount" name="account" th:value="${hasAccount ? 'true' : 'false'}" />
 
             <div class="section_unit mb-4 text-center">
                 <h1 class="mt-5" style="font-size: 1.5rem; margin-bottom: 12px;">판매하기</h1>
@@ -130,8 +138,7 @@
                                 <strong>상품명</strong><br><span th:text="${product.productName}"></span>
                             </div>
                             <div class="product_info">
-                                <strong>사이즈</strong><br>
-                                <span th:text="${size}">사이즈</span>
+                                <strong>사이즈</strong><br><span th:text="${size}">사이즈</span>
                             </div>
                         </div>
                     </div>
@@ -192,8 +199,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="tracking-number" class="form-label">운송장 번호</label>
-                            <input type="text" id="tracking-number" name="trackingNumber" class="form-control" placeholder="운송장 번호를 입력해주세요" required>
+                            <label for="trackingNumber" class="form-label">운송장 번호</label>
+                            <input type="text" id="trackingNumber" name="trackingNumber" class="form-control" placeholder="운송장 번호를 입력해주세요" required>
                         </div>
                     </div>
                 </div>
@@ -254,6 +261,33 @@
                     </div>
                 </div>
 
+                <!-- 정산 계좌 정보 표시 -->
+                <div class="section_unit mb-4">
+                    <div class="section_content p-3 border rounded mb-4">
+                        <div class="section_header">정산 계좌 정보</div>
+                        <div th:if="${hasAccount}" class="account_info d-flex align-items-center">
+                            <div class="info_list">
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">은행명</div>
+                                    <div class="desc" th:text="${bankName}"></div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">계좌번호</div>
+                                    <div class="desc" th:text="${accountNumber}"></div>
+                                </div>
+                                <div class="info_box d-flex align-items-center">
+                                    <div class="title">예금주</div>
+                                    <div class="desc" th:text="${accountHolder}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${!hasAccount}" class="text-center">
+                            <p class="text-secondary">정산 계좌 정보가 없습니다. 계좌를 등록해주세요.</p>
+                            <a id="add_account_btn" class="btn btn-outline-secondary" href="/user/account">계좌 등록</a>
+                        </div>
+                    </div>
+                </div>
+
             </section>
 
             <!-- 최종 주문 정보 -->
@@ -266,7 +300,7 @@
                     </div>
                     <div class="summary_item">
                         <span>검수비</span>
-                        <span>-5000원</span>
+                        <span>+5000원</span>
                     </div>
                     <div class="summary_item">
                         <span>배송비</span>
@@ -274,81 +308,73 @@
                     </div>
                     <div class="summary_item summary_total">
                         <span>총 결제금액</span>
-                        <span th:text="${price - 5000} + '원'"></span>
+                        <span th:text="${price + 5000} + '원'"></span>
                     </div>
                 </div>
             </div>
 
             <div class="btn-wrapper w-100 mb-5">
-                <button id="payment-button" class="btn btn-secondary w-100" type="submit" disabled>판매하기</button>
+                <button id="payment-button" class="btn btn-secondary w-100" type="submit" th:disabled="${!hasAccount}">판매하기</button>
             </div>
         </form>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        // 주소 선택 함수
-        function selectAddress(recipientName, phoneNumber, address) {
-            document.getElementById('recipientName').textContent = recipientName;
-            document.getElementById('phoneNumber').textContent = phoneNumber;
-            document.getElementById('address').textContent = address;
-            document.getElementById('hiddenAddress').value = address; 
-        }
-
-        // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
-        document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
-            const target = event.target.closest('li.list-group-item');
-            if (target) {
-                const recipientName = target.getAttribute('data-recipient-name');
-                const phoneNumber = target.getAttribute('data-phone-number');
-                const address = target.getAttribute('data-address');
-                selectAddress(recipientName, phoneNumber, address);
-                // 모달 닫기
-                var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
-                addressModal.hide();
+            const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
+            const trackingNumberInput = document.getElementById('trackingNumber'); // 운송장 번호 입력 요소
+            const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
+            const sellForm = document.getElementById('sellForm'); // 판매 폼
+    
+            // 서버에서 전달된 계좌 정보 유무
+            const hasAccount = document.getElementById('hiddenAccount').value === 'true';
+    
+            // 폼의 유효성을 검사하는 함수
+            function validateForm() {
+                if (courierSelect.value && trackingNumberInput.value.trim() && hasAccount) {
+                    paymentButton.removeAttribute('disabled');
+                } else {
+                    paymentButton.setAttribute('disabled', 'disabled');
+                }
             }
+    
+            // 초기 폼 상태 설정
+            validateForm();
+    
+            // 택배사 선택이 변경될 때마다 validateForm 함수를 호출합니다.
+            courierSelect.addEventListener('change', validateForm);
+    
+            // 운송장 번호 입력이 변경될 때마다 validateForm 함수를 호출합니다.
+            trackingNumberInput.addEventListener('input', validateForm);
+    
+            // 폼이 제출될 때 실행되는 이벤트 리스너를 추가합니다.
+            sellForm.addEventListener('submit', function(event) {
+                if (!hasAccount) {
+                    // 계좌 정보가 없으면 계좌 등록 페이지로 이동
+                    event.preventDefault();
+                    window.location.href = "/user/account";
+                } else {
+                    // 기존 hidden input 제거
+                    const existingHidden = document.querySelector('input[name="courierKorean"]');
+                    if (existingHidden) {
+                        existingHidden.remove();
+                    }
+                    // 택배사 이름을 한글로 변환하여 hidden input에 설정합니다.
+                    const courierKorean = {
+                        cj: "CJ대한통운",
+                        lotte: "롯데택배",
+                        hanjin: "한진택배",
+                        logen: "로젠택배",
+                        postoffice: "우체국택배"
+                    }[courierSelect.value];
+                    const courierHiddenInput = document.createElement('input');
+                    courierHiddenInput.type = 'hidden';
+                    courierHiddenInput.name = 'courierKorean';
+                    courierHiddenInput.value = courierKorean;
+                    sellForm.appendChild(courierHiddenInput);
+                }
+            });
         });
-
-        const courierSelect = document.getElementById('courier'); // 택배사 선택 요소
-        const trackingNumberInput = document.getElementById('tracking-number'); // 운송장 번호 입력 요소
-        const paymentButton = document.getElementById('payment-button'); // 판매하기 버튼
-        const sellForm = document.getElementById('sellForm'); // 판매 폼
-
-        // 택배사 매핑
-        const courierMapping = {
-            cj: "CJ대한통운",
-            lotte: "롯데택배",
-            hanjin: "한진택배",
-            logen: "로젠택배",
-            postoffice: "우체국택배"
-        };
-
-        // 폼의 유효성을 검사하는 함수
-        function validateForm() {
-            if (courierSelect.value && trackingNumberInput.value.trim()) {
-                paymentButton.removeAttribute('disabled');
-            } else {
-                paymentButton.setAttribute('disabled', 'disabled');
-            }
-        }
-
-        // 택배사 선택이 변경될 때마다 validateForm 함수를 호출합니다.
-        courierSelect.addEventListener('change', validateForm);
-
-        // 운송장 번호 입력이 변경될 때마다 validateForm 함수를 호출합니다.
-        trackingNumberInput.addEventListener('input', validateForm);
-
-        // 폼이 제출될 때 실행되는 이벤트 리스너를 추가합니다.
-        sellForm.addEventListener('submit', function(event) {
-            // 택배사 이름을 한글로 변환하여 hidden input에 설정합니다.
-            const courierKorean = courierMapping[courierSelect.value];
-            const courierHiddenInput = document.createElement('input');
-            courierHiddenInput.type = 'hidden';
-            courierHiddenInput.name = 'courierKorean';
-            courierHiddenInput.value = courierKorean;
-            sellForm.appendChild(courierHiddenInput);
-        });
-    });
     </script>
 </body>
 </html>
