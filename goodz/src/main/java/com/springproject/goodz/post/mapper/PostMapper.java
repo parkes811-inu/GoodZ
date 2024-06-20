@@ -3,6 +3,7 @@ package com.springproject.goodz.post.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.springproject.goodz.post.dto.Post;
 
@@ -32,7 +33,7 @@ public interface PostMapper {
     public int delete(int postNo) throws Exception;
 
     // 인기게시글 4개 - 메인화면 조회용
-    public List<Post> popularPosts() throws Exception;
+    public List<Post> popularPosts(@Param("offset") int offset, @Param("size") int sizee) throws Exception;
 
     // 게시글 조회 (대표이미지파일 번호 포함) - 게시글 번호 기준
     public List<Post> taggedPost(int productNo) throws Exception;
