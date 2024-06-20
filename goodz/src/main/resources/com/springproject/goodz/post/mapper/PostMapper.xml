@@ -125,7 +125,7 @@
         INNER JOIN file f on post_no = parent_no and f.parent_table='post' and file_code = 1
         INNER JOIN user u on p.user_id = u.user_id
         ORDER BY likeCount DESC
-        LIMIT 4;
+        LIMIT #{offset}, #{size}
     </select>
 
     <!-- 게시글 조회 (대표이미지파일 번호 포함) - 게시글 번호 기준  -->
