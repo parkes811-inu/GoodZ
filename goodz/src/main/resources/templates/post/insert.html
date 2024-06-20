@@ -158,7 +158,14 @@
                 // 이미 추가된 상품인지 확인
                 if(taggedProducts.includes(productNo)) {
                     // 이미 추가된 상품이면 얼럿
-                    alert('이미 추가된 상품입니다.');
+                    // alert('이미 추가된 상품입니다.');
+                    Swal.fire({
+                        html: `  
+                            <img src="/img/header/Goodz_logo3.png" />
+                            <h3 class="mt-4">이미 추가된 상품입니다.</h3>
+                        `,
+                        confirmButtonText: "확인",
+                    })
                     return; // 추가 중단
                 }
 
@@ -208,7 +215,14 @@
                 // 대표 이미지가 선택되었는지 확인
                 if(representativeImage === '') {
                     // 대표 이미지가 선택되지 않은 경우 알림 표시
-                    alert('대표 이미지를 선택해주세요.');
+                    // alert('대표 이미지를 선택해주세요.');
+                    Swal.fire({
+                        html: `  
+                            <img src="/img/header/Goodz_logo3.png" />
+                            <h3 class="mt-4">대표 이미지를 선택해주세요.</h3>
+                        `,
+                        confirmButtonText: "확인",
+                    })
                     return; // 폼 제출 중단
                 }
 

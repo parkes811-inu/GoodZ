@@ -456,7 +456,7 @@ public class UserController {
                 }
 
                 // 원화 형식으로 변환
-                String formattedPurchasePrice = decimalFormat.format(purchase.getPurchasePrice());
+                String formattedPurchasePrice = decimalFormat.format(purchase.getPurchasePrice() + 3000);
                 purchase.setFormattedPurchasePrice(formattedPurchasePrice);
 
                 // 상태별로 구매 내역 필터링

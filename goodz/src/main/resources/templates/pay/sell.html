@@ -296,11 +296,13 @@
                     <div class="section_header">최종 주문 정보</div>
                     <div class="summary_item">
                         <span>상품 가격</span>
-                        <span id="productPrice" th:text="${price} + '원'"></span>
+                        <!-- <span id="productPrice" th:text="${price} + '원'"></span> -->
+                        <span id="productPrice" th:attr="data-price=${price}" class="price"></span>
                     </div>
                     <div class="summary_item">
                         <span>검수비</span>
-                        <span>+5000원</span>
+                        <span>+ 5,000원</span>
+
                     </div>
                     <div class="summary_item">
                         <span>배송비</span>
@@ -308,7 +310,9 @@
                     </div>
                     <div class="summary_item summary_total">
                         <span>총 결제금액</span>
-                        <span th:text="${price + 5000} + '원'"></span>
+
+                        <!-- <span th:text="${price + 5000} + '원'"></span> -->
+                        <span th:attr="data-price=${price - 5000}" class="price"></span>
                     </div>
                 </div>
             </div>
@@ -337,6 +341,19 @@
                     paymentButton.setAttribute('disabled', 'disabled');
                 }
             }
+
+            // 가격 변경
+            var priceElements = document.querySelectorAll('.price');
+                priceElements.forEach(function(el) {
+                    var price = parseFloat(el.getAttribute('data-price'));
+                    el.textContent = formatCurrency(price);
+                });
+            
+
+            function formatCurrency(price) {
+                return parseInt(price).toLocaleString() + ' 원';
+            }
+
     
             // 초기 폼 상태 설정
             validateForm();
@@ -374,6 +391,31 @@
                     sellForm.appendChild(courierHiddenInput);
                 }
             });
+    
+            // 주소 선택 함수
+            function selectAddress(recipientName, phoneNumber, address) {
+                document.getElementById('recipientName').textContent = recipientName;
+                document.getElementById('phoneNumber').textContent = phoneNumber;
+                document.getElementById('address').textContent = address;
+                document.getElementById('hiddenAddress').value = address;
+            }
+    
+            // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
+            document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
+                const target = event.target.closest('li.list-group-item');
+                if (target) {
+                    const recipientName = target.getAttribute('data-recipient-name');
+                    const phoneNumber = target.getAttribute('data-phone-number');
+                    const address = target.getAttribute('data-address');
+                    selectAddress(recipientName, phoneNumber, address);
+                    // 모달 닫기
+                    var addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+                    addressModal.hide();
+                }
+            });
+    
+            // 폼 유효성 검사 호출
+            validateForm();
         });
     </script>
 </body>

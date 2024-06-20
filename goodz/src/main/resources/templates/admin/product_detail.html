@@ -10,7 +10,7 @@
         th {
             font-size: 14px;
         }
-        img {
+        .carousel-item img {
             width: 100px;
             object-fit: cover;
         }
@@ -38,7 +38,7 @@
                         <div class="carousel-inner" style="width:300px; height:300px;">
                             <th:block th:each="image, iterStat : ${images}">
                                 <div th:class="'carousel-item' + (${iterStat.index == 0} ? ' active' : '')">
-                                    <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}" style="width: 100%;">
+                                    <img th:src="@{/files/img(imgUrl=${image.filePath})}" th:alt="${image.filePath}" style=" width: 100px; object-fit: cover;">
                                 </div>
                             </th:block>
                         </div>
@@ -178,7 +178,14 @@
             const imageInput = document.getElementById('imageInput');
             const representativeImage = document.getElementById('representativeImage').value;
             if (imageInput.files.length > 0 && representativeImage === "") {
-                alert('대표 이미지를 선택해주세요.');
+                // alert('대표 이미지를 선택해주세요.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">대표 이미지를 선택해주세요.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 return false; // 폼 제출 방지
             }
             return true; // 폼 제출 허용
