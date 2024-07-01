@@ -59,8 +59,7 @@ public class SecurityConfig {
             )
         
         // OAuth 로그인 설정
-        .oauth2Login(oauth2Login ->
-            oauth2Login
+        .oauth2Login(oauth2Login -> oauth2Login
                 .loginPage("/login")
                 .successHandler( authenticationSuccessHandler() )
         );	

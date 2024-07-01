@@ -98,20 +98,42 @@
 
             // 첫 번째 비밀번호 유효성 검사
             if (!passwordRegex.test(firstPw)) {
-                alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                // alert('비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">비밀번호는 영문, 숫자, 특수 문자를 포함한 7자에서 16자여야 합니다.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
+
                 event.preventDefault(); // 폼 제출 방지
                 return;
             }
 
             // 두 번째 비밀번호와 일치하는지 확인
             if (firstPw !== secondPw) {
-                alert('비밀번호가 일치하지 않습니다.');
+                // alert('비밀번호가 일치하지 않습니다.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">비밀번호가 일치하지 않습니다.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 event.preventDefault(); // 폼 제출 방지
                 return;
             }
 
             // 비밀번호 변경 성공 알림
-            alert('비밀번호가 성공적으로 변경되었습니다 다시 로그인해주세요');
+            // alert('비밀번호가 성공적으로 변경되었습니다 다시 로그인해주세요');
+            Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">비밀번호가 성공적으로 변경되었습니다 다시 로그인해주세요</h3>
+                    `,
+                    confirmButtonText: "확인",
+            })
         });
     </script>
 </body>

@@ -338,7 +338,7 @@
                         <div class="col">
                             <!--[DB] 프로필 & 아이디 -->
                             <div class="card-text py-2">
-                                <a th:href="|/styles/user/${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
+                                <a th:href="|/styles/user/@${post.nickname}|" class="d-flex justify-content-start column-gap-1"  style="text-decoration: none; color: #393E46;">
                                     <img th:src="|/files/${post.profileImgNo}|" alt="프로필이미지" class="profile-img">
                                     <p class="userId fw-bold m-0" th:text="${post.nickname}"></p>
                                 </a>
@@ -504,7 +504,14 @@
         sizeModal.addEventListener('show.bs.modal', function(event) {
             const sizeOptions = sizeModal.querySelectorAll('.size-option');
             if (sizeOptions.length === 0) {
-                alert('구매 가능한 사이즈가 없습니다.');
+                // alert('구매 가능한 사이즈가 없습니다.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">구매 가능한 사이즈가 없습니다.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 event.preventDefault(); // 모달 창 열림 방지
                 return;
             }
@@ -514,14 +521,21 @@
         confirmSizeButton.addEventListener('click', function() {
             if (selectedSize && selectedPrice) {
                 sizeButton.textContent = selectedSize;
-                purchasePriceElement.textContent = selectedPrice + ' 원'; // 구매 버튼 가격 업데이트
-                productPriceElement.textContent = selectedPrice + ' 원'; // 상품 가격 업데이트
+                purchasePriceElement.textContent = parseInt(selectedPrice).toLocaleString() + ' 원'; // 구매 버튼 가격 업데이트
+                productPriceElement.textContent = parseInt(selectedPrice).toLocaleString() + ' 원'; // 상품 가격 업데이트 박은서 
                 var modal = bootstrap.Modal.getInstance(sizeModal);
                 modal.hide();
                 // 선택한 사이즈에 대해 그래프 업데이트
                 updateChart('AllTime');
             } else {
-                alert('사이즈를 선택해주세요.');
+                // alert('사이즈를 선택해주세요.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">사이즈를 선택해주세요.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
             }
         });
 
@@ -545,7 +559,14 @@
 
                 // 가격 객체가 비어 있으면 알림 메시지 표시하고 모달 창 열지 않음
                 if (Object.keys(prices).length === 0) {
-                    alert('구매 가능한 사이즈가 없습니다.');
+                    // alert('구매 가능한 사이즈가 없습니다.');
+                    Swal.fire({
+                        html: `  
+                            <img src="/img/header/Goodz_logo3.png" />
+                            <h3 class="mt-4">구매 가능한 사이즈가 없습니다.</h3>
+                        `,
+                        confirmButtonText: "확인",
+                    })
                     event.preventDefault(); // 모달 창 열림 방지
                     return;
                 }
@@ -621,7 +642,14 @@
                 url.searchParams.append('size', selectedSize);
                 window.location.href = url;
             } else {
-                alert('사이즈를 선택해주세요.');
+                // alert('사이즈를 선택해주세요.');
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">사이즈를 선택해주세요.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
             }
         });
 

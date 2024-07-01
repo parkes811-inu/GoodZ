@@ -4,17 +4,20 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.springproject.goodz.post.dto.Post;
 import com.springproject.goodz.post.service.PostService;
 import com.springproject.goodz.product.dto.Product;
 import com.springproject.goodz.product.dto.ProductOption;
 import com.springproject.goodz.product.service.ProductService;
+import com.springproject.goodz.user.dto.Wish;
 import com.springproject.goodz.utils.dto.Files;
 import com.springproject.goodz.utils.service.FileService;
 
@@ -112,13 +115,25 @@ public class MainController {
         model.addAttribute("newArrivalsList", newArrivalsList);
 
         // 📄인기게시글 4개
-        List<Post> popularPosts = postService.popularPosts();
+        List<Post> popularPosts = postService.popularPosts(0, 4);
         model.addAttribute("popularPosts", popularPosts);
 
         return "/index";
     }
 
 
+    // 인피니티 스크롤을 위한 컨트롤러
+    @GetMapping("/index/posts")
+    public ResponseEntity<List<Post>> getPostList(@RequestParam("page") int page, @RequestParam("size") int size) throws Exception {
+        // 📄인기게시글 4개씩 추가 
+        int offset = page * size;
 
+        List<Post> popularPosts = postService.popularPosts(offset, 4);
+
+        // 쿼리 결과를 로그로 확인
+        System.out.println("쿼리 결과: " + popularPosts);
+
+        return ResponseEntity.ok(popularPosts);
+    }
 
 }

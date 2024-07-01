@@ -154,23 +154,51 @@
             let birthField = document.getElementById('birth');
 
             if (username.trim() === '') {
-                alert("이름을 입력 해주세요.");
+                // alert("이름을 입력 해주세요.");
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">이름을 입력 해주세요.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 return;
             }
 
             if (idNumberFront.trim() === '' || idNumberBack.trim() === '' ||
                 idNumberFront.length + idNumberBack.length !== 13) {
-                alert("주민등록번호를 제대로 입력 해주세요.");
+                // alert("주민등록번호를 제대로 입력 해주세요.");
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">주민등록번호를 제대로 입력 해주세요.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 return;
             }
 
             if (!isNumeric(idNumberFront) || !isNumeric(idNumberBack)) {
-                alert("주민등록번호는 숫자만 입력 가능합니다.");
+                // alert("주민등록번호는 숫자만 입력 가능합니다.");
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">주민등록번호는 숫자만 입력 가능합니다.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 return;
             }
 
             if (!consent) {
-                alert("약관에 동의해야 합니다.");
+                // alert("약관에 동의해야 합니다.");
+                Swal.fire({
+                    html: `  
+                        <img src="/img/header/Goodz_logo3.png" />
+                        <h3 class="mt-4">약관에 동의해야 합니다.</h3>
+                    `,
+                    confirmButtonText: "확인",
+                })
                 return;
             }
 

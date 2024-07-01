@@ -17,14 +17,28 @@
     
                 // 로그인 여부 체크; 비로그인 시, 로그인 페이지로 튕김
                 if (!isLoggedIn) {
-                    alert('로그인 후 이용 가능합니다.');
-                    let moveToLogin = confirm('로그인 페이지로 이동하시겠습니까?');
-    
-                    if (moveToLogin) {
-                        window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                    Swal.fire({
+                        title: "로그인 페이지로 이동하시겠습니까?",
+                        text: "회원가입 및 로그인을 하시며 다양한 기능을 이용할 수 있습니다!",
+                        imageUrl: "http://localhost:8080/img/header/Goodz_logo3.png",
+                        showCancelButton: true,
+                        confirmButtonColor: "#393E46",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "로그인하기",
+                        cancelButtonText: "취소"
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                            return;
+                        }
                         return;
-                    }
-                    return;
+                      });
+                    // alert('로그인 후 이용 가능합니다.');
+                    //if (moveToLogin) {
+                    //    window.location.href = '/user/login'; // 로그인 페이지 URL로 변경
+                    //    return;
+                    //}
+                    //return;
                 }
                 
                 // 로그인 시,
