@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
+import com.springproject.goodz.product.dto.ProductOption;
 
 public interface PayService {
 
@@ -32,5 +33,8 @@ public interface PayService {
 
     // 유저별 구매 내역 조회 (페이징)
     List<Purchase> findPurchasesByUserIdWithPage(@Param("userId") String userId, @Param("start") int start, @Param("rows") int rows) throws Exception;
+
+
+    public ProductOption selectProductWithOption(int pNo, int optionId) throws Exception;
     
 }

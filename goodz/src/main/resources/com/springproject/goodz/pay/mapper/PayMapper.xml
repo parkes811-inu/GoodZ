@@ -5,14 +5,32 @@
 
 <mapper namespace="com.springproject.goodz.pay.mapper.PayMapper">
 
+<resultMap id="ProductOptionMap" type="ProductOption">
+        <result property="optionId" column="option_id"/>
+        <result property="pNo" column="p_no"/>
+        <result property="size" column="size"/>
+        <result property="optionPrice" column="option_price"/>
+        <result property="stockQuantity" column="stock_quantity"/>
+        <result property="status" column="status"/>
+        <result property="addedStockQuantity" column="added_stock_quantity"/>
+        <result property="productName" column="product_name"/> <!-- 새 속성 추가 -->
+    </resultMap>
 	<!-- 구매 등록 -->
   <insert id="insertPurchase" parameterType="Purchase">
 	<selectKey keyProperty="purchaseNo" resultType="int" order="AFTER">
 		SELECT LAST_INSERT_ID()
 	</selectKey>
-    INSERT INTO Purchase (user_id, p_no, purchase_price, payment_method, purchase_state, option_id)
-    VALUES (#{userId}, #{pNo}, #{purchasePrice}, #{paymentMethod}, #{purchaseState}, #{optionId})
+    INSERT INTO Purchase (user_id, p_no,  payment_method, purchase_state, option_id)
+    VALUES (#{userId}, #{pNo}, #{paymentMethod}, #{purchaseState}, #{optionId})
   </insert>
+
+ <!-- 상품 옵션(사이즈)에 맞는 가격 불러오기  -->
+  <select id="selectProductWithOption" resultMap="ProductOptionMap">
+        SELECT *
+        FROM Product p
+        JOIN product_option po ON p.p_no = po.p_no
+        WHERE p.p_no = #{pNo} AND po.option_id = #{optionId}
+    </select>
 
 	<!-- 구매 업데이트 -->
 	<update id="updatePurchase" parameterType="Purchase">
@@ -20,6 +38,7 @@
 		SET purchase_state = #{purchaseState},
 			order_id = #{orderId},
 			address = #{address},
+			purchase_price = #{purchasePrice},
 			updated_at = CURRENT_TIMESTAMP
 		WHERE purchase_no = #{purchaseNo}
 	</update>

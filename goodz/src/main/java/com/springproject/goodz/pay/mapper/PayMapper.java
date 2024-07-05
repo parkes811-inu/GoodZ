@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
+import com.springproject.goodz.product.dto.ProductOption;
 
 @Mapper
 public interface PayMapper {
@@ -34,4 +35,6 @@ public interface PayMapper {
 
     // 미결제시 취소
     public void cancelPurchase(int purchaseNo) throws Exception;
+
+    ProductOption selectProductWithOption(@Param("pNo") int pNo, @Param("optionId") int optionId) throws Exception;
 }

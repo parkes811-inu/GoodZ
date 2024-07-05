@@ -117,7 +117,7 @@
                 <input type="hidden" id="productNo" name="productNo" th:value="${product.pNo}" />
                 <input type="hidden" id="size" name="size" th:value="${size}" />
                 <input type="hidden" id="purchaseNo" name="purchaseNo" th:value="${purchaseNo}" />
-                <input type="hidden" id="purchasePrice" name="purchasePrice" th:value="${price}" />
+                <input type="text" id="purchasePrice" name="purchasePrice" th:value="${price}" />
                 <input type="hidden" id="hiddenAddress" name="address" th:value="${defaultAddress != null ? defaultAddress.address : ''}" />
                 <input type="hidden" id="productName" name="productName" th:value="${product.productName}" />
     
@@ -253,22 +253,20 @@
                     </div> 
                 </div>
             </form>
-                <div class="btn-wrapper w-100 mb-5"  style="margin: 0 auto; max-width: 800px;">
-                    <button id="payment-button" class="btn w-100" disabled>결제하기</button>
-                </div>
+            <div class="btn-wrapper w-100 mb-5"  style="margin: 0 auto; max-width: 800px;">
+                <button id="payment-button" class="btn w-100" disabled>결제하기</button>
+            </div>
         </div>
     </div>
 
     <script>
-        
         document.addEventListener("DOMContentLoaded", function () {
             // 가격 변경
             var priceElements = document.querySelectorAll('.price');
-                priceElements.forEach(function(el) {
-                    var price = parseFloat(el.getAttribute('data-price'));
-                    el.textContent = formatCurrency(price);
-                });
-            
+            priceElements.forEach(function(el) {
+                var price = parseFloat(el.getAttribute('data-price'));
+                el.textContent = formatCurrency(price);
+            });
 
             function formatCurrency(price) {
                 return parseInt(price).toLocaleString() + ' 원';
@@ -281,7 +279,7 @@
                 document.getElementById('address').textContent = address;
                 document.getElementById('hiddenAddress').value = address; // hidden input field update
             }
-    
+
             // 모달의 리스트 항목 클릭 이벤트 핸들러 추가 (이벤트 위임 사용)
             document.querySelector('#addressModal .modal-body').addEventListener('click', function (event) {
                 const target = event.target.closest('li.list-group-item');
@@ -292,65 +290,62 @@
                     selectAddress(recipientName, phoneNumber, address);
                 }
             });
-    
+
             // 결제 관련 스크립트
             const button = document.getElementById("payment-button"); // 결제 버튼 요소
-            // const csrfToken = document.querySelector('input[name="_csrf"]').value; // CSRF 토큰
-            const amount = parseInt(document.getElementById('purchasePrice').value) + 3000; // 상품 가격에 3000 더하기
+            const purchasePrice = parseInt(document.getElementById('purchasePrice').value); // purchasePrice
+            const amount = purchasePrice + 3000; // 상품 가격에 3000 더하기
             const productName = document.getElementById('productName').value; // 상품명
             const purchaseNo = document.getElementById('purchaseNo').value; // purchaseNo
-    
+
             let recipientName = document.getElementById('recipientName').textContent;
             let phoneNumber = document.getElementById('phoneNumber').textContent;
             let address = document.getElementById('address').textContent;
 
-            var csrfToken = $("meta[name='_csrf']").attr("content");
-            var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-            
             // 전화번호에서 특수문자 제거
             phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
-    
+
             // 랜덤 문자열 생성 함수
             function generateRandomString() {
                 return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             }
-    
+
             console.log("결제 위젯 초기화 시작");
             const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm"; // 결제 위젯 클라이언트 키
             const customerKey = generateRandomString(); // 고객 키
             const paymentWidget = PaymentWidget(clientKey, customerKey); // 결제 위젯 초기화
-    
+
             // 결제 수단 UI 렌더링
             const paymentMethodWidget = paymentWidget.renderPaymentMethods(
                 "#payment-method",
                 { value: amount },
                 { variantKey: "DEFAULT" }
             );
-    
+
             // 약관 동의 렌더링
             paymentWidget.renderAgreement('#agreement', { variantKey: 'DEFAULT' });
-    
+
             // 결제 위젯 렌더링 완료 시 결제 버튼 활성화
             paymentMethodWidget.on("ready", function () {
                 console.log("결제 위젯 렌더링 완료");
                 button.disabled = false; // 결제 버튼 활성화
             });
-    
+
             // 결제 버튼 클릭 이벤트
             button.addEventListener("click", function () {
                 var addr = $("#address").text();
+                var price = parseInt(document.getElementById('purchasePrice').value); // 결제 금액 계산
 
                 console.log("결제 요청 시작");
                 paymentWidget.requestPayment({
                     orderId: generateRandomString(), // 주문 ID
                     orderName: productName, // 주문명
-                    successUrl: window.location.origin + `/pay/complete?type=buy&purchaseNo=${purchaseNo}&address=`+ encodeURIComponent(address), // 성공 URL
+                    successUrl: window.location.origin + `/pay/complete?type=buy&purchaseNo=${purchaseNo}&address=`+ encodeURIComponent(address) + `&purchasePrice=${price}`, // 성공 URL
                     failUrl: window.location.origin + "/pay/complete?type=fail", // 실패 URL
                     customerName: recipientName, // 고객 이름
-                    customerMobilePhone: phoneNumber // 고객 전화번호
-                    
+                    customerMobilePhone: phoneNumber, // 고객 전화번호
+                    purchasePrice: purchasePrice // purchasePrice 
                 })
-              
             });
         });
     </script>

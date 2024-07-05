@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.springproject.goodz.pay.dto.Purchase;
 import com.springproject.goodz.pay.dto.Sales;
 import com.springproject.goodz.pay.mapper.PayMapper;
+import com.springproject.goodz.product.dto.ProductOption;
 
 @Service
 public class PayServiceImpl implements PayService {
@@ -57,5 +58,12 @@ public class PayServiceImpl implements PayService {
     @Override
     public List<Purchase> findPurchasesByUserIdWithPage(String userId, int start, int rows) throws Exception {
         return payMapper.findPurchasesByUserIdWithPage(userId, start, rows);
+    }
+
+
+
+    @Override
+    public ProductOption selectProductWithOption(int pNo, int optionId) throws Exception {
+        return payMapper.selectProductWithOption(pNo, optionId);
     }
 }

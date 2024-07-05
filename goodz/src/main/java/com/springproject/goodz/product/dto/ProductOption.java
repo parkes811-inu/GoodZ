@@ -11,5 +11,6 @@ public class ProductOption {
     private int stockQuantity;  // 재고 수량
     private String status;      // 상태 ('on' 또는 'off')
     private int addedStockQuantity; // 추가 수량
+    private String productName;
 
 }

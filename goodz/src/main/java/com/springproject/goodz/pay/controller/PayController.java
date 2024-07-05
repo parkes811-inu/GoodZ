@@ -87,11 +87,12 @@ public class PayController {
         for (ProductOption option : options) {
             if (option.getSize().equals(size)) {
                 purchasePrice = option.getOptionPrice();
-            }
-
-            if (option.getPNo() == pNo && option.getSize().equals(size)) {
                 optionId = option.getOptionId();
             }
+
+            // if (option.getPNo() == pNo && option.getSize().equals(size)) {
+            //     optionId = option.getOptionId();
+            // }
         }
 
         // purchase 테이블에 user_id, p_no, optionPrice, option_id 등록
@@ -100,7 +101,7 @@ public class PayController {
         Purchase purchase = new Purchase();
         purchase.setUserId(userId);
         purchase.setPNo(pNo);
-        purchase.setPurchasePrice(purchasePrice);
+        // purchase.setPurchasePrice(purchasePrice);
         purchase.setPaymentMethod("purchase");
         purchase.setPurchaseState("pending"); // 구매 상태를 pending으로 설정
         purchase.setOptionId(optionId);
@@ -153,18 +154,16 @@ public class PayController {
         // - p_no,  option_id 꺼내옴
         Purchase purchase = payService.selectPurchase(purchaseNo);
 
-        // Product 조회
+        // Product와 Option 정보 조회
         int pNo = purchase.getPNo();
+        int optionId = purchase.getOptionId();
+        ProductOption productOption = payService.selectProductWithOption(pNo, optionId);
+
         log.info("::::::::::::::::::::::::::::::::::::::::::");
         log.info("pNo : " + pNo);
+        log.info("optionId : " + optionId);
         Product product = productService.getProductBypNo(pNo);
         
-        // ProductOption 조회
-        int optionId = purchase.getOptionId();
-        log.info("::::::::::::::::::::::::::::::::::::::::::");
-        log.info("optionId : " + optionId);
-        ProductOption productOption = productService.getProductOptionByOptionId(optionId);
-
         // 상품 이미지 설정
         Files file = new Files();
         file.setParentNo(product.getPNo());
@@ -181,7 +180,7 @@ public class PayController {
         model.addAttribute("product", product); // 모델에 상품 정보를 추가합니다.
         model.addAttribute("size", productOption.getSize());
         model.addAttribute("image", productImages);
-        model.addAttribute("price", purchase.getPurchasePrice());
+        model.addAttribute("price", productOption.getOptionPrice()); // 정확한 옵션 가격을 설정
         model.addAttribute("purchaseNo", purchaseNo); // purchaseNo를 모델에 추가
         model.addAttribute("optionId", optionId);
 
@@ -202,22 +201,27 @@ public class PayController {
      * @param paymentKey 결제 키
      * @param orderId 주문 ID
      * @param amount 결제 금액
+     * @param address 주소
+     * @param purchasePrice 구매 가격
      * @return 결제 결과
      * @throws Exception
      */
     @ResponseBody
     @PostMapping("/buy")
     public String updatePurchase(@RequestParam("purchaseNo") int purchaseNo,
-                                 @RequestParam("paymentKey") String paymentKey,
-                                 @RequestParam("orderId") String orderId,
-                                 @RequestParam("amount") int amount,
-                                 @RequestParam("address") String address) throws Exception {
-        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}, address={}", purchaseNo, orderId, amount, address);
+                                @RequestParam("paymentKey") String paymentKey,
+                                @RequestParam("orderId") String orderId,
+                                @RequestParam("amount") int amount,
+                                @RequestParam("address") String address,
+                                @RequestParam("purchasePrice") int purchasePrice) throws Exception {
+        // log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}, address={}, purchasePrice={}", purchaseNo, orderId, amount, address, purchasePrice);
+        log.info("죽는다 결제금액아: {}", purchasePrice);
 
         Purchase purchase = new Purchase();
         purchase.setPurchaseNo(purchaseNo);
         purchase.setOrderId(orderId);
         purchase.setPurchaseState("paid");
+        purchase.setPurchasePrice(purchasePrice); // purchasePrice 설정
         purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
         String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
@@ -381,13 +385,16 @@ public class PayController {
                             @RequestParam(value = "paymentKey", required = false) String paymentKey,
                             @RequestParam(value = "orderId", required = false) String orderId,
                             @RequestParam(value = "amount", required = false) Integer amount,
+                            @RequestParam(value = "purchasePrice", required = false) Integer purchasePrice,
                             @RequestParam(value = "address", required = false) String address,
                             @RequestParam(value = "type", required = false) String type, 
                             Model model) throws Exception {
         
         String decodedAddress = URLDecoder.decode(address, "UTF-8"); // URL 디코딩
 
-        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
+        // log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}", purchaseNo, orderId, amount);
+        log.info("updatePurchase 호출됨: purchaseNo={}, orderId={}, amount={}, address={}, purchasePrice={}", purchaseNo, orderId, amount, address, purchasePrice);
+
                             
         Purchase purchase = new Purchase();
         purchase.setPurchaseNo(purchaseNo);
@@ -395,6 +402,7 @@ public class PayController {
         purchase.setPurchaseState("paid");
         purchase.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         purchase.setAddress(decodedAddress);
+        purchase.setPurchasePrice(purchasePrice);
 
         log.info("Purchase 객체 생성됨: {}", purchase);
 
