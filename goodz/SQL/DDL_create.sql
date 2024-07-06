@@ -118,7 +118,7 @@ CREATE TABLE `Purchase` (
 	`p_no` INT NOT NULL,
 	`option_id` INT NOT NULL,
 	`order_id` VARCHAR(255) NULL,
-	`purchase_price` INT NOT NULL,
+	`purchase_price` INT NULL,
 	`payment_method` VARCHAR(50) NOT NULL,
 	`address` VARCHAR(255) NULL,
 	`tracking_no` VARCHAR(255) NULL,
