@@ -230,6 +230,8 @@
     <!-- 댓글 -->
     <script>
         let postNo = "[[${post.postNo}]]";
+        let nickname = "[[${writer.nickname}]]"
+
         // 댓글 목록 요청
         cmmtList()
         countCmmt()
@@ -403,7 +405,7 @@
                     })
                 } 
                 
-                window.location.href = '/styles';
+                window.location.href = '/styles/user/@'+nickname;
             }
         }
     }
